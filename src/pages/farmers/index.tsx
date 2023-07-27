@@ -91,15 +91,22 @@ const allFarmers = () => {
   useEffect(() => {
     // @ts-ignore
     const userData: any = JSON.parse(localStorage.getItem('userData'))
-    let payload = {
-      adminId: userData?.id,
+    const payload = {
       page: page,
       pageSize: pageLimit
     }
-    //@ts-ignore
-    dispatch(getAllFarmers(payload)).then(response => {
-      setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
-    })
+    if (userData?.role === 'admin') {
+      payload.adminId = userData?.id
+      dispatch(getAllFarmers(payload)).then(response => {
+        setPageCount(Math.ceil(response?.payload?.totalFilterCount / pageLimit))
+      })
+    } else {
+      payload.referralId = userData?.id
+      dispatch(getAllFarmers(payload)).then(response => {
+        setPageCount(Math.ceil(response?.payload?.totalFilterCount / pageLimit))
+      })
+    }
+
     localStorage.removeItem('FarmerData')
   }, [createFarmer, deleteFarmer, page, pageCount, pageLimit])
 
