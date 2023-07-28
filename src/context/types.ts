@@ -22,6 +22,5 @@ export type AuthValuesType = {
   user: UserDataType | null
   setLoading: (value: boolean) => void
   setUser: (value?: UserDataType | null) => void
-  userLogin: () => (value: UserDataType | any | null) => void
   login: (params: LoginParams, errorCallback?: ErrCallbackType) => void
 }

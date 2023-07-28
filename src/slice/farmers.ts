@@ -29,6 +29,8 @@ interface RootState {
   updatePermission: Array<any>
   getUsers: Array<any>
   allUsers: Array<any>
+  createUser1: Array<any>
+  updateUsers1: Array<any>
   isLoading: boolean
 }
 const initialState: RootState = {
@@ -49,6 +51,8 @@ const initialState: RootState = {
   createPermission: [],
   updatePermission: [],
   allUsers: [],
+  createUser1: [],
+  updateUsers1: [],
   isLoading: false
 }
 export const getAllFarmers = createAsyncThunk('farmers/getAllFarmers', async (payload: any, { rejectWithValue }) => {
@@ -71,6 +75,27 @@ export const getAllDistrict = createAsyncThunk('farmers/getAllDistrict', async (
     return rejectWithValue(err?.response?.data)
   }
 })
+export const createUser1 = createAsyncThunk('farmers/createUser', async (payload: any, { rejectWithValue }) => {
+  try {
+    const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/user/createUsers`, payload, {
+      headers
+    })
+    return res?.data?.data
+  } catch (err: any) {
+    return rejectWithValue(err?.response?.data)
+  }
+})
+export const updateUser1 = createAsyncThunk('farmers/updateUser1', async (payload: any, { rejectWithValue }) => {
+  try {
+    const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/user/updateUsers`, payload, {
+      headers
+    })
+    return res?.data?.data
+  } catch (err: any) {
+    return rejectWithValue(err?.response?.data)
+  }
+})
+
 export const createFarmer = createAsyncThunk('farmers/createFarmer', async (payload: any, { rejectWithValue }) => {
   try {
     const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/farmer/createFarmer`, payload, {
@@ -175,10 +200,10 @@ export const getAllUsers = createAsyncThunk(
   'farmers/getAllUsers',
   async (payload: { page: string | number; pageSize: string | number }, { rejectWithValue }) => {
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/user/getAllUsers`, {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/user/getAllUsers`, payload, {
         headers
       })
-      return res?.data?.data
+      return res?.data
     } catch (err: any) {
       return rejectWithValue(err?.response?.data)
     }
@@ -205,7 +230,7 @@ export const getAllPermission = createAsyncThunk(
         const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/permission/GetAllPermission`, payload, {
           headers
         })
-        return res?.data?.data
+        return res?.data
       } else {
         const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/permission/GetAllPermission`, {
           headers
@@ -409,6 +434,27 @@ export const farmersSlice = createSlice({
       state.updatePermission = action.payload
     })
     builder.addCase(updatePermissions.rejected, state => {
+      state.isLoading = false
+    })
+
+    builder.addCase(createUser1.pending, state => {
+      state.isLoading = true
+    })
+    builder.addCase(createUser1.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.createUser1 = action.payload
+    })
+    builder.addCase(createUser1.rejected, state => {
+      state.isLoading = false
+    })
+    builder.addCase(updateUser1.pending, state => {
+      state.isLoading = true
+    })
+    builder.addCase(updateUser1.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.updateUsers1 = action.payload
+    })
+    builder.addCase(updateUser1.rejected, state => {
       state.isLoading = false
     })
   }

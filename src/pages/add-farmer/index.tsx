@@ -1,6 +1,5 @@
 //@ts-nocheck
 import React, { useEffect, useState } from 'react'
-import MenuItem from '@mui/material/MenuItem'
 import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'
@@ -9,10 +8,12 @@ import {
   Avatar,
   Button,
   Card,
+  Checkbox,
   Divider,
   Icon,
   IconButton,
   InputAdornment,
+  MenuItem,
   OutlinedInput,
   Radio,
   RadioGroup,
@@ -55,9 +56,11 @@ const FarmerDetails = () => {
     firstName: '',
     middleName: '',
     lastName: '',
+    asPerAbove: '',
     DOB: '',
     aadharNumber: '',
     mobileNumber: '',
+    wpNumber: '',
     address: '',
     villageName: '',
     taluka: '',
@@ -109,8 +112,10 @@ const FarmerDetails = () => {
     firstName: yup.string().required('First name  is required'),
     middleName: yup.string().required('Middle name is required'),
     lastName: yup.string().required('Last name is required'),
+    // pinCode: yup.string().required('pinCode is required'),
     mobileNumber: yup
       .string()
+      .required('Mobile number is required')
       // .min(10)
       .matches(/^ *(?:0 *[23478](?: *\d){8}|[1-9](?: *\d)*|0 *[01569](?: *\d)*) *$/, 'Phone number is not valid'),
     // .required('Mobile number is required'),
@@ -130,9 +135,11 @@ const FarmerDetails = () => {
       firstName: values?.firstName,
       middleName: values?.middleName,
       lastName: values?.lastName,
+      asPerAbove: values?.asPerAbove,
       DOB: values?.DOB,
       aadharNumber: values?.aadharNumber,
       mobileNumber: values?.mobileNumber,
+      wpNumber: values?.wpNumber,
       address: values?.address,
       villageName: values?.villageName,
       taluka: values?.taluka,
@@ -154,7 +161,7 @@ const FarmerDetails = () => {
       landArea: values?.landArea,
       landType: values?.landType,
       farmerLandOwnershipType: values?.farmerLandOwnershipType,
-      appliedForSoilTesting: 'yes' ? true : false
+      appliedForSoilTesting: 'yes' ? 1 : 0
     }
     if (!farmerData) {
       dispatch(createFarmer(payload)).then(res => {
@@ -249,7 +256,7 @@ const FarmerDetails = () => {
                       name='firstName'
                       error={Boolean(errors.firstName && touched.firstName)}
                       fullWidth
-                      label='First Name'
+                      label='First Name *'
                       placeholder='First Name'
                     />
                     <ErrorMessage name='firstName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
@@ -275,7 +282,7 @@ const FarmerDetails = () => {
                       onBlur={handleBlur}
                       error={Boolean(errors.lastName && touched.lastName)}
                       fullWidth
-                      label='Last Name'
+                      label='Last Name *'
                       placeholder='Last Name'
                     />
                     <ErrorMessage name='lastName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
@@ -287,7 +294,7 @@ const FarmerDetails = () => {
                       onChange={handleChange}
                       fullWidth
                       type='date'
-                      label='Date of birth'
+                      label='Date of birth *'
                       InputLabelProps={{
                         shrink: true
                       }}
@@ -301,7 +308,7 @@ const FarmerDetails = () => {
                       onBlur={handleBlur}
                       error={Boolean(errors.aadharNumber && touched.aadharNumber)}
                       fullWidth
-                      label='Adhar Number'
+                      label='Adhar Number *'
                       placeholder='Adhar Number'
                     />
                     <ErrorMessage name='aadharNumber' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
@@ -318,10 +325,27 @@ const FarmerDetails = () => {
                       InputLabelProps={{
                         shrink: true
                       }}
-                      label='Mobile Number'
+                      label='Mobile Number *'
                       placeholder='Mobile Number'
                     />
                     <ErrorMessage name='mobileNumber' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                  </Grid>
+                  <Grid item sm={6} xs={12}>
+                    <TextField
+                      value={values?.wpNumber}
+                      name='wpNumber'
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      type='number'
+                      error={Boolean(errors.wpNumber && touched.wpNumber)}
+                      fullWidth
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                      label='Whatsapp Number *'
+                      placeholder='Whatsapp Number'
+                    />
+                    <ErrorMessage name='wpNumber' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                   </Grid>
                   <Grid item sm={6} xs={12}>
                     <TextField
@@ -449,17 +473,6 @@ const FarmerDetails = () => {
                   </Grid>
 
                   <Grid item sm={6} xs={12}>
-                    <TextField
-                      value={values?.caste}
-                      name='caste'
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      fullWidth
-                      label='Caste'
-                      placeholder='caste'
-                    />
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
                     {' '}
                     <TextField
                       value={values?.religion}
@@ -484,7 +497,6 @@ const FarmerDetails = () => {
                     >
                       <FormControlLabel value='male' control={<Radio />} label='Male' />
                       <FormControlLabel value='female' control={<Radio />} label='Female' />
-                      <FormControlLabel value='both' control={<Radio />} label='Both' />
                     </RadioGroup>
                   </Grid>
                   <Grid item sm={6} xs={12}>
@@ -517,6 +529,10 @@ const FarmerDetails = () => {
                     />
                   </Divider>
                 </Box>
+                {/* <FormControlLabel
+                  control={<Checkbox checked={values.asPerAbove} onChange={setFieldValue} name='asPerAbove' />}
+                  label='Land Address As Per Above'
+                /> */}
                 <Grid
                   container
                   spacing={6}
@@ -567,18 +583,6 @@ const FarmerDetails = () => {
                       placeholder='Circle'
                     />
                   </Grid>
-                  <Grid item sm={6} xs={12}>
-                    {' '}
-                    <TextField
-                      value={values?.mouza}
-                      name='mouza'
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      fullWidth
-                      label='Mouza'
-                      placeholder='mouza'
-                    />
-                  </Grid>
 
                   <Grid item sm={6} xs={12}>
                     <TextField
@@ -607,6 +611,18 @@ const FarmerDetails = () => {
                         }
                       />
                     </FormControl> */}
+                  </Grid>
+                  <Grid item sm={6} xs={12}>
+                    {' '}
+                    <TextField
+                      value={values?.mouza}
+                      name='mouza'
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      fullWidth
+                      label='Mouza'
+                      placeholder='mouza'
+                    />
                   </Grid>
                   <Grid item sm={6} xs={12}>
                     {' '}
@@ -699,7 +715,7 @@ const FarmerDetails = () => {
                   </Grid>
                   <Grid item sm={6} xs={12}>
                     <Typography variant='body1' sx={{ fontWeight: 500, color: 'text.primary' }}>
-                      Soil sample collected ?{' '}
+                      Upload Land Document
                     </Typography>
                     <RadioGroup
                       row
@@ -717,7 +733,7 @@ const FarmerDetails = () => {
                       <Grid item sm={6} xs={12}></Grid>
                       <Grid item sm={6} xs={12}>
                         <Typography variant='body1' sx={{ fontWeight: 500, color: 'text.primary' }}>
-                          Upload your 7/12
+                          Upload Land Document
                         </Typography>
                         <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
                           <Button
@@ -730,7 +746,7 @@ const FarmerDetails = () => {
                               }
                             }}
                           >
-                            Upload image
+                            Upload Land Document
                             <input type='file' hidden onChange={e => handleFile(e)} />
                           </Button>
                         </Box>

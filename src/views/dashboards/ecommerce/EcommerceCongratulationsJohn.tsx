@@ -20,9 +20,9 @@ const EcommerceCongratulationsJohn = () => {
     <Card sx={{ position: 'relative' }}>
       <CardContent>
         <Typography variant='h6' sx={{ fontWeight: 500 }}>
-          Congratulations John! 🎉
+          Welcom Samruddh Kishan
         </Typography>
-        <Typography sx={{ mb: 2, color: 'text.secondary' }}>Best seller of the month</Typography>
+        <Typography sx={{ mb: 2, color: 'text.secondary' }}>Top registrations of the month</Typography>
         <Typography variant='h5' sx={{ mb: 0.5, fontWeight: 500, color: 'primary.main' }}>
           $48.9k
         </Typography>

@@ -17,6 +17,8 @@ const navigation = (): HorizontalNavItemsType => [
   {
     title: 'Users',
     path: '/users',
+    action: 'read',
+    subject: 'users',
     icon: 'tabler:smart-home'
   },
   {

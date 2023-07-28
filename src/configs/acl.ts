@@ -17,30 +17,16 @@ export type ACLObj = {
  * We have just shown Admin and Client rules for demo purpose where
  * admin can manage everything and client can just visit ACL page
  */
+//@ts-nocheck
 const defineRulesFor = (role: string, subject: string) => {
   const { can, rules } = new AbilityBuilder(AppAbility)
-  const filteredRoles = []
-  const roles = localStorage.getItem('role')
 
-  // if (roles?.includes('admin')) {
-  //   can('manage', 'all')
-  // } else if (roles?.includes('client')) {
-  //   can(['read'], 'acl-page')
-  // }
-  // if (roles?.includes('supervisor')) {
-  //   can(['read', 'create', 'update', 'delete'], subject)
-  // } else {
-  //   can(['read', 'create', 'update', 'delete'], subject)
-  // }
   if (role === 'admin') {
     can('manage', 'all')
   } else if (role === 'client') {
     can(['read'], 'acl-page')
-  }
-  if (role === 'supervisor') {
-    can(['read', 'create', 'update', 'delete'], subject)
   } else {
-    can(['read', 'create', 'update', 'delete'], subject)
+    can('manage', subject)
   }
 
   return rules

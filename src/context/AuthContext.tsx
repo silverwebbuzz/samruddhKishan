@@ -150,13 +150,15 @@ const AuthProvider = ({ children }: Props) => {
   const dispatch = useDispatch<AppDispatch>()
   // ** Hooks
   const router = useRouter()
-
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Content-Type': 'application/json'
+  }
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
       const storedToken = localStorage.getItem('accessToken')
       //@ts-ignore
       const UserData = JSON.parse(localStorage.getItem('userData'))
-      console.log('router.pathname--->', router.pathname)
 
       if (storedToken && UserData) {
         setLoading(false)
@@ -180,12 +182,22 @@ const AuthProvider = ({ children }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  useEffect(() => {
-    dispatch(getRoleAndPermissions()).then(response => {
-      localStorage.setItem('role', JSON.stringify(response.payload))
-    })
-  }, [])
+  // useEffect(() => {
 
+  // }, [])
+  const getAllPermissions = async () => {
+    const permissions = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/permission/GetAllPermission`, {
+      headers
+    })
+    localStorage.setItem('Permission', JSON.stringify(permissions?.data?.data))
+  }
+  const handleOtherRoles = () => {
+    dispatch(getRoleAndPermissions())
+      .then(response => {
+        localStorage.setItem('role', JSON.stringify(response.payload))
+      })
+      .then((res: any) => getAllPermissions())
+  }
   const handleLoginSuccess = (response: any) => {
     setLoading(false)
     const returnUrl = router.query.returnUrl
@@ -198,6 +210,7 @@ const AuthProvider = ({ children }: Props) => {
     router.replace(redirectURL as string)
     setLoading(false)
   }
+
   const handleLogin = ({ email, password, UserType }: any) => {
     const payload = {
       email: email,
@@ -234,6 +247,7 @@ const AuthProvider = ({ children }: Props) => {
         .then(async response => {
           if (response?.data?.status === 200) {
             handleLoginSuccess(response)
+            handleOtherRoles()
           } else if (response?.data?.status === 401) {
             toast.error(response.data.message)
           } else {
@@ -246,36 +260,11 @@ const AuthProvider = ({ children }: Props) => {
     }
   }
 
-  const handleUserLogin = ({ email, password }: any) => {
-    const payload = {
-      email: email,
-      password: password
-    }
-    axios
-      .post(`${process.env.NEXT_PUBLIC_BASE_URL}/user/UserLogin`, payload, {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(async response => {
-        if (response?.data?.status === 200) {
-          handleLoginSuccess(response)
-        } else if (response?.data?.status === 401) {
-          toast.error(response.data.message)
-        } else {
-          toast.error(response.data.message ? response.data.message : 'somthing went wrong')
-        }
-      })
-      .catch(err => {
-        console.log('ERROR: ', err)
-      })
-  }
   const handleLogout = () => {
     setUser(null)
     localStorage.removeItem('userData')
     localStorage.removeItem('accessToken')
-    router.push('/super-admin/login')
+    router.push('/login')
   }
 
   const values = {

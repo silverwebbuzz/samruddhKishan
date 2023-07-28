@@ -151,7 +151,7 @@ const LoginPage = () => {
               />
             </Box>
             <Formik
-              // validationSchema={validationSchema}
+              validationSchema={validationSchema}
               initialValues={{
                 email: '',
                 password: ''

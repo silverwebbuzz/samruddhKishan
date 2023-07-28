@@ -37,6 +37,7 @@ import { AppDispatch } from 'src/store/store'
 import { useSelector } from 'react-redux'
 import { ErrorMessage, Form, Formik } from 'formik'
 import * as yup from 'yup'
+import { FormControl, MenuItem, Pagination, Select } from '@mui/material'
 
 interface Colors {
   [key: string]: ThemeColor
@@ -80,7 +81,9 @@ const PermissionsTable = () => {
   const { createPermission, getPermission, updatePermission } = useSelector(
     (state: any) => state?.rootReducer?.farmerReducer
   )
-
+  const [page, setPage] = useState<number>(1)
+  const [pageCount, setPageCount] = useState<number>(1)
+  const [pageLimit, setPageLimit] = useState<number>(10)
   const dispatch = useDispatch<AppDispatch>()
   const validationSchema = yup.object().shape({
     permissionName: yup.string().required('Permission Name is required')
@@ -88,7 +91,40 @@ const PermissionsTable = () => {
   const handleFilter = useCallback((val: string) => {
     setValue(val)
   }, [])
+  const handleChange = (event: ChangeEvent<unknown>, value: number) => {
+    setPage(value)
+  }
+  const CustomPagination = () => {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'right',
+          alignItems: 'center',
+          padding: '1rem'
+        }}
+      >
+        <label>Row per page</label>
+        <FormControl sx={{ m: 1, width: '60px' }}>
+          <Select
+            size='small'
+            defaultValue='10'
+            value={pageLimit}
+            onChange={(e: any) => {
+              setPageLimit(e?.target?.value)
+              setPage(1)
+            }}
+          >
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={20}>20</MenuItem>
+            <MenuItem value={30}>30</MenuItem>
+          </Select>
+        </FormControl>
 
+        <Pagination count={pageCount} page={page} onChange={handleChange} />
+      </Box>
+    )
+  }
   const handleEditPermission = (row: any) => {
     setEditValue(row)
     setEditDialogOpen(true)
@@ -127,14 +163,17 @@ const PermissionsTable = () => {
   ]
   const getAllPermitionApiCall = () => {
     let payload = {
-      page: paginationModel?.page,
-      pageSize: paginationModel?.pageSize
+      // adminId: userData?.id,
+      page: page,
+      pageSize: pageLimit
     }
-    dispatch(getAllPermission(payload))
+    dispatch(getAllPermission(payload)).then(response => {
+      setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
+    })
   }
   useEffect(() => {
     getAllPermitionApiCall()
-  }, [paginationModel?.page, createPermission, paginationModel?.pageSize, updatePermission])
+  }, [page, pageCount, pageLimit, createPermission, updatePermission])
 
   return (
     <>
@@ -164,12 +203,15 @@ const PermissionsTable = () => {
                 }
               }}
               autoHeight
-              rows={getPermission ? getPermission : []}
+              rows={getPermission?.data ? getPermission?.data : []}
               columns={columns}
               disableRowSelectionOnClick
-              pageSizeOptions={[10, 25, 50]}
-              paginationModel={paginationModel}
-              onPaginationModelChange={setPaginationModel}
+              slots={{
+                footer: CustomPagination
+              }}
+              hideFooterRowCount
+              hideFooterSelectedRowCount
+              hideFooterPagination
             />
           </Card>
         </Grid>

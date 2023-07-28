@@ -34,6 +34,8 @@ import { ThemeColor } from 'src/@core/layouts/types'
 import TableHeader from 'src/views/apps/roles/TableHeader'
 import { AppDispatch } from 'src/store/store'
 import { getAllUsers } from 'src/slice/farmers'
+import { FormControl, MenuItem, Pagination } from '@mui/material'
+import Select from '@mui/material/Select'
 
 interface UserRoleType {
   [key: string]: { icon: string; color: string }
@@ -145,20 +147,61 @@ const UserList = () => {
   const dispatch = useDispatch<AppDispatch>()
   const { createURole, getUsers, updateRole } = useSelector((state: any) => state?.rootReducer?.farmerReducer)
 
+  const [page, setPage] = useState<number>(1)
+  const [pageCount, setPageCount] = useState<number>(1)
+  const [pageLimit, setPageLimit] = useState<number>(10)
+  const handleChange = (event: ChangeEvent<unknown>, value: number) => {
+    setPage(value)
+  }
+  const CustomPagination = () => {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'right',
+          alignItems: 'center',
+          padding: '1rem'
+        }}
+      >
+        <label>Row per page</label>
+        <FormControl sx={{ m: 1, width: '60px' }}>
+          <Select
+            size='small'
+            defaultValue='10'
+            value={pageLimit}
+            onChange={(e: any) => {
+              setPageLimit(e?.target?.value)
+              setPage(1)
+            }}
+          >
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={20}>20</MenuItem>
+            <MenuItem value={30}>30</MenuItem>
+          </Select>
+        </FormControl>
+
+        <Pagination count={pageCount} page={page} onChange={handleChange} />
+      </Box>
+    )
+  }
   const handleFilter = useCallback((val: string) => {
     setValue(val)
   }, [])
 
   const getUserRolesApiCall = () => {
     let payload = {
-      page: paginationModel?.page,
-      pageSize: paginationModel?.pageSize
+      // adminId: userData?.id,
+      page: page,
+      pageSize: pageLimit
     }
-    dispatch(getAllUsers(payload))
+    //@ts-ignore
+    dispatch(getAllUsers(payload)).then(response => {
+      setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
+    })
   }
   useEffect(() => {
     getUserRolesApiCall()
-  }, [paginationModel?.page, paginationModel?.pageSize, createURole, updateRole])
+  }, [page, pageCount, pageLimit, createURole, updateRole])
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
@@ -172,13 +215,16 @@ const UserList = () => {
             }}
             autoHeight
             rowHeight={62}
-            rows={getUsers ? getUsers : []}
+            rows={getUsers?.data ? getUsers?.data : []}
             columns={columns}
             // checkboxSelection
             disableRowSelectionOnClick
-            pageSizeOptions={[10, 25, 50]}
-            paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel}
+            slots={{
+              footer: CustomPagination
+            }}
+            hideFooterRowCount
+            hideFooterSelectedRowCount
+            hideFooterPagination
           />
         </Card>
       </Grid>

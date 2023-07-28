@@ -127,14 +127,14 @@ const allFarmers = () => {
       flex: 0.25,
       field: 'firstName',
       minWidth: 320,
-      headerName: 'Name',
+      headerName: 'Full Name',
       renderCell: ({ row }: any) => {
-        const { firstName } = row
+        const { firstName, lastName } = row
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {firstName}
+                {firstName} {lastName}
               </Typography>
             </Box>
           </Box>
@@ -144,14 +144,26 @@ const allFarmers = () => {
     {
       flex: 0.2,
       minWidth: 100,
-      field: 'mobileNumber',
-      headerName: 'Phone'
+      field: 'state',
+      headerName: 'State'
+    },
+    {
+      flex: 0.2,
+      minWidth: 100,
+      field: 'district',
+      headerName: 'District'
     },
     {
       flex: 0.2,
       minWidth: 100,
       field: 'villageName',
       headerName: 'Village Name'
+    },
+    {
+      flex: 0.2,
+      minWidth: 100,
+      field: 'mobileNumber',
+      headerName: 'Phone'
     },
     {
       flex: 0.1,
@@ -265,8 +277,5 @@ const allFarmers = () => {
 }
 // action: 'read',
 // subject: 'acl-page',
-allFarmers.acl = {
-  action: 'read',
-  subject: 'farmers'
-}
+
 export default allFarmers

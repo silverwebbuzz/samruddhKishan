@@ -35,11 +35,11 @@ import {
 } from '@mui/material'
 import { useTheme } from '@emotion/react'
 import { AnyAaaaRecord } from 'dns'
-import { Form, Formik } from 'formik'
+import { ErrorMessage, Form, Formik } from 'formik'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
 import { useRouter } from 'next/router'
-
+import * as yup from 'yup'
 // ** Styled Components
 const RegisterIllustration = styled('img')(({ theme }) => ({
   zIndex: 2,
@@ -103,7 +103,17 @@ const Register = () => {
 
   // ** Vars
   const { skin } = settings
-
+  const validationSchema = yup.object().shape({
+    email: yup.string().email('Invalid email').required('Email id is required'),
+    password: yup
+      .string()
+      .required('Password is required')
+      .min(8, 'Password must contain 8 characters')
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+        'Must contain 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special case character'
+      )
+  })
   const imageSource = skin === 'bordered' ? 'image_2023_07_11T06_56_56_991Z (1)' : 'image_2023_07_11T06_56_56_991Z (1)'
   const handleSubmit = (values: any) => {
     const payload = {
@@ -178,7 +188,7 @@ const Register = () => {
                 d='M7.69824 16.4364L12.5199 3.23696L16.5541 7.25596L7.69824 16.4364Z'
               />
               <path
-                fill='#161616'
+                fill='#161616' 
                 opacity={0.06}
                 fillRule='evenodd'
                 clipRule='evenodd'
@@ -205,7 +215,7 @@ const Register = () => {
               <Typography sx={{ color: 'text.secondary' }}>Make your app management easy and fun!</Typography> */}
             </Box>
             <Formik
-              // validationSchema={validationSchema}
+              validationSchema={validationSchema}
               initialValues={{
                 email: '',
                 phone: '',
@@ -234,7 +244,8 @@ const Register = () => {
                     onBlur={handleBlur}
                     value={values?.email}
                     name='email'
-                  />
+                    error={Boolean(errors.email && touched.email)}
+                  />{' '}
                   <TextField
                     fullWidth
                     type='tel'
@@ -265,7 +276,6 @@ const Register = () => {
                       }
                     />
                   </FormControl>
-
                   <Button
                     fullWidth
                     size='large'

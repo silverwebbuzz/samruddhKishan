@@ -50,6 +50,7 @@ const FarmerDetails = () => {
     firstName: getFarmer?.[0]?.firstName,
     middleName: getFarmer?.[0]?.middleName,
     lastName: getFarmer?.[0]?.lastName,
+    wpNumber: getFarmer?.[0]?.wpNumber,
     DOB: getFarmer?.[0]?.DOB,
     aadharNumber: getFarmer?.[0]?.aadharNumber,
     mobileNumber: getFarmer?.[0]?.mobileNumber,
@@ -102,6 +103,7 @@ const FarmerDetails = () => {
       firstName: values?.firstName,
       middleName: values?.middleName,
       lastName: values?.lastName,
+      wpNumber: values?.wpNumber,
       DOB: values?.DOB,
       aadharNumber: values?.aadharNumber,
       mobileNumber: values?.mobileNumber,
@@ -197,9 +199,10 @@ const FarmerDetails = () => {
       setVillageName(getFarmer?.[0]?.villageName)
       setLandDistrict(getFarmer?.[0]?.landDistrict)
       setUrl(getFarmer?.[0]?.file)
+      setFile(getFarmer?.[0]?.file)
     }, 1000)
     return () => clearTimeout(timer)
-  }, [getFarmer?.[0]?.state, getFarmer?.[0]?.taluka, getFarmer?.[0]?.pinCode])
+  }, [getFarmer?.[0]?.state, getFarmer?.[0]?.taluka, getFarmer?.[0]?.pinCode, getFarmer?.[0]?.landDistrict])
 
   function removeDuplicatesTaluka(getAddressByPinCodeData) {
     const unique = getAddressByPinCodeData?.[0]?.PostOffice?.filter(
@@ -220,15 +223,7 @@ const FarmerDetails = () => {
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={values => {
-            if (values?.appliedForSoilTesting === 'yes') {
-              if (url?.length > 0) {
-                handleSubmit(values)
-              } else if (file?.length > 0) {
-                handleSubmit(values)
-              }
-            } else if (values?.appliedForSoilTesting === 'no') {
-              handleSubmit(values)
-            }
+            handleSubmit(values)
           }}
         >
           {({ values, handleChange, handleBlur, errors, touched, setFieldValue }) => (
@@ -348,6 +343,23 @@ const FarmerDetails = () => {
                       placeholder='Mobile Number'
                     />
                     <ErrorMessage name='mobileNumber' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                  </Grid>
+                  <Grid item sm={6} xs={12}>
+                    <TextField
+                      value={values?.wpNumber}
+                      name='wpNumber'
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      type='number'
+                      error={Boolean(errors.wpNumber && touched.wpNumber)}
+                      fullWidth
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                      label='Whatsapp Number *'
+                      placeholder='Whatsapp Number'
+                    />
+                    <ErrorMessage name='wpNumber' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                   </Grid>
                   <Grid item sm={6} xs={12}>
                     <TextField
@@ -493,20 +505,6 @@ const FarmerDetails = () => {
                   </Grid>
 
                   <Grid item sm={6} xs={12}>
-                    <TextField
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                      value={values?.caste}
-                      name='caste'
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      fullWidth
-                      label='Caste'
-                      placeholder='caste'
-                    />
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
                     {' '}
                     <TextField
                       value={values?.religion}
@@ -534,9 +532,9 @@ const FarmerDetails = () => {
                     >
                       <FormControlLabel value='male' control={<Radio />} label='Male' />
                       <FormControlLabel value='female' control={<Radio />} label='Female' />
-                      <FormControlLabel value='both' control={<Radio />} label='Both' />
                     </RadioGroup>
                   </Grid>
+                  {console.log('values?.gender#########', values?.gender)}
                   <Grid item sm={6} xs={12}>
                     <Typography variant='body1' sx={{ fontWeight: 500, color: 'text.primary' }}>
                       Marital Status
@@ -792,7 +790,7 @@ const FarmerDetails = () => {
                   </Grid>
                   <Grid item sm={6} xs={12}>
                     <Typography variant='body1' sx={{ fontWeight: 500, color: 'text.primary' }}>
-                      Soil sample collected ?{' '}
+                      Upload Land Document
                     </Typography>
                     <RadioGroup
                       row
@@ -810,7 +808,7 @@ const FarmerDetails = () => {
                       <Grid item sm={6} xs={12}></Grid>
                       <Grid item sm={6} xs={12}>
                         <Typography variant='body1' sx={{ fontWeight: 500, color: 'text.primary' }}>
-                          {url?.length >= 0 ? 'Alredy uploaded your soil report ' : 'Uploaded your soil report '}
+                          {url?.length >= 0 ? 'Alredy Uploaded Your Land Document ' : 'Uploaded Your Land Document'}
                         </Typography>
                         <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
                           <Button
@@ -823,15 +821,15 @@ const FarmerDetails = () => {
                               }
                             }}
                           >
-                            Update Soil Report
+                            Upload Land Document
                             <input type='file' hidden onChange={e => handleFile(e)} />
                           </Button>
                         </Box>
-                        {values?.appliedForSoilTesting === 'yes' && url?.length <= 0 ? (
+                        {/* {values?.appliedForSoilTesting === 'yes' && url?.length <= 0 ? (
                           file?.length <= 0 ? (
                             <div style={{ color: 'red' }}>{'please select image'}</div>
                           ) : null
-                        ) : null}
+                        ) : null} */}
                       </Grid>
                     </>
                   ) : null}

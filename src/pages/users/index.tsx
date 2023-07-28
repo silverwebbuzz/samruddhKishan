@@ -18,8 +18,16 @@ import Icon from 'src/@core/components/icon'
 // ** Third Party Imports
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
-import { Button, Chip, Dialog, Divider, FormControl, InputLabel, MenuItem, Select } from '@mui/material'
-import { getAdressByPincode, getAllDistrict, getAllState, getAllUsers, getRoleAndPermissions } from 'src/slice/farmers'
+import { Button, Chip, Dialog, Divider, FormControl, InputLabel, MenuItem, Pagination, Select } from '@mui/material'
+import {
+  createUser1,
+  getAdressByPincode,
+  getAllDistrict,
+  getAllState,
+  getAllUsers,
+  getRoleAndPermissions,
+  updateUser1
+} from 'src/slice/farmers'
 import { AppDispatch } from 'src/store/store'
 import { Ref, forwardRef, ReactElement } from 'react'
 import Fade, { FadeProps } from '@mui/material/Fade'
@@ -47,40 +55,102 @@ const allUsers = () => {
   const router = useRouter()
   const [pincode, setPincode] = useState('')
   const [STATE, setSTATE] = useState('')
+  const [district, setDistrict] = useState('')
+  const [village, setVillage] = useState('')
 
+  const [page, setPage] = useState<number>(1)
+  const [pageCount, setPageCount] = useState<number>(1)
+  const [pageLimit, setPageLimit] = useState<number>(10)
+  const [editPrefillData, setEditPrefillData] = useState('')
   const dispatch = useDispatch<AppDispatch>()
   const [open, setOpen] = useState<boolean>(false)
-  const handleClickOpen = () => setOpen(true)
-  const initialValues = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    phone: '',
-    state: '',
-    district: '',
-    taluka: '',
-    villageName: '',
-    roleType: ''
+  const [showEdit, setShowEdit] = useState<boolean>(false)
+
+  const handleClickOpen = () => {
+    setEditPrefillData('')
+    setPincode('')
+    setOpen(true)
+  }
+  const initialValues = showEdit
+    ? {
+        firstName: editPrefillData?.firstName,
+        lastName: editPrefillData?.lastName,
+        email: editPrefillData?.email,
+        password: '',
+        phone: editPrefillData?.phone,
+        state: editPrefillData?.state,
+        district: editPrefillData?.city,
+        taluka: editPrefillData?.taluka,
+        villageName: editPrefillData?.villageName,
+        role: editPrefillData?.role
+      }
+    : {
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        phone: '',
+        state: '',
+        district: '',
+        taluka: '',
+        villageName: '',
+        role: ''
+      }
+  const handleChange = (event: ChangeEvent<unknown>, value: number) => {
+    setPage(value)
+  }
+  const CustomPagination = () => {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'right',
+          alignItems: 'center',
+          padding: '1rem'
+        }}
+      >
+        <label>Row per page</label>
+        <FormControl sx={{ m: 1, width: '60px' }}>
+          <Select
+            size='small'
+            defaultValue='10'
+            value={pageLimit}
+            onChange={(e: any) => {
+              setPageLimit(e?.target?.value)
+              setPage(1)
+            }}
+          >
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={20}>20</MenuItem>
+            <MenuItem value={30}>30</MenuItem>
+          </Select>
+        </FormControl>
+
+        <Pagination count={pageCount} page={page} onChange={handleChange} />
+      </Box>
+    )
   }
 
   useEffect(() => {
     //@ts-ignore
     const userData: any = JSON.parse(localStorage.getItem('userData'))
     let payload = {
-      //   adminId: userData?.id,
-      page: paginationModel?.page + 1,
-      pageSize: paginationModel?.pageSize
+      // adminId: userData?.id,
+      page: page,
+      pageSize: pageLimit
     }
     //@ts-ignore
-    dispatch(getAllUsers(payload))
+    dispatch(getAllUsers(payload)).then(response => {
+      setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
+    })
     // localStorage.removeItem('FarmerData')
-  }, [paginationModel?.page, paginationModel?.pageSize])
+  }, [page, pageCount, pageLimit])
 
   const handleSearch = () => {}
   const handleEdit = (row: any) => {
-    // localStorage.setItem('FarmerData', JSON.stringify(row?.id))
-    // router.push('/edit-farmer')
+    setOpen(true)
+    setShowEdit(true)
+    setEditPrefillData(row && row)
   }
   const handleClose = () => {
     setOpen(false)
@@ -92,6 +162,7 @@ const allUsers = () => {
     }
     dispatch(getAdressByPincode(payload))
   }
+
   useEffect(() => {
     dispatch(getAllState())
     dispatch(getRoleAndPermissions())
@@ -134,13 +205,13 @@ const allUsers = () => {
     {
       flex: 0.2,
       minWidth: 100,
-      field: 'mobileNumber',
+      field: 'phone',
       headerName: 'Phone'
     },
     {
       flex: 0.2,
       minWidth: 100,
-      field: 'villageName',
+      field: 'village',
       headerName: 'Village Name'
     },
     {
@@ -157,7 +228,17 @@ const allUsers = () => {
             </IconButton>
           </Tooltip>
           <Tooltip title='Edit'>
-            <IconButton size='small' sx={{ color: 'text.secondary' }} onClick={() => handleEdit(row)}>
+            <IconButton
+              size='small'
+              sx={{ color: 'text.secondary' }}
+              onClick={() => {
+                handleEdit(row)
+                setSTATE(row?.state && row?.state)
+                setDistrict(row?.city && row?.city)
+                setVillage(row?.village && row?.village)
+                setPincode(row?.pincode && row?.pincode)
+              }}
+            >
               <Icon icon='tabler:edit' />
             </IconButton>
           </Tooltip>
@@ -165,6 +246,28 @@ const allUsers = () => {
       )
     }
   ]
+
+  const handleSubmit = (values: any) => {
+    let payload = {
+      firstName: values?.firstName,
+      lastName: values?.lastName,
+      email: values?.email,
+      password: editPrefillData?.password,
+      phone: values?.phone,
+      state: values?.state,
+      city: values?.district,
+      taluka: values?.taluka,
+      village: values?.villageName,
+      role: values?.role
+    }
+    if (showEdit) {
+      payload.id = editPrefillData?.id
+      dispatch(updateUser1(payload))
+    } else {
+      dispatch(createUser1(payload))
+    }
+    handleClose()
+  }
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
@@ -229,23 +332,26 @@ const allUsers = () => {
             }}
             autoHeight
             pagination
-            rowHeight={62}
-            rowCount={getUsers?.totalItems}
-            rows={getUsers && getUsers ? getUsers : []}
+            // rowHeight={62}
+            // rowCount={getUsers?.totalItems}
+            rows={getUsers?.data && getUsers?.data ? getUsers?.data : []}
             columns={columns}
-            pageSizeOptions={[10, 25, 50]}
-            paginationModel={paginationModel}
-            disableRowSelectionOnClick
-            onPaginationModelChange={setPaginationModel}
+            slots={{
+              footer: CustomPagination
+            }}
+            hideFooterRowCount
+            hideFooterSelectedRowCount
+            hideFooterPagination
           />
         </Card>
+        {/* <UserEditDialog /> */}
         <Dialog fullWidth maxWidth='md' scroll='body' onClose={handleClose} open={open}>
           <Formik
             enableReinitialize
             initialValues={initialValues}
             // validationSchema={validationSchema}
             onSubmit={values => {
-              console.log('object', values)
+              handleSubmit(values)
             }}
           >
             {({ values, handleChange, handleBlur, errors, touched, setFieldValue }) => (
@@ -377,10 +483,13 @@ const allUsers = () => {
                               labelId='demo-simple-select-label'
                               id='demo-simple-select'
                               name='district'
-                              disabled={STATE.length <= 0}
-                              value={values?.district}
+                              disabled={STATE?.length <= 0}
+                              value={district}
                               label='district'
-                              onChange={handleChange}
+                              onChange={(e: any) => {
+                                setFieldValue('district', e?.target?.value)
+                                setDistrict(e?.target?.value)
+                              }}
                             >
                               {allDistrict?.map((name: any) => (
                                 <MenuItem key={name?.name} value={name?.name}>
@@ -397,6 +506,7 @@ const allUsers = () => {
                           name='pinCode'
                           onChange={e => {
                             handlePincode(e.target.value)
+                            setPincode(e.target.value)
                           }}
                           fullWidth
                           label='Pin Code'
@@ -406,9 +516,9 @@ const allUsers = () => {
                       <Grid item sm={6} xs={12}>
                         <Tooltip
                           title='Please enter pincode first'
-                          disableFocusListener={!(pincode.length <= 0)}
-                          disableHoverListener={!(pincode.length <= 0)}
-                          disableTouchListener={!(pincode.length <= 0)}
+                          disableFocusListener={!(pincode?.length <= 0)}
+                          disableHoverListener={!(pincode?.length <= 0)}
+                          disableTouchListener={!(pincode?.length <= 0)}
                         >
                           <FormControl fullWidth>
                             <InputLabel id='demo-simple-select-label'>taluka</InputLabel>
@@ -416,7 +526,7 @@ const allUsers = () => {
                               labelId='demo-simple-select-label'
                               id='demo-simple-select'
                               name='taluka'
-                              disabled={pincode.length <= 0}
+                              disabled={pincode?.length <= 0}
                               value={values?.taluka && values?.taluka}
                               label='taluka'
                               onChange={handleChange}
@@ -434,9 +544,9 @@ const allUsers = () => {
                       <Grid item sm={6} xs={12}>
                         <Tooltip
                           title='Please enter pincode first'
-                          disableFocusListener={!(pincode.length <= 0)}
-                          disableHoverListener={!(pincode.length <= 0)}
-                          disableTouchListener={!(pincode.length <= 0)}
+                          disableFocusListener={!(pincode?.length <= 0)}
+                          disableHoverListener={!(pincode?.length <= 0)}
+                          disableTouchListener={!(pincode?.length <= 0)}
                         >
                           <FormControl fullWidth>
                             <InputLabel id='demo-simple-select-label'>Village Name</InputLabel>
@@ -444,12 +554,16 @@ const allUsers = () => {
                               labelId='demo-simple-select-label'
                               id='demo-simple-select'
                               name='villageName'
-                              disabled={pincode.length <= 0}
-                              value={values?.villageName && values?.villageName}
+                              disabled={pincode?.length <= 0}
+                              value={village}
                               label='villageName'
-                              onChange={handleChange}
+                              // onChange={handleChange}
+                              onChange={e => {
+                                setFieldValue('villageName', e.target.value)
+                                setVillage(e.target.value)
+                              }}
                             >
-                              {getAddressByPinCodeData?.[0]?.PostOffice?.map(name => (
+                              {getAddressByPinCodeData?.[0]?.PostOffice?.map((name: any) => (
                                 <MenuItem key={name?.Name} value={name?.Name}>
                                   {name?.Name}
                                 </MenuItem>
@@ -464,9 +578,9 @@ const allUsers = () => {
                           <Select
                             labelId='demo-simple-select-label'
                             id='demo-simple-select'
-                            name='district'
-                            value={values?.district}
-                            label='district'
+                            name='role'
+                            value={values?.role}
+                            label='Role'
                             onChange={handleChange}
                           >
                             {getRoles?.map((Item: any) => (
