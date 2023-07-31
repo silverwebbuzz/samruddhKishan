@@ -131,7 +131,7 @@ const Register = () => {
       })
       .then(async response => {
         if (response?.data?.status === 200) {
-          router.push('/super-admin/login')
+          router.push('/login')
           toast.success('User Created successfully')
         } else if (response?.data?.status === 401) {
           toast.error(response.data.message)
@@ -203,7 +203,7 @@ const Register = () => {
             </svg> */}
             <Box sx={{ my: 6, textAlign: 'center' }}>
               <img
-                src='/images/pages/samrudh-kisaan-logo__2_-removebg-preview (1).png'
+                src='/images/pages/logo1234.png'
                 style={{
                   height: 'auto',
                   width: '209px'

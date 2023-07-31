@@ -33,6 +33,8 @@ import { Ref, forwardRef, ReactElement } from 'react'
 import Fade, { FadeProps } from '@mui/material/Fade'
 import { useRouter } from 'next/router'
 import { ErrorMessage, Form, Formik } from 'formik'
+import DeleteDialog from 'src/views/deleteDialogBox/deleteDialogBox'
+import { toast } from 'react-hot-toast'
 
 export type Payload = {
   id?: number
@@ -48,35 +50,51 @@ const Transition = forwardRef(function Transition(
 })
 const allUsers = () => {
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
-  const { getUsers, getRoles, getAddressByPinCodeData, allDistrict, allState } = useSelector(
-    (state: any) => state?.rootReducer?.farmerReducer
-  )
+  const {
+    getUsers,
+    getRoles,
+    getAddressByPinCodeData,
+    allDistrict,
+    allState,
+    deleteUser,
+    updateUsers12,
+    createUser12
+  } = useSelector((state: any) => state?.rootReducer?.farmerReducer)
   const [search, setSearch] = useState<string>('')
   const router = useRouter()
   const [pincode, setPincode] = useState('')
   const [STATE, setSTATE] = useState('')
   const [district, setDistrict] = useState('')
   const [village, setVillage] = useState('')
+  const [rolePrefill, setRolePrefill] = useState('')
+
+  // const [taluka, setTaluka] = useState('')
 
   const [page, setPage] = useState<number>(1)
   const [pageCount, setPageCount] = useState<number>(1)
   const [pageLimit, setPageLimit] = useState<number>(10)
   const [editPrefillData, setEditPrefillData] = useState('')
+  const [errorMsg, setErrorMsg] = useState('')
+
   const dispatch = useDispatch<AppDispatch>()
   const [open, setOpen] = useState<boolean>(false)
   const [showEdit, setShowEdit] = useState<boolean>(false)
-
+  const [DeleteID, setDeleteID] = useState()
+  const [openDelete, setOpenDelete] = useState<boolean>(false)
+  const [delelteField, setDelelteField] = useState<string>('')
   const handleClickOpen = () => {
     setEditPrefillData('')
     setPincode('')
     setOpen(true)
   }
+
+  const handleClickOpenDelete = () => setOpenDelete(true)
   const initialValues = showEdit
     ? {
         firstName: editPrefillData?.firstName,
         lastName: editPrefillData?.lastName,
         email: editPrefillData?.email,
-        password: '',
+        password: editPrefillData?.password,
         phone: editPrefillData?.phone,
         state: editPrefillData?.state,
         district: editPrefillData?.city,
@@ -144,7 +162,7 @@ const allUsers = () => {
       setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
     })
     // localStorage.removeItem('FarmerData')
-  }, [page, pageCount, pageLimit])
+  }, [page, pageCount, pageLimit, deleteUser, updateUsers12, createUser12])
 
   const handleSearch = () => {}
   const handleEdit = (row: any) => {
@@ -155,6 +173,9 @@ const allUsers = () => {
   const handleClose = () => {
     setOpen(false)
   }
+  const handleDeleteClose = () => {
+    setOpenDelete(false)
+  }
   const handlePincode = (e: any) => {
     setPincode(e)
     let payload = {
@@ -163,6 +184,21 @@ const allUsers = () => {
     dispatch(getAdressByPincode(payload))
   }
 
+  const pincodeAutoCall = () => {
+    let payload = {
+      pincode: pincode ? pincode : ''
+    }
+    getAdressByPincode(payload)
+  }
+  useEffect(() => {
+    if (pincode) {
+      pincodeAutoCall()
+    }
+  }, [pincode])
+
+  useEffect(() => {
+    dispatch(getAllState())
+  }, [])
   useEffect(() => {
     dispatch(getAllState())
     dispatch(getRoleAndPermissions())
@@ -223,7 +259,15 @@ const allUsers = () => {
       renderCell: ({ row }: any) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Tooltip title='Delete'>
-            <IconButton size='small' sx={{ color: 'text.secondary' }}>
+            <IconButton
+              size='small'
+              sx={{ color: 'text.secondary' }}
+              onClick={() => {
+                handleClickOpenDelete()
+                setDeleteID(row?.id)
+                setDelelteField(row?.firstName + ' ' + row?.lastName)
+              }}
+            >
               <Icon icon='tabler:trash' />
             </IconButton>
           </Tooltip>
@@ -232,11 +276,13 @@ const allUsers = () => {
               size='small'
               sx={{ color: 'text.secondary' }}
               onClick={() => {
+                pincodeAutoCall()
                 handleEdit(row)
                 setSTATE(row?.state && row?.state)
                 setDistrict(row?.city && row?.city)
+                setPincode(row?.pinCode && row?.pinCode)
+                setRolePrefill(row?.role && row?.role)
                 setVillage(row?.village && row?.village)
-                setPincode(row?.pincode && row?.pincode)
               }}
             >
               <Icon icon='tabler:edit' />
@@ -252,21 +298,29 @@ const allUsers = () => {
       firstName: values?.firstName,
       lastName: values?.lastName,
       email: values?.email,
-      password: editPrefillData?.password,
+      password: values?.password,
       phone: values?.phone,
       state: values?.state,
       city: values?.district,
       taluka: values?.taluka,
       village: values?.villageName,
+      pinCode: pincode,
       role: values?.role
     }
     if (showEdit) {
       payload.id = editPrefillData?.id
       dispatch(updateUser1(payload))
+      handleClose()
     } else {
-      dispatch(createUser1(payload))
+      dispatch(createUser1(payload)).then(res => {
+        if (res?.payload?.message == 'Email Already Exist') {
+          setErrorMsg('Email already exists')
+        } else {
+          setErrorMsg('')
+          handleClose()
+        }
+      })
     }
-    handleClose()
   }
   return (
     <Grid container spacing={6}>
@@ -317,7 +371,9 @@ const allUsers = () => {
                   backgroundColor: '#5E7954'
                 }
               }}
-              onClick={() => handleClickOpen()}
+              onClick={() => {
+                handleClickOpen(), setShowEdit(false), setRolePrefill(''), setDistrict('')
+              }}
             >
               Add User
             </Button>
@@ -422,7 +478,8 @@ const allUsers = () => {
                           label='email'
                           placeholder='email'
                         />
-                        <ErrorMessage name='lastName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                        <ErrorMessage name='email' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                        {errorMsg !== '' ? <div style={{ color: 'red' }}>{errorMsg}</div> : null}
                       </Grid>
                       <Grid item sm={6} xs={12}>
                         <TextField
@@ -513,7 +570,7 @@ const allUsers = () => {
                           placeholder='Pin Code'
                         />
                       </Grid>
-                      <Grid item sm={6} xs={12}>
+                      {/* <Grid item sm={6} xs={12}>
                         <Tooltip
                           title='Please enter pincode first'
                           disableFocusListener={!(pincode?.length <= 0)}
@@ -540,7 +597,7 @@ const allUsers = () => {
                             </Select>
                           </FormControl>
                         </Tooltip>
-                      </Grid>
+                      </Grid> */}
                       <Grid item sm={6} xs={12}>
                         <Tooltip
                           title='Please enter pincode first'
@@ -555,7 +612,7 @@ const allUsers = () => {
                               id='demo-simple-select'
                               name='villageName'
                               disabled={pincode?.length <= 0}
-                              value={village}
+                              value={village && village}
                               label='villageName'
                               // onChange={handleChange}
                               onChange={e => {
@@ -579,9 +636,12 @@ const allUsers = () => {
                             labelId='demo-simple-select-label'
                             id='demo-simple-select'
                             name='role'
-                            value={values?.role}
+                            value={rolePrefill}
                             label='Role'
-                            onChange={handleChange}
+                            onChange={e => {
+                              setFieldValue('role', e?.target?.value)
+                              setRolePrefill(e.target.value)
+                            }}
                           >
                             {getRoles?.map((Item: any) => (
                               <MenuItem key={Item?.roleType} value={Item?.roleType}>
@@ -618,6 +678,15 @@ const allUsers = () => {
           </Formik>
         </Dialog>
       </Grid>
+      <DeleteDialog
+        open={openDelete}
+        setOpen={setOpenDelete}
+        handleClickOpen={handleClickOpenDelete}
+        handleClose={handleDeleteClose}
+        type='users'
+        delelteField={delelteField}
+        id={DeleteID}
+      />
     </Grid>
   )
 }

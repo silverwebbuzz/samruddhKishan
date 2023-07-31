@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useEffect, useCallback, FormEvent } from 'react'
+import { useState, useEffect, useCallback, FormEvent, ChangeEvent } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -38,6 +38,7 @@ import { useSelector } from 'react-redux'
 import { ErrorMessage, Form, Formik } from 'formik'
 import * as yup from 'yup'
 import { FormControl, MenuItem, Pagination, Select } from '@mui/material'
+import DeleteDialog from 'src/views/deleteDialogBox/deleteDialogBox'
 
 interface Colors {
   [key: string]: ThemeColor
@@ -77,10 +78,12 @@ const PermissionsTable = () => {
   const [value, setValue] = useState<string>('')
   const [editValue, setEditValue] = useState<any>('')
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false)
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
-  const { createPermission, getPermission, updatePermission } = useSelector(
+  const { createPermission, getPermission, updatePermission, deletePermission } = useSelector(
     (state: any) => state?.rootReducer?.farmerReducer
   )
+  const [DeleteID, setDeleteID] = useState('')
+  const [open, setOpen] = useState<boolean>(false)
+  const [delelteField, setDelelteField] = useState<string>('')
   const [page, setPage] = useState<number>(1)
   const [pageCount, setPageCount] = useState<number>(1)
   const [pageLimit, setPageLimit] = useState<number>(10)
@@ -129,7 +132,8 @@ const PermissionsTable = () => {
     setEditValue(row)
     setEditDialogOpen(true)
   }
-
+  const handleClickOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
   const handleDialogToggle = () => setEditDialogOpen(!editDialogOpen)
 
   const handleSubmit = (values: any) => {
@@ -154,7 +158,13 @@ const PermissionsTable = () => {
           <IconButton onClick={() => handleEditPermission(row)}>
             <Icon icon='tabler:edit' />
           </IconButton>
-          <IconButton>
+          <IconButton
+            onClick={() => {
+              handleClickOpen()
+              setDeleteID(row?.id)
+              setDelelteField(row?.moduleName)
+            }}
+          >
             <Icon icon='tabler:trash' />
           </IconButton>
         </Box>
@@ -173,7 +183,7 @@ const PermissionsTable = () => {
   }
   useEffect(() => {
     getAllPermitionApiCall()
-  }, [page, pageCount, pageLimit, createPermission, updatePermission])
+  }, [page, pageCount, pageLimit, createPermission, updatePermission, deletePermission])
 
   return (
     <>
@@ -215,6 +225,15 @@ const PermissionsTable = () => {
             />
           </Card>
         </Grid>
+        <DeleteDialog
+          open={open}
+          setOpen={setOpen}
+          handleClickOpen={handleClickOpen}
+          handleClose={handleClose}
+          type='permissions'
+          delelteField={delelteField}
+          id={DeleteID}
+        />
       </Grid>
       <Dialog maxWidth='sm' fullWidth onClose={handleDialogToggle} open={editDialogOpen}>
         <DialogTitle

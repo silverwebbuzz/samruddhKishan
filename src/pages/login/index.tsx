@@ -148,7 +148,7 @@ const LoginPage = () => {
           >
             <Box sx={{ my: 6, textAlign: 'center' }}>
               <img
-                src='/images/pages/samrudh-kisaan-logo__2_-removebg-preview (1).png'
+                src='/images/pages/logo1234.png'
                 style={{
                   height: 'auto',
                   width: '209px'
@@ -175,7 +175,7 @@ const LoginPage = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       error={Boolean(errors.email && touched.email)}
-                      placeholder='admin@gmail.com'
+                      placeholder='User@gmail.com'
                       InputProps={{
                         //@ts-ignore
                         startAdornment: (
@@ -229,13 +229,13 @@ const LoginPage = () => {
                   >
                     Login
                   </Button>
-                  <Box>
+                  {/* <Box>
                     <Box sx={{ padding: '0.5rem 2rem' }}>
                       <Typography gutterBottom sx={{ padding: '0 1rem' }} align='center' variant='body2'>
                         Don't have an accout?<LinkStyled href='/register'> Join Now</LinkStyled>
                       </Typography>
                     </Box>
-                  </Box>
+                  </Box> */}
                 </Form>
               )}
             </Formik>

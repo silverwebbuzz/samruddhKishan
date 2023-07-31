@@ -82,19 +82,21 @@ const FarmerDetails = () => {
   const validationSchema = yup.object().shape({
     firstName: yup.string().required('First name  is required'),
     middleName: yup.string().required('Middle name is required'),
+    lastName: yup.string().required('Last name is required'),
+    // pinCode: yup.string().required('pinCode is required'),
     mobileNumber: yup
       .string()
-      .min(10, 'mobile number contain maximum 10 digit')
-      .max(10, 'mobile number contain maximum 10 digit'),
-    lastName: yup.string().required('Last name is required'),
+      .required('Mobile number is required')
+      // .min(10)
+      .matches(/^ *(?:0 *[23478](?: *\d){8}|[1-9](?: *\d)*|0 *[01569](?: *\d)*) *$/, 'Phone number is not valid'),
+
     aadharNumber: yup
       .string()
       .required('Adhar number is required')
       .matches(
         /^([0-9]{4}[0-9]{4}[0-9]{4}$)|([0-9]{4}\s[0-9]{4}\s[0-9]{4}$)|([0-9]{4}-[0-9]{4}-[0-9]{4}$)/,
         'please enter a valid adhar number'
-      ),
-    appliedForSoilTesting: yup.string().required('Periods of bond is required')
+      )
   })
   const handleSubmit = (values: any) => {
     const userData: any = JSON.parse(localStorage.getItem('userData'))
@@ -130,17 +132,36 @@ const FarmerDetails = () => {
       farmerLandOwnershipType: values?.farmerLandOwnershipType,
       appliedForSoilTesting: values?.appliedForSoilTesting === 'yes' ? 1 : 0
     }
-    if (getFarmer?.[0]?.id) {
-      payload.id = getFarmer?.[0]?.id
-      dispatch(updateFarmer(payload))
-      if (file?.length > 0) {
-        let payload = {
-          id: getFarmer?.[0]?.id,
-          file: file
+
+    if (userData?.role === 'admin') {
+      payload.adminId = userData?.id
+      if (getFarmer?.[0]?.id) {
+        payload.id = getFarmer?.[0]?.id
+        dispatch(updateFarmer(payload))
+        if (file?.length > 0) {
+          let payload = {
+            id: getFarmer?.[0]?.id,
+            file: file
+          }
+          dispatch(uploadImage(payload))
         }
-        dispatch(uploadImage(payload))
+        router.push('/farmers')
       }
-      router.push('/farmers')
+    } else {
+      payload.referralId = userData?.id
+      payload.referralName = userData?.role
+      if (getFarmer?.[0]?.id) {
+        payload.id = getFarmer?.[0]?.id
+        dispatch(updateFarmer(payload))
+        if (file?.length > 0) {
+          let payload = {
+            id: getFarmer?.[0]?.id,
+            file: file
+          }
+          dispatch(uploadImage(payload))
+        }
+        router.push('/farmers')
+      }
     }
   }
 
@@ -526,15 +547,14 @@ const FarmerDetails = () => {
                     <RadioGroup
                       row
                       aria-label='controlled'
-                      value={values?.gender}
+                      value={values?.gender && values?.gender}
                       name='gender'
                       onChange={handleChange}
                     >
-                      <FormControlLabel value='male' control={<Radio />} label='Male' />
-                      <FormControlLabel value='female' control={<Radio />} label='Female' />
+                      <FormControlLabel value='male' control={<Radio value='male' />} label='Male' />
+                      <FormControlLabel value='female' control={<Radio value='female' />} label='Female' />
                     </RadioGroup>
                   </Grid>
-                  {console.log('values?.gender#########', values?.gender)}
                   <Grid item sm={6} xs={12}>
                     <Typography variant='body1' sx={{ fontWeight: 500, color: 'text.primary' }}>
                       Marital Status
@@ -542,12 +562,12 @@ const FarmerDetails = () => {
                     <RadioGroup
                       row
                       aria-label='controlled'
-                      value={values?.maritalStatus}
+                      value={values?.maritalStatus && values?.maritalStatus}
                       name='maritalStatus'
                       onChange={handleChange}
                     >
-                      <FormControlLabel value='single' control={<Radio />} label='Single' />
-                      <FormControlLabel value='married' control={<Radio />} label='Married' />
+                      <FormControlLabel value='single' control={<Radio value='single' />} label='Single' />
+                      <FormControlLabel value='married' control={<Radio value='married' />} label='Married' />
                     </RadioGroup>
                   </Grid>
                 </Grid>

@@ -109,7 +109,6 @@ const RolesCards = () => {
         roleType: values.roleName,
         rolePermission: selectedCheckbox
       }
-      console.log(payload)
       dispatch(updateRoles(payload)).then((res: any) => {
         setSelectedCheckbox([])
         handleClose()

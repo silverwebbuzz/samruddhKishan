@@ -143,7 +143,7 @@ const LoginPage = () => {
           >
             <Box sx={{ my: 6, textAlign: 'center' }}>
               <img
-                src='/images/pages/samrudh-kisaan-logo__2_-removebg-preview (1).png'
+                src='/images/pages/logo1234.png'
                 style={{
                   height: 'auto',
                   width: '209px'
@@ -170,7 +170,7 @@ const LoginPage = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       error={Boolean(errors.email && touched.email)}
-                      placeholder='admin@gmail.com'
+                      placeholder='Superadmin@gmail.com'
                       InputProps={{
                         //@ts-ignore
                         startAdornment: (

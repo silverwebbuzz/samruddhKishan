@@ -1,6 +1,7 @@
 //@ts-nocheck
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
+import { toast } from 'react-hot-toast'
 let TOKEN = null
 if (typeof window !== 'undefined') {
   TOKEN = localStorage.getItem('accessToken')
@@ -29,8 +30,10 @@ interface RootState {
   updatePermission: Array<any>
   getUsers: Array<any>
   allUsers: Array<any>
-  createUser1: Array<any>
-  updateUsers1: Array<any>
+  createUser12: Array<any>
+  updateUsers12: Array<any>
+  deleteUser: Array<any>
+  deletePermission: Array<any>
   isLoading: boolean
 }
 const initialState: RootState = {
@@ -51,8 +54,10 @@ const initialState: RootState = {
   createPermission: [],
   updatePermission: [],
   allUsers: [],
-  createUser1: [],
-  updateUsers1: [],
+  createUser12: [],
+  updateUsers12: [],
+  deleteUser: [],
+  deletePermission: [],
   isLoading: false
 }
 export const getAllFarmers = createAsyncThunk('farmers/getAllFarmers', async (payload: any, { rejectWithValue }) => {
@@ -80,7 +85,7 @@ export const createUser1 = createAsyncThunk('farmers/createUser', async (payload
     const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/user/createUsers`, payload, {
       headers
     })
-    return res?.data?.data
+    return res?.data
   } catch (err: any) {
     return rejectWithValue(err?.response?.data)
   }
@@ -130,9 +135,10 @@ export const updateFarmer = createAsyncThunk('farmer/updateFarmer', async (paylo
 })
 export const deleteFarmer = createAsyncThunk('farmer/deleteFarmer', async (payload: any, { rejectWithValue }) => {
   try {
-    const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/farmer/deleteFarmer/${payload?.id}`, {
+    const res = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/farmer/deleteFarmer/${payload?.id}`, {
       headers
     })
+    res?.data?.status === 200 ? toast.success('Farmer deleted successfully') : toast.error('Somthing went wrong')
     return res?.data?.data
   } catch (err: any) {
     return rejectWithValue(err?.response?.data)
@@ -266,6 +272,32 @@ export const updateRoles = createAsyncThunk('farmer/updateRoles', async (payload
     return rejectWithValue(err?.response?.data)
   }
 })
+export const deleteUser = createAsyncThunk('farmer/deleteUsers', async (payload: any, { rejectWithValue }) => {
+  try {
+    const res = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/user/deleteUsers/${payload?.id}`, {
+      headers
+    })
+    res?.data?.status === 200 ? toast.success('user deleted successfully') : toast.error('Somthing went wrong')
+    return res?.data?.data
+  } catch (err: any) {
+    return rejectWithValue(err?.response?.data)
+  }
+})
+
+export const deletePermissions = createAsyncThunk(
+  'farmer/deletePermissions',
+  async (payload: any, { rejectWithValue }) => {
+    try {
+      const res = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/permission/deletePermission/${payload?.id}`, {
+        headers
+      })
+      res?.data?.status === 200 ? toast.success('Permission deleted successfully') : toast.error('Somthing went wrong')
+      return res?.data?.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response?.data)
+    }
+  }
+)
 
 // Company Profile slice
 export const farmersSlice = createSlice({
@@ -442,7 +474,7 @@ export const farmersSlice = createSlice({
     })
     builder.addCase(createUser1.fulfilled, (state, action) => {
       state.isLoading = false
-      state.createUser1 = action.payload
+      state.createUser12 = action.payload
     })
     builder.addCase(createUser1.rejected, state => {
       state.isLoading = false
@@ -452,9 +484,29 @@ export const farmersSlice = createSlice({
     })
     builder.addCase(updateUser1.fulfilled, (state, action) => {
       state.isLoading = false
-      state.updateUsers1 = action.payload
+      state.updateUsers12 = action.payload
     })
     builder.addCase(updateUser1.rejected, state => {
+      state.isLoading = false
+    })
+    builder.addCase(deleteUser.pending, state => {
+      state.isLoading = true
+    })
+    builder.addCase(deleteUser.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.deleteUser = action.payload
+    })
+    builder.addCase(deleteUser.rejected, state => {
+      state.isLoading = false
+    })
+    builder.addCase(deletePermissions.pending, state => {
+      state.isLoading = true
+    })
+    builder.addCase(deletePermissions.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.deletePermission = action.payload
+    })
+    builder.addCase(deletePermissions.rejected, state => {
       state.isLoading = false
     })
   }

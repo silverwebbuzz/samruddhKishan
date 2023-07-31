@@ -116,9 +116,7 @@ const FarmerDetails = () => {
     mobileNumber: yup
       .string()
       .required('Mobile number is required')
-      // .min(10)
       .matches(/^ *(?:0 *[23478](?: *\d){8}|[1-9](?: *\d)*|0 *[01569](?: *\d)*) *$/, 'Phone number is not valid'),
-    // .required('Mobile number is required'),
     aadharNumber: yup
       .string()
       .required('Adhar number is required')
@@ -131,7 +129,6 @@ const FarmerDetails = () => {
   const handleSubmit = (values: any) => {
     const userData: any = JSON.parse(localStorage.getItem('userData'))
     const payload = {
-      adminId: userData?.id,
       firstName: values?.firstName,
       middleName: values?.middleName,
       lastName: values?.lastName,
@@ -163,18 +160,37 @@ const FarmerDetails = () => {
       farmerLandOwnershipType: values?.farmerLandOwnershipType,
       appliedForSoilTesting: 'yes' ? 1 : 0
     }
-    if (!farmerData) {
-      dispatch(createFarmer(payload)).then(res => {
-        console.log('res', res?.payload?.id)
-        if (res?.payload?.id) {
-          let payload = {
-            id: res?.payload?.id,
-            file: file
+
+    if (userData?.role === 'admin') {
+      payload.adminId = userData?.id
+      if (!farmerData) {
+        dispatch(createFarmer(payload)).then(res => {
+          if (res?.payload?.id) {
+            let payload = {
+              id: res?.payload?.id,
+              file: file
+            }
+            dispatch(uploadImage(payload))
+            router.push('/farmers')
           }
-          dispatch(uploadImage(payload))
-          router.push('/farmers')
-        }
-      })
+        })
+      }
+    } else {
+      payload.referralId = userData?.id
+      payload.referralName = userData?.role
+
+      if (!farmerData) {
+        dispatch(createFarmer(payload)).then(res => {
+          if (res?.payload?.id) {
+            let payload = {
+              id: res?.payload?.id,
+              file: file
+            }
+            dispatch(uploadImage(payload))
+            router.push('/farmers')
+          }
+        })
+      }
     }
   }
 
@@ -258,6 +274,18 @@ const FarmerDetails = () => {
                       fullWidth
                       label='First Name *'
                       placeholder='First Name'
+                      sx={{
+                        '&.Mui-error fieldset': {
+                          borderColor: 'red !important'
+                        },
+                        '& fieldset': {
+                          borderWidth: '1px !important'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#7da370 !important',
+                          borderWidth: '2px !important'
+                        }
+                      }}
                     />
                     <ErrorMessage name='firstName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                   </Grid>
@@ -271,6 +299,18 @@ const FarmerDetails = () => {
                       fullWidth
                       label='Middle Name'
                       placeholder='Middle Name'
+                      sx={{
+                        '&.Mui-error fieldset': {
+                          borderColor: 'red !important'
+                        },
+                        '& fieldset': {
+                          borderWidth: '1px !important'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#7da370 !important',
+                          borderWidth: '2px !important'
+                        }
+                      }}
                     />
                     <ErrorMessage name='middleName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                   </Grid>
@@ -491,12 +531,12 @@ const FarmerDetails = () => {
                     <RadioGroup
                       row
                       aria-label='controlled'
-                      value={values?.gender}
+                      value={values?.gender && values?.gender}
                       name='gender'
                       onChange={handleChange}
                     >
-                      <FormControlLabel value='male' control={<Radio />} label='Male' />
-                      <FormControlLabel value='female' control={<Radio />} label='Female' />
+                      <FormControlLabel value='male' control={<Radio value='male' />} label='Male' />
+                      <FormControlLabel value='female' control={<Radio value='female' />} label='Female' />
                     </RadioGroup>
                   </Grid>
                   <Grid item sm={6} xs={12}>
@@ -506,7 +546,7 @@ const FarmerDetails = () => {
                     <RadioGroup
                       row
                       aria-label='controlled'
-                      value={values?.maritalStatus}
+                      value={values?.maritalStatus && values?.maritalStatus}
                       name='maritalStatus'
                       onChange={handleChange}
                     >
@@ -594,7 +634,7 @@ const FarmerDetails = () => {
                       label='Land Village'
                       placeholder='landVillage'
                     />
-                    {/* <FormControl fullWidth>
+                    {/* <FormControlfullWidth>
                       <InputLabel htmlFor='auth-login-v2-password'>Land Village</InputLabel>
                       <OutlinedInput
                         label='landVillage'
@@ -667,7 +707,7 @@ const FarmerDetails = () => {
                       name='landArea'
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      fullWidth
+                     fullWidth
                       label='Land Area'
                       placeholder='Land Area'
                     /> */}
