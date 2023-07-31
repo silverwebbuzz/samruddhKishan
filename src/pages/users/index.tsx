@@ -35,6 +35,7 @@ import { useRouter } from 'next/router'
 import { ErrorMessage, Form, Formik } from 'formik'
 import DeleteDialog from 'src/views/deleteDialogBox/deleteDialogBox'
 import { toast } from 'react-hot-toast'
+import * as yup from 'yup'
 
 export type Payload = {
   id?: number
@@ -88,6 +89,18 @@ const allUsers = () => {
     setOpen(true)
   }
 
+  const validationSchema = yup.object().shape({
+    firstName: yup.string().required('First name  is required'),
+    lastName: yup.string().required('Last name is required'),
+    password: yup
+      .string()
+      .required('Password is required')
+      .min(8, 'Password must contain 8 characters')
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+        'Must contain 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special case character'
+      )
+  })
   const handleClickOpenDelete = () => setOpenDelete(true)
   const initialValues = showEdit
     ? {
@@ -405,7 +418,7 @@ const allUsers = () => {
           <Formik
             enableReinitialize
             initialValues={initialValues}
-            // validationSchema={validationSchema}
+            validationSchema={validationSchema}
             onSubmit={values => {
               handleSubmit(values)
             }}
@@ -492,7 +505,7 @@ const allUsers = () => {
                           label='Password'
                           placeholder='Password'
                         />
-                        <ErrorMessage name='lastName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                        <ErrorMessage name='password' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                       </Grid>
 
                       <Grid item sm={6} xs={12}>
