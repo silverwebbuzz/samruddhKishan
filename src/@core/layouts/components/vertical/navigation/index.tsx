@@ -142,12 +142,72 @@ const Navigation = (props: Props) => {
 
   const ScrollWrapper = hidden ? Box : PerfectScrollbar
   const router = useRouter()
-  console.log('================================>>', router?.pathname)
-  if (router?.pathname == '/add-farmer') {
-    console.log('sahdlkjoadlsajodjoajdospa############')
-    return <></>
-  } else if (router?.pathname == '/edit-farmer') {
-    return <></>
+  const userRole = JSON.parse(localStorage.getItem('userData'))
+  console.log('userRoleuserRole', userRole)
+  if (userRole?.role !== 'admin') {
+    if (router?.pathname == '/add-farmer') {
+      return <></>
+    } else if (router?.pathname == '/edit-farmer') {
+      return <></>
+    } else {
+      return (
+        <ThemeProvider theme={darkTheme}>
+          <Drawer
+            {...props}
+            navHover={navHover}
+            setNavHover={setNavHover}
+            navigationBorderWidth={navigationBorderWidth}
+          >
+            <VerticalNavHeader {...props} navHover={navHover} />
+            {beforeNavMenuContent && beforeVerticalNavMenuContentPosition === 'fixed'
+              ? beforeNavMenuContent(navMenuContentProps)
+              : null}
+            {(beforeVerticalNavMenuContentPosition === 'static' || !beforeNavMenuContent) && (
+              <StyledBoxForShadow ref={shadowRef} />
+            )}
+            <Box sx={{ position: 'relative', overflow: 'hidden' }}>
+              {/* @ts-ignore */}
+              <ScrollWrapper
+                {...(hidden
+                  ? {
+                      onScroll: (container: any) => scrollMenu(container),
+                      sx: { height: '100%', overflowY: 'auto', overflowX: 'hidden' }
+                    }
+                  : {
+                      options: { wheelPropagation: false },
+                      onScrollY: (container: any) => scrollMenu(container),
+                      containerRef: (ref: any) => handleInfiniteScroll(ref)
+                    })}
+              >
+                {beforeNavMenuContent && beforeVerticalNavMenuContentPosition === 'static'
+                  ? beforeNavMenuContent(navMenuContentProps)
+                  : null}
+                {userNavMenuContent ? (
+                  userNavMenuContent(navMenuContentProps)
+                ) : (
+                  <List className='nav-items' sx={{ pt: 0, '& > :first-child': { mt: '0' } }}>
+                    <VerticalNavItems
+                      navHover={navHover}
+                      groupActive={groupActive}
+                      setGroupActive={setGroupActive}
+                      currentActiveGroup={currentActiveGroup}
+                      setCurrentActiveGroup={setCurrentActiveGroup}
+                      {...props}
+                    />
+                  </List>
+                )}
+                {afterNavMenuContent && afterVerticalNavMenuContentPosition === 'static'
+                  ? afterNavMenuContent(navMenuContentProps)
+                  : null}
+              </ScrollWrapper>
+            </Box>
+            {afterNavMenuContent && afterVerticalNavMenuContentPosition === 'fixed'
+              ? afterNavMenuContent(navMenuContentProps)
+              : null}
+          </Drawer>
+        </ThemeProvider>
+      )
+    }
   } else {
     return (
       <ThemeProvider theme={darkTheme}>

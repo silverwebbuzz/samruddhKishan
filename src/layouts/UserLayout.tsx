@@ -54,7 +54,7 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
   const AppBrand = () => {
     return (
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <img src='/images/Pages/logo1234.png' alt='logo' style={{ objectFit: 'contain' }} width='150' height='80' />
+        <img src='/images/pages/logo1234.png' alt='logo' style={{ objectFit: 'contain' }} width='150' height='80' />
       </Box>
     )
   }

@@ -40,6 +40,7 @@ import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
 import * as yup from 'yup'
+// import { DatePicker } from '@material-ui/pickers'
 
 const FarmerDetails = () => {
   const { allDistrict, allState, getFarmer, getAddressByPinCodeData } = useSelector(
@@ -220,7 +221,9 @@ const FarmerDetails = () => {
     )
     return unique
   }
-
+  const customDatePicker = () => {
+    return <DatePicker value={selectedDate} onChange={handleDateChange} minDate={minSelectableDate} />
+  }
   return (
     <>
       <Card
