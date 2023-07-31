@@ -1,6 +1,8 @@
 // ** MUI Imports
+import { Button } from '@mui/material'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
+import { useRouter } from 'next/router'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -22,7 +24,9 @@ interface Props {
 const AppBarContent = (props: Props) => {
   // ** Props
   const { hidden, settings, saveSettings, toggleNavVisibility } = props
+  const router = useRouter()
 
+  const role = JSON.parse(localStorage.getItem('userData'))
   return (
     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
@@ -33,6 +37,11 @@ const AppBarContent = (props: Props) => {
         ) : null}
 
         {/* <ModeToggler settings={settings} saveSettings={saveSettings} /> */}
+        {role?.role !== 'admin' && (router?.pathname === '/add-farmer' || router?.pathname === '/edit-farmer') ? (
+          <Button startIcon={<Icon icon='ep:back' />} onClick={() => router.push('/farmers')}>
+            Back
+          </Button>
+        ) : null}
       </Box>
       <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
         <UserDropdown settings={settings} />

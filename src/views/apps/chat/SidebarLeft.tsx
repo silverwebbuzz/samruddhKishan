@@ -363,6 +363,7 @@ const SidebarLeft = (props: ChatSidebarLeftType) => {
         }}
         sx={{
           zIndex: 7,
+
           height: '100%',
           display: 'block',
           position: mdAbove ? 'static' : 'absolute',
