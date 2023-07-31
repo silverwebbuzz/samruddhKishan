@@ -284,6 +284,22 @@ const FarmerDetails = () => {
                         shrink: true
                       }}
                       placeholder='First Name'
+                      sx={{
+                        '&.Mui-error fieldset': {
+                          borderColor: 'red !important'
+                        },
+                        '& fieldset': {
+                          borderWidth: '1px !important',
+                          borderColor: '#8d8686 !important'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#7da370 !important',
+                          borderWidth: '2px !important'
+                        },
+                        '& label.MuiInputLabel-root': {
+                          color: 'black' // Set the label font color to blue
+                        }
+                      }}
                     />
                     <ErrorMessage name='firstName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                   </Grid>
@@ -300,6 +316,22 @@ const FarmerDetails = () => {
                       fullWidth
                       label='Middle Name'
                       placeholder='Middle Name'
+                      sx={{
+                        '&.Mui-error fieldset': {
+                          borderColor: 'red !important'
+                        },
+                        '& fieldset': {
+                          borderWidth: '1px !important',
+                          borderColor: '#8d8686 !important'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#7da370 !important',
+                          borderWidth: '2px !important'
+                        },
+                        '& label.MuiInputLabel-root': {
+                          color: 'black' // Set the label font color to blue
+                        }
+                      }}
                     />
                     <ErrorMessage name='middleName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                   </Grid>
@@ -316,6 +348,22 @@ const FarmerDetails = () => {
                       fullWidth
                       label='Last Name'
                       placeholder='Last Name'
+                      sx={{
+                        '&.Mui-error fieldset': {
+                          borderColor: 'red !important'
+                        },
+                        '& fieldset': {
+                          borderWidth: '1px !important',
+                          borderColor: '#8d8686 !important'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#7da370 !important',
+                          borderWidth: '2px !important'
+                        },
+                        '& label.MuiInputLabel-root': {
+                          color: 'black' // Set the label font color to blue
+                        }
+                      }}
                     />
                     <ErrorMessage name='lastName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                   </Grid>
@@ -329,6 +377,22 @@ const FarmerDetails = () => {
                       label='Date of birth'
                       InputLabelProps={{
                         shrink: true
+                      }}
+                      sx={{
+                        '&.Mui-error fieldset': {
+                          borderColor: 'red !important'
+                        },
+                        '& fieldset': {
+                          borderWidth: '1px !important',
+                          borderColor: '#8d8686 !important'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#7da370 !important',
+                          borderWidth: '2px !important'
+                        },
+                        '& label.MuiInputLabel-root': {
+                          color: 'black' // Set the label font color to blue
+                        }
                       }}
                     />
                   </Grid>
@@ -345,6 +409,22 @@ const FarmerDetails = () => {
                       fullWidth
                       label='Adhar Number'
                       placeholder='Adhar Number'
+                      sx={{
+                        '&.Mui-error fieldset': {
+                          borderColor: 'red !important'
+                        },
+                        '& fieldset': {
+                          borderWidth: '1px !important',
+                          borderColor: '#8d8686 !important'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#7da370 !important',
+                          borderWidth: '2px !important'
+                        },
+                        '& label.MuiInputLabel-root': {
+                          color: 'black' // Set the label font color to blue
+                        }
+                      }}
                     />
                     <ErrorMessage name='aadharNumber' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                   </Grid>
@@ -362,6 +442,22 @@ const FarmerDetails = () => {
                       }}
                       label='Mobile Number'
                       placeholder='Mobile Number'
+                      sx={{
+                        '&.Mui-error fieldset': {
+                          borderColor: 'red !important'
+                        },
+                        '& fieldset': {
+                          borderWidth: '1px !important',
+                          borderColor: '#8d8686 !important'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#7da370 !important',
+                          borderWidth: '2px !important'
+                        },
+                        '& label.MuiInputLabel-root': {
+                          color: 'black' // Set the label font color to blue
+                        }
+                      }}
                     />
                     <ErrorMessage name='mobileNumber' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                   </Grid>
@@ -379,6 +475,22 @@ const FarmerDetails = () => {
                       }}
                       label='Whatsapp Number *'
                       placeholder='Whatsapp Number'
+                      sx={{
+                        '&.Mui-error fieldset': {
+                          borderColor: 'red !important'
+                        },
+                        '& fieldset': {
+                          borderWidth: '1px !important',
+                          borderColor: '#8d8686 !important'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#7da370 !important',
+                          borderWidth: '2px !important'
+                        },
+                        '& label.MuiInputLabel-root': {
+                          color: 'black' // Set the label font color to blue
+                        }
+                      }}
                     />
                     <ErrorMessage name='wpNumber' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                   </Grid>
@@ -394,11 +506,37 @@ const FarmerDetails = () => {
                       fullWidth
                       label='Address'
                       placeholder='Address'
+                      sx={{
+                        '&.Mui-error fieldset': {
+                          borderColor: 'red !important'
+                        },
+                        '& fieldset': {
+                          borderWidth: '1px !important',
+                          borderColor: '#8d8686 !important'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#7da370 !important',
+                          borderWidth: '2px !important'
+                        },
+                        '& label.MuiInputLabel-root': {
+                          color: 'black' // Set the label font color to blue
+                        }
+                      }}
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>
                     <FormControl fullWidth>
-                      <InputLabel id='demo-simple-select-label'>state</InputLabel>
+                      <InputLabel
+                        sx={{
+                          color: 'black',
+                          '&.Mui-focused': {
+                            color: 'black' // Set the label color when focused
+                          }
+                        }}
+                        id='demo-simple-select-label'
+                      >
+                        state
+                      </InputLabel>
                       <Select
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
@@ -408,6 +546,23 @@ const FarmerDetails = () => {
                         onChange={(e: any) => {
                           setFieldValue('state', e?.target?.value)
                           setSTATE(e?.target?.value)
+                        }}
+                        sx={{
+                          '& .MuiSelect-root': {
+                            borderWidth: '1px !important',
+                            borderColor: '#8d8686 !important' // Set the desired color for the select
+                          },
+                          '& .MuiOutlinedInput-notchedOutline': {
+                            borderColor: 'black !important' // Set the desired border color for the select
+                          },
+
+                          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            borderWidth: '1px !important',
+                            borderColor: '#8d8686 !important'
+                          },
+                          '&.Mui-error': {
+                            color: 'red' // Set the label color when the Select is in an error state
+                          }
                         }}
                       >
                         {allState?.data?.map(name => (
@@ -421,7 +576,17 @@ const FarmerDetails = () => {
                   <Grid item sm={6} xs={12}>
                     <Tooltip title='Please select state first'>
                       <FormControl fullWidth>
-                        <InputLabel id='demo-simple-select-label'>District</InputLabel>
+                        <InputLabel
+                          sx={{
+                            color: 'black',
+                            '&.Mui-focused': {
+                              color: 'black' // Set the label color when focused
+                            }
+                          }}
+                          id='demo-simple-select-label'
+                        >
+                          District
+                        </InputLabel>
                         <Select
                           labelId='demo-simple-select-label'
                           id='demo-simple-select'
@@ -433,6 +598,23 @@ const FarmerDetails = () => {
                           onChange={e => {
                             setFieldValue('district', e?.target?.value)
                             setDistrict(e?.target?.value)
+                          }}
+                          sx={{
+                            '& .MuiSelect-root': {
+                              borderWidth: '1px !important',
+                              borderColor: '#8d8686 !important' // Set the desired color for the select
+                            },
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: 'black !important' // Set the desired border color for the select
+                            },
+
+                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                              borderWidth: '1px !important',
+                              borderColor: '#8d8686 !important'
+                            },
+                            '&.Mui-error': {
+                              color: 'red' // Set the label color when the Select is in an error state
+                            }
                           }}
                         >
                           {allDistrict?.map(name => (
@@ -458,6 +640,22 @@ const FarmerDetails = () => {
                       fullWidth
                       label='Pin Code'
                       placeholder='Pin Code'
+                      sx={{
+                        '&.Mui-error fieldset': {
+                          borderColor: 'red !important'
+                        },
+                        '& fieldset': {
+                          borderWidth: '1px !important',
+                          borderColor: '#8d8686 !important'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#7da370 !important',
+                          borderWidth: '2px !important'
+                        },
+                        '& label.MuiInputLabel-root': {
+                          color: 'black' // Set the label font color to blue
+                        }
+                      }}
                     />
                   </Grid>
 
@@ -469,7 +667,17 @@ const FarmerDetails = () => {
                       disableTouchListener={!(pincode?.length <= 0)}
                     >
                       <FormControl fullWidth>
-                        <InputLabel id='demo-simple-select-label'>taluka</InputLabel>
+                        <InputLabel
+                          sx={{
+                            color: 'black',
+                            '&.Mui-focused': {
+                              color: 'black' // Set the label color when focused
+                            }
+                          }}
+                          id='demo-simple-select-label'
+                        >
+                          taluka
+                        </InputLabel>
                         <Select
                           labelId='demo-simple-select-label'
                           id='demo-simple-select'
@@ -482,6 +690,23 @@ const FarmerDetails = () => {
                             setTaluka(e?.target?.value)
                           }}
                           noOptionsMessage={() => 'No taluka Found'}
+                          sx={{
+                            '& .MuiSelect-root': {
+                              borderWidth: '1px !important',
+                              borderColor: '#8d8686 !important' // Set the desired color for the select
+                            },
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: 'black !important' // Set the desired border color for the select
+                            },
+
+                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                              borderWidth: '1px !important',
+                              borderColor: '#8d8686 !important'
+                            },
+                            '&.Mui-error': {
+                              color: 'red' // Set the label color when the Select is in an error state
+                            }
+                          }}
                         >
                           {getAddressByPinCodeData &&
                             removeDuplicatesTaluka(getAddressByPinCodeData)?.map(name => (
@@ -501,7 +726,17 @@ const FarmerDetails = () => {
                       disableTouchListener={!(pincode?.length <= 0)}
                     >
                       <FormControl fullWidth>
-                        <InputLabel id='demo-simple-select-label'>Village Name</InputLabel>
+                        <InputLabel
+                          sx={{
+                            color: 'black',
+                            '&.Mui-focused': {
+                              color: 'black' // Set the label color when focused
+                            }
+                          }}
+                          id='demo-simple-select-label'
+                        >
+                          Village Name
+                        </InputLabel>
                         <Select
                           labelId='demo-simple-select-label'
                           id='demo-simple-select'
@@ -513,6 +748,22 @@ const FarmerDetails = () => {
                           onChange={e => {
                             setFieldValue('villageName', e?.target?.value)
                             setVillageName(e?.target?.value)
+                          }}
+                          sx={{
+                            '&.Mui-error fieldset': {
+                              borderColor: 'red !important'
+                            },
+                            '& fieldset': {
+                              borderWidth: '1px !important',
+                              borderColor: '#8d8686 !important'
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: '#7da370 !important',
+                              borderWidth: '2px !important'
+                            },
+                            '& label.MuiInputLabel-root': {
+                              color: 'black' // Set the label font color to blue
+                            }
                           }}
                         >
                           {getAddressByPinCodeData?.[0]?.PostOffice?.map(name => (
@@ -538,6 +789,22 @@ const FarmerDetails = () => {
                         shrink: true
                       }}
                       placeholder='Religion'
+                      sx={{
+                        '&.Mui-error fieldset': {
+                          borderColor: 'red !important'
+                        },
+                        '& fieldset': {
+                          borderWidth: '1px !important',
+                          borderColor: '#8d8686 !important'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#7da370 !important',
+                          borderWidth: '2px !important'
+                        },
+                        '& label.MuiInputLabel-root': {
+                          color: 'black' // Set the label font color to blue
+                        }
+                      }}
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>
@@ -593,8 +860,18 @@ const FarmerDetails = () => {
                   }}
                 >
                   <Grid item sm={6} xs={12}>
-                    <FormControl fullWidth>
-                      <InputLabel id='demo-simple-select-label'>Land District</InputLabel>
+                    {/* <FormControl fullWidth>
+                      <InputLabel
+                        sx={{
+                          color: 'black',
+                          '&.Mui-focused': {
+                            color: 'black' // Set the label color when focused
+                          }
+                        }}
+                        id='demo-simple-select-label'
+                      >
+                        Land District
+                      </InputLabel>
                       <Select
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
@@ -605,6 +882,22 @@ const FarmerDetails = () => {
                           setFieldValue('landDistrict', e?.target?.value)
                           setLandDistrict(e?.target?.value)
                         }}
+                        sx={{
+                          '&.Mui-error fieldset': {
+                            borderColor: 'red !important'
+                          },
+                          '& fieldset': {
+                            borderWidth: '1px !important',
+                            borderColor: '#8d8686 !important'
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: '#7da370 !important',
+                            borderWidth: '2px !important'
+                          },
+                          '& label.MuiInputLabel-root': {
+                            color: 'black' // Set the label font color to blue
+                          }
+                        }}
                       >
                         {allDistrict?.map(name => (
                           <MenuItem key={name?.name} value={name?.name}>
@@ -612,7 +905,33 @@ const FarmerDetails = () => {
                           </MenuItem>
                         ))}
                       </Select>
-                    </FormControl>
+                    </FormControl> */}
+                    <TextField
+                      value={values?.landDistrict}
+                      name='landDistrict'
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={Boolean(errors.landDistrict && touched.landDistrict)}
+                      fullWidth
+                      label='Land District'
+                      placeholder='Land Distric'
+                      sx={{
+                        '&.Mui-error fieldset': {
+                          borderColor: 'red !important'
+                        },
+                        '& fieldset': {
+                          borderWidth: '1px !important',
+                          borderColor: '#8d8686 !important'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#7da370 !important',
+                          borderWidth: '2px !important'
+                        },
+                        '& label.MuiInputLabel-root': {
+                          color: 'black' // Set the label font color to blue
+                        }
+                      }}
+                    />
                   </Grid>
                   <Grid item sm={6} xs={12}>
                     {' '}
@@ -627,6 +946,22 @@ const FarmerDetails = () => {
                       fullWidth
                       label='SubDivision'
                       placeholder='SubDivision'
+                      sx={{
+                        '&.Mui-error fieldset': {
+                          borderColor: 'red !important'
+                        },
+                        '& fieldset': {
+                          borderWidth: '1px !important',
+                          borderColor: '#8d8686 !important'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#7da370 !important',
+                          borderWidth: '2px !important'
+                        },
+                        '& label.MuiInputLabel-root': {
+                          color: 'black' // Set the label font color to blue
+                        }
+                      }}
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>
@@ -642,6 +977,22 @@ const FarmerDetails = () => {
                       fullWidth
                       label='Circle'
                       placeholder='Circle'
+                      sx={{
+                        '&.Mui-error fieldset': {
+                          borderColor: 'red !important'
+                        },
+                        '& fieldset': {
+                          borderWidth: '1px !important',
+                          borderColor: '#8d8686 !important'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#7da370 !important',
+                          borderWidth: '2px !important'
+                        },
+                        '& label.MuiInputLabel-root': {
+                          color: 'black' // Set the label font color to blue
+                        }
+                      }}
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>
@@ -657,6 +1008,22 @@ const FarmerDetails = () => {
                       fullWidth
                       label='Mouza'
                       placeholder='mouza'
+                      sx={{
+                        '&.Mui-error fieldset': {
+                          borderColor: 'red !important'
+                        },
+                        '& fieldset': {
+                          borderWidth: '1px !important',
+                          borderColor: '#8d8686 !important'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#7da370 !important',
+                          borderWidth: '2px !important'
+                        },
+                        '& label.MuiInputLabel-root': {
+                          color: 'black' // Set the label font color to blue
+                        }
+                      }}
                     />
                   </Grid>
 
@@ -696,6 +1063,22 @@ const FarmerDetails = () => {
                       fullWidth
                       label='Land Village'
                       placeholder='landVillage'
+                      sx={{
+                        '&.Mui-error fieldset': {
+                          borderColor: 'red !important'
+                        },
+                        '& fieldset': {
+                          borderWidth: '1px !important',
+                          borderColor: '#8d8686 !important'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#7da370 !important',
+                          borderWidth: '2px !important'
+                        },
+                        '& label.MuiInputLabel-root': {
+                          color: 'black' // Set the label font color to blue
+                        }
+                      }}
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>
@@ -711,6 +1094,22 @@ const FarmerDetails = () => {
                       fullWidth
                       label='PattaType'
                       placeholder='PattaType'
+                      sx={{
+                        '&.Mui-error fieldset': {
+                          borderColor: 'red !important'
+                        },
+                        '& fieldset': {
+                          borderWidth: '1px !important',
+                          borderColor: '#8d8686 !important'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#7da370 !important',
+                          borderWidth: '2px !important'
+                        },
+                        '& label.MuiInputLabel-root': {
+                          color: 'black' // Set the label font color to blue
+                        }
+                      }}
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>
@@ -726,6 +1125,22 @@ const FarmerDetails = () => {
                       fullWidth
                       label='LatNo'
                       placeholder='LatNo'
+                      sx={{
+                        '&.Mui-error fieldset': {
+                          borderColor: 'red !important'
+                        },
+                        '& fieldset': {
+                          borderWidth: '1px !important',
+                          borderColor: '#8d8686 !important'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#7da370 !important',
+                          borderWidth: '2px !important'
+                        },
+                        '& label.MuiInputLabel-root': {
+                          color: 'black' // Set the label font color to blue
+                        }
+                      }}
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>
@@ -741,6 +1156,22 @@ const FarmerDetails = () => {
                       fullWidth
                       label='PattaNo'
                       placeholder='PattaNo'
+                      sx={{
+                        '&.Mui-error fieldset': {
+                          borderColor: 'red !important'
+                        },
+                        '& fieldset': {
+                          borderWidth: '1px !important',
+                          borderColor: '#8d8686 !important'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#7da370 !important',
+                          borderWidth: '2px !important'
+                        },
+                        '& label.MuiInputLabel-root': {
+                          color: 'black' // Set the label font color to blue
+                        }
+                      }}
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>
@@ -758,7 +1189,16 @@ const FarmerDetails = () => {
                       placeholder='Land Area'
                     /> */}
                     <FormControl fullWidth>
-                      <InputLabel shrink htmlFor='auth-login-v2-password'>
+                      <InputLabel
+                        sx={{
+                          color: 'black',
+                          '&.Mui-focused': {
+                            color: 'black' // Set the label color when focused
+                          }
+                        }}
+                        shrink
+                        htmlFor='auth-login-v2-password'
+                      >
                         Land Area
                       </InputLabel>
                       <OutlinedInput
@@ -769,12 +1209,37 @@ const FarmerDetails = () => {
                         value={values?.landArea}
                         name='landArea'
                         type={'number'}
-                        sx={{ mb: 4 }}
+                        // sx={{ mb: 4 }}
                         endAdornment={
                           <InputAdornment position='end'>
-                            <Box edge='end'>Sqft.</Box>
+                            <Box
+                              edge='end'
+                              sx={{
+                                color: 'black'
+                              }}
+                            >
+                              Sqft.
+                            </Box>
                           </InputAdornment>
                         }
+                        sx={{
+                          '& fieldset': {
+                            borderWidth: '1px !important',
+                            borderColor: '#8d8686 !important'
+                          },
+
+                          '&.Mui-focused fieldset': {
+                            borderColor: '#8d8686 !important',
+                            borderWidth: '1px !important'
+                          },
+                          '& input': {
+                            color: 'black' // Set the desired text color for the input
+                          },
+                          '& label.MuiInputLabel-root': {
+                            color: 'black' // Set the label font color to blue
+                          },
+                          mb: 4
+                        }}
                       />
                     </FormControl>
                   </Grid>
@@ -791,6 +1256,22 @@ const FarmerDetails = () => {
                       fullWidth
                       label='Land Type'
                       placeholder='Land Type'
+                      sx={{
+                        '&.Mui-error fieldset': {
+                          borderColor: 'red !important'
+                        },
+                        '& fieldset': {
+                          borderWidth: '1px !important',
+                          borderColor: '#8d8686 !important'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#7da370 !important',
+                          borderWidth: '2px !important'
+                        },
+                        '& label.MuiInputLabel-root': {
+                          color: 'black' // Set the label font color to blue
+                        }
+                      }}
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>
@@ -805,6 +1286,22 @@ const FarmerDetails = () => {
                       onBlur={handleBlur}
                       fullWidth
                       label='Farmer LandOwner Ship Type'
+                      sx={{
+                        '&.Mui-error fieldset': {
+                          borderColor: 'red !important'
+                        },
+                        '& fieldset': {
+                          borderWidth: '1px !important',
+                          borderColor: '#8d8686 !important'
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#7da370 !important',
+                          borderWidth: '2px !important'
+                        },
+                        '& label.MuiInputLabel-root': {
+                          color: 'black' // Set the label font color to blue
+                        }
+                      }}
                       placeholder='Farmer LandOwner Ship Type'
                     />
                   </Grid>
