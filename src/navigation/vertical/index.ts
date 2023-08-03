@@ -10,7 +10,6 @@ const navigation = (): VerticalNavItemsType => {
   //@ts-ignore
 
   let FilterRoles = JSON?.parse(roles ? roles : null)
-  console.log('ABCD', UserData?.role, FilterRoles)
   let ARRR = []
   //@ts-ignore
   const output = FilterRoles?.map(function (roleId, index) {

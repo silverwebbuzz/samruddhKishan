@@ -3,7 +3,7 @@ import { ReactNode } from 'react'
 
 // ** Next Imports
 import Head from 'next/head'
-import { Router } from 'next/router'
+import { Router, useRouter } from 'next/router'
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 
@@ -100,7 +100,7 @@ const Guard = ({ children, authGuard, guestGuard }: GuardProps) => {
 // ** Configure JSS & ClassName
 const App = (props: ExtendedAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps, ...rest } = props
-
+  const router = useRouter()
   // Variables
   const contentHeightFixed = Component.contentHeightFixed ?? false
   const getLayout =
@@ -113,7 +113,6 @@ const App = (props: ExtendedAppProps) => {
   const guestGuard = Component.guestGuard ?? false
 
   const aclAbilities = Component.acl ?? defaultACLObj
-
   return (
     <Provider store={store}>
       <CacheProvider value={emotionCache}>

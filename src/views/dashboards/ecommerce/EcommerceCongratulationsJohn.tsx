@@ -24,10 +24,10 @@ const EcommerceCongratulationsJohn = () => {
         </Typography>
         <Typography sx={{ mb: 2, color: 'text.secondary' }}>Top registrations of the month</Typography>
         <Typography variant='h5' sx={{ mb: 0.5, fontWeight: 500, color: 'primary.main' }}>
-          ₹48.9k
+          48.9k
         </Typography>
-        <Button variant='contained'>View Sales</Button>
-        <Illustration width={116} alt='congratulations john' src='/images/cards/congratulations-john.png' />
+        {/* <Button variant='contained'>View Sales</Button> */}
+        {/* <Illustration width={116} alt='congratulations john' src='/images/cards/congratulations-john.png' /> */}
       </CardContent>
     </Card>
   )

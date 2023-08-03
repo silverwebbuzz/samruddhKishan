@@ -142,8 +142,8 @@ const Navigation = (props: Props) => {
 
   const ScrollWrapper = hidden ? Box : PerfectScrollbar
   const router = useRouter()
+  //@ts-ignore
   const userRole = JSON.parse(localStorage.getItem('userData'))
-  console.log('userRoleuserRole', userRole)
   if (userRole?.role !== 'admin') {
     if (router?.pathname == '/add-farmer') {
       return <></>

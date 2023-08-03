@@ -9,8 +9,7 @@ if (typeof window !== 'undefined') {
 }
 const headers = {
   'Access-Control-Allow-Origin': '*',
-  'Content-Type': 'application/json',
-  Authentication: `Bearer ${TOKEN}`
+  'Content-Type': 'application/json'
 }
 interface RootState {
   allFarmers: Array<any>
@@ -34,6 +33,7 @@ interface RootState {
   updateUsers12: Array<any>
   deleteUser: Array<any>
   deletePermission: Array<any>
+  singleUser: Array<any>
   isLoading: boolean
 }
 const initialState: RootState = {
@@ -58,6 +58,7 @@ const initialState: RootState = {
   updateUsers12: [],
   deleteUser: [],
   deletePermission: [],
+  singleUser: [],
   isLoading: false
 }
 export const getAllFarmers = createAsyncThunk('farmers/getAllFarmers', async (payload: any, { rejectWithValue }) => {
@@ -85,6 +86,9 @@ export const createUser1 = createAsyncThunk('farmers/createUser', async (payload
     const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/user/createUsers`, payload, {
       headers
     })
+    if (res.data?.message === 'Email Already Exist') {
+      toast.error('Email Already Exist')
+    }
     return res?.data
   } catch (err: any) {
     return rejectWithValue(err?.response?.data)
@@ -95,7 +99,7 @@ export const updateUser1 = createAsyncThunk('farmers/updateUser1', async (payloa
     const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/user/updateUsers`, payload, {
       headers
     })
-    return res?.data?.data
+    return res?.data
   } catch (err: any) {
     return rejectWithValue(err?.response?.data)
   }
@@ -283,7 +287,16 @@ export const deleteUser = createAsyncThunk('farmer/deleteUsers', async (payload:
     return rejectWithValue(err?.response?.data)
   }
 })
-
+export const deleteRole = createAsyncThunk('farmer/roles', async (payload: any, { rejectWithValue }) => {
+  try {
+    const res = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/role/deleteRole/${payload?.id}`, {
+      headers
+    })
+    return res?.data
+  } catch (err: any) {
+    return rejectWithValue(err?.response?.data)
+  }
+})
 export const deletePermissions = createAsyncThunk(
   'farmer/deletePermissions',
   async (payload: any, { rejectWithValue }) => {
@@ -461,6 +474,7 @@ export const farmersSlice = createSlice({
     builder.addCase(updatePermissions.pending, state => {
       state.isLoading = true
     })
+
     builder.addCase(updatePermissions.fulfilled, (state, action) => {
       state.isLoading = false
       state.updatePermission = action.payload
@@ -507,6 +521,15 @@ export const farmersSlice = createSlice({
       state.deletePermission = action.payload
     })
     builder.addCase(deletePermissions.rejected, state => {
+      state.isLoading = false
+    })
+    builder.addCase(deleteRole.pending, state => {
+      state.isLoading = true
+    })
+    builder.addCase(deleteRole.fulfilled, (state, action) => {
+      state.isLoading = false
+    })
+    builder.addCase(deleteRole.rejected, state => {
       state.isLoading = false
     })
   }

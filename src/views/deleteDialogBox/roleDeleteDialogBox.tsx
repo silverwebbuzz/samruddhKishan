@@ -11,7 +11,8 @@ import Slide, { SlideProps } from '@mui/material/Slide'
 import DialogContentText from '@mui/material/DialogContentText'
 import { AppDispatch } from 'src/store/store'
 import { useDispatch } from 'react-redux'
-import { deleteFarmer, deletePermissions, deleteUser } from 'src/slice/farmers'
+import { deleteFarmer, deletePermissions, deleteRole, deleteUser, getRoleAndPermissions } from 'src/slice/farmers'
+import { toast } from 'react-hot-toast'
 
 const Transition = forwardRef(function Transition(
   props: SlideProps & { children?: ReactElement<any, any> },
@@ -20,24 +21,24 @@ const Transition = forwardRef(function Transition(
   return <Slide direction='up' ref={ref} {...props} />
 })
 
-const DeleteDialog = ({ open, type, id, handleClose, delelteField }: any) => {
+const RoleDeleteDialog = ({ open, type, id, handleClose, delelteField }: any) => {
   const dispatch = useDispatch<AppDispatch>()
 
   const handleDelete = () => {
     const payload = {
       id: id
     }
-    // console.log(payload, 'payload')
 
     switch (type) {
-      case 'farmer':
-        dispatch(deleteFarmer(payload))
-        break
-      case 'users':
-        dispatch(deleteUser(payload))
-        break
-      case 'permissions':
-        dispatch(deletePermissions(payload))
+      case 'role':
+        dispatch(deleteRole(payload)).then(res => {
+          if (res?.payload?.status === 400) {
+            toast.error('This role is assigned to another users')
+          } else if (res?.payload?.status === 200) {
+            toast.error('Role has been deleted successfully')
+            dispatch(getRoleAndPermissions())
+          }
+        })
         break
 
       default:
@@ -82,4 +83,4 @@ const DeleteDialog = ({ open, type, id, handleClose, delelteField }: any) => {
   )
 }
 
-export default DeleteDialog
+export default RoleDeleteDialog

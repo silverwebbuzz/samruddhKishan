@@ -102,32 +102,9 @@ const allUsers = () => {
       )
   })
   const handleClickOpenDelete = () => setOpenDelete(true)
-  const initialValues = showEdit
-    ? {
-        firstName: editPrefillData?.firstName,
-        lastName: editPrefillData?.lastName,
-        email: editPrefillData?.email,
-        password: editPrefillData?.password,
-        phone: editPrefillData?.phone,
-        state: editPrefillData?.state,
-        district: editPrefillData?.city,
-        taluka: editPrefillData?.taluka,
-        villageName: editPrefillData?.villageName,
-        role: editPrefillData?.role
-      }
-    : {
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        phone: '',
-        state: '',
-        district: '',
-        taluka: '',
-        villageName: '',
-        role: ''
-      }
-  const handleChange = (event: ChangeEvent<unknown>, value: number) => {
+  const handleDeleteClose = () => setOpenDelete(false)
+
+  const handleChange = (event: any, value: number) => {
     setPage(value)
   }
   const CustomPagination = () => {
@@ -178,39 +155,9 @@ const allUsers = () => {
   }, [page, pageCount, pageLimit, deleteUser, updateUsers12, createUser12])
 
   const handleSearch = () => {}
-  const handleEdit = (row: any) => {
-    setOpen(true)
-    setShowEdit(true)
-    setEditPrefillData(row && row)
-  }
-  const handleClose = () => {
-    setOpen(false)
-  }
-  const handleDeleteClose = () => {
-    setOpenDelete(false)
-  }
-  const handlePincode = (e: any) => {
-    setPincode(e)
-    let payload = {
-      pincode: e
-    }
-    dispatch(getAdressByPincode(payload))
-  }
-
-  const pincodeAutoCall = () => {
-    let payload = {
-      pincode: pincode ? pincode : ''
-    }
-    getAdressByPincode(payload)
-  }
-  useEffect(() => {
-    if (pincode) {
-      pincodeAutoCall()
-    }
-  }, [pincode])
-
   useEffect(() => {
     dispatch(getAllState())
+    localStorage.removeItem('editUserId')
   }, [])
   useEffect(() => {
     dispatch(getAllState())
@@ -219,13 +166,7 @@ const allUsers = () => {
   useEffect(() => {
     dispatch(getAllDistrict({ state: STATE }))
   }, [STATE])
-  function removeDuplicatesTaluka(getAddressByPinCodeData: any) {
-    const unique = getAddressByPinCodeData?.[0]?.PostOffice?.filter(
-      (obj: any, index: any) =>
-        getAddressByPinCodeData?.[0]?.PostOffice?.findIndex((item: any) => item.Block === obj.Block) === index
-    )
-    return unique
-  }
+
   const columns: GridColDef[] = [
     {
       flex: 0.1,
@@ -239,12 +180,12 @@ const allUsers = () => {
       minWidth: 320,
       headerName: 'Name',
       renderCell: ({ row }: any) => {
-        const { firstName } = row
+        const { firstName, apmcName, centerName } = row
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {firstName}
+                {firstName !== '' ? firstName : centerName !== '' ? centerName : apmcName !== '' ? apmcName : ''}
               </Typography>
             </Box>
           </Box>
@@ -260,8 +201,20 @@ const allUsers = () => {
     {
       flex: 0.2,
       minWidth: 100,
-      field: 'village',
-      headerName: 'Village Name'
+      field: 'city',
+      headerName: 'District',
+      renderCell: ({ row }: any) => {
+        const { city, apmcDistrict, centerDistrict } = row
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
+                {city !== '' ? city : centerDistrict !== '' ? centerDistrict : apmcDistrict !== '' ? apmcDistrict : ''}
+              </Typography>
+            </Box>
+          </Box>
+        )
+      }
     },
     {
       flex: 0.1,
@@ -289,13 +242,8 @@ const allUsers = () => {
               size='small'
               sx={{ color: 'text.secondary' }}
               onClick={() => {
-                pincodeAutoCall()
-                handleEdit(row)
-                setSTATE(row?.state && row?.state)
-                setDistrict(row?.city && row?.city)
-                setPincode(row?.pinCode && row?.pinCode)
-                setRolePrefill(row?.role && row?.role)
-                setVillage(row?.village && row?.village)
+                localStorage.setItem('editUserId', row?.id)
+                router.push('/users/edit-user')
               }}
             >
               <Icon icon='tabler:edit' />
@@ -306,35 +254,6 @@ const allUsers = () => {
     }
   ]
 
-  const handleSubmit = (values: any) => {
-    let payload = {
-      firstName: values?.firstName,
-      lastName: values?.lastName,
-      email: values?.email,
-      password: values?.password,
-      phone: values?.phone,
-      state: values?.state,
-      city: values?.district,
-      taluka: values?.taluka,
-      village: values?.villageName,
-      pinCode: pincode,
-      role: values?.role
-    }
-    if (showEdit) {
-      payload.id = editPrefillData?.id
-      dispatch(updateUser1(payload))
-      handleClose()
-    } else {
-      dispatch(createUser1(payload)).then(res => {
-        if (res?.payload?.message == 'Email Already Exist') {
-          setErrorMsg('Email already exists')
-        } else {
-          setErrorMsg('')
-          handleClose()
-        }
-      })
-    }
-  }
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
@@ -385,7 +304,7 @@ const allUsers = () => {
                 }
               }}
               onClick={() => {
-                handleClickOpen(), setShowEdit(false), setRolePrefill(''), setDistrict('')
+                router.push('/users/add-user')
               }}
             >
               Add User
@@ -408,288 +327,12 @@ const allUsers = () => {
             slots={{
               footer: CustomPagination
             }}
+            //@ts-ignore
             hideFooterRowCount
             hideFooterSelectedRowCount
             hideFooterPagination
           />
         </Card>
-        {/* <UserEditDialog /> */}
-        <Dialog fullWidth maxWidth='md' scroll='body' onClose={handleClose} open={open}>
-          <Formik
-            enableReinitialize
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={values => {
-              handleSubmit(values)
-            }}
-          >
-            {({ values, handleChange, handleBlur, errors, touched, setFieldValue }) => (
-              <>
-                <Box
-                  sx={{
-                    margin: 10
-                  }}
-                >
-                  <Form>
-                    <Box sx={{ mb: 8, textAlign: 'center' }}>
-                      <Divider>
-                        <Chip
-                          sx={{
-                            fontSize: '22px',
-                            padding: '15px',
-                            fontWeight: 'bold',
-                            textAlign: 'left',
-                            backgroundColor: '#f6f5f8'
-                          }}
-                          label='User Details'
-                        />
-                      </Divider>
-                    </Box>
-                    <Grid
-                      container
-                      spacing={6}
-                      sx={{
-                        padding: '10px'
-                      }}
-                    >
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.firstName}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='firstName'
-                          error={Boolean(errors.firstName && touched.firstName)}
-                          fullWidth
-                          label='First Name'
-                          placeholder='First Name'
-                        />
-                        <ErrorMessage name='firstName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.lastName}
-                          name='lastName'
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          error={Boolean(errors.lastName && touched.lastName)}
-                          fullWidth
-                          label='Last Name'
-                          placeholder='Last Name'
-                        />
-                        <ErrorMessage name='lastName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.email}
-                          name='email'
-                          type='email'
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          error={Boolean(errors?.email && touched?.email)}
-                          fullWidth
-                          label='email'
-                          placeholder='email'
-                        />
-                        <ErrorMessage name='email' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                        {errorMsg !== '' ? <div style={{ color: 'red' }}>{errorMsg}</div> : null}
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.password}
-                          name='password'
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          error={Boolean(errors?.password && touched?.password)}
-                          fullWidth
-                          label='Password'
-                          placeholder='Password'
-                        />
-                        <ErrorMessage name='password' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.phone}
-                          name='phone'
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          error={Boolean(errors.phone && touched.phone)}
-                          fullWidth
-                          label='Phone Number'
-                          placeholder='Phone Number'
-                        />
-                        <ErrorMessage name='phone' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-
-                      <Grid item sm={6} xs={12}>
-                        <FormControl fullWidth>
-                          <InputLabel id='demo-simple-select-label'>state</InputLabel>
-                          <Select
-                            labelId='demo-simple-select-label'
-                            id='demo-simple-select'
-                            name='state'
-                            value={values?.state}
-                            label='state'
-                            onChange={(e: any) => {
-                              setFieldValue('state', e?.target?.value)
-                              setSTATE(e?.target?.value)
-                            }}
-                          >
-                            {allState?.data?.map((name: any) => (
-                              <MenuItem key={name?.name} value={name?.name}>
-                                {name?.name}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-
-                      <Grid item sm={6} xs={12}>
-                        <Tooltip title='Please select state first'>
-                          <FormControl fullWidth>
-                            <InputLabel id='demo-simple-select-label'>District</InputLabel>
-                            <Select
-                              labelId='demo-simple-select-label'
-                              id='demo-simple-select'
-                              name='district'
-                              disabled={STATE?.length <= 0}
-                              value={district}
-                              label='district'
-                              onChange={(e: any) => {
-                                setFieldValue('district', e?.target?.value)
-                                setDistrict(e?.target?.value)
-                              }}
-                            >
-                              {allDistrict?.map((name: any) => (
-                                <MenuItem key={name?.name} value={name?.name}>
-                                  {name?.name}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Tooltip>
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={pincode}
-                          name='pinCode'
-                          onChange={e => {
-                            handlePincode(e.target.value)
-                            setPincode(e.target.value)
-                          }}
-                          fullWidth
-                          label='Pin Code'
-                          placeholder='Pin Code'
-                        />
-                      </Grid>
-                      {/* <Grid item sm={6} xs={12}>
-                        <Tooltip
-                          title='Please enter pincode first'
-                          disableFocusListener={!(pincode?.length <= 0)}
-                          disableHoverListener={!(pincode?.length <= 0)}
-                          disableTouchListener={!(pincode?.length <= 0)}
-                        >
-                          <FormControl fullWidth>
-                            <InputLabel id='demo-simple-select-label'>taluka</InputLabel>
-                            <Select
-                              labelId='demo-simple-select-label'
-                              id='demo-simple-select'
-                              name='taluka'
-                              disabled={pincode?.length <= 0}
-                              value={values?.taluka && values?.taluka}
-                              label='taluka'
-                              onChange={handleChange}
-                            >
-                              {getAddressByPinCodeData &&
-                                removeDuplicatesTaluka(getAddressByPinCodeData)?.map((name: any) => (
-                                  <MenuItem key={name?.Block} value={name?.Block}>
-                                    {name?.Block}
-                                  </MenuItem>
-                                ))}
-                            </Select>
-                          </FormControl>
-                        </Tooltip>
-                      </Grid> */}
-                      <Grid item sm={6} xs={12}>
-                        <Tooltip
-                          title='Please enter pincode first'
-                          disableFocusListener={!(pincode?.length <= 0)}
-                          disableHoverListener={!(pincode?.length <= 0)}
-                          disableTouchListener={!(pincode?.length <= 0)}
-                        >
-                          <FormControl fullWidth>
-                            <InputLabel id='demo-simple-select-label'>Village Name</InputLabel>
-                            <Select
-                              labelId='demo-simple-select-label'
-                              id='demo-simple-select'
-                              name='villageName'
-                              disabled={pincode?.length <= 0}
-                              value={village && village}
-                              label='villageName'
-                              // onChange={handleChange}
-                              onChange={e => {
-                                setFieldValue('villageName', e.target.value)
-                                setVillage(e.target.value)
-                              }}
-                            >
-                              {getAddressByPinCodeData?.[0]?.PostOffice?.map((name: any) => (
-                                <MenuItem key={name?.Name} value={name?.Name}>
-                                  {name?.Name}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Tooltip>
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <FormControl fullWidth>
-                          <InputLabel id='demo-simple-select-label'>Role</InputLabel>
-                          <Select
-                            labelId='demo-simple-select-label'
-                            id='demo-simple-select'
-                            name='role'
-                            value={rolePrefill}
-                            label='Role'
-                            onChange={e => {
-                              setFieldValue('role', e?.target?.value)
-                              setRolePrefill(e.target.value)
-                            }}
-                          >
-                            {getRoles?.map((Item: any) => (
-                              <MenuItem key={Item?.roleType} value={Item?.roleType}>
-                                {Item?.roleType}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item sm={6} xs={12}></Grid>
-                      <Box
-                        sx={{
-                          padding: 5
-                        }}
-                      >
-                        <Button
-                          variant='contained'
-                          type='submit'
-                          sx={{
-                            mr: 1,
-                            '&:hover': {
-                              backgroundColor: '#5E7954'
-                            }
-                          }}
-                        >
-                          Submit
-                        </Button>
-                      </Box>
-                    </Grid>
-                  </Form>
-                </Box>
-              </>
-            )}
-          </Formik>
-        </Dialog>
       </Grid>
       <DeleteDialog
         open={openDelete}

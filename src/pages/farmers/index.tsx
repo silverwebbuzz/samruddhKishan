@@ -115,12 +115,10 @@ const allFarmers = () => {
       district: district ? district : '',
       taluka: taluka ? taluka : '',
       referralId: roleValue ? roleValue : '',
-      referralName: referalNames
+      referralName: roleValue === '' ? '' : referalNames ? referalNames : ''
     }
-    console.log('payload-------->', payload)
     if (userData?.role === 'admin') {
       payload.adminId = userData?.id
-
       dispatch(getAllFarmers(payload)).then(response => {
         setPageCount(Math.ceil(response?.payload?.totalFilterCount / pageLimit))
       })
@@ -155,7 +153,7 @@ const allFarmers = () => {
   const handleSearch = () => {}
   const handleEdit = (row: any) => {
     localStorage.setItem('FarmerData', JSON.stringify(row?.id))
-    router.push('/edit-farmer')
+    router.push('/farmers/edit-farmer')
   }
   const handleClickOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -245,9 +243,6 @@ const allFarmers = () => {
       }
     })
   }
-  // useEffect(() => {
-  //   setSTATE('Gujarat')
-  // }, [])
   const handleRolechange = id => {
     setRoleValue(id)
     findUserRoleByID(id)
@@ -267,33 +262,6 @@ const allFarmers = () => {
               p: theme => theme.spacing(2, 5, 4, 5)
             }}
           >
-            {/* <TextField
-              size='small'
-              value={search}
-              onChange={handleSearch}
-              placeholder='Search…'
-              InputProps={{
-                startAdornment: (
-                  <Box sx={{ mr: 2, display: 'flex' }}>
-                    <Icon icon='tabler:search' fontSize={20} />
-                  </Box>
-                ),
-                endAdornment: (
-                  <IconButton size='small' title='Clear' aria-label='Clear'>
-                    <Icon icon='tabler:x' fontSize={20} />
-                  </IconButton>
-                )
-              }}
-              sx={{
-                width: {
-                  xs: 1,
-                  sm: 'auto'
-                },
-                '& .MuiInputBase-root > svg': {
-                  mr: 2
-                }
-              }}
-            /> */}
             {userData?.role === 'admin' ? (
               <>
                 <Grid item sm={2} xs={12}>
@@ -423,7 +391,7 @@ const allFarmers = () => {
                   backgroundColor: '#5E7954'
                 }
               }}
-              onClick={() => router.push('/add-farmer')}
+              onClick={() => router.push('/farmers/add-farmer')}
             >
               Add farmer
             </Button>

@@ -28,7 +28,7 @@ import { hasActiveChild, removeChildren } from 'src/@core/layouts/utils'
 
 // ** Type Import
 import { NavGroup, LayoutProps } from 'src/@core/layouts/types'
-
+// FILE FOR NESTED ROUTE
 // ** Custom Components Imports
 import VerticalNavItems from './VerticalNavItems'
 import UserIcon from 'src/layouts/components/UserIcon'

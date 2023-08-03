@@ -23,7 +23,6 @@ import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import FormControl from '@mui/material/FormControl'
 import DialogTitle from '@mui/material/DialogTitle'
-import AvatarGroup from '@mui/material/AvatarGroup'
 import CardContent from '@mui/material/CardContent'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
@@ -44,6 +43,7 @@ import { AppDispatch } from 'src/store/store'
 import { useSelector } from 'react-redux'
 import { ErrorMessage, Form, Formik } from 'formik'
 import * as yup from 'yup'
+import RoleDeleteDialog from 'src/views/deleteDialogBox/roleDeleteDialogBox'
 
 interface CardDataType {
   title: string
@@ -67,6 +67,10 @@ const RolesCards = () => {
   const [dialogTitle, setDialogTitle] = useState<'Add' | 'Edit'>('Add')
   const [selectedCheckbox, setSelectedCheckbox] = useState<any[]>([])
   const [useffectCall, setUseffectCall] = useState(false)
+  const [DeleteID, setDeleteID] = useState()
+  const [openDelete, setOpenDelete] = useState<boolean>(false)
+  const [delelteField, setDelelteField] = useState<string>('')
+
   const { getRoles, createURole, getPermission, isLoading } = useSelector(
     (state: any) => state?.rootReducer?.farmerReducer
   )
@@ -89,6 +93,8 @@ const RolesCards = () => {
       setSelectedCheckbox(prev => [...prev, id])
     }
   }
+  const handleClickOpenDelete = () => setOpenDelete(true)
+  const handleDeleteClose = () => setOpenDelete(false)
 
   useEffect(() => {
     dispatch(getRoleAndPermissions())
@@ -106,7 +112,7 @@ const RolesCards = () => {
     if (dialogTitle === 'Edit') {
       let payload = {
         id: roleEditValue?.id,
-        roleType: values.roleName,
+        roleType: values.roleName?.toUpperCase(),
         rolePermission: selectedCheckbox
       }
       dispatch(updateRoles(payload)).then((res: any) => {
@@ -134,7 +140,7 @@ const RolesCards = () => {
           return Fi
         }
         let payload = {
-          roleType: values.roleName,
+          roleType: values.roleName?.toUpperCase(),
           //@ts-ignore
           rolePermission: removeDuplicates(FilterdArray())
         }
@@ -188,8 +194,16 @@ const RolesCards = () => {
                   Edit Role
                 </Typography>
               </Box>
-              <IconButton size='small' sx={{ color: 'text.disabled' }}>
-                <Icon icon='tabler:copy' />
+              <IconButton
+                size='small'
+                sx={{ color: 'text.disabled' }}
+                onClick={() => {
+                  handleClickOpenDelete()
+                  setDeleteID(item?.id)
+                  setDelelteField(item?.roleType)
+                }}
+              >
+                <Icon icon='tabler:trash' />
               </IconButton>
             </Box>
           </CardContent>
@@ -423,6 +437,15 @@ const RolesCards = () => {
           )}
         </Formik>
       </Dialog>
+      <RoleDeleteDialog
+        open={openDelete}
+        setOpen={setOpenDelete}
+        handleClickOpen={handleClickOpenDelete}
+        handleClose={handleDeleteClose}
+        type='role'
+        delelteField={delelteField}
+        id={DeleteID}
+      />
     </Grid>
   )
 }
