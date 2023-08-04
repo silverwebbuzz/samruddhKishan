@@ -80,16 +80,16 @@ const index = () => {
     }),
     email: yup.string().required('Email is required'),
     phone: yup.string().required('Phone number is required'),
-    apmcFirmName: yup.string().when('role', {
-      is: (role: any) => role === 'APMC TRADERS',
-      then: yup => yup.required('Apmc firm name is required for this role'),
-      otherwise: yup => yup.optional()
-    }),
-    centerName: yup.string().when('role', {
-      is: (role: any) => role === 'CENTERS',
-      then: yup => yup.required('Center Name is required for this role'),
-      otherwise: yup => yup.optional()
-    }),
+    // apmcFirmName: yup.string().when('role', {
+    //   is: (role: any) => role === 'APMC TRADERS',
+    //   then: yup => yup.required('Apmc firm name is required for this role'),
+    //   otherwise: yup => yup.optional()
+    // }),
+    // centerName: yup.string().when('role', {
+    //   is: (role: any) => role === 'CENTERS',
+    //   then: yup => yup.required('Center Name is required for this role'),
+    //   otherwise: yup => yup.optional()
+    // }),
     password: yup
       .string()
       .required('Password is required')
@@ -372,14 +372,14 @@ const index = () => {
                       </Grid>
                       <Grid item sm={6} xs={12}>
                         <TextField
-                          value={values?.centerKeyPerson}
+                          value={values?.firstName}
                           onChange={handleChange}
                           InputLabelProps={{
                             shrink: true
                           }}
                           onBlur={handleBlur}
-                          name='centerKeyPerson'
-                          error={Boolean(errors.centerKeyPerson && touched.centerKeyPerson)}
+                          name='firstName'
+                          // error={Boolean(errors.centerKeyPerson && touched.centerKeyPerson)}
                           fullWidth
                           label='Name of key person'
                           placeholder='Name of key person'
@@ -918,13 +918,13 @@ const index = () => {
                     <>
                       <Grid item sm={6} xs={12}>
                         <TextField
-                          value={values?.apmcFirmName}
+                          value={values?.firstName}
                           onChange={handleChange}
                           InputLabelProps={{
                             shrink: true
                           }}
                           onBlur={handleBlur}
-                          name='apmcFirmName'
+                          name='firstName'
                           error={Boolean(errors.apmcFirmName && touched.apmcFirmName)}
                           fullWidth
                           label='Name of the firm'
