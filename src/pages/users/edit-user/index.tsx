@@ -55,10 +55,12 @@ const index = () => {
   const [rolePrefill, setRolePrefill] = useState('')
   const [userData, setUserData] = useState<any>({})
   const [district, setDistrict] = useState('')
+  const [taluka, setTaluka] = useState('')
+  const [village, setVillage] = useState('')
   const router = useRouter()
   const dispatch = useDispatch<AppDispatch>()
   const [pincode, setPincode] = useState('')
-
+  const [pinCodeAddress, setPinCodeAddress] = useState('')
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json'
@@ -107,18 +109,19 @@ const index = () => {
     email: userData?.email,
     password: userData?.password,
     phone: userData?.phone,
-    state: userData?.state,
-    district: userData?.city,
-    taluka: userData?.taluka,
-    villageName: userData?.village,
+    state: STATE,
+    district: district,
+    taluka: taluka,
+    villageName: village,
+    pinCode: pincode,
     role: userData?.role,
     //centuserData?.//ces
     centerName: userData?.centerName,
     centerRegisterUnderCompanyDate: userData?.centerRegisterUnderCompanyDate,
     centerKeyPerson: userData?.centerKeyPerson,
     centerHandlingPersonName: userData?.centerHandlingPersonName,
-    centerTaluka: userData?.centerTaluka,
-    centerDistrict: userData?.centerDistrict,
+    centerTaluka: taluka,
+    centerDistrict: district,
     centerTurnover: userData?.centerTurnover,
     centerMemberFarmer: userData?.centerMemberFarmer,
     centerPerDayMilkCollection: userData?.centerPerDayMilkCollection,
@@ -136,8 +139,8 @@ const index = () => {
     apmcFirmName: userData?.apmcFirmName,
     apmcAddress: userData?.apmcAddress,
     apmcName: userData?.apmcName,
-    apmcTaluka: userData?.apmcTaluka,
-    apmcDistrict: userData?.apmcDistrict,
+    apmcTaluka: taluka,
+    apmcDistrict: district,
     apmcPersonName: userData?.apmcPersonName,
     apmcConnectedFarmers: userData?.apmcConnectedFarmers,
     apmcMajorCropsSelling: userData?.apmcMajorCropsSelling,
@@ -149,13 +152,6 @@ const index = () => {
     })
     return res
   }
-  useEffect(() => {
-    if (userData) {
-      setSTATE(userData?.state)
-      setDistrict(userData?.city)
-      setRolePrefill(userData?.role)
-    }
-  }, [userData])
 
   useEffect(() => {
     let userID = localStorage.getItem('editUserId')
@@ -165,15 +161,36 @@ const index = () => {
     apiCallToGetUser(payload).then(response => {
       setUserData(response?.data?.data)
     })
+
     dispatch(getAllState())
     dispatch(getRoleAndPermissions())
   }, [])
+  useEffect(() => {
+    if (userData && userData?.pinCode) {
+      const res = axios
+        .get(`${process.env.NEXT_PUBLIC_BASE_URL}/farmer/GetPinCode/${userData?.pinCode}`, {
+          headers
+        })
+        .then(response => {
+          setPinCodeAddress(response?.data?.[0]?.PostOffice)
+        })
+      return res?.data
+    }
+  }, [userData?.pinCode])
   const handlePincode = e => {
     setPincode(e)
     let payload = {
-      pincode: e
+      pincode: e ? e : ''
     }
-    dispatch(getAdressByPincode(payload))
+    const res = axios
+      .get(`${process.env.NEXT_PUBLIC_BASE_URL}/farmer/GetPinCode/${payload?.pincode}`, {
+        headers
+      })
+      .then(response => {
+        setPinCodeAddress(response?.data?.[0]?.PostOffice)
+      })
+    return res?.data
+    // dispatch(getAdressByPincode(payload))
   }
   const pincodeAutoCall = () => {
     let payload = {
@@ -189,6 +206,29 @@ const index = () => {
   useEffect(() => {
     dispatch(getAllDistrict({ state: STATE }))
   }, [STATE])
+  const setPincodeprefill = (state: any) => {
+    setPincode(state)
+  }
+  useEffect(() => {
+    let payload = {
+      pincode: userData?.pinCode
+    }
+    getAdressByPincode(payload)
+  }, [userData?.pinCode])
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (userData) {
+        setRolePrefill(userData?.role)
+        setSTATE(userData?.state && userData?.state)
+        setDistrict(userData?.city && userData?.city)
+        setPincodeprefill(userData?.pinCode)
+        setTaluka(userData?.taluka && userData?.taluka)
+        setVillage(userData?.village && userData?.village)
+      }
+    }, 1000)
+    return () => clearTimeout(timer)
+  }, [userData?.state, userData?.city, userData?.pinCode, userData?.role])
+
   const handleSubmit = (values: any) => {
     let payload = {
       id: userData?.id,
@@ -198,17 +238,18 @@ const index = () => {
       password: values?.password,
       phone: values?.phone,
       state: values?.state,
-      city: values?.district,
+      city: district,
       taluka: values?.taluka,
-      village: values?.villageName,
-      role: values?.role,
+      village: village,
+      pinCode: pincode,
+      role: rolePrefill,
       //centers
       centerName: values?.centerName,
       centerRegisterUnderCompanyDate: values?.centerRegisterUnderCompanyDate,
       centerKeyPerson: values?.centerKeyPerson,
       centerHandlingPersonName: values?.centerHandlingPersonName,
       centerTaluka: values?.centerTaluka,
-      centerDistrict: values?.centerDistrict,
+      centerDistrict: district,
       centerTurnover: values?.centerTurnover,
       centerMemberFarmer: values?.centerMemberFarmer,
       centerPerDayMilkCollection: values?.centerPerDayMilkCollection,
@@ -227,7 +268,7 @@ const index = () => {
       apmcAddress: values?.apmcAddress,
       apmcName: values?.apmcName,
       apmcTaluka: values?.apmcTaluka,
-      apmcDistrict: values?.apmcDistrict,
+      apmcDistrict: district,
       apmcPersonName: values?.apmcPersonName,
       apmcConnectedFarmers: values?.apmcConnectedFarmers,
       apmcMajorCropsSelling: values?.apmcMajorCropsSelling,
@@ -239,11 +280,21 @@ const index = () => {
       }
     })
   }
-  function removeDuplicatesTaluka(getAddressByPinCodeData) {
-    const unique = getAddressByPinCodeData?.[0]?.PostOffice?.filter(
-      (obj, index) => getAddressByPinCodeData?.[0]?.PostOffice?.findIndex(item => item.Block === obj.Block) === index
-    )
-    return unique
+  function removeDuplicatesTaluka(getAddressByPinCodeData: any) {
+    if (getAddressByPinCodeData) {
+      const unique = getAddressByPinCodeData?.[0]?.PostOffice?.filter(
+        (obj, index) => getAddressByPinCodeData?.[0]?.PostOffice?.findIndex(item => item.Block === obj.Block) === index
+      )
+      return unique
+    }
+  }
+  function removeDuplicatesTalukaS(getAddressByPinCodeData: any) {
+    if (getAddressByPinCodeData) {
+      const unique = getAddressByPinCodeData?.filter(
+        (obj, index) => getAddressByPinCodeData?.findIndex(item => item.Block === obj.Block) === index
+      )
+      return unique
+    }
   }
   return (
     <Card
@@ -296,11 +347,11 @@ const index = () => {
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
                         name='role'
-                        value={rolePrefill}
+                        value={rolePrefill && rolePrefill}
                         error={Boolean(errors.role && touched.role)}
                         label='Role'
                         onChange={e => {
-                          setFieldValue('role', e.target?.value)
+                          setFieldValue('role', e?.target?.value)
                           setFieldValue('email', '')
                           setFieldValue('phone', '')
                           setFieldValue('password', '')
@@ -309,14 +360,16 @@ const index = () => {
                           setFieldValue('taluka', '')
                           setFieldValue('villageName', '')
                           setFieldValue('apmcDistrict', '')
-                          setFieldValue('centerDistrict', '')
+                          // setFieldValue('centerDistrict', '')
                           setFieldValue('firstName', '')
                           setFieldValue('lastName', '')
                           setFieldValue('apmcName', '')
                           setFieldValue('centerName', '')
+
                           setFieldValue('state', '')
                           setSTATE('')
-                          setRolePrefill(e.target?.value)
+                          setVillage('')
+                          setRolePrefill(e?.target?.value)
                         }}
                       >
                         {getRoles?.map((Item: any) => (
@@ -328,7 +381,7 @@ const index = () => {
                       <ErrorMessage name='role' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                     </FormControl>
                   </Grid>
-                  {values?.role === 'CENTERS' ? (
+                  {rolePrefill === 'CENTERS' ? (
                     <>
                       <Grid item sm={6} xs={12}>
                         <TextField
@@ -379,7 +432,7 @@ const index = () => {
                           }}
                           onBlur={handleBlur}
                           name='firstName'
-                          // error={Boolean(errors.centerKeyPerson && touched.centerKeyPerson)}
+                          error={Boolean(errors.firstName && touched.firstName)}
                           fullWidth
                           label='Name of key person'
                           placeholder='Name of key person'
@@ -457,18 +510,6 @@ const index = () => {
                         />
                       </Grid>
                       <Grid item sm={6} xs={12}>
-                        {/* <TextField
-                          value={values?.state}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='state'
-                          error={Boolean(errors.state && touched.state)}
-                          fullWidth
-                          label='State'
-                          placeholder='State'
-                        />
-
-                        <ErrorMessag name='state' render={msg => <div style={{ color: 'red' }}>{msg}</div>} /> */}
                         <FormControl fullWidth>
                           <InputLabel
                             // sx={{
@@ -485,31 +526,14 @@ const index = () => {
                             labelId='demo-simple-select-label'
                             id='demo-simple-select'
                             name='state'
-                            value={values?.state}
+                            value={STATE}
                             label='State'
                             onChange={(e: any) => {
                               setFieldValue('state', e?.target?.value)
                               setSTATE(e?.target?.value)
                             }}
-                            // sx={{
-                            //   '& .MuiSelect-root': {
-                            //     borderWidth: '1px !important',
-                            //     borderColor: '#8d8686 !important' // Set the desired color for the select
-                            //   },
-                            //   '& .MuiOutlinedInput-notchedOutline': {
-                            //     borderColor: 'black !important' // Set the desired border color for the select
-                            //   },
-
-                            //   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                            //     borderWidth: '1px !important',
-                            //     borderColor: '#8d8686 !important'
-                            //   },
-                            //   '&.Mui-error': {
-                            //     color: 'red' // Set the label color when the Select is in an error state
-                            //   }
-                            // }}
                           >
-                            {allState?.data?.map(name => (
+                            {allState?.data?.map((name: any) => (
                               <MenuItem key={name?.name} value={name?.name}>
                                 {name?.name}
                               </MenuItem>
@@ -537,9 +561,12 @@ const index = () => {
                               id='demo-simple-select'
                               name='centerDistrict'
                               disabled={STATE?.length <= 0}
-                              value={values?.centerDistrict}
+                              value={district && district}
                               label='district'
-                              onChange={handleChange}
+                              onChange={e => {
+                                setFieldValue('centerDistrict', e?.target?.value)
+                                setDistrict(e?.target?.value)
+                              }}
                               // sx={{
                               //   '& .MuiSelect-root': {
                               //     borderWidth: '1px !important',
@@ -613,9 +640,9 @@ const index = () => {
                       <Grid item sm={6} xs={12}>
                         <Tooltip
                           title='Please enter pincode first'
-                          disableFocusListener={!(pincode.length <= 0)}
-                          disableHoverListener={!(pincode.length <= 0)}
-                          disableTouchListener={!(pincode.length <= 0)}
+                          disableFocusListener={!(pincode?.length <= 0)}
+                          disableHoverListener={!(pincode?.length <= 0)}
+                          disableTouchListener={!(pincode?.length <= 0)}
                         >
                           <FormControl fullWidth>
                             <InputLabel id='demo-simple-select-label'>taluka</InputLabel>
@@ -623,10 +650,12 @@ const index = () => {
                               labelId='demo-simple-select-label'
                               id='demo-simple-select'
                               name='centerTaluka'
-                              disabled={pincode.length <= 0}
-                              value={values?.centerTaluka && values?.centerTaluka}
+                              disabled={pincode?.length <= 0}
+                              value={taluka}
                               label='taluka'
-                              onChange={handleChange}
+                              onChange={e => {
+                                setTaluka(e?.target?.value)
+                              }}
                               // sx={{
                               //   '& .MuiSelect-root': {
                               //     borderWidth: '1px !important',
@@ -645,8 +674,8 @@ const index = () => {
                               //   }
                               // }}
                             >
-                              {getAddressByPinCodeData &&
-                                removeDuplicatesTaluka(getAddressByPinCodeData)?.map(name => (
+                              {pinCodeAddress &&
+                                removeDuplicatesTalukaS(pinCodeAddress)?.map(name => (
                                   <MenuItem key={name?.Block} value={name?.Block}>
                                     {name?.Block}
                                   </MenuItem>
@@ -914,7 +943,7 @@ const index = () => {
                         />
                       </Grid>
                     </>
-                  ) : values?.role === 'APMC TRADERS' ? (
+                  ) : rolePrefill === 'APMC TRADERS' ? (
                     <>
                       <Grid item sm={6} xs={12}>
                         <TextField
@@ -925,7 +954,7 @@ const index = () => {
                           }}
                           onBlur={handleBlur}
                           name='firstName'
-                          error={Boolean(errors.apmcFirmName && touched.apmcFirmName)}
+                          error={Boolean(errors.firstName && touched.firstName)}
                           fullWidth
                           label='Name of the firm'
                           placeholder='Name of the firm'
@@ -1119,20 +1148,23 @@ const index = () => {
                       <Grid item sm={6} xs={12}>
                         <Tooltip
                           title='Please enter pincode first'
-                          disableFocusListener={!(pincode.length <= 0)}
-                          disableHoverListener={!(pincode.length <= 0)}
-                          disableTouchListener={!(pincode.length <= 0)}
+                          disableFocusListener={!(pincode?.length <= 0)}
+                          disableHoverListener={!(pincode?.length <= 0)}
+                          disableTouchListener={!(pincode?.length <= 0)}
                         >
                           <FormControl fullWidth>
                             <InputLabel id='demo-simple-select-label'>taluka</InputLabel>
                             <Select
                               labelId='demo-simple-select-label'
                               id='demo-simple-select'
-                              name='apmcTaluka'
-                              disabled={pincode.length <= 0}
-                              value={values?.apmcTaluka && values?.apmcTaluka}
+                              name='taluka'
+                              disabled={pincode?.length <= 0}
+                              value={taluka}
                               label='taluka'
-                              onChange={handleChange}
+                              onChange={e => {
+                                setFieldValue('taluka', e?.target?.value)
+                                setTaluka(e?.target?.value)
+                              }}
                               // sx={{
                               //   '& .MuiSelect-root': {
                               //     borderWidth: '1px !important',
@@ -1151,8 +1183,8 @@ const index = () => {
                               //   }
                               // }}
                             >
-                              {getAddressByPinCodeData &&
-                                removeDuplicatesTaluka(getAddressByPinCodeData)?.map(name => (
+                              {pinCodeAddress &&
+                                removeDuplicatesTalukaS(pinCodeAddress)?.map(name => (
                                   <MenuItem key={name?.Block} value={name?.Block}>
                                     {name?.Block}
                                   </MenuItem>
@@ -1566,9 +1598,9 @@ const index = () => {
                       <Grid item sm={6} xs={12}>
                         <Tooltip
                           title='Please enter pincode first'
-                          disableFocusListener={!(pincode.length <= 0)}
-                          disableHoverListener={!(pincode.length <= 0)}
-                          disableTouchListener={!(pincode.length <= 0)}
+                          disableFocusListener={!(pincode?.length <= 0)}
+                          disableHoverListener={!(pincode?.length <= 0)}
+                          disableTouchListener={!(pincode?.length <= 0)}
                         >
                           <FormControl fullWidth>
                             <InputLabel id='demo-simple-select-label'>taluka</InputLabel>
@@ -1576,10 +1608,13 @@ const index = () => {
                               labelId='demo-simple-select-label'
                               id='demo-simple-select'
                               name='taluka'
-                              disabled={pincode.length <= 0}
-                              value={values?.taluka && values?.taluka}
+                              disabled={pincode?.length <= 0}
+                              value={taluka && taluka}
                               label='taluka'
-                              onChange={handleChange}
+                              onChange={e => {
+                                setFieldValue('taluka', e?.target?.value)
+                                setTaluka(e?.target?.value)
+                              }}
                               // sx={{
                               //   '& .MuiSelect-root': {
                               //     borderWidth: '1px !important',
@@ -1598,8 +1633,8 @@ const index = () => {
                               //   }
                               // }}
                             >
-                              {getAddressByPinCodeData &&
-                                removeDuplicatesTaluka(getAddressByPinCodeData)?.map(name => (
+                              {pinCodeAddress &&
+                                removeDuplicatesTalukaS(pinCodeAddress)?.map(name => (
                                   <MenuItem key={name?.Block} value={name?.Block}>
                                     {name?.Block}
                                   </MenuItem>
@@ -1655,9 +1690,9 @@ const index = () => {
                       <Grid item sm={6} xs={12}>
                         <Tooltip
                           title='Please enter pincode first'
-                          disableFocusListener={!(pincode.length <= 0)}
-                          disableHoverListener={!(pincode.length <= 0)}
-                          disableTouchListener={!(pincode.length <= 0)}
+                          disableFocusListener={!(pincode?.length <= 0)}
+                          disableHoverListener={!(pincode?.length <= 0)}
+                          disableTouchListener={!(pincode?.length <= 0)}
                         >
                           <FormControl fullWidth>
                             <InputLabel
@@ -1675,10 +1710,13 @@ const index = () => {
                               labelId='demo-simple-select-label'
                               id='demo-simple-select'
                               name='villageName'
-                              disabled={pincode.length <= 0}
-                              value={values?.villageName && values?.villageName}
+                              disabled={pincode?.length <= 0}
+                              value={village}
                               label='villageName'
-                              onChange={handleChange}
+                              onChange={e => {
+                                setFieldValue('villageName', e?.target?.value)
+                                setVillage(e?.target?.value)
+                              }}
                               // sx={{
                               //   '&.Mui-error fieldset': {
                               //     borderColor: 'red !important'
@@ -1696,11 +1734,12 @@ const index = () => {
                               //   }
                               // }}
                             >
-                              {getAddressByPinCodeData?.[0]?.PostOffice?.map(name => (
-                                <MenuItem key={name?.Name} value={name?.Name}>
-                                  {name?.Name}
-                                </MenuItem>
-                              ))}
+                              {pinCodeAddress &&
+                                pinCodeAddress?.map((name: any) => (
+                                  <MenuItem key={name?.Name} value={name?.Name}>
+                                    {name?.Name}
+                                  </MenuItem>
+                                ))}
                             </Select>
                           </FormControl>
                         </Tooltip>

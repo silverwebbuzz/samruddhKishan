@@ -2,11 +2,11 @@
   "name": "vuexy-nextjs-admin-template",
   "version": "1.1.0",
   "private": true,
-  "proxy": "http://localhost:3005/admin/",
+  "homepage": "https://samruddhkishan.hivecareer.com",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -p 4002",
+    "start": "next start -p 5052",
     "export": "next export && next build",
     "lint": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",

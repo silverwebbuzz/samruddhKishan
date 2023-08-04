@@ -399,15 +399,12 @@ const index = () => {
                           onChange={handleChange}
                           onBlur={handleBlur}
                           name='firstName'
-                          error={Boolean(errors.centerKeyPerson && touched.centerKeyPerson)}
+                          error={Boolean(errors.firstName && touched.firstName)}
                           fullWidth
                           label='Name of key person'
                           placeholder='Name of key person'
                         />
-                        <ErrorMessage
-                          name='centerKeyPerson'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
+                        <ErrorMessage name='firstName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                       </Grid>
                       <Grid item sm={6} xs={12}>
                         <TextField
@@ -517,17 +514,7 @@ const index = () => {
                         {/* <Grid item sm={6} xs={12}> */}
                         <Tooltip title='Please select state first'>
                           <FormControl fullWidth>
-                            <InputLabel
-                              // sx={{
-                              //   color: 'black',
-                              //   '&.Mui-focused': {
-                              //     color: 'black' // Set the label color when focused
-                              //   }
-                              // }}
-                              id='demo-simple-select-label'
-                            >
-                              District
-                            </InputLabel>
+                            <InputLabel id='demo-simple-select-label'>District</InputLabel>
                             <Select
                               labelId='demo-simple-select-label'
                               id='demo-simple-select'
@@ -875,7 +862,7 @@ const index = () => {
                           onChange={handleChange}
                           onBlur={handleBlur}
                           name='firstName'
-                          error={Boolean(errors.apmcFirmName && touched.apmcFirmName)}
+                          error={Boolean(errors.firstName && touched.firstName)}
                           fullWidth
                           label='Name of the firm'
                           placeholder='Name of the firm'
