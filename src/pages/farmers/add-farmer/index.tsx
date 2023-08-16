@@ -140,7 +140,7 @@ const FarmerDetails = () => {
       middleName: values?.middleName,
       lastName: values?.lastName,
       // asPerAbove: values?.asPerAbove,
-      DOB: values?.DOB,
+      dateOfBirth: values?.DOB,
       aadharNumber: values?.aadharNumber,
       mobileNumber: values?.mobileNumber,
       wpNumber: values?.wpNumber,
@@ -783,7 +783,7 @@ const FarmerDetails = () => {
                       }}
                     />
                   </Grid>
-                  <Grid item sm={6} xs={12}>
+                  {/* <Grid item sm={6} xs={12}>
                     <Typography variant='body1' sx={{ fontWeight: 500, color: 'text.primary' }}>
                       Gender{' '}
                     </Typography>
@@ -794,6 +794,15 @@ const FarmerDetails = () => {
                       name='gender'
                       onChange={handleChange}
                     >
+                      <FormControlLabel value='male' control={<Radio value='male' />} label='Male' />
+                      <FormControlLabel value='female' control={<Radio value='female' />} label='Female' />
+                    </RadioGroup>
+                  </Grid> */}
+                  <Grid item sm={6} xs={12}>
+                    <Typography variant='body1' sx={{ fontWeight: 500, color: 'text.primary' }}>
+                      Gender{' '}
+                    </Typography>
+                    <RadioGroup row value={values && values?.gender} name='gender' onChange={handleChange}>
                       <FormControlLabel value='male' control={<Radio value='male' />} label='Male' />
                       <FormControlLabel value='female' control={<Radio value='female' />} label='Female' />
                     </RadioGroup>
@@ -1191,6 +1200,8 @@ const FarmerDetails = () => {
                       <FormControlLabel value='no' control={<Radio />} label='No' />
                     </RadioGroup>
                   </Grid>
+                  {console?.log('values?.gendervalues?.gender', values?.gender)}
+
                   {values?.appliedForSoilTesting === 'yes' ? (
                     <>
                       <Grid item sm={6} xs={12}></Grid>
@@ -1248,8 +1259,5 @@ const FarmerDetails = () => {
     </>
   )
 }
-FarmerDetails.acl = {
-  action: 'read',
-  subject: 'farmers'
-}
+
 export default FarmerDetails

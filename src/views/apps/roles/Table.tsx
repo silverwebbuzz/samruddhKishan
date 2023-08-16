@@ -68,6 +68,7 @@ const columns: GridColDef[] = [
   {
     flex: 0.25,
     minWidth: 280,
+    sortable: false,
     field: 'firstName',
     headerName: 'UserName',
     renderCell: ({ row }: CellType) => {
@@ -99,14 +100,16 @@ const columns: GridColDef[] = [
   },
   {
     flex: 0.15,
-    field: 'roleType',
+    field: 'role',
+    sortable: false,
+
     minWidth: 170,
     headerName: 'Role',
     renderCell: ({ row }: CellType) => {
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row?.roleType}
+            {row?.role}
           </Typography>
         </Box>
       )
@@ -116,6 +119,8 @@ const columns: GridColDef[] = [
     flex: 0.1,
     minWidth: 120,
     headerName: 'City',
+    sortable: false,
+
     field: 'city',
     renderCell: ({ row }: CellType) => {
       return (
@@ -128,6 +133,8 @@ const columns: GridColDef[] = [
   {
     flex: 0.15,
     minWidth: 190,
+    sortable: false,
+
     field: 'phone',
     headerName: 'Phone',
     renderCell: ({ row }: CellType) => {
@@ -222,6 +229,9 @@ const UserList = () => {
             slots={{
               footer: CustomPagination
             }}
+            disableColumnMenu
+            disableColumnFilter
+            disableColumnSelector
             hideFooterRowCount
             hideFooterSelectedRowCount
             hideFooterPagination

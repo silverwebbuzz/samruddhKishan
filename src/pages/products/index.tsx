@@ -10,7 +10,7 @@ import TextField from '@mui/material/TextField'
 import CardHeader from '@mui/material/CardHeader'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import { DataGrid, GridColDef, GridRowId } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridRenderCellParams, GridRowId } from '@mui/x-data-grid'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -18,16 +18,19 @@ import Icon from 'src/@core/components/icon'
 // ** Third Party Imports
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
-import { Button, Chip, Dialog, Divider, FormControl, InputLabel, MenuItem, Pagination, Select } from '@mui/material'
 import {
-  createUser1,
-  getAdressByPincode,
-  getAllDistrict,
-  getAllState,
-  getAllUsers,
-  getRoleAndPermissions,
-  updateUser1
-} from 'src/slice/farmers'
+  Badge,
+  Button,
+  Chip,
+  Dialog,
+  Divider,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Pagination,
+  Select
+} from '@mui/material'
+
 import { AppDispatch } from 'src/store/store'
 import { Ref, forwardRef, ReactElement } from 'react'
 import Fade, { FadeProps } from '@mui/material/Fade'
@@ -36,6 +39,13 @@ import { ErrorMessage, Form, Formik } from 'formik'
 import DeleteDialog from 'src/views/deleteDialogBox/deleteDialogBox'
 import { toast } from 'react-hot-toast'
 import * as yup from 'yup'
+import { getAllCategories } from 'src/slice/categoriesSlice'
+import CategoryDialog from 'src/views/components/dialogBox/CategoryDialog'
+import ProductDialog from 'src/views/components/dialogBox/ProductDialog'
+import { getAllProducts } from 'src/slice/productSlice'
+import CustomAvatar from 'src/@core/components/mui/avatar'
+import { ThemeColor } from 'src/@core/layouts/types'
+import { getInitials } from 'src/@core/utils/get-initials'
 
 export type Payload = {
   id?: number
@@ -49,58 +59,36 @@ const Transition = forwardRef(function Transition(
 ) {
   return <Fade ref={ref} {...props} />
 })
-const allUsers = () => {
+const ContentPage = () => {
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
-  const {
-    getUsers,
-    getRoles,
-    getAddressByPinCodeData,
-    allDistrict,
-    allState,
-    deleteUser,
-    updateUsers12,
-    createUser12
-  } = useSelector((state: any) => state?.rootReducer?.farmerReducer)
+  const { allProductsData, deleteProductData, createProductData } = useSelector(
+    (state: any) => state?.rootReducer?.productReducer
+  )
   const [search, setSearch] = useState<string>('')
   const router = useRouter()
-  const [pincode, setPincode] = useState('')
-  const [STATE, setSTATE] = useState('')
-  const [district, setDistrict] = useState('')
-  const [village, setVillage] = useState('')
-  const [rolePrefill, setRolePrefill] = useState('')
-
-  // const [taluka, setTaluka] = useState('')
-
   const [page, setPage] = useState<number>(1)
   const [pageCount, setPageCount] = useState<number>(1)
   const [pageLimit, setPageLimit] = useState<number>(10)
   const [editPrefillData, setEditPrefillData] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
-
   const dispatch = useDispatch<AppDispatch>()
   const [open, setOpen] = useState<boolean>(false)
   const [showEdit, setShowEdit] = useState<boolean>(false)
   const [DeleteID, setDeleteID] = useState()
   const [openDelete, setOpenDelete] = useState<boolean>(false)
   const [delelteField, setDelelteField] = useState<string>('')
+  const [show, setShow] = useState<boolean>(false)
+  const [dialogName, setDialogName] = useState<string>('')
+  const [edit, setEdit] = useState<boolean>(false)
+  const [editID, setEditID] = useState<string | number>('')
+  const [editField, setEditField] = useState<string | number>('')
+  console.log(editField, 'editField')
+
   const handleClickOpen = () => {
     setEditPrefillData('')
-    setPincode('')
     setOpen(true)
   }
 
-  const validationSchema = yup.object().shape({
-    firstName: yup.string().required('First name  is required'),
-    lastName: yup.string().required('Last name is required'),
-    password: yup
-      .string()
-      .required('Password is required')
-      .min(8, 'Password must contain 8 characters')
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-        'Must contain 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special case character'
-      )
-  })
   const handleClickOpenDelete = () => setOpenDelete(true)
   const handleDeleteClose = () => setOpenDelete(false)
 
@@ -140,31 +128,52 @@ const allUsers = () => {
   }
 
   useEffect(() => {
-    //@ts-ignore
-    const userData: any = JSON.parse(localStorage.getItem('userData'))
-    let payload = {
+    let payload: any = {
       page: page,
       pageSize: pageLimit
     }
-    //@ts-ignore
-    dispatch(getAllUsers(payload)).then(response => {
+    dispatch(getAllProducts(payload)).then(response => {
       setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
     })
-  }, [page, pageCount, pageLimit, deleteUser, updateUsers12, createUser12])
+  }, [page, pageCount, pageLimit, deleteProductData, createProductData])
 
+  const handleShow = (dialogName: string) => {
+    setShow(true)
+    setDialogName(dialogName)
+  }
+  const handleCancel = () => {
+    setShow(false)
+    setDialogName('')
+  }
+  let props = {
+    editField: editField,
+    show: show,
+    edit: edit,
+    editID: editID,
+    setEdit: setEdit,
+    handleCancel: handleCancel
+  }
   const handleSearch = () => {}
-  useEffect(() => {
-    dispatch(getAllState())
-    localStorage.removeItem('editUserId')
-  }, [])
-  useEffect(() => {
-    dispatch(getAllState())
-    dispatch(getRoleAndPermissions())
-  }, [])
-  useEffect(() => {
-    dispatch(getAllDistrict({ state: STATE }))
-  }, [STATE])
+  const renderClient = (params: GridRenderCellParams) => {
+    const { row } = params
+    const stateNum = Math.floor(Math.random() * 6)
+    const states = ['success', 'error', 'warning', 'info', 'primary', 'secondary']
+    const color = states[stateNum]
 
+    if (row?.brandLogo?.length) {
+      return <CustomAvatar src={`${row?.brandLogo}`} sx={{ mr: 3, width: '2.575rem', height: '2.575rem' }} />
+    } else {
+      return (
+        <CustomAvatar
+          skin='light'
+          color={color as ThemeColor}
+          sx={{ mr: 3, fontSize: '.8rem', width: '2.575rem', height: '2.575rem' }}
+        >
+          {/* {getInitials(row.full_name ? row.full_name : 'John Doe')} */}
+        </CustomAvatar>
+      )
+    }
+  }
   const columns: GridColDef[] = [
     {
       flex: 0.1,
@@ -175,52 +184,33 @@ const allUsers = () => {
     },
     {
       flex: 0.25,
-      field: 'firstName',
+      minWidth: 290,
+      field: 'brandLogo',
+      headerName: 'brand Logo',
+      renderCell: (params: GridRenderCellParams) => {
+        return <Box sx={{ display: 'flex', alignItems: 'center' }}>{renderClient(params)}</Box>
+      }
+    },
+    {
+      flex: 0.25,
+      field: 'productName',
       sortable: false,
-
       minWidth: 320,
-      headerName: 'Name',
+      headerName: 'Product Name',
       renderCell: ({ row }: any) => {
-        const { firstName, apmcName, centerName } = row
+        const { productName } = row
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {firstName !== '' ? firstName : centerName !== '' ? centerName : apmcName !== '' ? apmcName : ''}
+                {productName}
               </Typography>
             </Box>
           </Box>
         )
       }
     },
-    {
-      flex: 0.2,
-      minWidth: 100,
-      field: 'phone',
-      sortable: false,
 
-      headerName: 'Phone'
-    },
-    {
-      flex: 0.2,
-      minWidth: 100,
-      sortable: false,
-
-      field: 'city',
-      headerName: 'District',
-      renderCell: ({ row }: any) => {
-        const { city, apmcDistrict, centerDistrict } = row
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {city !== '' ? city : centerDistrict !== '' ? centerDistrict : apmcDistrict !== '' ? apmcDistrict : ''}
-              </Typography>
-            </Box>
-          </Box>
-        )
-      }
-    },
     {
       flex: 0.1,
       minWidth: 140,
@@ -236,7 +226,7 @@ const allUsers = () => {
               onClick={() => {
                 handleClickOpenDelete()
                 setDeleteID(row?.id)
-                setDelelteField(row?.firstName + ' ' + row?.lastName)
+                setDelelteField(row?.categoryName)
               }}
             >
               <Icon icon='tabler:trash' />
@@ -247,8 +237,10 @@ const allUsers = () => {
               size='small'
               sx={{ color: 'text.secondary' }}
               onClick={() => {
-                localStorage.setItem('editUserId', row?.id)
-                router.push('/users/edit-user')
+                handleShow('products')
+                setEdit(true)
+                setEditID(row?.id)
+                setEditField(row)
               }}
             >
               <Icon icon='tabler:edit' />
@@ -263,7 +255,7 @@ const allUsers = () => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='All Users' />
+          <CardHeader title='All Categories' />
           <Box
             sx={{
               gap: 2,
@@ -309,10 +301,10 @@ const allUsers = () => {
                 }
               }}
               onClick={() => {
-                router.push('/users/add-user')
+                handleShow('products')
               }}
             >
-              Add User
+              Add Product
             </Button>
           </Box>
 
@@ -327,7 +319,7 @@ const allUsers = () => {
             pagination
             // rowHeight={62}
             // rowCount={getUsers?.totalItems}
-            rows={getUsers?.data && getUsers?.data ? getUsers?.data : []}
+            rows={allProductsData?.data && allProductsData?.data ? allProductsData?.data : []}
             columns={columns}
             slots={{
               footer: CustomPagination
@@ -347,12 +339,14 @@ const allUsers = () => {
         setOpen={setOpenDelete}
         handleClickOpen={handleClickOpenDelete}
         handleClose={handleDeleteClose}
-        type='users'
+        type='deleteProduct'
         delelteField={delelteField}
         id={DeleteID}
       />
+
+      {dialogName === 'products' && <ProductDialog {...props} />}
     </Grid>
   )
 }
 
-export default allUsers
+export default ContentPage

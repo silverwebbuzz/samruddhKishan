@@ -18,16 +18,19 @@ import Icon from 'src/@core/components/icon'
 // ** Third Party Imports
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
-import { Button, Chip, Dialog, Divider, FormControl, InputLabel, MenuItem, Pagination, Select } from '@mui/material'
 import {
-  createUser1,
-  getAdressByPincode,
-  getAllDistrict,
-  getAllState,
-  getAllUsers,
-  getRoleAndPermissions,
-  updateUser1
-} from 'src/slice/farmers'
+  Badge,
+  Button,
+  Chip,
+  Dialog,
+  Divider,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Pagination,
+  Select
+} from '@mui/material'
+
 import { AppDispatch } from 'src/store/store'
 import { Ref, forwardRef, ReactElement } from 'react'
 import Fade, { FadeProps } from '@mui/material/Fade'
@@ -36,6 +39,8 @@ import { ErrorMessage, Form, Formik } from 'formik'
 import DeleteDialog from 'src/views/deleteDialogBox/deleteDialogBox'
 import { toast } from 'react-hot-toast'
 import * as yup from 'yup'
+import { getAllCategories } from 'src/slice/categoriesSlice'
+import CategoryDialog from 'src/views/components/dialogBox/CategoryDialog'
 
 export type Payload = {
   id?: number
@@ -49,25 +54,12 @@ const Transition = forwardRef(function Transition(
 ) {
   return <Fade ref={ref} {...props} />
 })
-const allUsers = () => {
+const allCategories = () => {
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
-  const {
-    getUsers,
-    getRoles,
-    getAddressByPinCodeData,
-    allDistrict,
-    allState,
-    deleteUser,
-    updateUsers12,
-    createUser12
-  } = useSelector((state: any) => state?.rootReducer?.farmerReducer)
+  const { categories, deleteCat, createCat } = useSelector((state: any) => state?.rootReducer?.categoriesReducer)
+  // console.log(createCat, 'categories')
   const [search, setSearch] = useState<string>('')
   const router = useRouter()
-  const [pincode, setPincode] = useState('')
-  const [STATE, setSTATE] = useState('')
-  const [district, setDistrict] = useState('')
-  const [village, setVillage] = useState('')
-  const [rolePrefill, setRolePrefill] = useState('')
 
   // const [taluka, setTaluka] = useState('')
 
@@ -76,31 +68,24 @@ const allUsers = () => {
   const [pageLimit, setPageLimit] = useState<number>(10)
   const [editPrefillData, setEditPrefillData] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
-
   const dispatch = useDispatch<AppDispatch>()
   const [open, setOpen] = useState<boolean>(false)
   const [showEdit, setShowEdit] = useState<boolean>(false)
   const [DeleteID, setDeleteID] = useState()
   const [openDelete, setOpenDelete] = useState<boolean>(false)
   const [delelteField, setDelelteField] = useState<string>('')
+  const [show, setShow] = useState<boolean>(false)
+  const [dialogName, setDialogName] = useState<string>('')
+  const [edit, setEdit] = useState<boolean>(false)
+  const [editID, setEditID] = useState<string | number>('')
+  const [editField, setEditField] = useState<string | number>('')
+  console.log(editField, 'editField')
+
   const handleClickOpen = () => {
     setEditPrefillData('')
-    setPincode('')
     setOpen(true)
   }
 
-  const validationSchema = yup.object().shape({
-    firstName: yup.string().required('First name  is required'),
-    lastName: yup.string().required('Last name is required'),
-    password: yup
-      .string()
-      .required('Password is required')
-      .min(8, 'Password must contain 8 characters')
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-        'Must contain 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special case character'
-      )
-  })
   const handleClickOpenDelete = () => setOpenDelete(true)
   const handleDeleteClose = () => setOpenDelete(false)
 
@@ -140,30 +125,32 @@ const allUsers = () => {
   }
 
   useEffect(() => {
-    //@ts-ignore
-    const userData: any = JSON.parse(localStorage.getItem('userData'))
-    let payload = {
+    let payload: any = {
       page: page,
       pageSize: pageLimit
     }
-    //@ts-ignore
-    dispatch(getAllUsers(payload)).then(response => {
+    dispatch(getAllCategories(payload)).then(response => {
       setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
     })
-  }, [page, pageCount, pageLimit, deleteUser, updateUsers12, createUser12])
+  }, [page, pageCount, pageLimit, deleteCat, createCat])
 
+  const handleShow = (dialogName: string) => {
+    setShow(true)
+    setDialogName(dialogName)
+  }
+  const handleCancel = () => {
+    setShow(false)
+    setDialogName('')
+  }
+  let props = {
+    editField: editField,
+    show: show,
+    edit: edit,
+    editID: editID,
+    setEdit: setEdit,
+    handleCancel: handleCancel
+  }
   const handleSearch = () => {}
-  useEffect(() => {
-    dispatch(getAllState())
-    localStorage.removeItem('editUserId')
-  }, [])
-  useEffect(() => {
-    dispatch(getAllState())
-    dispatch(getRoleAndPermissions())
-  }, [])
-  useEffect(() => {
-    dispatch(getAllDistrict({ state: STATE }))
-  }, [STATE])
 
   const columns: GridColDef[] = [
     {
@@ -173,20 +160,21 @@ const allUsers = () => {
       sortable: false,
       headerName: 'ID'
     },
+
     {
       flex: 0.25,
-      field: 'firstName',
+      field: 'categoryName',
       sortable: false,
 
       minWidth: 320,
-      headerName: 'Name',
+      headerName: 'Category Name',
       renderCell: ({ row }: any) => {
-        const { firstName, apmcName, centerName } = row
+        const { categoryName } = row
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {firstName !== '' ? firstName : centerName !== '' ? centerName : apmcName !== '' ? apmcName : ''}
+                {categoryName}
               </Typography>
             </Box>
           </Box>
@@ -194,28 +182,24 @@ const allUsers = () => {
       }
     },
     {
-      flex: 0.2,
-      minWidth: 100,
-      field: 'phone',
+      flex: 0.25,
+      field: 'categoryStatus',
       sortable: false,
-
-      headerName: 'Phone'
-    },
-    {
-      flex: 0.2,
-      minWidth: 100,
-      sortable: false,
-
-      field: 'city',
-      headerName: 'District',
+      minWidth: 320,
+      headerName: 'Category status',
       renderCell: ({ row }: any) => {
-        const { city, apmcDistrict, centerDistrict } = row
+        const { categoryStatus } = row
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {city !== '' ? city : centerDistrict !== '' ? centerDistrict : apmcDistrict !== '' ? apmcDistrict : ''}
-              </Typography>
+              {/* <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
+                {categoryStatus}
+              </Typography> */}
+              <Chip
+                label={categoryStatus === 1 ? 'Active' : 'Inactive'}
+                color={categoryStatus === 1 ? 'primary' : 'error'}
+              />
+              <Badge />
             </Box>
           </Box>
         )
@@ -236,7 +220,7 @@ const allUsers = () => {
               onClick={() => {
                 handleClickOpenDelete()
                 setDeleteID(row?.id)
-                setDelelteField(row?.firstName + ' ' + row?.lastName)
+                setDelelteField(row?.categoryName)
               }}
             >
               <Icon icon='tabler:trash' />
@@ -247,8 +231,10 @@ const allUsers = () => {
               size='small'
               sx={{ color: 'text.secondary' }}
               onClick={() => {
-                localStorage.setItem('editUserId', row?.id)
-                router.push('/users/edit-user')
+                handleShow('category')
+                setEdit(true)
+                setEditID(row?.id)
+                setEditField(row)
               }}
             >
               <Icon icon='tabler:edit' />
@@ -263,7 +249,7 @@ const allUsers = () => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='All Users' />
+          <CardHeader title='All Categories' />
           <Box
             sx={{
               gap: 2,
@@ -309,10 +295,10 @@ const allUsers = () => {
                 }
               }}
               onClick={() => {
-                router.push('/users/add-user')
+                handleShow('category')
               }}
             >
-              Add User
+              Add Category
             </Button>
           </Box>
 
@@ -327,7 +313,7 @@ const allUsers = () => {
             pagination
             // rowHeight={62}
             // rowCount={getUsers?.totalItems}
-            rows={getUsers?.data && getUsers?.data ? getUsers?.data : []}
+            rows={categories?.data && categories?.data ? categories?.data : []}
             columns={columns}
             slots={{
               footer: CustomPagination
@@ -347,12 +333,13 @@ const allUsers = () => {
         setOpen={setOpenDelete}
         handleClickOpen={handleClickOpenDelete}
         handleClose={handleDeleteClose}
-        type='users'
+        type='categories'
         delelteField={delelteField}
         id={DeleteID}
       />
+      {dialogName === 'category' && <CategoryDialog {...props} />}
     </Grid>
   )
 }
 
-export default allUsers
+export default allCategories

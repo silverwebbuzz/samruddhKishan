@@ -18,7 +18,6 @@ const navigation = (): HorizontalNavItemsType => {
       if (UserData?.role === ROLENAME) {
         ROLEID?.map((rID: any) => {
           if (rID == permission?.id) {
-            // console.log(ROLENAME, permission)
             ARRR.push(permission)
           }
         })
@@ -30,23 +29,18 @@ const navigation = (): HorizontalNavItemsType => {
       {
         title: 'Farmers',
         path: '/farmers',
-        // action: 'read',
-        // subject: 'farmers',
-        icon: 'tabler:smart-home'
+        icon: 'game-icons:farmer'
       },
       {
         title: 'Users',
         path: '/users',
-        // action: 'read',
-        // subject: 'users',
-        icon: 'tabler:smart-home'
+        icon: 'ci:users'
       }
     ]
     const FinalRoute = []
     const ABCG = Rout?.filter(r1 => {
       ARRR.map(r2 => {
         if (r1?.title == r2?.moduleName) {
-          console.log(' r2?.moduleName---->', r2?.moduleName)
           FinalRoute.push(r1)
         }
       })
@@ -57,26 +51,25 @@ const navigation = (): HorizontalNavItemsType => {
       {
         title: 'Dashboard',
         path: '/dashboard',
-        icon: 'tabler:smart-home'
+        icon: 'fluent-mdl2:b-i-dashboard'
       },
       {
         title: 'Farmers',
         path: '/farmers',
         action: 'read',
         subject: 'farmers',
-        icon: 'tabler:smart-home'
+        icon: 'game-icons:farmer'
       },
       {
         title: 'Users',
         path: '/users',
         action: 'read',
         subject: 'users',
-        icon: 'tabler:smart-home'
+        icon: 'ci:users'
       },
       {
         title: 'Roles & Permissions',
         icon: 'tabler:settings',
-
         children: [
           {
             title: 'Roles',
@@ -87,6 +80,21 @@ const navigation = (): HorizontalNavItemsType => {
             path: '/permissions'
           }
         ]
+      },
+      {
+        title: 'Product',
+        path: '/products',
+        icon: 'fluent-mdl2:b-i-dashboard'
+      },
+      {
+        title: 'Landing Page Content',
+        path: '/landing-page-content',
+        icon: 'fluent:content-view-32-regular'
+      },
+      {
+        title: 'Categories',
+        path: '/categories',
+        icon: 'tabler:category'
       }
     ]
   }

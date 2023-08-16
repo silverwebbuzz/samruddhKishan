@@ -39,6 +39,8 @@ const FarmerDetails = () => {
   const farmerData = JSON.parse(localStorage.getItem('FarmerData'))
   const [pincode, setPincode] = useState('')
   const [district, setDistrict] = useState('')
+  const [gender, setGender] = useState('')
+  const [maritalStatus, setMaritalStatus] = useState('')
   const [villageName, setVillageName] = useState('')
   const [landDistrict, setLandDistrict] = useState('')
   const [url, setUrl] = useState('')
@@ -51,7 +53,7 @@ const FarmerDetails = () => {
     middleName: getFarmer?.[0]?.middleName,
     lastName: getFarmer?.[0]?.lastName,
     wpNumber: getFarmer?.[0]?.wpNumber,
-    DOB: getFarmer?.[0]?.DOB,
+    DOB: getFarmer && getFarmer?.[0]?.dateOfBirth,
     aadharNumber: getFarmer?.[0]?.aadharNumber,
     mobileNumber: getFarmer?.[0]?.mobileNumber,
     address: getFarmer?.[0]?.address,
@@ -62,7 +64,7 @@ const FarmerDetails = () => {
     pinCode: getFarmer?.[0]?.pinCode,
     caste: getFarmer?.[0]?.caste,
     maritalStatus: getFarmer?.[0]?.maritalStatus,
-    gender: getFarmer?.[0]?.gender,
+    gender: getFarmer && getFarmer?.[0]?.gender,
     religion: getFarmer?.[0]?.religion,
     landDistrict: getFarmer?.[0]?.landDistrict,
     subDivision: getFarmer?.[0]?.subDivision,
@@ -106,7 +108,7 @@ const FarmerDetails = () => {
       middleName: values?.middleName,
       lastName: values?.lastName,
       wpNumber: values?.wpNumber,
-      DOB: values?.DOB,
+      dateOfBirth: values?.DOB,
       aadharNumber: values?.aadharNumber,
       mobileNumber: values?.mobileNumber,
       address: values?.address,
@@ -116,8 +118,8 @@ const FarmerDetails = () => {
       state: values?.state,
       pinCode: pincode,
       caste: values?.caste,
-      maritalStatus: values?.maritalStatus,
-      gender: values?.gender,
+      maritalStatus: maritalStatus,
+      gender: gender,
       religion: values?.religion,
       landDistrict: values?.landDistrict,
       subDivision: values?.subDivision,
@@ -164,7 +166,9 @@ const FarmerDetails = () => {
       }
     }
   }
-
+  const handleRadio = (e: any) => {
+    setGender(e)
+  }
   const handlePincode = e => {
     setPincode(e)
     let payload = {
@@ -222,6 +226,8 @@ const FarmerDetails = () => {
       setUrl(getFarmer?.[0]?.file)
       setFile(getFarmer?.[0]?.file)
     }, 1000)
+    setGender(getFarmer?.[0]?.gender)
+    setMaritalStatus(getFarmer?.[0]?.maritalStatus)
     return () => clearTimeout(timer)
   }, [getFarmer?.[0]?.state, getFarmer?.[0]?.taluka, getFarmer?.[0]?.pinCode, getFarmer?.[0]?.landDistrict])
 
@@ -271,6 +277,7 @@ const FarmerDetails = () => {
                     padding: '10px'
                   }}
                 >
+                  {console.log(getFarmer?.[0]?.dateOfBirth)}
                   <Grid item sm={6} xs={12}>
                     <TextField
                       value={values?.firstName}
@@ -568,7 +575,7 @@ const FarmerDetails = () => {
                           }
                         }}
                       >
-                        {allState?.data?.map(name => (
+                        {allState?.data?.map((name: any) => (
                           <MenuItem key={name?.name} value={name?.name}>
                             {name?.name}
                           </MenuItem>
@@ -816,13 +823,14 @@ const FarmerDetails = () => {
                     </Typography>
                     <RadioGroup
                       row
-                      aria-label='controlled'
-                      value={values?.gender && values?.gender}
+                      value={gender}
                       name='gender'
-                      onChange={handleChange}
+                      onChange={e => {
+                        handleRadio(e.target?.value)
+                      }}
                     >
-                      <FormControlLabel value='male' control={<Radio value='male' />} label='Male' />
-                      <FormControlLabel value='female' control={<Radio value='female' />} label='Female' />
+                      <FormControlLabel value='male' name='gender' control={<Radio />} label='Male' />
+                      <FormControlLabel value='female' name='gender' control={<Radio />} label='Female' />
                     </RadioGroup>
                   </Grid>
                   <Grid item sm={6} xs={12}>
@@ -832,9 +840,9 @@ const FarmerDetails = () => {
                     <RadioGroup
                       row
                       aria-label='controlled'
-                      value={values?.maritalStatus && values?.maritalStatus}
+                      value={maritalStatus}
                       name='maritalStatus'
-                      onChange={handleChange}
+                      onChange={e => setMaritalStatus(e.target?.value)}
                     >
                       <FormControlLabel value='single' control={<Radio value='single' />} label='Single' />
                       <FormControlLabel value='married' control={<Radio value='married' />} label='Married' />
@@ -1302,11 +1310,6 @@ const FarmerDetails = () => {
                             <input type='file' hidden onChange={e => handleFile(e)} />
                           </Button>
                         </Box>
-                        {/* {values?.appliedForSoilTesting === 'yes' && url?.length <= 0 ? (
-                          file?.length <= 0 ? (
-                            <div style={{ color: 'red' }}>{'please select image'}</div>
-                          ) : null
-                        ) : null} */}
                       </Grid>
                     </>
                   ) : null}
@@ -1337,8 +1340,5 @@ const FarmerDetails = () => {
     </>
   )
 }
-FarmerDetails.acl = {
-  action: 'read',
-  subject: 'farmers'
-}
+
 export default FarmerDetails

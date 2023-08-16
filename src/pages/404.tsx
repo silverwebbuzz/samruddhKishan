@@ -59,5 +59,5 @@ const Error404 = () => {
 }
 
 Error404.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
-
+Error404.authGuard = false
 export default Error404

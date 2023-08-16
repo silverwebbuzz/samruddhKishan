@@ -20,7 +20,7 @@ import Icon from 'src/@core/components/icon'
 // ** Third Party Imports
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
-import { Button, FormControl, InputLabel, MenuItem, Pagination } from '@mui/material'
+import { Button, Chip, FormControl, InputLabel, MenuItem, OutlinedInput, Pagination } from '@mui/material'
 import Select from '@mui/material/Select'
 
 import { getAllDistrict, getAllFarmers, getAllState } from 'src/slice/farmers'
@@ -70,7 +70,7 @@ const allFarmers = () => {
   const handleChange = (event: ChangeEvent<unknown>, value: number) => {
     setPage(value)
   }
-  const [roleValue, setRoleValue] = useState<string>('')
+  const [roleValue, setRoleValue] = useState<string>([])
   const router = useRouter()
   const dispatch = useDispatch<AppDispatch>()
   const ROLE = JSON.parse(localStorage.getItem('role'))
@@ -105,6 +105,32 @@ const allFarmers = () => {
       </Box>
     )
   }
+  const ITEM_HEIGHT = 48
+  const ITEM_PADDING_TOP = 8
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250
+      }
+    }
+  }
+  const handleDropdownChange = (event: any) => {
+    const {
+      target: { value }
+    } = event
+    console.log(value)
+    setRoleValue(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value
+    )
+  }
+  function getStyles(name: string, personName: readonly string[], theme: Theme) {
+    return {
+      fontWeight:
+        personName.indexOf(name) === -1 ? theme.typography.fontWeightRegular : theme.typography.fontWeightMedium
+    }
+  }
 
   useEffect(() => {
     // @ts-ignore
@@ -114,7 +140,7 @@ const allFarmers = () => {
       state: STATE ? STATE : '',
       district: district ? district : '',
       taluka: taluka ? taluka : '',
-      referralId: roleValue ? roleValue : '',
+      referralId: roleValue?.map(role => role?.id),
       referralName: roleValue === '' ? '' : referalNames ? referalNames : ''
     }
     if (userData?.role === 'admin') {
@@ -143,24 +169,32 @@ const allFarmers = () => {
     setUsersData(res?.data)
     return res?.data
   }
+
   useEffect(() => {
     dispatch(getAllState())
     userApiCall()
   }, [])
+
   useEffect(() => {
     dispatch(getAllDistrict({ state: STATE }))
   }, [STATE])
+
   const handleSearch = () => {}
+
   const handleEdit = (row: any) => {
     localStorage.setItem('FarmerData', JSON.stringify(row?.id))
     router.push('/farmers/edit-farmer')
   }
   const handleClickOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+
   const columns: GridColDef[] = [
     {
       flex: 0.1,
       field: 'id',
+      sortable: false,
+      filter: false,
+
       minWidth: 100,
       headerName: 'ID'
     },
@@ -168,6 +202,7 @@ const allFarmers = () => {
       flex: 0.25,
       field: 'firstName',
       minWidth: 320,
+      sortable: false,
       headerName: 'Full Name',
       renderCell: ({ row }: any) => {
         const { firstName, lastName } = row
@@ -185,6 +220,7 @@ const allFarmers = () => {
     {
       flex: 0.2,
       minWidth: 100,
+      sortable: false,
       field: 'state',
       headerName: 'State'
     },
@@ -192,16 +228,19 @@ const allFarmers = () => {
       flex: 0.2,
       minWidth: 100,
       field: 'district',
+      sortable: false,
       headerName: 'District'
     },
     {
       flex: 0.2,
       minWidth: 100,
+      sortable: false,
       field: 'villageName',
       headerName: 'Village Name'
     },
     {
       flex: 0.2,
+      sortable: false,
       minWidth: 100,
       field: 'mobileNumber',
       headerName: 'Phone'
@@ -265,21 +304,13 @@ const allFarmers = () => {
             {userData?.role === 'admin' ? (
               <>
                 <Grid item sm={2} xs={12}>
-                  <FormControl fullWidth size='small'>
-                    <InputLabel
-                    //  id='demo-simple-select-label'
-                    >
-                      Users
-                    </InputLabel>
+                  {/* <FormControl fullWidth size='small'>
+                    <InputLabel>Users</InputLabel>
                     <Select
-                      // labelId='demo-simple-select-label'
                       id='demo-simple-select'
                       name='Role'
                       value={roleValue}
                       label='Role'
-                      // sx={{
-                      //   height: '5px'
-                      // }}
                       onChange={(e: any) => {
                         handleRolechange(e.target.value)
                       }}
@@ -293,25 +324,44 @@ const allFarmers = () => {
                         </MenuItem>
                       ))}
                     </Select>
+                  </FormControl> */}
+                  <FormControl fullWidth size='small'>
+                    <InputLabel id='demo-multiple-chip-label'>Role</InputLabel>
+                    <Select
+                      labelId='demo-multiple-chip-label'
+                      id='demo-multiple-chip'
+                      multiple
+                      value={roleValue}
+                      onChange={handleDropdownChange}
+                      input={<OutlinedInput id='select-multiple-chip' label='Role' />}
+                      renderValue={selected => (
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                          {selected.map(selectedItem => (
+                            <Chip
+                              key={selectedItem?.value}
+                              label={`${selectedItem?.firstName}${selectedItem?.lastName}`}
+                            />
+                          ))}
+                        </Box>
+                      )}
+                      MenuProps={MenuProps}
+                    >
+                      {usersData?.data?.map(name => (
+                        <MenuItem key={name} value={name}>
+                          {name?.firstName} {name?.lastName}
+                        </MenuItem>
+                      ))}
+                    </Select>
                   </FormControl>
                 </Grid>
                 <Grid item sm={2} xs={12}>
                   <FormControl fullWidth size='small'>
-                    <InputLabel
-                    //  id='demo-simple-select-label'
-                    >
-                      State
-                    </InputLabel>
+                    <InputLabel>State</InputLabel>
                     <Select
-                      // labelId='demo-simple-select-label'
                       id='demo-simple-select'
                       name='state'
                       value={STATE}
                       label='State'
-                      // defaultValue=''
-                      // sx={{
-                      //   height: '5px'
-                      // }}
                       onChange={(e: any) => {
                         setSTATE(e?.target?.value)
                       }}
@@ -374,7 +424,7 @@ const allFarmers = () => {
                       setSTATE('')
                       setTaluka('')
                       setDistrict('')
-                      setRoleValue('')
+                      setRoleValue([])
                       setReferalName('')
                     }}
                   >
@@ -413,6 +463,9 @@ const allFarmers = () => {
             hideFooterSelectedRowCount
             hideFooterPagination
             disableRowSelectionOnClick
+            disableColumnMenu
+            disableColumnFilter
+            disableColumnSelector
           />
         </Card>
         <DeleteDialog
@@ -428,7 +481,5 @@ const allFarmers = () => {
     </Grid>
   )
 }
-// action: 'read',
-// subject: 'acl-page',
 
 export default allFarmers

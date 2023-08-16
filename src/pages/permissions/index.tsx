@@ -59,6 +59,8 @@ const colors: Colors = {
 const defaultColumns: GridColDef[] = [
   {
     flex: 0.25,
+    sortable: false,
+
     minWidth: 210,
     field: 'id',
     headerName: 'id',
@@ -67,6 +69,8 @@ const defaultColumns: GridColDef[] = [
   {
     flex: 0.25,
     field: 'moduleName',
+    sortable: false,
+
     minWidth: 240,
     headerName: 'Permission Name',
     renderCell: ({ row }: CellType) => <Typography sx={{ color: 'text.secondary' }}>{row?.moduleName}</Typography>
@@ -219,6 +223,9 @@ const PermissionsTable = () => {
               slots={{
                 footer: CustomPagination
               }}
+              disableColumnMenu
+              disableColumnFilter
+              disableColumnSelector
               hideFooterRowCount
               hideFooterSelectedRowCount
               hideFooterPagination

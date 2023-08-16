@@ -71,9 +71,9 @@ const AclGuard = (props: AclGuardProps) => {
 
   // Check the access of current user and render pages
   if (ability && auth.user && ability.can(aclAbilities.action, aclAbilities.subject)) {
-    if (router?.route === '/') {
-      return <Spinner />
-    }
+    // if (router?.route === '/') {
+    //   return <Spinner />
+    // }
 
     return <AbilityContext.Provider value={ability}>{children}</AbilityContext.Provider>
   }

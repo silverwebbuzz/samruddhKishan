@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 // ** Type import
 import { VerticalNavItemsType } from 'src/@core/layouts/types'
 const navigation = (): VerticalNavItemsType => {
@@ -31,23 +33,18 @@ const navigation = (): VerticalNavItemsType => {
       {
         title: 'Farmers',
         path: '/farmers',
-        // action: 'read',
-        // subject: 'farmers',
-        icon: 'tabler:smart-home'
+        icon: 'game-icons:farmer'
       },
       {
         title: 'Users',
         path: '/users',
-        // action: 'read',
-        // subject: 'users',
-        icon: 'tabler:smart-home'
+        icon: 'ci:users'
       }
     ]
     const FinalRoute = []
     const ABCG = Rout?.filter(r1 => {
       ARRR.map(r2 => {
         if (r1?.title == r2?.moduleName) {
-          console.log(' r2?.moduleName---->', r2?.moduleName)
           FinalRoute.push(r1)
         }
       })
@@ -58,21 +55,21 @@ const navigation = (): VerticalNavItemsType => {
       {
         title: 'Dashboard',
         path: '/dashboard',
-        icon: 'tabler:smart-home'
+        icon: 'fluent-mdl2:b-i-dashboard'
       },
       {
         title: 'Farmers',
         path: '/farmers',
         action: 'read',
         subject: 'farmers',
-        icon: 'tabler:smart-home'
+        icon: 'game-icons:farmer'
       },
       {
         title: 'Users',
         path: '/users',
         action: 'read',
         subject: 'users',
-        icon: 'tabler:smart-home'
+        icon: 'ci:users'
       },
       {
         title: 'Roles & Permissions',
@@ -88,6 +85,21 @@ const navigation = (): VerticalNavItemsType => {
             path: '/permissions'
           }
         ]
+      },
+      {
+        title: 'Landing Page Content',
+        path: '/landing-page-content',
+        icon: 'fluent:content-view-32-regular'
+      },
+      {
+        title: 'Products',
+        path: '/products',
+        icon: 'fluent-mdl2:b-i-dashboard'
+      },
+      {
+        title: 'Categories',
+        path: '/categories',
+        icon: 'tabler:category'
       }
     ]
   }

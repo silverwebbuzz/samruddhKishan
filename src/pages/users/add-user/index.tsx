@@ -64,6 +64,7 @@ const index = () => {
   const [district, setDistrict] = useState('')
   const [village, setVillage] = useState('')
   const [rolePrefill, setRolePrefill] = useState('')
+  const [roleID, setRoleID] = useState('')
 
   // const [taluka, setTaluka] = useState('')
 
@@ -77,7 +78,7 @@ const index = () => {
   const handlePincode = e => {
     setPincode(e)
     let payload = {
-      pincode: e
+      pincode: e ? e : ''
     }
     dispatch(getAdressByPincode(payload))
   }
@@ -93,7 +94,7 @@ const index = () => {
       }),
     lastName: yup.string().when('role', {
       is: (role: any) => role !== 'APMC TRADERS' && role !== 'CENTERS',
-      then: yup => yup.required('First Name is required for this role'),
+      then: yup => yup.required('Last Name is required for this role'),
       otherwise: yup => yup.optional()
     }),
     email: yup.string().required('Email is required'),
@@ -119,13 +120,6 @@ const index = () => {
       )
   })
 
-  // const handlePincode = (e: any) => {
-  //   setPincode(e)
-  //   let payload = {
-  //     pincode: e
-  //   }
-  //   dispatch(getAdressByPincode(payload))
-  // }
   const initialValues = {
     //normal User
     firstName: '',
@@ -139,7 +133,7 @@ const index = () => {
     taluka: '',
     villageName: '',
     role: '',
-
+    roleId: '',
     //centers
     centerName: '',
     centerRegisterUnderCompanyDate: '',
@@ -216,7 +210,15 @@ const index = () => {
     )
     return unique
   }
-
+  const findRoleId = ros => {
+    let RFD = ''
+    const RoID = getRoles?.map(ro => {
+      if (ro.roleType?.includes(ros)) {
+        RFD = ro?.id
+      }
+    })
+    return RFD
+  }
   const handleSubmit = (values: any) => {
     let payload = {
       firstName: values?.firstName,
@@ -230,6 +232,7 @@ const index = () => {
       village: values?.villageName,
       pinCode: pincode,
       role: values?.role,
+      roleId: findRoleId(values?.role),
       //centers
       centerName: values?.centerName,
       centerRegisterUnderCompanyDate: values?.centerRegisterUnderCompanyDate,
@@ -267,9 +270,11 @@ const index = () => {
       }
     })
   }
+
   function removeDuplicatesTaluka(getAddressByPinCodeData) {
     const unique = getAddressByPinCodeData?.[0]?.PostOffice?.filter(
-      (obj, index) => getAddressByPinCodeData?.[0]?.PostOffice?.findIndex(item => item.Block === obj.Block) === index
+      (obj, index) =>
+        getAddressByPinCodeData?.[0]?.PostOffice?.findIndex((item: any) => item.Block === obj.Block) === index
     )
     return unique
   }
@@ -897,17 +902,7 @@ const index = () => {
                       </Grid>
                       <Grid item sm={6} xs={12}>
                         <FormControl fullWidth>
-                          <InputLabel
-                            // sx={{
-                            //   color: 'black',
-                            //   '&.Mui-focused': {
-                            //     color: 'black' // Set the label color when focused
-                            //   }
-                            // }}
-                            id='demo-simple-select-label'
-                          >
-                            State
-                          </InputLabel>
+                          <InputLabel id='demo-simple-select-label'>State</InputLabel>
                           <Select
                             labelId='demo-simple-select-label'
                             id='demo-simple-select'
@@ -918,25 +913,8 @@ const index = () => {
                               setFieldValue('state', e?.target?.value)
                               setSTATE(e?.target?.value)
                             }}
-                            // sx={{
-                            //   '& .MuiSelect-root': {
-                            //     borderWidth: '1px !important',
-                            //     borderColor: '#8d8686 !important' // Set the desired color for the select
-                            //   },
-                            //   '& .MuiOutlinedInput-notchedOutline': {
-                            //     borderColor: 'black !important' // Set the desired border color for the select
-                            //   },
-
-                            //   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                            //     borderWidth: '1px !important',
-                            //     borderColor: '#8d8686 !important'
-                            //   },
-                            //   '&.Mui-error': {
-                            //     color: 'red' // Set the label color when the Select is in an error state
-                            //   }
-                            // }}
                           >
-                            {allState?.data?.map(name => (
+                            {allState?.data?.map((name: any) => (
                               <MenuItem key={name?.name} value={name?.name}>
                                 {name?.name}
                               </MenuItem>
@@ -944,60 +922,21 @@ const index = () => {
                           </Select>
                         </FormControl>
                       </Grid>
-                      {/* <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.apmcDistrict}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='apmcDistrict'
-                          error={Boolean(errors.apmcDistrict && touched.apmcDistrict)}
-                          fullWidth
-                          label='District'
-                          placeholder='District'
-                        />
-                        <ErrorMessage name='apmcDistrict' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid> */}
+
                       <Grid item sm={6} xs={12}>
                         <Tooltip title='Please select state first'>
                           <FormControl fullWidth>
-                            <InputLabel
-                              // sx={{
-                              //   color: 'black',
-                              //   '&.Mui-focused': {
-                              //     color: 'black' // Set the label color when focused
-                              //   }
-                              // }}
-                              id='demo-simple-select-label'
-                            >
-                              District
-                            </InputLabel>
+                            <InputLabel id='demo-simple-select-label'>District</InputLabel>
                             <Select
                               labelId='demo-simple-select-label'
                               id='demo-simple-select'
                               name='apmcDistrict'
                               disabled={STATE.length <= 0}
                               value={values?.apmcDistrict}
-                              label='district'
+                              label='District'
                               onChange={handleChange}
-                              // sx={{
-                              //   '& .MuiSelect-root': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important' // Set the desired color for the select
-                              //   },
-                              //   '& .MuiOutlinedInput-notchedOutline': {
-                              //     borderColor: 'black !important' // Set the desired border color for the select
-                              //   },
-
-                              //   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important'
-                              //   },
-                              //   '&.Mui-error': {
-                              //     color: 'red' // Set the label color when the Select is in an error state
-                              //   }
-                              // }}
                             >
-                              {allDistrict?.map(name => (
+                              {allDistrict?.map((name: any) => (
                                 <MenuItem key={name?.name} value={name?.name}>
                                   {name?.name}
                                 </MenuItem>
@@ -1016,37 +955,9 @@ const index = () => {
                           fullWidth
                           label='Pin Code'
                           placeholder='Pin Code'
-                          // sx={{
-                          //   '&.Mui-error fieldset': {
-                          //     borderColor: 'red !important'
-                          //   },
-                          //   '& fieldset': {
-                          //     borderWidth: '1px !important',
-                          //     borderColor: '#8d8686 !important'
-                          //   },
-                          //   '&.Mui-focused fieldset': {
-                          //     borderColor: '#7da370 !important',
-                          //     borderWidth: '2px !important'
-                          //   },
-                          //   '& label.MuiInputLabel-root': {
-                          //     color: 'black' // Set the label font color to blue
-                          //   }
-                          // }}
                         />
                       </Grid>
-                      {/* <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.apmcTaluka}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='apmcTaluka'
-                          error={Boolean(errors.apmcTaluka && touched.apmcTaluka)}
-                          fullWidth
-                          label='Taluka'
-                          placeholder='Taluka'
-                        />
-                        <ErrorMessage name='apmcTaluka' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid> */}
+
                       <Grid item sm={6} xs={12}>
                         <Tooltip
                           title='Please enter pincode first'
@@ -1062,28 +973,11 @@ const index = () => {
                               name='apmcTaluka'
                               disabled={pincode.length <= 0}
                               value={values?.apmcTaluka && values?.apmcTaluka}
-                              label='taluka'
+                              label='Taluka'
                               onChange={handleChange}
-                              // sx={{
-                              //   '& .MuiSelect-root': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important' // Set the desired color for the select
-                              //   },
-                              //   '& .MuiOutlinedInput-notchedOutline': {
-                              //     borderColor: 'black !important' // Set the desired border color for the select
-                              //   },
-
-                              //   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important'
-                              //   },
-                              //   '&.Mui-error': {
-                              //     color: 'red' // Set the label color when the Select is in an error state
-                              //   }
-                              // }}
                             >
                               {getAddressByPinCodeData &&
-                                removeDuplicatesTaluka(getAddressByPinCodeData)?.map(name => (
+                                removeDuplicatesTaluka(getAddressByPinCodeData)?.map((name: any) => (
                                   <MenuItem key={name?.Block} value={name?.Block}>
                                     {name?.Block}
                                   </MenuItem>
@@ -1265,30 +1159,8 @@ const index = () => {
                         <ErrorMessage name='phone' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                       </Grid>
                       <Grid item sm={6} xs={12}>
-                        {/* <TextField
-                          value={values?.state}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='state'
-                          error={Boolean(errors.state && touched.state)}
-                          fullWidth
-                          label='State'
-                          placeholder='State'
-                        />
-
-                        <ErrorMessag name='state' render={msg => <div style={{ color: 'red' }}>{msg}</div>} /> */}
                         <FormControl fullWidth>
-                          <InputLabel
-                            // sx={{
-                            //   color: 'black',
-                            //   '&.Mui-focused': {
-                            //     color: 'black' // Set the label color when focused
-                            //   }
-                            // }}
-                            id='demo-simple-select-label'
-                          >
-                            State
-                          </InputLabel>
+                          <InputLabel id='demo-simple-select-label'>State</InputLabel>
                           <Select
                             labelId='demo-simple-select-label'
                             id='demo-simple-select'
@@ -1299,23 +1171,6 @@ const index = () => {
                               setFieldValue('state', e?.target?.value)
                               setSTATE(e?.target?.value)
                             }}
-                            // sx={{
-                            //   '& .MuiSelect-root': {
-                            //     borderWidth: '1px !important',
-                            //     borderColor: '#8d8686 !important' // Set the desired color for the select
-                            //   },
-                            //   '& .MuiOutlinedInput-notchedOutline': {
-                            //     borderColor: 'black !important' // Set the desired border color for the select
-                            //   },
-
-                            //   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                            //     borderWidth: '1px !important',
-                            //     borderColor: '#8d8686 !important'
-                            //   },
-                            //   '&.Mui-error': {
-                            //     color: 'red' // Set the label color when the Select is in an error state
-                            //   }
-                            // }}
                           >
                             {allState?.data?.map(name => (
                               <MenuItem key={name?.name} value={name?.name}>
@@ -1328,44 +1183,17 @@ const index = () => {
                       <Grid item sm={6} xs={12}>
                         <Tooltip title='Please select state first'>
                           <FormControl fullWidth>
-                            <InputLabel
-                              // sx={{
-                              //   color: 'black',
-                              //   '&.Mui-focused': {
-                              //     color: 'black' // Set the label color when focused
-                              //   }
-                              // }}
-                              id='demo-simple-select-label'
-                            >
-                              District
-                            </InputLabel>
+                            <InputLabel id='demo-simple-select-label'>District</InputLabel>
                             <Select
                               labelId='demo-simple-select-label'
                               id='demo-simple-select'
                               name='district'
                               disabled={STATE.length <= 0}
                               value={values?.district}
-                              label='district'
+                              label='District'
                               onChange={handleChange}
-                              // sx={{
-                              //   '& .MuiSelect-root': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important' // Set the desired color for the select
-                              //   },
-                              //   '& .MuiOutlinedInput-notchedOutline': {
-                              //     borderColor: 'black !important' // Set the desired border color for the select
-                              //   },
-
-                              //   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important'
-                              //   },
-                              //   '&.Mui-error': {
-                              //     color: 'red' // Set the label color when the Select is in an error state
-                              //   }
-                              // }}
                             >
-                              {allDistrict?.map(name => (
+                              {allDistrict?.map((name: any) => (
                                 <MenuItem key={name?.name} value={name?.name}>
                                   {name?.name}
                                 </MenuItem>
@@ -1384,53 +1212,25 @@ const index = () => {
                           fullWidth
                           label='Pin Code'
                           placeholder='Pin Code'
-                          // sx={{
-                          //   '&.Mui-error fieldset': {
-                          //     borderColor: 'red !important'
-                          //   },
-                          //   '& fieldset': {
-                          //     borderWidth: '1px !important',
-                          //     borderColor: '#8d8686 !important'
-                          //   },
-                          //   '&.Mui-focused fieldset': {
-                          //     borderColor: '#7da370 !important',
-                          //     borderWidth: '2px !important'
-                          //   },
-                          //   '& label.MuiInputLabel-root': {
-                          //     color: 'black' // Set the label font color to blue
-                          //   }
-                          // }}
                         />
                       </Grid>
-                      {/* <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.taluka}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='taluka'
-                          error={Boolean(errors.taluka && touched.taluka)}
-                          fullWidth
-                          label='Taluka'
-                          placeholder='Taluka'
-                        />
-                        <ErrorMessage name='taluka' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid> */}
+
                       <Grid item sm={6} xs={12}>
                         <Tooltip
                           title='Please enter pincode first'
-                          disableFocusListener={!(pincode.length <= 0)}
-                          disableHoverListener={!(pincode.length <= 0)}
-                          disableTouchListener={!(pincode.length <= 0)}
+                          disableFocusListener={!(pincode?.length <= 0)}
+                          disableHoverListener={!(pincode?.length <= 0)}
+                          disableTouchListener={!(pincode?.length <= 0)}
                         >
                           <FormControl fullWidth>
-                            <InputLabel id='demo-simple-select-label'>taluka</InputLabel>
+                            <InputLabel id='demo-simple-select-label'>Taluka</InputLabel>
                             <Select
                               labelId='demo-simple-select-label'
                               id='demo-simple-select'
                               name='taluka'
-                              disabled={pincode.length <= 0}
+                              disabled={pincode?.length <= 0}
                               value={values?.taluka && values?.taluka}
-                              label='taluka'
+                              label='Taluka'
                               onChange={handleChange}
                               // sx={{
                               //   '& .MuiSelect-root': {
@@ -1498,7 +1298,7 @@ const index = () => {
                               name='villageName'
                               disabled={pincode.length <= 0}
                               value={values?.villageName && values?.villageName}
-                              label='villageName'
+                              label='Village Name'
                               onChange={handleChange}
                               // sx={{
                               //   '&.Mui-error fieldset': {

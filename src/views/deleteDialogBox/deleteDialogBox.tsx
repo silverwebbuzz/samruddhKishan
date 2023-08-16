@@ -12,6 +12,8 @@ import DialogContentText from '@mui/material/DialogContentText'
 import { AppDispatch } from 'src/store/store'
 import { useDispatch } from 'react-redux'
 import { deleteFarmer, deletePermissions, deleteUser } from 'src/slice/farmers'
+import { deleteCategory } from 'src/slice/categoriesSlice'
+import { deleteProduct } from 'src/slice/productSlice'
 
 const Transition = forwardRef(function Transition(
   props: SlideProps & { children?: ReactElement<any, any> },
@@ -24,7 +26,7 @@ const DeleteDialog = ({ open, type, id, handleClose, delelteField }: any) => {
   const dispatch = useDispatch<AppDispatch>()
 
   const handleDelete = () => {
-    const payload = {
+    const payload: any = {
       id: id
     }
     // console.log(payload, 'payload')
@@ -39,7 +41,12 @@ const DeleteDialog = ({ open, type, id, handleClose, delelteField }: any) => {
       case 'permissions':
         dispatch(deletePermissions(payload))
         break
-
+      case 'categories':
+        dispatch(deleteCategory(payload))
+        break
+      case 'deleteProduct':
+        dispatch(deleteProduct(payload))
+        break
       default:
         console.log('Does not exist DELETE ID!')
         break

@@ -2,6 +2,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { toast } from 'react-hot-toast'
+import errorHandler from 'src/error/error-handler'
 let TOKEN = null
 if (typeof window !== 'undefined') {
   TOKEN = localStorage.getItem('accessToken')
@@ -34,6 +35,7 @@ interface RootState {
   deleteUser: Array<any>
   deletePermission: Array<any>
   singleUser: Array<any>
+  contentPage: Array<any>
   isLoading: boolean
 }
 const initialState: RootState = {
@@ -59,18 +61,24 @@ const initialState: RootState = {
   deleteUser: [],
   deletePermission: [],
   singleUser: [],
+  contentPage: [],
   isLoading: false
 }
+
 export const getAllFarmers = createAsyncThunk('farmers/getAllFarmers', async (payload: any, { rejectWithValue }) => {
   try {
     const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/farmer/getAllFarmer`, payload, {
       headers
     })
+    // errorHandler(res)
+
     return res?.data
   } catch (err: any) {
+    errorHandler(err?.code)
     return rejectWithValue(err?.response?.data)
   }
 })
+
 export const getAllDistrict = createAsyncThunk('farmers/getAllDistrict', async (payload: any, { rejectWithValue }) => {
   try {
     const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/farmer/getAllCity`, payload, {
@@ -153,7 +161,6 @@ export const getAdressByPincode = createAsyncThunk('farmer/GetPinCoder', async (
     const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/farmer/GetPinCode/${payload?.pincode}`, {
       headers
     })
-    console.log('resresres', res)
     return res?.data
   } catch (err: any) {
     return rejectWithValue(err?.response?.data)
@@ -311,7 +318,19 @@ export const deletePermissions = createAsyncThunk(
     }
   }
 )
-
+export const createContentPage = createAsyncThunk(
+  'farmers/createContentPage',
+  async (payload: any, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/contentPage/createContentPage`, payload, {
+        headers
+      })
+      return res?.data?.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response?.data)
+    }
+  }
+)
 // Company Profile slice
 export const farmersSlice = createSlice({
   name: 'farmers',
@@ -532,6 +551,17 @@ export const farmersSlice = createSlice({
     builder.addCase(deleteRole.rejected, state => {
       state.isLoading = false
     })
+    builder.addCase(createContentPage.pending, state => {
+      state.isLoading = true
+    })
+    builder.addCase(createContentPage.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.contentPage = action.payload
+    })
+    builder.addCase(createContentPage.rejected, state => {
+      state.isLoading = false
+    })
   }
 })
+
 export default farmersSlice.reducer

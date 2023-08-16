@@ -8,7 +8,6 @@ import Button from '@mui/material/Button'
 import ListItem from '@mui/material/ListItem'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
-import { styled, useTheme } from '@mui/material/styles'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -23,27 +22,20 @@ interface FileProp {
   size: number
 }
 
-// Styled component for the upload image inside the dropzone area
-const Img = styled('img')(({ theme }) => ({
-  width: 48,
-  height: 48,
-  marginBottom: theme.spacing(8.5)
-}))
-
-const FileUploaderRestrictions = () => {
+const FileUploaderRestrictions = ({ files, setFiles }: any) => {
   // ** State
-  const [files, setFiles] = useState<File[]>([])
 
   // ** Hooks
-  const theme = useTheme()
   const { getRootProps, getInputProps } = useDropzone({
-    maxFiles: 2,
-    maxSize: 2000000,
+    maxFiles: 4,
+    maxSize: 4000000,
     accept: {
-      'image/*': ['.png', '.jpg', '.jpeg', '.gif']
+      'image/*': ['.png', '.jpg', '.jpeg']
     },
     onDrop: (acceptedFiles: File[]) => {
       setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
+      console.log('acceptedFiles ------>', acceptedFiles?.[0])
+      setFiles([...files, acceptedFiles[0]])
     },
     onDropRejected: () => {
       toast.error('You can only upload 2 files & maximum size of 2 MB.', {
@@ -51,9 +43,8 @@ const FileUploaderRestrictions = () => {
       })
     }
   })
-
   const renderFilePreview = (file: FileProp) => {
-    if (file.type.startsWith('image')) {
+    if (file?.type?.startsWith('image')) {
       return <img width={38} height={38} alt={file.name} src={URL.createObjectURL(file as any)} />
     } else {
       return <Icon icon='tabler:file-description' />
@@ -67,7 +58,14 @@ const FileUploaderRestrictions = () => {
   }
 
   const fileList = files.map((file: FileProp) => (
-    <ListItem key={file.name}>
+    <ListItem
+      key={file.name}
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        boxShadow: '1px solid #000'
+      }}
+    >
       <div className='file-details'>
         <div className='file-preview'>{renderFilePreview(file)}</div>
         <div>
@@ -94,12 +92,25 @@ const FileUploaderRestrictions = () => {
       <div {...getRootProps({ className: 'dropzone' })}>
         <input {...getInputProps()} />
         <Box sx={{ display: 'flex', textAlign: 'center', alignItems: 'center', flexDirection: 'column' }}>
-          <Img alt='Upload img' src={`/images/misc/upload-${theme.palette.mode}.png`} />
-          <Typography variant='h5' sx={{ mb: 2.5 }}>
+          <Box
+            sx={{
+              mb: 8.75,
+              width: 48,
+              height: 48,
+              display: 'flex',
+              borderRadius: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: theme => `rgba(${theme.palette.customColors.main}, 0.08)`
+            }}
+          >
+            <Icon icon='tabler:upload' fontSize='1.75rem' />
+          </Box>
+          <Typography variant='h4' sx={{ mb: 2.5 }}>
             Drop files here or click to upload.
           </Typography>
-          <Typography sx={{ color: 'text.secondary' }}>Allowed *.jpeg, *.jpg, *.png, *.gif</Typography>
-          <Typography sx={{ color: 'text.secondary' }}>Max 2 files and max size of 2 MB</Typography>
+          <Typography sx={{ color: 'text.secondary' }}>Allowed *.jpeg, *.jpg, *.png</Typography>
+          <Typography sx={{ color: 'text.secondary' }}>Max 4 file and max size of 2 MB</Typography>
         </Box>
       </div>
       {files.length ? (
@@ -107,9 +118,8 @@ const FileUploaderRestrictions = () => {
           <List>{fileList}</List>
           <div className='buttons'>
             <Button color='error' variant='outlined' onClick={handleRemoveAllFiles}>
-              Remove All
+              Remove Image
             </Button>
-            <Button variant='contained'>Upload Files</Button>
           </div>
         </Fragment>
       ) : null}

@@ -73,9 +73,6 @@ const AuthProvider = ({ children }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // useEffect(() => {
-
-  // }, [])
   const getAllPermissions = async () => {
     const permissions = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/permission/GetAllPermission`, {
       headers
@@ -155,7 +152,7 @@ const AuthProvider = ({ children }: Props) => {
     setUser(null)
     localStorage.removeItem('userData')
     localStorage.removeItem('accessToken')
-    router.push('/login')
+    router.push('/')
   }
 
   const values = {

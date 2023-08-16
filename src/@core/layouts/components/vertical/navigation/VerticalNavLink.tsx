@@ -3,7 +3,7 @@ import { ElementType } from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
-import { useRouter } from 'next/router'
+import { NextRouter, useRouter } from 'next/router'
 
 // ** MUI Imports
 import Chip from '@mui/material/Chip'
@@ -98,11 +98,16 @@ const VerticalNavLink = ({
 
   // ** Vars
   const { navCollapsed } = settings
-
+  console.log('active menue using Nav')
   const icon = parent && !item.icon ? themeConfig.navSubItemIcon : item.icon
-
+  const handleChildRoutes = (router: NextRouter, path: string | undefined) => {
+    //@ts-ignore
+    if (router.pathname.includes(path)) {
+      return true
+    }
+  }
   const isNavLinkActive = () => {
-    if (router.pathname === item.path || handleURLQueries(router, item.path)) {
+    if (router.pathname === item.path || handleURLQueries(router, item.path) || handleChildRoutes(router, item.path)) {
       return true
     } else {
       return false
@@ -169,6 +174,7 @@ const VerticalNavLink = ({
             >
               <Translations text={item.title} />
             </Typography>
+
             {item.badgeContent ? (
               <Chip
                 label={item.badgeContent}
