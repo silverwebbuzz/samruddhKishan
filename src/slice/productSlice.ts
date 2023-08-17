@@ -48,6 +48,14 @@ export const createProduct = createAsyncThunk('user/createProduct', async (paylo
     return rejectWithValue(err?.response?.data)
   }
 })
+// export const updateProduct = createAsyncThunk('user/updateProduct', async (payload: any, { rejectWithValue }) => {
+//   try {
+//     console.log('#########', payload)
+
+//     const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/product/updateProduct`, payload)
+
+//     console.log('#########', res)
+// toast.success('Product updated successfully')
 
 export const updateProduct = createAsyncThunk('user/updateProduct', async (payload: any, { rejectWithValue }) => {
   try {

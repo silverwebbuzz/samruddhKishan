@@ -64,6 +64,7 @@ const ContentPage = () => {
   const { allProductsData, deleteProductData, createProductData } = useSelector(
     (state: any) => state?.rootReducer?.productReducer
   )
+
   const [search, setSearch] = useState<string>('')
   const router = useRouter()
   const [page, setPage] = useState<number>(1)
@@ -82,7 +83,6 @@ const ContentPage = () => {
   const [edit, setEdit] = useState<boolean>(false)
   const [editID, setEditID] = useState<string | number>('')
   const [editField, setEditField] = useState<string | number>('')
-  console.log(editField, 'editField')
 
   const handleClickOpen = () => {
     setEditPrefillData('')
@@ -132,6 +132,7 @@ const ContentPage = () => {
       page: page,
       pageSize: pageLimit
     }
+    dispatch(getAllCategories({ page: 1, pageSize: 10 }))
     dispatch(getAllProducts(payload)).then(response => {
       setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
     })
@@ -153,6 +154,9 @@ const ContentPage = () => {
     setEdit: setEdit,
     handleCancel: handleCancel
   }
+  useEffect(() => {
+    dispatch(getAllCategories({ page: 1, pageSize: 10 }))
+  }, [])
   const handleSearch = () => {}
   const renderClient = (params: GridRenderCellParams) => {
     const { row } = params

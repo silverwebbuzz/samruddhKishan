@@ -7,52 +7,62 @@ import TextField from '@mui/material/TextField'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import { Formik, Form, FormikProps, ErrorMessage } from 'formik'
-import { Box, Checkbox, FormControlLabel, Grid, Icon, Typography } from '@mui/material'
+import {
+  Box,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  Icon,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography
+} from '@mui/material'
 import { AppDispatch, RootState } from 'src/store/store'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import * as yup from 'yup'
 import { getAllCategories, updateCategory } from 'src/slice/categoriesSlice'
 import styled from '@emotion/styled'
-import { useState } from 'react'
-import { createProduct, updateProduct } from 'src/slice/productSlice'
+import { useEffect, useState } from 'react'
+import { createProduct, getAllProducts, updateProduct } from 'src/slice/productSlice'
 
 const ProductDialog = ({ show, setShow, handleCancel, edit, setEdit, editField, editID }: any) => {
   // console.log(search)
   const dispatch = useDispatch<AppDispatch>()
   // ** State
+  const [categories1, setCategories] = useState()
   const [filePreview, setFilePreview] = useState('')
   const [filePreviewForproductImage, setFilePreviewForproductImage] = useState('')
+  const { categories } = useSelector((state: any) => state?.rootReducer?.categoriesReducer)
+  useEffect(() => {
+    dispatch(getAllCategories({ page: 1, pageSize: 10 }))
+  }, [])
   const handleCategory = (values: any, { resetForm }: any) => {
     // console.log(values)
     let formData = new FormData()
     formData.append('productName', values?.productName)
+    // formData.append('categoryName', values?.categories)
     formData.append('productDescription', values?.productDescription)
     formData.append('productImage', values?.productImage)
     formData.append('brandLogo', values?.brandLogo)
 
-    // let formData = {
-    //   productName: values?.productName,
-    //   productDescription: values?.productDescription,
-    //   productImage: filePreviewForproductImage,
-    //   brandLogo: filePreview
-    // }
     let payload = formData
-
     if (edit) {
       payload.append('id', editField?.id)
       dispatch(updateProduct(payload)).then(res => {
         // if (res.payload.status === 200) {
-        //   dispatch(getAllCategories({ page: 1, pageSize: 10 }))
+        dispatch(getAllProducts({ page: 1, pageSize: 10 }))
         // }
       })
       resetForm()
       handleCancel()
     } else {
       dispatch(createProduct(payload)).then(res => {
-        if (res.payload.status === 200) {
-          //   dispatch(getAllCategories({ page: 1, pageSize: 10 }))
-        }
+        // if (res.payload.status === 200) {
+        dispatch(getAllProducts({ page: 1, pageSize: 10 }))
+        // }
       })
       resetForm()
       handleCancel()
@@ -74,6 +84,7 @@ const ProductDialog = ({ show, setShow, handleCancel, edit, setEdit, editField, 
       marginBottom: theme.spacing(4)
     }
   }))
+
   const isValidUrl = urlString => {
     try {
       return Boolean(new URL(urlString))
@@ -117,12 +128,13 @@ const ProductDialog = ({ show, setShow, handleCancel, edit, setEdit, editField, 
           initialValues={
             edit
               ? {
+                  categories: editField?.categoryName,
                   productName: editField?.productName,
                   productDescription: editField?.productDescription,
                   brandLogo: editField?.brandLogo,
                   productImage: editField?.productImage
                 }
-              : { productName: '', productDescription: '', productImage: '', brandLogo: '' }
+              : { productName: '', productDescription: '', productImage: '', brandLogo: '', categories: '' }
           }
           validationSchema={validationSchema}
           onSubmit={(values: any, { resetForm }) => {
@@ -153,6 +165,24 @@ const ProductDialog = ({ show, setShow, handleCancel, edit, setEdit, editField, 
                       }}
                     />
                   </Grid>
+                  {/* <Grid item xs={12}>
+                    <FormControl fullWidth>
+                      <InputLabel>Categories</InputLabel>
+                      <Select
+                        id='demo-simple-select'
+                        name='categories'
+                        value={values?.categories}
+                        label='Categories'
+                        onChange={handleChange}
+                      >
+                        {categories?.data?.map(name => (
+                          <MenuItem key={name?.categoryName} value={name?.categoryName}>
+                            {name?.categoryName}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid> */}
                   <Grid item xs={12}>
                     <TextField
                       label='Product Description'

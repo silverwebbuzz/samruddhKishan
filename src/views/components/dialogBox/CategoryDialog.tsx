@@ -61,8 +61,16 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
           enableReinitialize
           initialValues={
             edit
-              ? { categoryName: editField?.categoryName, categoryStatus: editField?.categoryStatus }
-              : { categoryName: '', categoryStatus: 0 }
+              ? {
+                  categoryName: editField?.categoryName,
+                  // subCategoryName: editField?.subCategoryName,
+                  categoryStatus: editField?.categoryStatus
+                }
+              : {
+                  categoryName: '',
+                  // subCategoryName: '',
+                  categoryStatus: 0
+                }
           }
           validationSchema={validationSchema}
           onSubmit={(values: any, { resetForm }) => {
@@ -73,8 +81,14 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
             const { values, touched, errors, handleBlur, handleChange, handleSubmit, setFieldValue } = props
             return (
               <Form onSubmit={handleSubmit}>
-                <Grid container spacing={5}>
-                  <Grid item xs={12}>
+                <Grid
+                  container
+                  gap={3}
+                  // sx={{
+                  //   padding: 5
+                  // }}
+                >
+                  <Grid xs={12}>
                     <TextField
                       label='Category Name'
                       autoComplete='off'
@@ -91,6 +105,26 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
                         shrink: true
                       }}
                     />
+                  </Grid>
+                  {/* <Grid xs={12}>
+                    <TextField
+                      label='Sub Category Name'
+                      autoComplete='off'
+                      value={values?.subCategoryName}
+                      type='text'
+                      helperText={errors?.subCategoryName && touched?.subCategoryName ? errors?.subCategoryName : ''}
+                      error={errors?.subCategoryName && touched?.subCategoryName ? true : false}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      fullWidth
+                      name='subCategoryName'
+                      placeholder={edit ? 'Update Sub Category Name' : 'Add Sub Category Name'}
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                    />
+                  </Grid> */}
+                  <Grid xs={12}>
                     <FormControlLabel
                       control={<Checkbox checked={values.categoryStatus} />}
                       label='Category Status'
@@ -99,7 +133,8 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
                         setFieldValue('categoryStatus', e?.target?.checked)
                       }}
                     />
-                    {console.log('values.categoryStatus', values.categoryStatus)}
+                  </Grid>
+                  <Grid xs={12}>
                     <Box sx={{ marginTop: '25px' }}>
                       <Button type='submit' variant='contained' size='medium'>
                         Save
