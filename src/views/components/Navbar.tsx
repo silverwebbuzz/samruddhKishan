@@ -9,14 +9,19 @@ import { useTheme } from '@mui/material/styles'
 // import { Menu, Close } from '@mui/icons-material'
 
 import { Button } from '@mui/material'
+import { Router, useRouter } from 'next/router'
 
 export default function Navbar() {
   const [visibleMenu, setVisibleMenu] = useState<boolean>(false)
   const { breakpoints } = useTheme()
   const matchMobileView = useMediaQuery(breakpoints.down('md'))
+  const router = useRouter()
   return (
-    <Box sx={{ backgroundColor: 'background.paper' }}>
-      <Container sx={{ py: { xs: 2, md: 1 } }}>
+    <Box sx={{ backgroundColor: 'background.paper' }} className='landing_home_page_header'>
+      <Container
+        sx={{ py: { xs: 2, mx: 1 }, px: { xs: '50px' } }}
+        style={{ maxWidth: '100%', padding: '0.5rem 10% 0.5rem 10%', minHeight: '102px' }}
+      >
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box
             sx={{
@@ -28,7 +33,7 @@ export default function Navbar() {
           >
             <img className='logo-img' src='/images/logo/logo1234.png' alt='logo' />
             <IconButton onClick={() => setVisibleMenu(!visibleMenu)}>
-              <Icon fontSize='30px' icon='material-symbols:menu' />
+              <Icon fontSize={35} icon='material-symbols:menu' />
             </IconButton>
           </Box>
 
@@ -45,31 +50,34 @@ export default function Navbar() {
                 backgroundColor: 'background.paper',
                 zIndex: 'appBar',
                 position: 'fixed',
-                height: { xs: '90vh', md: 'auto' },
+                height: { xs: '60vh', md: 'auto' },
                 top: visibleMenu ? 0 : '-120vh',
                 left: 0
               })
             }}
           >
-            {/* <Box /> */}
             <img className='logo-img' src='/images/logo/logo1234.png' alt='logo' />
-            {/* Magic space */}
             <div className='main-menu'>
               <ul className='sub-menu'>
                 <li className='menu-item'>Home</li>
                 <li className='menu-item'>About Us</li>
                 <li className='menu-item'>Contact Us</li>
-                <li className='menu-item'>Products List And Details</li>
-                <li className='menu-item'>Services List And Details</li>
+                <li className='menu-item'>Products</li>
+                <li className='menu-item'>Services</li>
               </ul>
             </div>
-            <Button className='login-btn'>Farmer Inquery</Button>
+            <Box sx={{ display: 'flex' }}>
+              <Button className='login-btn'>Farmer Inquery</Button>
+              <Button sx={{ ml: '10px' }} className='login-btn' onClick={() => router.push('/login')}>
+                Login
+              </Button>
+            </Box>
             {visibleMenu && matchMobileView && (
               <IconButton
                 sx={{
                   position: 'fixed',
-                  top: 10,
-                  right: 10
+                  top: 20,
+                  right: 20
                 }}
                 onClick={() => setVisibleMenu(!visibleMenu)}
               >

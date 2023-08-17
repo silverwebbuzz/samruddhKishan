@@ -87,15 +87,15 @@ const navigation = (): HorizontalNavItemsType => {
         icon: 'fluent-mdl2:b-i-dashboard'
       },
       {
-        title: 'Landing Page Content',
-        path: '/landing-page-content',
-        icon: 'fluent:content-view-32-regular'
-      },
-      {
         title: 'Categories',
         path: '/categories',
         icon: 'tabler:category'
       }
+      // {
+      //   title: 'Landing Page Content',
+      //   path: '/landing-page-content',
+      //   icon: 'fluent:content-view-32-regular'
+      // }
     ]
   }
 }

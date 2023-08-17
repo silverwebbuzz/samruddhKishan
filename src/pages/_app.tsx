@@ -58,6 +58,7 @@ import 'src/iconify-bundle/icons-bundle-react'
 
 // ** Global css styles
 import '../../styles/globals.css'
+import '../../styles/slider.css'
 import { Provider } from 'react-redux'
 import store from 'src/store/store'
 // ** Extend App Props with Emotion

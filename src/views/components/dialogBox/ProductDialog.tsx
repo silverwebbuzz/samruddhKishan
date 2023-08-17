@@ -62,7 +62,8 @@ const ProductDialog = ({ show, setShow, handleCancel, edit, setEdit, editField, 
   // Validations
   const validationSchema = yup.object({
     productName: yup.string().required('Category name is required'),
-    brandLogo: yup.mixed().test('fileRequired', 'Brand logo is required', value => !!value)
+    brandLogo: yup.mixed().test('fileRequired', 'Brand logo is required', value => !!value),
+    productImage: yup.mixed().test('fileRequired', 'Product image is required', value => !!value)
   })
   const ProfilePicture = styled('img')(({ theme }) => ({
     width: 108,
@@ -244,6 +245,7 @@ const ProductDialog = ({ show, setShow, handleCancel, edit, setEdit, editField, 
                           />
                         </Button>
                       </Box>
+                      <ErrorMessage name='productImage' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                     </Grid>
                   </Grid>
                   <Grid item xs={12}>

@@ -304,27 +304,6 @@ const allFarmers = () => {
             {userData?.role === 'admin' ? (
               <>
                 <Grid item sm={2} xs={12}>
-                  {/* <FormControl fullWidth size='small'>
-                    <InputLabel>Users</InputLabel>
-                    <Select
-                      id='demo-simple-select'
-                      name='Role'
-                      value={roleValue}
-                      label='Role'
-                      onChange={(e: any) => {
-                        handleRolechange(e.target.value)
-                      }}
-                    >
-                      <MenuItem key={''} value={''}>
-                        {'None'}
-                      </MenuItem>
-                      {usersData?.data?.map(name => (
-                        <MenuItem key={name?.id} value={name?.id}>
-                          {name?.firstName} {name?.lastName}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl> */}
                   <FormControl fullWidth size='small'>
                     <InputLabel id='demo-multiple-chip-label'>Role</InputLabel>
                     <Select

@@ -71,6 +71,7 @@ const navigation = (): VerticalNavItemsType => {
         subject: 'users',
         icon: 'ci:users'
       },
+
       {
         title: 'Roles & Permissions',
         icon: 'tabler:settings',
@@ -87,12 +88,7 @@ const navigation = (): VerticalNavItemsType => {
         ]
       },
       {
-        title: 'Landing Page Content',
-        path: '/landing-page-content',
-        icon: 'fluent:content-view-32-regular'
-      },
-      {
-        title: 'Products',
+        title: 'Product',
         path: '/products',
         icon: 'fluent-mdl2:b-i-dashboard'
       },
@@ -101,6 +97,11 @@ const navigation = (): VerticalNavItemsType => {
         path: '/categories',
         icon: 'tabler:category'
       }
+      // {
+      //   title: 'Landing Page Content',
+      //   path: '/landing-page-content',
+      //   icon: 'fluent:content-view-32-regular'
+      // },
     ]
   }
 }
