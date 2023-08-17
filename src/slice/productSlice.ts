@@ -59,11 +59,11 @@ export const createProduct = createAsyncThunk('user/createProduct', async (paylo
 
 export const updateProduct = createAsyncThunk('user/updateProduct', async (payload: any, { rejectWithValue }) => {
   try {
-    const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/product/updateProduct`, payload, {
-      'Access-Control-Allow-Origin': '*',
-      'Content-Type': 'multipart/form-data'
-    })
-    toast.success('Product updated successfully')
+    for (const value of payload.values()) {
+      console.log(value)
+    }
+    const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/product/updateProduct`, payload)
+    // toast.success('Product updated successfully')
     return res?.data
   } catch (err: any) {
     return rejectWithValue(err?.response?.data)

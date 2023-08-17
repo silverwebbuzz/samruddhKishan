@@ -15,7 +15,7 @@ import * as yup from 'yup'
 import { createMasterDegree, updateMasterDegreeById } from 'src/slice/masterDegreeSlice'
 import { createCategory, getAllCategories, updateCategory } from 'src/slice/categoriesSlice'
 
-const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField, editID }: any) => {
+const ServicesDialog = ({ show, setShow, handleCancel, edit, setEdit, editField, editID }: any) => {
   // console.log(search)
   const dispatch = useDispatch<AppDispatch>()
   // ** State
@@ -30,19 +30,19 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
       id: editID
     }
     if (edit) {
-      dispatch(updateCategory(editPayload)).then(res => {
-        if (res.payload.status === 200) {
-          dispatch(getAllCategories({ page: 1, pageSize: 10 }))
-        }
-      })
+      //   dispatch(updateCategory(editPayload)).then(res => {
+      //     if (res.payload.status === 200) {
+      //       dispatch(getAllCategories({ page: 1, pageSize: 10 }))
+      //     }
+      //   })
       resetForm()
       handleCancel()
     } else {
-      dispatch(createCategory(payload)).then(res => {
-        if (res.payload.status === 200) {
-          dispatch(getAllCategories({ page: 1, pageSize: 10 }))
-        }
-      })
+      //   dispatch(createCategory(payload)).then(res => {
+      //     if (res.payload.status === 200) {
+      //       dispatch(getAllCategories({ page: 1, pageSize: 10 }))
+      //     }
+      //   })
       resetForm()
       handleCancel()
     }
@@ -50,12 +50,12 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
   }
   // Validations
   const validationSchema = yup.object({
-    categoryName: yup.string().required('Category name is required')
+    categoryName: yup.string().required('Services name is required')
   })
 
   return (
     <Dialog maxWidth='sm' fullWidth open={show} aria-labelledby='form-dialog-title'>
-      <DialogTitle id='form-dialog-title'>{edit ? 'Update Category' : 'Add Category'}</DialogTitle>
+      <DialogTitle id='form-dialog-title'>{edit ? 'Update Services' : 'Add Services'}</DialogTitle>
       <DialogContent>
         <Formik
           enableReinitialize
@@ -90,7 +90,7 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
                 >
                   <Grid xs={12}>
                     <TextField
-                      label='Category Name'
+                      label='Services Name'
                       autoComplete='off'
                       value={values?.categoryName}
                       type='text'
@@ -106,28 +106,11 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
                       }}
                     />
                   </Grid>
-                  <Grid xs={12}>
-                    <TextField
-                      label='Sub Category Name'
-                      autoComplete='off'
-                      value={values?.subCategoryName}
-                      type='text'
-                      helperText={errors?.subCategoryName && touched?.subCategoryName ? errors?.subCategoryName : ''}
-                      error={errors?.subCategoryName && touched?.subCategoryName ? true : false}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      fullWidth
-                      name='subCategoryName'
-                      placeholder={edit ? 'Update Sub Category Name' : 'Add Sub Category Name'}
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                    />
-                  </Grid>
+
                   <Grid xs={12}>
                     <FormControlLabel
                       control={<Checkbox checked={values.categoryStatus} />}
-                      label='Category Status'
+                      label='Services Status'
                       name='categoryStatus'
                       onChange={e => {
                         setFieldValue('categoryStatus', e?.target?.checked)
@@ -164,4 +147,4 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
   )
 }
 
-export default CategoryDialog
+export default ServicesDialog

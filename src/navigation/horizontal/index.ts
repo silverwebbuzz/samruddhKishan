@@ -90,12 +90,17 @@ const navigation = (): HorizontalNavItemsType => {
         title: 'Categories',
         path: '/categories',
         icon: 'tabler:category'
+      },
+      {
+        title: 'Services',
+        path: '/services',
+        icon: 'tabler:category'
+      },
+      {
+        title: 'Landing Page Content',
+        path: '/landing-page-content',
+        icon: 'fluent:content-view-32-regular'
       }
-      // {
-      //   title: 'Landing Page Content',
-      //   path: '/landing-page-content',
-      //   icon: 'fluent:content-view-32-regular'
-      // }
     ]
   }
 }

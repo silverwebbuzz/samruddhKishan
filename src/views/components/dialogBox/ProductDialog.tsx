@@ -32,7 +32,7 @@ const ProductDialog = ({ show, setShow, handleCancel, edit, setEdit, editField, 
   // console.log(search)
   const dispatch = useDispatch<AppDispatch>()
   // ** State
-  const [categories1, setCategories] = useState()
+  const [categories1, setCategories] = useState('')
   const [filePreview, setFilePreview] = useState('')
   const [filePreviewForproductImage, setFilePreviewForproductImage] = useState('')
   const { categories } = useSelector((state: any) => state?.rootReducer?.categoriesReducer)
@@ -40,29 +40,31 @@ const ProductDialog = ({ show, setShow, handleCancel, edit, setEdit, editField, 
     dispatch(getAllCategories({ page: 1, pageSize: 10 }))
   }, [])
   const handleCategory = (values: any, { resetForm }: any) => {
-    // console.log(values)
+    console.log('values', values)
     let formData = new FormData()
     formData.append('productName', values?.productName)
-    // formData.append('categoryName', values?.categories)
+    formData.append('categoryId', 1)
     formData.append('productDescription', values?.productDescription)
     formData.append('productImage', values?.productImage)
     formData.append('brandLogo', values?.brandLogo)
-
+    // for (const value of formData.values()) {
+    //   console.log(value)
+    // }
     let payload = formData
     if (edit) {
       payload.append('id', editField?.id)
       dispatch(updateProduct(payload)).then(res => {
-        // if (res.payload.status === 200) {
-        dispatch(getAllProducts({ page: 1, pageSize: 10 }))
-        // }
+        if (res.payload.status === 200) {
+          dispatch(getAllProducts({ page: 1, pageSize: 10 }))
+        }
       })
       resetForm()
       handleCancel()
     } else {
       dispatch(createProduct(payload)).then(res => {
-        // if (res.payload.status === 200) {
-        dispatch(getAllProducts({ page: 1, pageSize: 10 }))
-        // }
+        if (res.payload.status === 200) {
+          dispatch(getAllProducts({ page: 1, pageSize: 10 }))
+        }
       })
       resetForm()
       handleCancel()
@@ -134,7 +136,7 @@ const ProductDialog = ({ show, setShow, handleCancel, edit, setEdit, editField, 
                   brandLogo: editField?.brandLogo,
                   productImage: editField?.productImage
                 }
-              : { productName: '', productDescription: '', productImage: '', brandLogo: '', categories: '' }
+              : { productName: '', productDescription: '', productImage: '', brandLogo: '', categories: 0 }
           }
           validationSchema={validationSchema}
           onSubmit={(values: any, { resetForm }) => {
@@ -165,7 +167,7 @@ const ProductDialog = ({ show, setShow, handleCancel, edit, setEdit, editField, 
                       }}
                     />
                   </Grid>
-                  {/* <Grid item xs={12}>
+                  <Grid item xs={12}>
                     <FormControl fullWidth>
                       <InputLabel>Categories</InputLabel>
                       <Select
@@ -176,13 +178,29 @@ const ProductDialog = ({ show, setShow, handleCancel, edit, setEdit, editField, 
                         onChange={handleChange}
                       >
                         {categories?.data?.map(name => (
-                          <MenuItem key={name?.categoryName} value={name?.categoryName}>
+                          <MenuItem key={name?.categoryName} value={name?.id}>
                             {name?.categoryName}
                           </MenuItem>
                         ))}
                       </Select>
                     </FormControl>
-                  </Grid> */}
+                    {/* <TextField
+                      label='Product Name'
+                      autoComplete='off'
+                      value={values?.productName}
+                      type='text'
+                      helperText={errors?.productName && touched?.productName ? errors?.productName : ''}
+                      error={errors?.productName && touched?.productName ? true : false}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      fullWidth
+                      name='productName'
+                      placeholder={edit ? 'Update Product Name' : 'Add Product Name'}
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                    /> */}
+                  </Grid>
                   <Grid item xs={12}>
                     <TextField
                       label='Product Description'
