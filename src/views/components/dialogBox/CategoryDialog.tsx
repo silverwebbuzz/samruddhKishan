@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import { Formik, Form, FormikProps } from 'formik'
-import { Box, Checkbox, FormControlLabel, Grid } from '@mui/material'
+import { Box, Checkbox, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select } from '@mui/material'
 import { AppDispatch, RootState } from 'src/store/store'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
@@ -18,13 +18,18 @@ import { createCategory, getAllCategories, updateCategory } from 'src/slice/cate
 const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField, editID }: any) => {
   // console.log(search)
   const dispatch = useDispatch<AppDispatch>()
+  const { categories } = useSelector((state: any) => state?.rootReducer?.categoriesReducer)
+
   // ** State
   const handleCategory = (values: any, { resetForm }: any) => {
     // console.log(values)
     const payload: any = {
-      categoryName: values?.categoryName?.trim()
+      categoryId: values?.categoryId === 'none' ? 0 : values?.categoryId,
+      categoryName: values?.categoryName,
+      categoryStatus: values?.categoryStatus
     }
     let editPayload: any = {
+      categoryId: values?.categoryId === 'none' ? 0 : values?.categoryId,
       categoryName: values?.categoryName,
       categoryStatus: values?.categoryStatus,
       id: editID
@@ -62,13 +67,13 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
           initialValues={
             edit
               ? {
+                  categoryId: editField?.categoryId === 0 ? 'none' : editField.categoryId,
                   categoryName: editField?.categoryName,
-                  subCategoryName: editField?.subCategoryName,
                   categoryStatus: editField?.categoryStatus
                 }
               : {
+                  categoryId: '',
                   categoryName: '',
-                  subCategoryName: '',
                   categoryStatus: 0
                 }
           }
@@ -89,7 +94,7 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
                   // }}
                 >
                   <Grid xs={12}>
-                    <TextField
+                    {/* <TextField
                       label='Category Name'
                       autoComplete='off'
                       value={values?.categoryName}
@@ -104,21 +109,43 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
                       InputLabelProps={{
                         shrink: true
                       }}
-                    />
+                    /> */}
+                    <FormControl fullWidth>
+                      <InputLabel id='demo-simple-select-label'>Main Category Name</InputLabel>
+                      <Select
+                        labelId='demo-simple-select-label'
+                        id='demo-simple-select'
+                        name='categoryId'
+                        value={values?.categoryId}
+                        label='Main Category Name'
+                        onChange={(e: any) => {
+                          setFieldValue('categoryId', e?.target?.value)
+                        }}
+                      >
+                        <MenuItem key={'none'} value={'none'}>
+                          None
+                        </MenuItem>
+                        {categories?.data?.map((Item: any) => (
+                          <MenuItem key={Item?.categoryName} value={Item?.id}>
+                            {Item?.categoryName}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </Grid>
                   <Grid xs={12}>
                     <TextField
-                      label='Sub Category Name'
+                      label='Category Name'
                       autoComplete='off'
-                      value={values?.subCategoryName}
+                      value={values?.categoryName}
                       type='text'
-                      helperText={errors?.subCategoryName && touched?.subCategoryName ? errors?.subCategoryName : ''}
-                      error={errors?.subCategoryName && touched?.subCategoryName ? true : false}
+                      helperText={errors?.categoryName && touched?.categoryName ? errors?.categoryName : ''}
+                      error={errors?.categoryName && touched?.categoryName ? true : false}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       fullWidth
-                      name='subCategoryName'
-                      placeholder={edit ? 'Update Sub Category Name' : 'Add Sub Category Name'}
+                      name='categoryName'
+                      placeholder={edit ? 'Update  Category Name' : 'Add  Category Name'}
                       InputLabelProps={{
                         shrink: true
                       }}

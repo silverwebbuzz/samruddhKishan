@@ -219,7 +219,7 @@ const index = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       if (userData) {
-        setRolePrefill(userData?.role)
+        setRolePrefill(userData?.role && userData?.role)
         setSTATE(userData?.state && userData?.state)
         setDistrict(userData?.city && userData?.city)
         setPincodeprefill(userData?.pinCode)
@@ -230,15 +230,20 @@ const index = () => {
     return () => clearTimeout(timer)
   }, [userData?.state, userData?.city, userData?.pinCode, userData?.role])
   const findRoleId = ros => {
-    let RFD = ''
-    const RoID = getRoles?.map(ro => {
-      if (ro.roleType?.includes(ros)) {
-        RFD = ro?.id
-      }
-    })
-    return RFD
+    const selectedOption = getRoles?.find(option => option.roleType === ros)
+    return selectedOption?.id
+    // let RFD = ''
+    // const RoID = getRoles?.map(ro => {
+    //   if (ro.roleType?.includes(ros)) {
+    //     RFD = ro?.id
+    //   }
+    // })
+    // return RFD
   }
+  //  const selectedOption = options.find((option) => option.id === selectedOptionId);
+
   const handleSubmit = (values: any) => {
+    console.log(findRoleId('dsasada', values?.role))
     let payload = {
       id: userData?.id,
       firstName: values?.firstName,
@@ -358,9 +363,10 @@ const index = () => {
                         id='demo-simple-select'
                         name='role'
                         value={rolePrefill && rolePrefill}
-                        error={Boolean(errors.role && touched.role)}
+                        error={Boolean(errors?.role && touched?.role)}
                         label='Role'
                         onChange={e => {
+                          console.log(e?.target?.value)
                           setFieldValue('role', e?.target?.value)
                           setFieldValue('email', '')
                           setFieldValue('phone', '')

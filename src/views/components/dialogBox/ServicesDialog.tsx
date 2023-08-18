@@ -100,7 +100,7 @@ const ServicesDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
                       onChange={handleChange}
                       fullWidth
                       name='categoryName'
-                      placeholder={edit ? 'Update Category Name' : 'Add Category Name'}
+                      placeholder={edit ? 'Update Services Name' : 'Add Services Name'}
                       InputLabelProps={{
                         shrink: true
                       }}
