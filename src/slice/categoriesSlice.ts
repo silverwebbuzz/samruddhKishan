@@ -26,10 +26,17 @@ export const getAllCategories = createAsyncThunk(
   'user/getAllCategories',
   async (payload: { page: string | number; pageSize: string | number }, { rejectWithValue }) => {
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/categories/GetAllCategory`, payload, {
-        headers
-      })
-      return res?.data
+      if (payload) {
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/categories/GetAllCategory`, payload, {
+          headers
+        })
+        return res?.data
+      } else {
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/categories/GetAllCategory`, {
+          headers
+        })
+        return res?.data
+      }
     } catch (err: any) {
       return rejectWithValue(err?.response?.data)
     }

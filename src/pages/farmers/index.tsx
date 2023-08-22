@@ -358,10 +358,10 @@ const allFarmers = () => {
                     <FormControl fullWidth size='small'>
                       <InputLabel id='demo-simple-select-label'>District</InputLabel>
                       <Select
-                        labelId='demo-simple-select-label'
+                        labelId='demso-imple-select-label'
                         id='demo-simple-select'
                         name='district'
-                        disabled={STATE.length <= 0}
+                        disabled={STATE?.length <= 0}
                         value={district}
                         label='district'
                         onChange={e => {
@@ -382,7 +382,7 @@ const allFarmers = () => {
                     size='small'
                     value={taluka}
                     onChange={e => {
-                      setTaluka(e.target?.value)
+                      setTaluka(e?.target?.value)
                     }}
                     label='Taluka'
                     placeholder='Taluka'

@@ -3,7 +3,6 @@
 import { SyntheticEvent, useEffect, useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
-import Navbar from 'src/views/components/Navbar'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
@@ -11,13 +10,16 @@ import 'swiper/css/free-mode'
 import { Autoplay, Pagination, Navigation, EffectFade, FreeMode } from 'swiper/modules'
 import { Button, Grid } from '@mui/material'
 import { Box } from '@mui/system'
-import Accordion from '@mui/material/Accordion'
-import AccordionSummary from '@mui/material/AccordionSummary'
-import AccordionDetails from '@mui/material/AccordionDetails'
 import Icon from 'src/@core/components/icon'
 import Link from 'next/link'
 import CountUp from 'react-countup'
 import VisibilitySensor from 'react-visibility-sensor'
+import Navbar from 'src/views/components/landdingPage/navBar/Navbar'
+import ContactSection from 'src/views/components/landdingPage/contactSection'
+import FooterSection from 'src/views/components/landdingPage/footerSection'
+import AboutSection from 'src/views/components/landdingPage/aboutSection/AboutSection'
+import GetToKnow from 'src/views/components/landdingPage/getKnow/GetKnown'
+import TestimonialSection from 'src/views/components/landdingPage/testimonialSection/TestimonialSection'
 
 const HomePage = () => {
   const [expanded, setExpanded] = useState<string | false>(false)
@@ -168,49 +170,9 @@ const HomePage = () => {
             </SwiperSlide>
           </Swiper>
         </section>
-        <section className='about-section sec_padding'>
-          <Box sx={{ display: { md: 'flex' }, flexDirection: { sx: 'column' } }}>
-            <Grid sm={6} md={5} lg={5}>
-              <div className='about-sec'>
-                <img className='about-img' src='/images/logo/slider1.jpg' alt='slider1.jpg' />
-                <div className='sub-about-img'>
-                  <img className='about-img2' src='/images/logo/slider3.jpg' alt='slider1.jpg' />
-                </div>
-              </div>
-            </Grid>
-            <Grid sm={6} md={7} lg={7}>
-              <div className='about-content'>
-                <div className='about-text'>
-                  <h2 className='about-heading'>
-                    Agriculture For <br /> Future Development
-                  </h2>
-                  <p className='about-des'>
-                    There are many variations of passages of ipsum available but the majority have suffered alteration
-                    in some form by injected humor or random word which don’t look even. Comparison new ham melancholy
-                    son themselves.
-                  </p>
-                  <p className='about-des'>
-                    There are many variations of passages of ipsum available but the majority have suffered alteration
-                    in some form by injected humor or random word which don’t look even. Comparison new ham melancholy
-                    son themselves.
-                  </p>
-                </div>
-                <div className='about-card'>
-                  <div className='card1'>
-                    <img className='top-card-img' src='/images/logo/tameta.png' alt='card1' />
-                    <h3 className='about-card-heading'>Natural Farming</h3>
-                    <p className='about-card-text'>Resolve parties but trying she shewing of moment.</p>
-                  </div>
-                  <div className='card2'>
-                    <img className='top-card-img' src='/images/logo/2.png' alt='card1' />
-                    <h3 className='about-card-heading'>Natural Farming</h3>
-                    <p className='about-card-text'>Resolve parties but trying she shewing of moment.</p>
-                  </div>
-                </div>
-              </div>
-            </Grid>
-          </Box>
-        </section>
+        {/* About section start */}
+        <AboutSection />
+        {/* About section end */}
         <section className='what-we-do sec_padding'>
           <div className='section-bg-img'>
             <img src='/images/logo/18.png' alt='banner image' />
@@ -384,140 +346,14 @@ const HomePage = () => {
             </div>
           </div>
         </section>
-        <section className='get-to-know sec_padding'>
-          <Grid container style={{ alignItems: 'center' }}>
-            <Grid sm={12} md={5} style={{ position: 'relative' }}>
-              <Box className='get-to-know-left'>
-                <img className='get-to-know-img' src='./images/logo/1-1.jpg' alt='slider6' />
-                <img className='get-to-know-img2' src='./images/logo/22.png' alt='slider6' />
-              </Box>
-              <Box className='get_to_know_btm'>
-                <div className='get_to_know_btm_left'>
-                  <img src='/images/logo/1-2.png' alt='' />
-                </div>
-                <div className='get_to_know_btm_right'>
-                  <div className='timer'>
-                    <CountUp end={259} duration={2} suffix='K'>
-                      {({ countUpRef, start }) => (
-                        <VisibilitySensor active={!viewPortEntered} onChange={start} delayedCall>
-                          <span ref={countUpRef} />
-                        </VisibilitySensor>
-                      )}
-                    </CountUp>
-                  </div>
-                  <p>Agriculture, Organic Products</p>
-                </div>
-              </Box>
-            </Grid>
-            <Grid sm={12} md={7}>
-              <Box className='get-to-know-right'>
-                <p className='get-to-know-heading'>GET TO KNOW US</p>
-                <h1 className='get-to-know-content'>
-                  Agriculture matters to <br />
-                  the future of development
-                </h1>
-                <div>
-                  <Accordion
-                    className='accordion-main'
-                    expanded={expanded === 'panel1'}
-                    onChange={handleChange('panel1')}
-                  >
-                    <AccordionSummary
-                      id='controlled-panel-header-1'
-                      aria-controls='controlled-panel-content-1'
-                      expandIcon={<Icon fontSize='1.25rem' icon='tabler:chevron-down' />}
-                    >
-                      <h4 className='get-col-heading'>Accordion 1</h4>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <p className='get-col-text'>
-                        Wafer sesame snaps chocolate bar candy canes halvah. Cupcake sesame snaps sweet tart dessert
-                        biscuit. Topping soufflé tart sweet croissant.
-                      </p>
-                    </AccordionDetails>
-                  </Accordion>
+        {/* Get to know section start */}
+        <GetToKnow />
+        {/* Get to know section end */}
 
-                  <Accordion
-                    className='accordion-main'
-                    expanded={expanded === 'panel2'}
-                    onChange={handleChange('panel2')}
-                  >
-                    <AccordionSummary
-                      id='controlled-panel-header-2'
-                      aria-controls='controlled-panel-content-2'
-                      expandIcon={<Icon fontSize='1.25rem' icon='tabler:chevron-down' />}
-                    >
-                      <h4 className='get-col-heading'>Accordion 1</h4>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <p className='get-col-text'>
-                        Wafer sesame snaps chocolate bar candy canes halvah. Cupcake sesame snaps sweet tart dessert
-                        biscuit. Topping soufflé tart sweet croissant.
-                      </p>
-                    </AccordionDetails>
-                  </Accordion>
+        {/* Testimonial section start */}
+        <TestimonialSection />
+        {/* Testimonial section end */}
 
-                  <Accordion
-                    className='accordion-main'
-                    expanded={expanded === 'panel3'}
-                    onChange={handleChange('panel3')}
-                  >
-                    <AccordionSummary
-                      id='controlled-panel-header-3'
-                      aria-controls='controlled-panel-content-3'
-                      expandIcon={<Icon fontSize='1.25rem' icon='tabler:chevron-down' />}
-                    >
-                      <h4 className='get-col-heading'>Accordion 1</h4>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <p className='get-col-text'>
-                        Wafer sesame snaps chocolate bar candy canes halvah. Cupcake sesame snaps sweet tart dessert
-                        biscuit. Topping soufflé tart sweet croissant.
-                      </p>
-                    </AccordionDetails>
-                  </Accordion>
-                </div>
-              </Box>
-            </Grid>
-          </Grid>
-        </section>
-        <section className='testimonial_section sec_padding'>
-          <Grid container style={{ alignItems: 'center' }}>
-            <Grid sm={12} md={6} className='testimonial_left'>
-              <Box>
-                <h4>Testimonial</h4>
-                <img src='./images/logo/2-1.jpg' alt='slider6' />
-                <img src='./images/logo/1-2.jpg' alt='slider6' />
-                <img src='./images/logo/1-2.jpg' alt='slider6' />
-                <img src='./images/logo/1-2.jpg' alt='slider6' />
-              </Box>
-            </Grid>
-            <Grid sm={12} md={6}>
-              <Box className='testimonial_right'>
-                <Swiper slidesPerView={1} loop={true} className='testimonial_slider'>
-                  <SwiperSlide className='slider_item'>
-                    <h4>
-                      “Targetingconsultation discover apartments. ndulgence off under folly death wrote cause her way
-                      spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties
-                      but why she shewing. She sang know now always remembering to the point.”
-                    </h4>
-                    <p>Metho k. Partho </p>
-                    <span>Consultant </span>
-                  </SwiperSlide>
-                  <SwiperSlide className='slider_item'>
-                    <h4>
-                      “Targetingconsultation discover apartments. ndulgence off under folly death wrote cause her way
-                      spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties
-                      but why she shewing. She sang know now always remembering to the point.”
-                    </h4>
-                    <p>Metho k. Partho </p>
-                    <span>Consultant </span>
-                  </SwiperSlide>
-                </Swiper>
-              </Box>
-            </Grid>
-          </Grid>
-        </section>
         <section className='product_gallery_section'>
           <div className='product_gallery_heading sec_padding'>
             <h5 className='sec_sub_title'>AWESOME GALLERY</h5>
@@ -643,78 +479,9 @@ const HomePage = () => {
             </div>
           </div>
         </section>
-        <section className='home-contact sec_padding'>
-          <Grid container style={{ alignItems: 'center' }}>
-            <Grid sm={12} md={6}>
-              <Box className='home-contact-left'>
-                <div className='form-section'>
-                  <h5 className='sec_sub_title'>HAVE QUESTIONS?</h5>
-                  <h2 className='sec_title'>Send us a Massage</h2>
-                  <form className='home-form'>
-                    <div className='name_row'>
-                      <input type='text' placeholder='Name' />
-                    </div>
-                    <div className='email_phone_row'>
-                      <div className='email_row'>
-                        <input type='email' placeholder='Email*' />
-                      </div>
-                      <div className='phone_row'>
-                        <input type='number' placeholder='Phone' />
-                      </div>
-                    </div>
-                    <div className='textarea_row'>
-                      <textarea name='' id='' cols='30' rows='10' placeholder='Tell Us About Project*'></textarea>
-                    </div>
-                    <div>
-                      <button className='submit_btn yellowbtn'>
-                        <Icon icon='vaadin:paperplane' />
-                        Get in Touch
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              </Box>
-            </Grid>
-            <Grid sm={12} md={6}>
-              <Box className='home-contact-right'>
-                <div className='contact-des'>
-                  <h1 className='contact-heading'>Contact Information</h1>
-                  <p className='contact-text'>
-                    Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she
-                    shewing.
-                  </p>
-                </div>
-                <div className='contact-details contact_details_phone'>
-                  <div className='contact-icon'>
-                    <Icon fontSize='25px' icon='ic:baseline-phone' />
-                  </div>
-                  <div className='contact-name'>
-                    <h3>Phone No.</h3>
-                    <p>+91 33378901</p>
-                  </div>
-                </div>
-                <div className='contact-details contact_details_location'>
-                  <div className='contact-icon'>
-                    <Icon fontSize='25px' icon='mdi:location' />
-                  </div>
-                  <div className='contact-name'>
-                    <h3>Our Location</h3>
-                    <p>Ahmedabad, Gujarat</p>
-                  </div>
-                </div>
-                <div className='contact-details contact_details_email'>
-                  <div className='contact-icon'>
-                    <Icon fontSize='25px' icon='ic:baseline-email' />
-                  </div>
-                  <div className='contact-name'>
-                    <h3>Email</h3>
-                    <p>example@gamil.com</p>
-                  </div>
-                </div>
-              </Box>
-            </Grid>
-          </Grid>
-        </section>
+        {/* Contact form start */}
+        <ContactSection />
+        {/* Contact form end */}
         <section className='home_latest_blogs sec_padding'>
           <div className='latest_blog_lg'>
             <div className='card_img'>
@@ -798,116 +565,10 @@ const HomePage = () => {
             </div>
           </div>
         </section>
-        <footer className='sec_padding'>
-          <div className='footer_first_col logo_col'>
-            <a href='#'>
-              <img src='/images/logo/logo1234.png' alt='' />
-            </a>
-            <p>
-              Happen active county. Winding morning ambition shyness evident to poor. Because elderly new to the point
-              to main success.
-            </p>
-            <div className='footer_form'>
-              <input type='text' placeholder='input your email' />
-              <button type='submit'>Go</button>
-            </div>
-          </div>
-          <div className='footer_sec_col explore_menu'>
-            <h3>Explore</h3>
-            <ul>
-              <li>
-                <a href='#'>About Us</a>
-              </li>
-              <li>
-                <a href='#'>Meet Our Team</a>
-              </li>
-              <li>
-                <a href='#'>Services</a>
-              </li>
-              <li>
-                <a href='#'>News & Media</a>
-              </li>
-              <li>
-                <a href='#'>Contact Us</a>
-              </li>
-              <li>
-                <a href='#'>Volunteers</a>
-              </li>
-            </ul>
-          </div>
-          <div className='footer_third_col recent_post_menu'>
-            <h3>Recent Posts</h3>
-            <div className='fotter_post_item'>
-              <div className='fotter_post_item_img'>
-                <Link href='#'>
-                  <img src='/images/logo/blog-2.jpg' alt='' />
-                </Link>
-              </div>
-              <div className='fotter_post_item_content'>
-                <p>April 14, 2023</p>
-                <Link href='#'>
-                  <h4>Announcing if the resolution sentiments</h4>
-                </Link>
-              </div>
-            </div>
-            <div className='fotter_post_item'>
-              <div className='fotter_post_item_img'>
-                <Link href='#'>
-                  <img src='/images/logo/blog-2.jpg' alt='' />
-                </Link>
-              </div>
-              <div className='fotter_post_item_content'>
-                <p>April 14, 2023</p>
-                <Link href='#'>
-                  <h4>Announcing if the resolution sentiments</h4>
-                </Link>
-              </div>
-            </div>
-          </div>
-          <div className='footer_forth_col contact_details_menu'>
-            <h3>Contact Info</h3>
-            <div class='contact-details contact_details_phone'>
-              <div class='contact-icon'>
-                <Icon icon='carbon:home' />
-              </div>
-              <div class='contact-name'>
-                <h3>ADDRESS:</h3>
-                <p>5919 Trussville Crossings Pkwy, Birmingham</p>
-              </div>
-            </div>
-            <div class='contact-details contact_details_phone'>
-              <div class='contact-icon'>
-                <Icon icon='mdi-light:email-open' />
-              </div>
-              <div class='contact-name'>
-                <h3>EMAIL:</h3>
-                <p>
-                  <a href='mailto:info@validtheme.com'>info@validtheme.com</a>
-                </p>
-              </div>
-            </div>
-            <div class='contact-details contact_details_phone'>
-              <div class='contact-icon'>
-                <Icon icon='material-symbols:call-outline' />
-              </div>
-              <div class='contact-name'>
-                <h3>Phone Mo.</h3>
-                <p>
-                  <a href='tel:+91 33378901'>+91 33378901</a>
-                </p>
-              </div>
-            </div>
-          </div>
-        </footer>
-        <div className='copyright sec_padding'>
-          <div className='copyright_left'>© Copyright 2023. All Rights Reserved by Silverwebbuzz</div>
-          <div className='copyright_right'>
-            <a href='#'>Terms</a>
-            <a href='#'>Privacy</a>
-            <a href='#'>Support</a>
-          </div>
-        </div>
       </div>
+      {/* Main footer start */}
+      <FooterSection />
+      {/* Main footer end */}
     </>
   )
 }

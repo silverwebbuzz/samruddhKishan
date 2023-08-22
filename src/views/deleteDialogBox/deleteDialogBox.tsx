@@ -14,6 +14,8 @@ import { useDispatch } from 'react-redux'
 import { deleteFarmer, deletePermissions, deleteUser } from 'src/slice/farmers'
 import { deleteCategory } from 'src/slice/categoriesSlice'
 import { deleteProduct } from 'src/slice/productSlice'
+import { deleteService, getAllServices } from 'src/slice/servicesSlice'
+import { deleteBrands, getAllBrands } from 'src/slice/brandsSlice'
 
 const Transition = forwardRef(function Transition(
   props: SlideProps & { children?: ReactElement<any, any> },
@@ -47,6 +49,22 @@ const DeleteDialog = ({ open, type, id, handleClose, delelteField }: any) => {
       case 'deleteProduct':
         dispatch(deleteProduct(payload))
         break
+
+      case 'services':
+        dispatch(deleteService(payload)).then(res => {
+          if (res) {
+            //@ts-ignore
+            dispatch(getAllServices())
+          }
+        })
+      case 'brands':
+        dispatch(deleteBrands(payload)).then(res => {
+          if (res) {
+            //@ts-ignore
+            dispatch(getAllBrands())
+          }
+        })
+
       default:
         console.log('Does not exist DELETE ID!')
         break

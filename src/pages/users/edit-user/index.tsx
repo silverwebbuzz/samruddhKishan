@@ -60,7 +60,7 @@ const index = () => {
   const router = useRouter()
   const dispatch = useDispatch<AppDispatch>()
   const [pincode, setPincode] = useState('')
-  const [pinCodeAddress, setPinCodeAddress] = useState('')
+  const [pinCodeAddress, setPinCodeAddress] = useState([])
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json'
@@ -583,23 +583,6 @@ const index = () => {
                                 setFieldValue('centerDistrict', e?.target?.value)
                                 setDistrict(e?.target?.value)
                               }}
-                              // sx={{
-                              //   '& .MuiSelect-root': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important' // Set the desired color for the select
-                              //   },
-                              //   '& .MuiOutlinedInput-notchedOutline': {
-                              //     borderColor: 'black !important' // Set the desired border color for the select
-                              //   },
-
-                              //   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important'
-                              //   },
-                              //   '&.Mui-error': {
-                              //     color: 'red' // Set the label color when the Select is in an error state
-                              //   }
-                              // }}
                             >
                               {allDistrict?.map(name => (
                                 <MenuItem key={name?.name} value={name?.name}>
@@ -1039,7 +1022,7 @@ const index = () => {
                               labelId='demo-simple-select-label'
                               id='demo-simple-select'
                               name='apmcDistrict'
-                              disabled={STATE.length <= 0}
+                              disabled={STATE?.length <= 0}
                               value={values?.apmcDistrict}
                               label='district'
                               onChange={handleChange}

@@ -1,0 +1,70 @@
+/* .page-banner {
+  padding: 150px 0;
+  background-image: url('/images/logo/3.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+  z-index: 1;
+}
+.page-banner::after {
+  background: #000000;
+  content: '';
+  height: 100%;
+  left: 0;
+  opacity: 0.5;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: -1;
+} */
+
+.page-banner {
+  position: relative;
+  height: 450px;
+}
+
+.page-img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+.page-banner::after {
+  background: #000000;
+  content: '';
+  height: 100%;
+  left: 0;
+  opacity: 0.5;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+.banner-container {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  z-index: 2;
+}
+.page-banner-heading {
+  text-transform: capitalize;
+  margin-top: 0;
+  margin-bottom: 5px;
+  color: #ffffff;
+  font-family: var(--defalt-font) !important;
+}
+.page-banner-text {
+  font-family: var(--defalt-font) !important;
+  display: inline-block;
+  color: #ebebeb;
+  margin: 0;
+  text-align: center;
+  font-size: 16px;
+}
+.page-banner-content {
+  display: flex;
+  flex-direction: column;
+  justify-self: center;
+  align-items: center;
+}

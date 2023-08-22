@@ -18,7 +18,7 @@ const navigation = (): HorizontalNavItemsType => {
       if (UserData?.role === ROLENAME) {
         ROLEID?.map((rID: any) => {
           if (rID == permission?.id) {
-            ARRR.push(permission)
+            ARRR?.push(permission)
           }
         })
       }
@@ -35,6 +35,16 @@ const navigation = (): HorizontalNavItemsType => {
         title: 'Users',
         path: '/users',
         icon: 'ci:users'
+      },
+      {
+        title: 'Product',
+        path: '/all-products',
+        icon: 'fluent-mdl2:b-i-dashboard'
+      },
+      {
+        title: 'Services',
+        path: '/all-services',
+        icon: 'carbon:ibm-cloud-hyper-protect-crypto-services'
       }
     ]
     const FinalRoute = []
@@ -81,10 +91,15 @@ const navigation = (): HorizontalNavItemsType => {
           }
         ]
       },
+      // {
+      //   title: 'Product',
+      //   path: '/all-products',
+      //   icon: 'fluent-mdl2:b-i-dashboard'
+      // },
       {
-        title: 'Product',
-        path: '/products',
-        icon: 'fluent-mdl2:b-i-dashboard'
+        title: 'Services',
+        path: '/all-services',
+        icon: 'carbon:ibm-cloud-hyper-protect-crypto-services'
       },
       {
         title: 'Categories',
@@ -93,8 +108,17 @@ const navigation = (): HorizontalNavItemsType => {
       },
       {
         title: 'Services',
-        path: '/services',
-        icon: 'tabler:category'
+        path: '/all-services',
+        action: 'read',
+        subject: 'all-services',
+        icon: 'carbon:ibm-cloud-hyper-protect-crypto-services'
+      },
+      {
+        title: 'Brands',
+        path: '/brands',
+        action: 'read',
+        subject: 'brands',
+        icon: 'fluent:production-checkmark-24-regular'
       },
       {
         title: 'Landing Page Content',

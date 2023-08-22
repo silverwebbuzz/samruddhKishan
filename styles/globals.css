@@ -13,6 +13,7 @@
   --defalt-font: 'Manrope', sans-serif;
   --handlee-font: 'Handlee', cursive;
   --heading-color: #04000b;
+  --menu-color: ;
 }
 html,
 body {
@@ -65,6 +66,9 @@ code[class*='language-'] {
   list-style: none;
   padding: 0;
 }
+.menu-link {
+  text-decoration: none;
+}
 .menu-item {
   padding: 10px 10px;
   font-size: 14px;
@@ -72,6 +76,7 @@ code[class*='language-'] {
   font-family: var(--defalt-font);
   text-transform: uppercase;
   cursor: pointer;
+  color: var(--heading-color);
 }
 .menu-item:hover {
   color: var(--btn-color);
@@ -1461,7 +1466,7 @@ code[class*='language-'] {
     bottom: -80px;
   }
   .main-card {
-    width: 70%;
+    width: 85%;
     margin: 0 auto;
   }
   .about-section,

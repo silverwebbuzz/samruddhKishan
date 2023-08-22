@@ -94,22 +94,6 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
                   // }}
                 >
                   <Grid xs={12}>
-                    {/* <TextField
-                      label='Category Name'
-                      autoComplete='off'
-                      value={values?.categoryName}
-                      type='text'
-                      helperText={errors?.categoryName && touched?.categoryName ? errors?.categoryName : ''}
-                      error={errors?.categoryName && touched?.categoryName ? true : false}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      fullWidth
-                      name='categoryName'
-                      placeholder={edit ? 'Update Category Name' : 'Add Category Name'}
-                      InputLabelProps={{
-                        shrink: true
-                      }}
-                    /> */}
                     <FormControl fullWidth>
                       <InputLabel id='demo-simple-select-label'>Main Category Name</InputLabel>
                       <Select

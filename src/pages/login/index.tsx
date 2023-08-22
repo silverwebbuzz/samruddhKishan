@@ -84,7 +84,7 @@ const LoginPage = () => {
 
   const { login } = auth
   const validationSchema = yup.object().shape({
-    email: yup.string().email('Invalid email').required('Email id is required'),
+    email: yup.string().required('Email or phone number is required'),
     password: yup
       .string()
       .required('Password is required')
@@ -169,13 +169,12 @@ const LoginPage = () => {
                     <TextField
                       autoFocus
                       name='email'
-                      type='email'
-                      label='Email'
+                      label='Enter your email or phone number'
                       value={values?.email}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       error={Boolean(errors.email && touched.email)}
-                      placeholder='User@gmail.com'
+                      placeholder='Enter your email or phone number'
                       InputProps={{
                         //@ts-ignore
                         startAdornment: (

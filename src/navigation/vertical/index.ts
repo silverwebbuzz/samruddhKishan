@@ -39,6 +39,11 @@ const navigation = (): VerticalNavItemsType => {
         title: 'Users',
         path: '/users',
         icon: 'ci:users'
+      },
+      {
+        title: 'Product',
+        path: '/all-products',
+        icon: 'fluent-mdl2:b-i-dashboard'
       }
     ]
     const FinalRoute = []
@@ -87,11 +92,13 @@ const navigation = (): VerticalNavItemsType => {
           }
         ]
       },
-      {
-        title: 'Product',
-        path: '/products',
-        icon: 'fluent-mdl2:b-i-dashboard'
-      },
+      // {
+      //   title: 'Product',
+      //   path: '/all-products',
+      //   action: 'read',
+      //   subject: 'all-products',
+      //   icon: 'fluent-mdl2:b-i-dashboard'
+      // },
       {
         title: 'Categories',
         path: '/categories',
@@ -99,9 +106,19 @@ const navigation = (): VerticalNavItemsType => {
       },
       {
         title: 'Services',
-        path: '/services',
-        icon: 'tabler:category'
+        path: '/all-services',
+        action: 'read',
+        subject: 'all-services',
+        icon: 'carbon:ibm-cloud-hyper-protect-crypto-services'
       },
+      {
+        title: 'Brands',
+        path: '/brands',
+        action: 'read',
+        subject: 'brands',
+        icon: 'fluent:production-checkmark-24-regular'
+      },
+
       {
         title: 'Landing Page Content',
         path: '/landing-page-content',

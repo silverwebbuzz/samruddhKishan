@@ -113,6 +113,7 @@ const AuthProvider = ({ children }: Props) => {
           }
         })
         .then(async response => {
+          console.log('response', response)
           if (response?.data?.status === 200) {
             handleLoginSuccess(response)
           } else if (response?.data?.status === 401) {
@@ -143,7 +144,10 @@ const AuthProvider = ({ children }: Props) => {
           }
         })
         .catch(err => {
-          console.log('ERROR: ', err)
+          console.log('ERROR: ', err?.response?.data)
+          if (err?.response?.data?.status === 404) {
+            toast.error(err?.response?.data?.msg)
+          }
         })
     }
   }
