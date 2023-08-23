@@ -78,6 +78,41 @@ const navigation = (): HorizontalNavItemsType => {
         icon: 'ci:users'
       },
       {
+        title: 'Brands',
+        path: '/brands',
+        action: 'read',
+        subject: 'brands',
+        icon: 'fluent:production-checkmark-24-regular'
+      },
+      {
+        title: 'Categories',
+        path: '/categories',
+        icon: 'tabler:category'
+      },
+      {
+        title: 'Product',
+        path: '/all-products',
+        icon: 'fluent-mdl2:b-i-dashboard'
+      },
+      {
+        title: 'Services',
+        path: '/all-services',
+        icon: 'carbon:ibm-cloud-hyper-protect-crypto-services'
+      },
+      {
+        title: 'Services',
+        path: '/all-services',
+        action: 'read',
+        subject: 'all-services',
+        icon: 'carbon:ibm-cloud-hyper-protect-crypto-services'
+      },
+
+      {
+        title: 'Landing Page Content',
+        path: '/landing-page-content',
+        icon: 'fluent:content-view-32-regular'
+      },
+      {
         title: 'Roles & Permissions',
         icon: 'tabler:settings',
         children: [
@@ -90,40 +125,6 @@ const navigation = (): HorizontalNavItemsType => {
             path: '/permissions'
           }
         ]
-      },
-      // {
-      //   title: 'Product',
-      //   path: '/all-products',
-      //   icon: 'fluent-mdl2:b-i-dashboard'
-      // },
-      {
-        title: 'Services',
-        path: '/all-services',
-        icon: 'carbon:ibm-cloud-hyper-protect-crypto-services'
-      },
-      {
-        title: 'Categories',
-        path: '/categories',
-        icon: 'tabler:category'
-      },
-      {
-        title: 'Services',
-        path: '/all-services',
-        action: 'read',
-        subject: 'all-services',
-        icon: 'carbon:ibm-cloud-hyper-protect-crypto-services'
-      },
-      {
-        title: 'Brands',
-        path: '/brands',
-        action: 'read',
-        subject: 'brands',
-        icon: 'fluent:production-checkmark-24-regular'
-      },
-      {
-        title: 'Landing Page Content',
-        path: '/landing-page-content',
-        icon: 'fluent:content-view-32-regular'
       }
     ]
   }

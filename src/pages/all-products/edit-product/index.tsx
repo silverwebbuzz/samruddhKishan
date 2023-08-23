@@ -32,21 +32,32 @@ import { getAllBrands } from 'src/slice/brandsSlice'
 import { toast } from 'react-hot-toast'
 import { border, borderRadius, display, padding } from '@mui/system'
 import { GridDeleteIcon } from '@mui/x-data-grid'
-import { createProduct, getAllCountry, getAllUnits } from 'src/slice/productSlice'
+import {
+  createProduct,
+  deleteProductGallaryImage,
+  getAllCountry,
+  getAllUnits,
+  getProductById,
+  updateProduct
+} from 'src/slice/productSlice'
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
-const addProduct = () => {
+const editProduct = () => {
   const dispatch = useDispatch<AppDispatch>()
   const router = useRouter()
   const { categories } = useSelector((state: any) => state?.rootReducer?.categoriesReducer)
   const { brandsData } = useSelector((state: any) => state?.rootReducer?.brandsReducer)
-  const { allUnitsData, contries } = useSelector((state: any) => state?.rootReducer?.productReducer)
+  const { allUnitsData, contries, singleProductsData } = useSelector((state: any) => state?.rootReducer?.productReducer)
   const [selectedFiles, setSelectedFiles] = useState([])
+  const [newSelectedFiles, setNewSelectedFiles] = useState([])
+  const [removeFiles, setRemoveFiles] = useState([])
   const [categoryIdPrefill, setCategoryIdPrefill] = useState('')
   const [vendorPrefill, setVendorPrefill] = useState('')
   const [brandPrefill, setBrandPrefill] = useState('')
   const [contryPrefill, setContryPrefill] = useState('')
   const [productUnits, setProductUnits] = useState('')
+  const productID = localStorage.getItem('editProductID')
+
   const ProfilePicture = styled('img')(({ theme }) => ({
     width: 108,
     height: 108,
@@ -60,9 +71,9 @@ const addProduct = () => {
   // ** State
   const handleProduct = (values: any, { resetForm }: any) => {
     let formdata = new FormData()
-
-    formdata.append('vendorName', vendorPrefill)
-    formdata.append('categoryId', categoryIdPrefill)
+    formdata.append('id', productID)
+    formdata.append('vendorName', values?.vendorName)
+    formdata.append('categoryId', values?.categoryId)
     formdata.append('productName', values?.productName)
     formdata.append('brandId', brandPrefill)
     formdata.append('productShort', values?.productShort)
@@ -75,16 +86,21 @@ const addProduct = () => {
     formdata.append('minPrice', values?.minPrice)
     formdata.append('maxPrice', values?.maxPrice)
     formdata.append('productUnits', productUnits)
-    formdata.append('country', contryPrefill)
+    formdata.append('country', values?.country)
     formdata.append('status', values?.status)
-    selectedFiles.forEach((file, index) => {
+    newSelectedFiles.forEach((file, index) => {
       formdata.append(`productGallaryImage`, file)
       // formdata.append('productGallaryImage', JSON.stringify(selectedFiles))
     })
 
     let payload = formdata
-    // console.log()
-    dispatch(createProduct(payload)).then(res => {
+    let payloadForDeleteImages = {
+      ids: removeFiles
+    }
+    dispatch(updateProduct(payload)).then(res => {
+      if (removeFiles?.length > 0) {
+        dispatch(deleteProductGallaryImage(payloadForDeleteImages))
+      }
       if (res?.payload?.status === 'success') {
         router.push('/all-products')
       }
@@ -140,6 +156,45 @@ const addProduct = () => {
         )
       }
     }
+  }
+
+  const handleFileChange = event => {
+    const file = event.target.files[0] // Only allow selecting one file at a time
+    setSelectedFiles([...selectedFiles, file])
+    setNewSelectedFiles([...newSelectedFiles, file])
+  }
+  useEffect(() => {
+    dispatch(getAllCategories())
+    dispatch(getAllBrands())
+    dispatch(getAllCountry())
+    dispatch(getAllUnits())
+    dispatch(getProductById({ id: productID }))
+  }, [])
+  useEffect(() => {
+    setTimeout(() => {
+      setCategoryIdPrefill(singleProductsData?.categoryId)
+      setVendorPrefill(singleProductsData?.venderId)
+      setBrandPrefill(singleProductsData?.brandId)
+      setContryPrefill(singleProductsData?.country)
+      setProductUnits(singleProductsData?.productUnits)
+      // setSelectedFiles([...selectedFiles, ...singleProductsData?.productGallaryImage])
+      if (Array.isArray(selectedFiles) && singleProductsData && Array.isArray(singleProductsData.productGallaryImage)) {
+        setSelectedFiles([...selectedFiles, ...singleProductsData.productGallaryImage])
+      } else {
+        console.error('Invalid data or types for concatenation.')
+      }
+    })
+  }, [
+    singleProductsData?.categoryId,
+    singleProductsData?.venderId,
+    singleProductsData?.brandId,
+    singleProductsData?.productName,
+    singleProductsData?.country,
+    singleProductsData?.productUnits
+  ])
+  const handleRemoveFile = (indexToRemove: any, id: any) => {
+    setSelectedFiles(prevFiles => prevFiles.filter((_, index) => index !== indexToRemove))
+    setRemoveFiles([...removeFiles, id])
   }
   const ImagePreviewer = ({ file, index }) => {
     if (isValidUrl(file?.file?.file)) {
@@ -202,18 +257,12 @@ const addProduct = () => {
       }
     }
   }
-  const handleFileChange = event => {
-    const file = event.target.files[0] // Only allow selecting one file at a time
-    setSelectedFiles([...selectedFiles, file])
-  }
-  useEffect(() => {
-    dispatch(getAllCategories())
-    dispatch(getAllBrands())
-    dispatch(getAllCountry())
-    dispatch(getAllUnits())
-  }, [])
-  const handleRemoveFile = indexToRemove => {
-    setSelectedFiles(prevFiles => prevFiles.filter((_, index) => index !== indexToRemove))
+  const checkValidJson = (val: any) => {
+    try {
+      return JSON.parse(val)
+    } catch (e) {
+      return []
+    }
   }
   return (
     <Card
@@ -224,21 +273,22 @@ const addProduct = () => {
       <Formik
         enableReinitialize
         initialValues={{
-          vendorName: '',
-          productName: '',
-          categoryId: '',
-          brandId: '',
-          productShort: '',
-          specifications: [],
-          producctVideoUrl: '',
-          productDescription: '',
-          productImage: '',
-          availbilityStock: '',
-          minPrice: 0,
-          maxPrice: 0,
-          productUnits: '',
-          country: '',
-          status: ''
+          vendorName: singleProductsData?.vendorName,
+          productName: singleProductsData?.productName,
+          categoryId: singleProductsData?.categoryId,
+          brandId: singleProductsData?.brandId,
+          productShort: singleProductsData?.productShort,
+          specifications: checkValidJson(singleProductsData?.specification),
+          producctVideoUrl: singleProductsData?.producctVideoUrl,
+          productCode: singleProductsData?.productCode,
+          productDescription: singleProductsData?.productDescription,
+          productImage: singleProductsData?.productImage,
+          availbilityStock: singleProductsData?.availbilityStock,
+          minPrice: singleProductsData?.minPrice,
+          maxPrice: singleProductsData?.maxPrice,
+          productUnits: singleProductsData?.productUnits,
+          country: singleProductsData?.country,
+          status: singleProductsData?.status
         }}
         validationSchema={validationSchema}
         onSubmit={(values: any, { resetForm }) => {
@@ -416,11 +466,11 @@ const addProduct = () => {
                     <Select
                       labelId='demo-simple-select-label'
                       id='demo-simple-select'
-                      name='productUnits'
+                      name='brandId'
                       value={productUnits}
                       label='Products Unit'
                       onChange={(e: any) => {
-                        setFieldValue('productUnits', e?.target?.value)
+                        setFieldValue('brandId', e?.target?.value)
                         setProductUnits(e?.target?.value)
                       }}
                     >
@@ -724,4 +774,4 @@ const addProduct = () => {
   )
 }
 
-export default addProduct
+export default editProduct

@@ -163,8 +163,8 @@ const ContentPage = () => {
     const states = ['success', 'error', 'warning', 'info', 'primary', 'secondary']
     const color = states[stateNum]
 
-    if (row?.brandLogo?.length) {
-      return <CustomAvatar src={`${row?.brandLogo}`} sx={{ mr: 3, width: '2.575rem', height: '2.575rem' }} />
+    if (row?.productImage?.length) {
+      return <CustomAvatar src={`${row?.productImage}`} sx={{ mr: 3, width: '2.575rem', height: '2.575rem' }} />
     } else {
       return (
         <CustomAvatar
@@ -188,8 +188,8 @@ const ContentPage = () => {
     {
       flex: 0.25,
       minWidth: 290,
-      field: 'brandLogo',
-      headerName: 'brand Logo',
+      field: 'productImage',
+      headerName: 'product Image',
       renderCell: (params: GridRenderCellParams) => {
         return <Box sx={{ display: 'flex', alignItems: 'center' }}>{renderClient(params)}</Box>
       }
@@ -240,10 +240,10 @@ const ContentPage = () => {
               size='small'
               sx={{ color: 'text.secondary' }}
               onClick={() => {
-                handleShow('products')
-                setEdit(true)
                 setEditID(row?.id)
                 setEditField(row)
+                localStorage.setItem('editProductID', row?.id)
+                router.push('/all-products/edit-product')
               }}
             >
               <Icon icon='tabler:edit' />
@@ -305,7 +305,6 @@ const ContentPage = () => {
               }}
               onClick={() => {
                 router.push('/all-products/add-product')
-                // handleShow('products')
               }}
             >
               Add Product
@@ -347,8 +346,6 @@ const ContentPage = () => {
         delelteField={delelteField}
         id={DeleteID}
       />
-
-      {/* {dialogName === 'products' && <ProductDialog {...props} />} */}
     </Grid>
   )
 }
