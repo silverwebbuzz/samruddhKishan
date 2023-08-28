@@ -12,6 +12,7 @@ import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import * as yup from 'yup'
+import moment from 'moment'
 
 // ** Icon Imports
 import { ErrorMessage, Form, Formik } from 'formik'
@@ -53,7 +54,9 @@ const FarmerDetails = () => {
     middleName: getFarmer?.[0]?.middleName,
     lastName: getFarmer?.[0]?.lastName,
     wpNumber: getFarmer?.[0]?.wpNumber,
-    DOB: getFarmer && getFarmer?.[0]?.dateOfBirth,
+    DOB: moment(getFarmer && getFarmer?.[0]?.dateOfBirth)
+      .utc()
+      .format('YYYY-MM-DD'),
     aadharNumber: getFarmer?.[0]?.aadharNumber,
     mobileNumber: getFarmer?.[0]?.mobileNumber,
     address: getFarmer?.[0]?.address,
@@ -91,7 +94,11 @@ const FarmerDetails = () => {
       .required('Mobile number is required')
       // .min(10)
       .matches(/^ *(?:0 *[23478](?: *\d){8}|[1-9](?: *\d)*|0 *[01569](?: *\d)*) *$/, 'Phone number is not valid'),
-
+    wpNumber: yup
+      .string()
+      .required('Whatsapp number is required')
+      // .min(10)
+      .matches(/^ *(?:0 *[23478](?: *\d){8}|[1-9](?: *\d)*|0 *[01569](?: *\d)*) *$/, 'Phone number is not valid'),
     aadharNumber: yup
       .string()
       .required('Adhar number is required')
@@ -545,14 +552,14 @@ const FarmerDetails = () => {
                         }}
                         id='demo-simple-select-label'
                       >
-                        state
+                        State
                       </InputLabel>
                       <Select
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
                         name='state'
                         value={STATE}
-                        label='state'
+                        label='State'
                         onChange={(e: any) => {
                           setFieldValue('state', e?.target?.value)
                           setSTATE(e?.target?.value)

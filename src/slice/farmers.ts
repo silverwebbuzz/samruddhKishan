@@ -92,7 +92,8 @@ export const getAllDistrict = createAsyncThunk('farmers/getAllDistrict', async (
 export const createUser1 = createAsyncThunk('farmers/createUser', async (payload: any, { rejectWithValue }) => {
   try {
     const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/user/createUsers`, payload, {
-      headers
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'multipart/form-data'
     })
     if (res.data?.message === 'Email Already Exist') {
       toast.error('Email Already Exist')
@@ -156,16 +157,48 @@ export const deleteFarmer = createAsyncThunk('farmer/deleteFarmer', async (paylo
     return rejectWithValue(err?.response?.data)
   }
 })
-export const getAdressByPincode = createAsyncThunk('farmer/GetPinCoder', async (payload: any, { rejectWithValue }) => {
-  try {
-    const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/farmer/GetPinCode/${payload?.pincode}`, {
-      headers
-    })
-    return res?.data
-  } catch (err: any) {
-    return rejectWithValue(err?.response?.data)
+
+export const deleteMultipleFarmer = createAsyncThunk(
+  'farmer/deleteMultipleFarmer',
+  async (payload: any, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/farmer/multiDeleteFarmer`, payload, {
+        headers
+      })
+      return res?.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response?.data)
+    }
   }
-})
+)
+export const deleteMultipleUsers = createAsyncThunk(
+  'farmer/deleteMultipleUsers',
+  async (payload: any, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/user/multiDeleteUsers`, payload, {
+        headers
+      })
+      return res?.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response?.data)
+    }
+  }
+)
+
+export const getAdressByPincode = createAsyncThunk(
+  'farmer/getAdressByPincode',
+  async (payload: any, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/farmer/GetPinCode/${payload?.pincode}`, {
+        headers
+      })
+      console.log('res?.datares?.datares?.data', res)
+      return res?.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response?.data)
+    }
+  }
+)
 export const getAllState = createAsyncThunk('farmers/getAllState', async (_, { rejectWithValue }) => {
   try {
     const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/farmer/getAllState`, {
@@ -397,7 +430,25 @@ export const farmersSlice = createSlice({
     builder.addCase(deleteFarmer.rejected, state => {
       state.isLoading = false
     })
-
+    builder.addCase(deleteMultipleFarmer.pending, state => {
+      state.isLoading = true
+    })
+    builder.addCase(deleteMultipleFarmer.fulfilled, (state, action) => {
+      state.isLoading = false
+    })
+    builder.addCase(deleteMultipleFarmer.rejected, state => {
+      state.isLoading = false
+    })
+    builder.addCase(deleteMultipleUsers.pending, state => {
+      state.isLoading = true
+    })
+    builder.addCase(deleteMultipleUsers.fulfilled, (state, action) => {
+      state.isLoading = false
+    })
+    builder.addCase(deleteMultipleUsers.rejected, state => {
+      state.isLoading = false
+    })
+    //deleteMultipleUsers
     builder.addCase(getAdressByPincode.pending, state => {
       state.isLoading = true
     })

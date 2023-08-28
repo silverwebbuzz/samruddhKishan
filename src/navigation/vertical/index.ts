@@ -36,14 +36,30 @@ const navigation = (): VerticalNavItemsType => {
         icon: 'game-icons:farmer'
       },
       {
-        title: 'Users',
-        path: '/users',
-        icon: 'ci:users'
+        title: 'Brands',
+        path: '/brands',
+        action: 'read',
+        subject: 'brands',
+        icon: 'fluent:production-checkmark-24-regular'
       },
       {
-        title: 'Product',
+        title: 'Categories',
+        path: '/categories',
+        icon: 'tabler:category'
+      },
+      {
+        title: 'Products',
         path: '/all-products',
+        action: 'read',
+        subject: 'all-products',
         icon: 'fluent-mdl2:b-i-dashboard'
+      },
+      {
+        title: 'Services',
+        path: '/all-services',
+        action: 'read',
+        subject: 'all-services',
+        icon: 'carbon:ibm-cloud-hyper-protect-crypto-services'
       }
     ]
     const FinalRoute = []
@@ -89,7 +105,7 @@ const navigation = (): VerticalNavItemsType => {
         icon: 'tabler:category'
       },
       {
-        title: 'Product',
+        title: 'Products',
         path: '/all-products',
         action: 'read',
         subject: 'all-products',
@@ -102,26 +118,26 @@ const navigation = (): VerticalNavItemsType => {
         subject: 'all-services',
         icon: 'carbon:ibm-cloud-hyper-protect-crypto-services'
       },
-
-      {
-        title: 'Landing Page Content',
-        path: '/landing-page-content',
-        icon: 'fluent:content-view-32-regular'
-      },
+      // {
+      //   title: 'Landing Page Content',
+      //   path: '/landing-page-content',
+      //   icon: 'fluent:content-view-32-regular'
+      // },
       {
         title: 'Roles & Permissions',
         icon: 'tabler:settings',
+        path: '/roles'
 
-        children: [
-          {
-            title: 'Roles',
-            path: '/roles'
-          },
-          {
-            title: 'Permissions',
-            path: '/permissions'
-          }
-        ]
+        // children: [
+        //   {
+        //     title: 'Roles',
+        //     path: '/roles'
+        //   },
+        //   {
+        //     title: 'Permissions',
+        //     path: '/permissions'
+        //   }
+        // ]
       }
     ]
   }

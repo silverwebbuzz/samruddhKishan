@@ -334,6 +334,20 @@ const RolesCards = () => {
                             </Tooltip>
                           </Box>
                         </TableCell>
+                        <TableCell sx={{ pl: '0 !important' }}>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              fontSize: '0.875rem',
+                              whiteSpace: 'nowrap',
+                              alignItems: 'center',
+                              textTransform: 'capitalize',
+                              '& svg': { ml: 1, cursor: 'pointer' }
+                            }}
+                          >
+                            Access
+                          </Box>
+                        </TableCell>
                       </TableRow>
                     </TableHead>
                     {dialogTitle === 'Add' ? (
@@ -354,7 +368,7 @@ const RolesCards = () => {
                               </TableCell>
                               <TableCell>
                                 <FormControlLabel
-                                  label='Read'
+                                  // label='Access'
                                   control={
                                     <Checkbox
                                       size='small'
@@ -386,7 +400,7 @@ const RolesCards = () => {
                               </TableCell>
                               <TableCell>
                                 <FormControlLabel
-                                  label='Read'
+                                  // label='Access'
                                   control={
                                     <Checkbox
                                       size='small'

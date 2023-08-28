@@ -164,11 +164,11 @@ const AddFarmerDialog = (
                     <TextField
                       value={values?.mobileNumber}
                       name='mobileNumber'
+                      type='number'
                       onChange={handleChange}
                       onBlur={handleBlur}
                       fullWidth
                       label='Mobile Number'
-                      placeholder='Doe'
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>

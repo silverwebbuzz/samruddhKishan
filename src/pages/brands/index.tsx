@@ -10,7 +10,7 @@ import TextField from '@mui/material/TextField'
 import CardHeader from '@mui/material/CardHeader'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import { DataGrid, GridColDef, GridRowId } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridRenderCellParams, GridRowId } from '@mui/x-data-grid'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -28,7 +28,8 @@ import {
   InputLabel,
   MenuItem,
   Pagination,
-  Select
+  Select,
+  Toolbar
 } from '@mui/material'
 
 import { AppDispatch } from 'src/store/store'
@@ -43,6 +44,9 @@ import { getAllCategories } from 'src/slice/categoriesSlice'
 import CategoryDialog from 'src/views/components/dialogBox/CategoryDialog'
 import BrandsDialog from 'src/views/components/dialogBox/BrandsDialog'
 import { getAllBrands } from 'src/slice/brandsSlice'
+import { ThemeColor } from 'src/@core/layouts/types'
+import DeleteMultiFieldsDialog from 'src/views/deleteDialogBox/deleteMultiFieldsDialog'
+import { alpha } from '@mui/system'
 
 export type Payload = {
   id?: number
@@ -77,6 +81,12 @@ const brands = () => {
   const [edit, setEdit] = useState<boolean>(false)
   const [editID, setEditID] = useState<string | number>('')
   const [editField, setEditField] = useState<string | number>('')
+  const [selectedRows, setSelectedRows] = useState<number[]>([])
+
+  const [multiFieldDeleteOpen, setMultiFieldDeleteOpen] = useState(false)
+
+  const handleMultiDeleteClickOpen = () => setMultiFieldDeleteOpen(true)
+  const handleMultiDeleteClickClose = () => setMultiFieldDeleteOpen(false)
 
   const handleClickOpen = () => {
     setEditPrefillData('')
@@ -116,7 +126,6 @@ const brands = () => {
             <MenuItem value={30}>30</MenuItem>
           </Select>
         </FormControl>
-
         <Pagination count={pageCount} page={page} onChange={handleChange} />
       </Box>
     )
@@ -149,7 +158,30 @@ const brands = () => {
     handleCancel: handleCancel
   }
   const handleSearch = () => {}
+  const handleSelectionChange = (selection: any) => {
+    setSelectedRows(selection)
+  }
+  const renderClient = (params: GridRenderCellParams) => {
+    const { row } = params
+    const stateNum = Math.floor(Math.random() * 6)
+    const states = ['success', 'error', 'warning', 'info', 'primary', 'secondary']
+    const color = states[stateNum]
 
+    if (row?.brandLogo?.length) {
+      return (
+        <img
+          src={`${row?.brandLogo}`}
+          style={{
+            mr: 3,
+            width: '2.575rem',
+            height: '2.575rem'
+          }}
+        />
+      )
+    } else {
+      return <></>
+    }
+  }
   const columns: GridColDef[] = [
     {
       flex: 0.1,
@@ -157,6 +189,16 @@ const brands = () => {
       minWidth: 100,
       sortable: false,
       headerName: 'ID'
+    },
+    {
+      flex: 0.25,
+      field: 'brandLogo',
+      sortable: false,
+      minWidth: 320,
+      headerName: 'brand Logo',
+      renderCell: (params: GridRenderCellParams) => {
+        return <Box sx={{ display: 'flex', alignItems: 'center' }}>{renderClient(params)}</Box>
+      }
     },
     {
       flex: 0.25,
@@ -227,11 +269,11 @@ const brands = () => {
               display: 'flex',
               flexWrap: 'wrap',
               alignItems: 'center',
-              justifyContent: 'space-between',
+              justifyContent: 'end',
               p: theme => theme.spacing(2, 5, 4, 5)
             }}
           >
-            <TextField
+            {/* <TextField
               size='small'
               value={search}
               onChange={handleSearch}
@@ -257,7 +299,7 @@ const brands = () => {
                   mr: 2
                 }
               }}
-            />
+            /> */}
             <Button
               variant='contained'
               sx={{
@@ -272,20 +314,48 @@ const brands = () => {
               Add Brands
             </Button>
           </Box>
-
+          {selectedRows?.length > 0 ? (
+            <>
+              <Grid xs={12} sm={12}>
+                <Toolbar
+                  sx={{
+                    px: theme => `${theme.spacing(5)} !important`,
+                    ...(selectedRows?.length > 0 && {
+                      bgcolor: theme => alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity)
+                    })
+                  }}
+                >
+                  <Typography sx={{ flex: '1 1 100%' }} color='inherit' variant='subtitle1' component='div'>
+                    {selectedRows?.length} selected
+                  </Typography>
+                  {selectedRows?.length > 0 ? (
+                    <Tooltip title='Delete'>
+                      <IconButton
+                        sx={{ color: 'error' }}
+                        onClick={() => {
+                          handleMultiDeleteClickOpen()
+                        }}
+                      >
+                        <Icon icon='tabler:trash' />
+                      </IconButton>
+                    </Tooltip>
+                  ) : null}
+                </Toolbar>
+              </Grid>
+            </>
+          ) : null}
           <DataGrid
             sx={{
               '& .MuiDataGrid-row:hover': {
                 backgroundColor: '#a4be9b'
-                // color: "red"
               }
             }}
             autoHeight
             pagination
-            // rowHeight={62}
-            // rowCount={getUsers?.totalItems}
             rows={brandsData?.data && brandsData?.data ? brandsData?.data : []}
             columns={columns}
+            checkboxSelection
+            onRowSelectionModelChange={handleSelectionChange}
             slots={{
               footer: CustomPagination
             }}
@@ -307,6 +377,14 @@ const brands = () => {
         type='brands'
         delelteField={delelteField}
         id={DeleteID}
+      />
+      <DeleteMultiFieldsDialog
+        open={multiFieldDeleteOpen}
+        setOpen={setMultiFieldDeleteOpen}
+        handleClickOpen={handleMultiDeleteClickOpen}
+        handleClose={handleMultiDeleteClickClose}
+        type='brands'
+        id={selectedRows}
       />
       {dialogName === 'brands' && <BrandsDialog {...props} />}
     </Grid>

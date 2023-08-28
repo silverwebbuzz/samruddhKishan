@@ -18,7 +18,18 @@ import Icon from 'src/@core/components/icon'
 // ** Third Party Imports
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
-import { Button, Chip, Dialog, Divider, FormControl, InputLabel, MenuItem, Pagination, Select } from '@mui/material'
+import {
+  Button,
+  Chip,
+  Dialog,
+  Divider,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Pagination,
+  Select,
+  Toolbar
+} from '@mui/material'
 import {
   createUser1,
   getAdressByPincode,
@@ -36,6 +47,8 @@ import { ErrorMessage, Form, Formik } from 'formik'
 import DeleteDialog from 'src/views/deleteDialogBox/deleteDialogBox'
 import { toast } from 'react-hot-toast'
 import * as yup from 'yup'
+import DeleteMultiFieldsDialog from 'src/views/deleteDialogBox/deleteMultiFieldsDialog'
+import { alpha } from '@mui/system'
 
 export type Payload = {
   id?: number
@@ -88,6 +101,11 @@ const allUsers = () => {
     setPincode('')
     setOpen(true)
   }
+  const [selectedRows, setSelectedRows] = useState<number[]>([])
+  const [multiFieldDeleteOpen, setMultiFieldDeleteOpen] = useState(false)
+  const [userSearch, setUserSearch] = useState('')
+  const handleMultiDeleteClickOpen = () => setMultiFieldDeleteOpen(true)
+  const handleMultiDeleteClickClose = () => setMultiFieldDeleteOpen(false)
 
   const validationSchema = yup.object().shape({
     firstName: yup.string().required('First name  is required'),
@@ -144,13 +162,14 @@ const allUsers = () => {
     const userData: any = JSON.parse(localStorage.getItem('userData'))
     let payload = {
       page: page,
-      pageSize: pageLimit
+      pageSize: pageLimit,
+      fullName: userSearch ? userSearch : ''
     }
     //@ts-ignore
     dispatch(getAllUsers(payload)).then(response => {
       setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
     })
-  }, [page, pageCount, pageLimit, deleteUser, updateUsers12, createUser12])
+  }, [page, pageCount, pageLimit, deleteUser, updateUsers12, createUser12, userSearch])
 
   const handleSearch = () => {}
   useEffect(() => {
@@ -164,7 +183,10 @@ const allUsers = () => {
   useEffect(() => {
     dispatch(getAllDistrict({ state: STATE }))
   }, [STATE])
-
+  const handleSelectionChange = (selection: any) => {
+    setSelectedRows(selection)
+    console.log('handleSelectionChange', selection)
+  }
   const columns: GridColDef[] = [
     {
       flex: 0.1,
@@ -276,8 +298,8 @@ const allUsers = () => {
           >
             <TextField
               size='small'
-              value={search}
-              onChange={handleSearch}
+              value={userSearch}
+              onChange={e => setUserSearch(e?.target?.value)}
               placeholder='Search…'
               InputProps={{
                 startAdornment: (
@@ -315,7 +337,42 @@ const allUsers = () => {
               Add User
             </Button>
           </Box>
+          {selectedRows?.length > 0 ? (
+            <>
+              <Grid xs={12} sm={12}>
+                {/* <Typography variant='body'>Delete all selected farmers:</Typography> */}
+                {/* <Button variant='outlined' color='error'>
+              Delete All Selected Farmers
+            </Button> */}
 
+                <Toolbar
+                  sx={{
+                    px: theme => `${theme.spacing(5)} !important`,
+                    ...(selectedRows?.length > 0 && {
+                      bgcolor: theme => alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity)
+                    })
+                  }}
+                >
+                  <Typography sx={{ flex: '1 1 100%' }} color='inherit' variant='subtitle1' component='div'>
+                    {selectedRows?.length} selected
+                  </Typography>
+                  {selectedRows?.length > 0 ? (
+                    <Tooltip title='Delete'>
+                      <IconButton
+                        sx={{ color: 'error' }}
+                        onClick={() => {
+                          handleMultiDeleteClickOpen()
+                          setDeleteID(selectedRows)
+                        }}
+                      >
+                        <Icon icon='tabler:trash' />
+                      </IconButton>
+                    </Tooltip>
+                  ) : null}
+                </Toolbar>
+              </Grid>
+            </>
+          ) : null}
           <DataGrid
             sx={{
               '& .MuiDataGrid-row:hover': {
@@ -329,6 +386,8 @@ const allUsers = () => {
             // rowCount={getUsers?.totalItems}
             rows={getUsers?.data && getUsers?.data ? getUsers?.data : []}
             columns={columns}
+            checkboxSelection
+            onRowSelectionModelChange={handleSelectionChange}
             slots={{
               footer: CustomPagination
             }}
@@ -350,6 +409,14 @@ const allUsers = () => {
         type='users'
         delelteField={delelteField}
         id={DeleteID}
+      />
+      <DeleteMultiFieldsDialog
+        open={multiFieldDeleteOpen}
+        setOpen={setMultiFieldDeleteOpen}
+        handleClickOpen={handleMultiDeleteClickOpen}
+        handleClose={handleMultiDeleteClickClose}
+        type='users'
+        id={selectedRows}
       />
     </Grid>
   )

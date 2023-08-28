@@ -90,7 +90,32 @@ export const deleteService = createAsyncThunk('user/deleteService', async (paylo
     return rejectWithValue(err?.response?.data)
   }
 })
-
+export const deleteMultipleServices = createAsyncThunk(
+  'farmer/deleteMultipleServices',
+  async (payload: any, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/service/multiDeleteServices`, payload, {
+        headers
+      })
+      return res?.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response?.data)
+    }
+  }
+)
+export const updateMultipleServiceStatus = createAsyncThunk(
+  'farmer/updateMultipleServiceStatus',
+  async (payload: any, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/service/updateServicesStatus`, payload, {
+        headers
+      })
+      return res?.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response?.data)
+    }
+  }
+)
 // categories slice
 export const servicesSlice = createSlice({
   name: 'servicesSlice',
@@ -128,6 +153,25 @@ export const servicesSlice = createSlice({
     builder.addCase(deleteService.rejected, state => {
       state.isLoading = false
     })
+    builder.addCase(deleteMultipleServices.pending, state => {
+      state.isLoading = true
+    })
+    builder.addCase(deleteMultipleServices.fulfilled, (state, action) => {
+      state.isLoading = false
+    })
+    builder.addCase(deleteMultipleServices.rejected, state => {
+      state.isLoading = false
+    })
+    builder.addCase(updateMultipleServiceStatus.pending, state => {
+      state.isLoading = true
+    })
+    builder.addCase(updateMultipleServiceStatus.fulfilled, (state, action) => {
+      state.isLoading = false
+    })
+    builder.addCase(updateMultipleServiceStatus.rejected, state => {
+      state.isLoading = false
+    })
+    //updateMultipleServiceStatus
     builder.addCase(createService.pending, state => {
       state.isLoading = true
     })

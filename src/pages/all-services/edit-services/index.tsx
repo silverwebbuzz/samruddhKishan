@@ -6,6 +6,8 @@ import {
   Box,
   Card,
   Checkbox,
+  Chip,
+  Divider,
   FormControl,
   FormControlLabel,
   Grid,
@@ -25,6 +27,7 @@ import 'react-quill/dist/quill.snow.css'
 import { getAllCategories } from 'src/slice/categoriesSlice'
 import { createService, getSingleService, updateService } from 'src/slice/servicesSlice'
 import { useRouter } from 'next/router'
+import { getAllUsers } from 'src/slice/farmers'
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 const editServices = () => {
@@ -33,13 +36,17 @@ const editServices = () => {
   const { categories } = useSelector((state: any) => state?.rootReducer?.categoriesReducer)
   const { singleService } = useSelector((state: any) => state?.rootReducer?.servicesReducer)
   const serviceId = localStorage.getItem('serviceID')
+  const [serviceStatusPrefill, setServiceStatusPrefill] = useState('')
+  const [vendorId, setVendorId] = useState(0)
+  const { getUsers } = useSelector((state: any) => state?.rootReducer?.farmerReducer)
 
   const [categoryPrefill, setCategoryPrefill] = useState('')
   const [vendorPrefill, setVendorPrefill] = useState('')
   const [serviceTypePrefill, setServiceTypePrefill] = useState('')
   const [availabilityEndDay, setAvailabilityEndDay] = useState('')
   const [availabilityStartDay, setAvailabilityStartDay] = useState('')
-
+  const [availabilityStartDayPrefill, setAvailabilityStartDayPrefill] = useState('')
+  const [availabilityEndDayPrefill, setAvailabilityEndDayPrefill] = useState('')
   const ProfilePicture = styled('img')(({ theme }) => ({
     width: 108,
     height: 108,
@@ -54,8 +61,7 @@ const editServices = () => {
   const handleServices = (values: any, { resetForm }: any) => {
     let formdata = new FormData()
     formdata.append('id', serviceId)
-
-    formdata.append('vendorName', values?.vendorName)
+    formdata.append('vendorId', vendorId)
     formdata.append('categoryId', values?.categoryId)
     formdata.append('serviceName', values?.serviceName)
     formdata.append('serviceType', values?.serviceType)
@@ -65,7 +71,7 @@ const editServices = () => {
     formdata.append('availabilityStartDay', values?.availabilityStartDay)
     formdata.append('availabilityEndDay', values?.availabilityEndDay)
     formdata.append('serviceBannerImage', values?.serviceBannerImage)
-    formdata.append('status', values?.status === true ? 1 : 0)
+    formdata.append('status', serviceStatusPrefill)
 
     let payload = formdata
     dispatch(updateService(payload)).then(res => {
@@ -132,16 +138,23 @@ const editServices = () => {
     }
     dispatch(getSingleService(payload))
     dispatch(getAllCategories())
+    dispatch(getAllUsers({ page: 1, pageSize: 10 }))
   }, [])
-
   useEffect(() => {
     // e?.target?.value
     setTimeout(() => {
       setCategoryPrefill(singleService?.categoryId)
-      setVendorPrefill(singleService?.vendorName)
+      setVendorId(singleService?.vendorId)
       setServiceTypePrefill(singleService?.serviceType)
+      setServiceStatusPrefill(singleService?.status)
+      setAvailabilityEndDayPrefill(singleService?.availabilityEndDay)
+      setAvailabilityStartDayPrefill(singleService?.availabilityStartDay)
     }, [1000])
-  }, [singleService?.categoryId, singleService?.serviceType])
+  }, [singleService?.categoryId, singleService?.serviceType, singleService?.setVendorId])
+
+  const userFilter = (users: any) => {
+    return users?.filter((user: any) => user.role === 'VENDORS')
+  }
   return (
     <Card
       sx={{
@@ -164,7 +177,23 @@ const editServices = () => {
           return (
             <Form onSubmit={handleSubmit}>
               <Grid container spacing={5}>
-                <Grid item xs={12}>
+                <Grid xs={12} sm={12}>
+                  <Box sx={{ mb: 8, mt: 8, textAlign: 'center' }}>
+                    <Divider>
+                      <Chip
+                        sx={{
+                          fontSize: '22px',
+                          padding: '15px',
+                          fontWeight: 'bold',
+                          textAlign: 'left',
+                          backgroundColor: '#f6f5f8'
+                        }}
+                        label='Service Details'
+                      />
+                    </Divider>
+                  </Box>
+                </Grid>
+                <Grid item xs={6} sm={6}>
                   <FormControl fullWidth>
                     <InputLabel id='demo-simple-select-label'> Select Category</InputLabel>
                     <Select
@@ -186,34 +215,29 @@ const editServices = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item item xs={6} sm={6}>
                   <FormControl fullWidth>
-                    <InputLabel id='demo-simple-select-label'> Select Vendor Name</InputLabel>
+                    <InputLabel id='demo-simple-select-label'>Vendor Name</InputLabel>
                     <Select
                       labelId='demo-simple-select-label'
                       id='demo-simple-select'
-                      name='vendorName'
-                      value={'Comming soon'} //{vendorPrefill}
-                      label='Select Vendor Name'
+                      name='vendorId'
+                      value={vendorId}
+                      label='Vendor Name'
                       onChange={(e: any) => {
-                        console.log('Comming soon', e?.target?.value)
-                        // setVendorPrefill(e?.target?.value)
-                        // setFieldValue('vendorName', e?.target?.value)
+                        setVendorId(e?.target?.value)
                       }}
                     >
-                      <MenuItem key={'Comming soon'} value={'Comming soon'}>
-                        {'Comming soon'}
-                      </MenuItem>
-                      {/* {categories?.data?.map((Item: any) => (
-                        <MenuItem key={Item?.categoryName} value={Item?.id}>
-                          {Item?.categoryName}
+                      {userFilter(getUsers?.data)?.map((Item: any) => (
+                        <MenuItem key={Item?.id} value={Item?.id}>
+                          {Item?.firstName} {Item?.lastName}
                         </MenuItem>
-                      ))} */}
+                      ))}
                     </Select>
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid item xs={6} sm={6}>
                   <TextField
                     label='Services Name'
                     autoComplete='off'
@@ -233,7 +257,7 @@ const editServices = () => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={6} sm={6}>
                   <FormControl fullWidth>
                     <InputLabel id='demo-simple-select-label'> Service Type</InputLabel>
                     <Select
@@ -262,7 +286,7 @@ const editServices = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={6} sm={6}>
                   <TextField
                     label='Service Location:'
                     autoComplete='off'
@@ -282,7 +306,7 @@ const editServices = () => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={6} sm={6}>
                   <TextField
                     label='Min Order Quantity'
                     autoComplete='off'
@@ -302,9 +326,10 @@ const editServices = () => {
                     }}
                   />
                 </Grid>
-                <Grid
+                {/* <Grid
                   item
-                  xs={12}
+                  xs={6}
+                  sm={6}
                   sx={{
                     display: 'flex',
                     alignItems: 'center'
@@ -371,6 +396,92 @@ const editServices = () => {
                       }}
                     />
                   </Grid>
+                </Grid> */}
+                <Grid item xs={6} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel>Select Status</InputLabel>
+                    <Select
+                      // size='small'
+                      labelId='demo-simple-select-label'
+                      id='demo-simple-select'
+                      name='status'
+                      label='Select Status'
+                      value={serviceStatusPrefill}
+                      onChange={e => {
+                        setFieldValue('status', e?.target?.value)
+                        setServiceStatusPrefill(e?.target?.value)
+                      }}
+                    >
+                      <MenuItem value={1}>Active</MenuItem>
+                      <MenuItem value={0}>InActive</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={6} sm={6}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center'
+                      // margin: 5
+                    }}
+                  >
+                    <Typography variant='body'>Availability :</Typography>
+                    <FormControl
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                      sx={{ m: 1 }}
+                      size='small'
+                    >
+                      <InputLabel labelId='demo-simple-select-label'>Start Day</InputLabel>
+                      <Select
+                        name='availabilityStartDay'
+                        labelId='demo-simple-select-label'
+                        id='demo-simple-select'
+                        label='Start Day'
+                        value={availabilityStartDayPrefill}
+                        onChange={e => {
+                          setFieldValue('availabilityStartDay', e?.target?.value)
+                          setAvailabilityStartDayPrefill(e?.target?.value)
+                        }}
+                      >
+                        <MenuItem value={'Monday'}>Monday</MenuItem>
+                        <MenuItem value={'Tuesday'}>Tuesday</MenuItem>
+                        <MenuItem value={'Wednesday'}>Wednesday</MenuItem>
+                        <MenuItem value={'Thursday '}>Thursday </MenuItem>
+                        <MenuItem value={'Friday'}>Friday</MenuItem>
+                        <MenuItem value={'Saturday'}>Saturday</MenuItem>
+                        <MenuItem value={'Sunday'}>Sunday</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <Typography variant='body'>to</Typography>
+                    <FormControl name='availabilityEndDay' sx={{ m: 1 }} size='small'>
+                      <InputLabel
+                        InputLabelProps={{
+                          shrink: true
+                        }}
+                      >
+                        End Day
+                      </InputLabel>
+                      <Select
+                        name='availabilityEndDay'
+                        label='End Day'
+                        value={availabilityEndDayPrefill}
+                        onChange={e => {
+                          setFieldValue(availabilityEndDay, e?.target?.value)
+                          setAvailabilityEndDayPrefill(e?.target?.value)
+                        }}
+                      >
+                        <MenuItem value={'Monday'}>Monday</MenuItem>
+                        <MenuItem value={'Tuesday'}>Tuesday</MenuItem>
+                        <MenuItem value={'Wednesday'}>Wednesday</MenuItem>
+                        <MenuItem value={'Thursday '}>Thursday </MenuItem>
+                        <MenuItem value={'Friday'}>Friday</MenuItem>
+                        <MenuItem value={'Saturday'}>Saturday</MenuItem>
+                        <MenuItem value={'Sunday'}>Sunday</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Box>
                 </Grid>
                 <Grid
                   item

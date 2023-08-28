@@ -28,7 +28,8 @@ import {
   InputLabel,
   MenuItem,
   Pagination,
-  Select
+  Select,
+  Toolbar
 } from '@mui/material'
 
 import { AppDispatch } from 'src/store/store'
@@ -46,6 +47,10 @@ import { getAllProducts } from 'src/slice/productSlice'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import { ThemeColor } from 'src/@core/layouts/types'
 import { getInitials } from 'src/@core/utils/get-initials'
+import { getAllBrands } from 'src/slice/brandsSlice'
+import DeleteMultiFieldsDialog from 'src/views/deleteDialogBox/deleteMultiFieldsDialog'
+import { alpha } from '@mui/system'
+import { getAllUsers } from 'src/slice/farmers'
 
 export type Payload = {
   id?: number
@@ -64,6 +69,12 @@ const ContentPage = () => {
   const { allProductsData, deleteProductData, createProductData } = useSelector(
     (state: any) => state?.rootReducer?.productReducer
   )
+  const { getUsers } = useSelector((state: any) => state?.rootReducer?.farmerReducer)
+  const [selectedRows, setSelectedRows] = useState<number[]>([])
+
+  const { categories } = useSelector((state: any) => state?.rootReducer?.categoriesReducer)
+  const { brandsData } = useSelector((state: any) => state?.rootReducer?.brandsReducer)
+
   const [search, setSearch] = useState<string>('')
   const router = useRouter()
   const [page, setPage] = useState<number>(1)
@@ -82,15 +93,14 @@ const ContentPage = () => {
   const [edit, setEdit] = useState<boolean>(false)
   const [editID, setEditID] = useState<string | number>('')
   const [editField, setEditField] = useState<string | number>('')
-
-  const handleClickOpen = () => {
-    setEditPrefillData('')
-    setOpen(true)
-  }
-
   const handleClickOpenDelete = () => setOpenDelete(true)
   const handleDeleteClose = () => setOpenDelete(false)
-
+  const [categoryIdPrefill, setCategoryIdPrefill] = useState('')
+  const [brandPrefill, setBrandPrefill] = useState('')
+  const [multiFieldDeleteOpen, setMultiFieldDeleteOpen] = useState(false)
+  const [vendorId, setVendorId] = useState('')
+  const handleMultiDeleteClickOpen = () => setMultiFieldDeleteOpen(true)
+  const handleMultiDeleteClickClose = () => setMultiFieldDeleteOpen(false)
   const handleChange = (event: any, value: number) => {
     setPage(value)
   }
@@ -129,13 +139,18 @@ const ContentPage = () => {
   useEffect(() => {
     let payload: any = {
       page: page,
-      pageSize: pageLimit
+      pageSize: pageLimit,
+      categoryId: categoryIdPrefill ? categoryIdPrefill : '',
+      brandId: brandPrefill ? brandPrefill : '',
+      vendorId: vendorId ? vendorId : ''
     }
     dispatch(getAllCategories({ page: 1, pageSize: 10 }))
+    dispatch(getAllBrands({ page: 1, pageSize: 10 }))
+    dispatch(getAllUsers({ page: 1, pageSize: 10 }))
     dispatch(getAllProducts(payload)).then(response => {
       setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
     })
-  }, [page, pageCount, pageLimit, deleteProductData, createProductData])
+  }, [page, pageCount, pageLimit, deleteProductData, createProductData, categoryIdPrefill, brandPrefill, vendorId])
 
   const handleShow = (dialogName: string) => {
     setShow(true)
@@ -155,6 +170,7 @@ const ContentPage = () => {
   }
   useEffect(() => {
     dispatch(getAllCategories({ page: 1, pageSize: 10 }))
+    localStorage.removeItem('editProductID')
   }, [])
   const handleSearch = () => {}
   const renderClient = (params: GridRenderCellParams) => {
@@ -177,6 +193,10 @@ const ContentPage = () => {
       )
     }
   }
+  const handleSelectionChange = (selection: any) => {
+    setSelectedRows(selection)
+  }
+
   const columns: GridColDef[] = [
     {
       flex: 0.1,
@@ -185,9 +205,10 @@ const ContentPage = () => {
       sortable: false,
       headerName: 'ID'
     },
+
     {
       flex: 0.25,
-      minWidth: 290,
+      minWidth: 190,
       field: 'productImage',
       headerName: 'product Image',
       renderCell: (params: GridRenderCellParams) => {
@@ -198,7 +219,7 @@ const ContentPage = () => {
       flex: 0.25,
       field: 'productName',
       sortable: false,
-      minWidth: 320,
+      minWidth: 220,
       headerName: 'Product Name',
       renderCell: ({ row }: any) => {
         const { productName } = row
@@ -213,7 +234,64 @@ const ContentPage = () => {
         )
       }
     },
-
+    {
+      flex: 0.25,
+      field: 'categoryName',
+      sortable: false,
+      minWidth: 220,
+      headerName: 'Product Category',
+      renderCell: ({ row }: any) => {
+        const { categoryName } = row
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
+                {categoryName}
+              </Typography>
+            </Box>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.25,
+      field: 'firstName',
+      sortable: false,
+      minWidth: 220,
+      headerName: 'Vendor Name',
+      renderCell: ({ row }: any) => {
+        const { firstName, lastName } = row
+        console.log('@@@@@@@@@@@@@@@', firstName + lastName)
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
+                {`${firstName ? firstName : ''}${''}${lastName ? lastName : ''}`}
+              </Typography>
+            </Box>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.25,
+      field: 'brandName',
+      sortable: false,
+      minWidth: 220,
+      headerName: 'Brand Name',
+      renderCell: ({ row }: any) => {
+        const { brandName } = row
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
+                {brandName}
+              </Typography>
+            </Box>
+          </Box>
+        )
+      }
+    },
     {
       flex: 0.1,
       minWidth: 140,
@@ -254,48 +332,101 @@ const ContentPage = () => {
     }
   ]
 
+  const userFilter = (users: any) => {
+    return users?.filter((user: any) => user.role === 'VENDORS')
+  }
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='All Categories' />
+          <CardHeader title='All Products' />
+
           <Box
             sx={{
               gap: 2,
               display: 'flex',
               flexWrap: 'wrap',
               alignItems: 'center',
-              justifyContent: 'space-between',
+              justifyContent: 'space-around',
               p: theme => theme.spacing(2, 5, 4, 5)
             }}
           >
-            <TextField
-              size='small'
-              value={search}
-              onChange={handleSearch}
-              placeholder='Search…'
-              InputProps={{
-                startAdornment: (
-                  <Box sx={{ mr: 2, display: 'flex' }}>
-                    <Icon icon='tabler:search' fontSize={20} />
-                  </Box>
-                ),
-                endAdornment: (
-                  <IconButton size='small' title='Clear' aria-label='Clear'>
-                    <Icon icon='tabler:x' fontSize={20} />
-                  </IconButton>
-                )
-              }}
-              sx={{
-                width: {
-                  xs: 1,
-                  sm: 'auto'
-                },
-                '& .MuiInputBase-root > svg': {
-                  mr: 2
-                }
-              }}
-            />
+            <Grid item sm={2} xs={12}>
+              <FormControl size='small' fullWidth>
+                <InputLabel id='demo-simple-select-label'> Category Name</InputLabel>
+                <Select
+                  labelId='demo-simple-select-label'
+                  id='demo-simple-select'
+                  name='categoryId'
+                  value={categoryIdPrefill}
+                  label='Category Name'
+                  onChange={(e: any) => {
+                    setCategoryIdPrefill(e?.target?.value)
+                  }}
+                >
+                  {categories?.data?.map((Item: any) => (
+                    <MenuItem key={Item?.categoryName} value={Item?.id}>
+                      {Item?.categoryName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item sm={2} xs={12}>
+              <FormControl fullWidth size='small'>
+                <InputLabel id='demo-simple-select-label'>Vendor Name</InputLabel>
+                <Select
+                  labelId='demo-simple-select-label'
+                  id='demo-simple-select'
+                  name='vendorId'
+                  value={vendorId}
+                  label='Vendor Name'
+                  onChange={(e: any) => {
+                    setVendorId(e?.target?.value)
+                  }}
+                >
+                  {userFilter(getUsers?.data)?.map((Item: any) => (
+                    <MenuItem key={Item?.id} value={Item?.id}>
+                      {Item?.firstName} {Item?.lastName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item sm={2} xs={12}>
+              <FormControl fullWidth size='small'>
+                <InputLabel id='demo-simple-select-label'> Brand Name</InputLabel>
+                <Select
+                  labelId='demo-simple-select-label'
+                  id='demo-simple-select'
+                  name='categoryId'
+                  value={brandPrefill}
+                  label='Brand Name'
+                  onChange={(e: any) => {
+                    setBrandPrefill(e?.target?.value)
+                  }}
+                >
+                  {brandsData?.data?.map((Item: any) => (
+                    <MenuItem key={Item?.categoryName} value={Item?.id}>
+                      {Item?.brandName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item sm={2} xs={12}>
+              <Button
+                onClick={() => {
+                  setCategoryIdPrefill('')
+                  setBrandPrefill('')
+                  setVendorId('')
+                }}
+              >
+                {' '}
+                Clear
+              </Button>
+            </Grid>
             <Button
               variant='contained'
               sx={{
@@ -310,7 +441,42 @@ const ContentPage = () => {
               Add Product
             </Button>
           </Box>
+          {selectedRows?.length > 0 ? (
+            <>
+              <Grid xs={12} sm={12}>
+                {/* <Typography variant='body'>Delete all selected farmers:</Typography> */}
+                {/* <Button variant='outlined' color='error'>
+              Delete All Selected Farmers
+            </Button> */}
 
+                <Toolbar
+                  sx={{
+                    px: theme => `${theme.spacing(5)} !important`,
+                    ...(selectedRows?.length > 0 && {
+                      bgcolor: theme => alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity)
+                    })
+                  }}
+                >
+                  <Typography sx={{ flex: '1 1 100%' }} color='inherit' variant='subtitle1' component='div'>
+                    {selectedRows?.length} selected
+                  </Typography>
+                  {selectedRows?.length > 0 ? (
+                    <Tooltip title='Delete'>
+                      <IconButton
+                        sx={{ color: 'error' }}
+                        onClick={() => {
+                          handleMultiDeleteClickOpen()
+                          setDeleteID(selectedRows)
+                        }}
+                      >
+                        <Icon icon='tabler:trash' />
+                      </IconButton>
+                    </Tooltip>
+                  ) : null}
+                </Toolbar>
+              </Grid>
+            </>
+          ) : null}
           <DataGrid
             sx={{
               '& .MuiDataGrid-row:hover': {
@@ -320,10 +486,10 @@ const ContentPage = () => {
             }}
             autoHeight
             pagination
-            // rowHeight={62}
-            // rowCount={getUsers?.totalItems}
             rows={allProductsData?.data && allProductsData?.data ? allProductsData?.data : []}
             columns={columns}
+            checkboxSelection
+            onRowSelectionModelChange={handleSelectionChange}
             slots={{
               footer: CustomPagination
             }}
@@ -345,6 +511,14 @@ const ContentPage = () => {
         type='deleteProduct'
         delelteField={delelteField}
         id={DeleteID}
+      />
+      <DeleteMultiFieldsDialog
+        open={multiFieldDeleteOpen}
+        setOpen={setMultiFieldDeleteOpen}
+        handleClickOpen={handleMultiDeleteClickOpen}
+        handleClose={handleMultiDeleteClickClose}
+        type='products'
+        id={selectedRows}
       />
     </Grid>
   )

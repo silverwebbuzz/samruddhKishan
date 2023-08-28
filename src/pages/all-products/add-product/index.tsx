@@ -33,6 +33,7 @@ import { toast } from 'react-hot-toast'
 import { border, borderRadius, display, padding } from '@mui/system'
 import { GridDeleteIcon } from '@mui/x-data-grid'
 import { createProduct, getAllCountry, getAllUnits } from 'src/slice/productSlice'
+import { getAllUsers } from 'src/slice/farmers'
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 const addProduct = () => {
@@ -40,6 +41,7 @@ const addProduct = () => {
   const router = useRouter()
   const { categories } = useSelector((state: any) => state?.rootReducer?.categoriesReducer)
   const { brandsData } = useSelector((state: any) => state?.rootReducer?.brandsReducer)
+  const { getUsers } = useSelector((state: any) => state?.rootReducer?.farmerReducer)
   const { allUnitsData, contries } = useSelector((state: any) => state?.rootReducer?.productReducer)
   const [selectedFiles, setSelectedFiles] = useState([])
   const [categoryIdPrefill, setCategoryIdPrefill] = useState('')
@@ -47,6 +49,8 @@ const addProduct = () => {
   const [brandPrefill, setBrandPrefill] = useState('')
   const [contryPrefill, setContryPrefill] = useState('')
   const [productUnits, setProductUnits] = useState('')
+  const [vendorId, setVendorId] = useState(0)
+
   const ProfilePicture = styled('img')(({ theme }) => ({
     width: 108,
     height: 108,
@@ -61,7 +65,7 @@ const addProduct = () => {
   const handleProduct = (values: any, { resetForm }: any) => {
     let formdata = new FormData()
 
-    formdata.append('vendorName', vendorPrefill)
+    formdata.append('vendorId', vendorId)
     formdata.append('categoryId', categoryIdPrefill)
     formdata.append('productName', values?.productName)
     formdata.append('brandId', brandPrefill)
@@ -208,6 +212,7 @@ const addProduct = () => {
   }
   useEffect(() => {
     dispatch(getAllCategories())
+    dispatch(getAllUsers({ page: 1, pageSize: 10 }))
     dispatch(getAllBrands())
     dispatch(getAllCountry())
     dispatch(getAllUnits())
@@ -215,6 +220,11 @@ const addProduct = () => {
   const handleRemoveFile = indexToRemove => {
     setSelectedFiles(prevFiles => prevFiles.filter((_, index) => index !== indexToRemove))
   }
+
+  const userFilter = (users: any) => {
+    return users?.filter((user: any) => user.role === 'VENDORS')
+  }
+
   return (
     <Card
       sx={{
@@ -288,26 +298,22 @@ const addProduct = () => {
                 </Grid>
                 <Grid item xs={6} sm={6}>
                   <FormControl fullWidth>
-                    <InputLabel id='demo-simple-select-label'> Select Vendor Name</InputLabel>
+                    <InputLabel id='demo-simple-select-label'>Vendor Name</InputLabel>
                     <Select
                       labelId='demo-simple-select-label'
                       id='demo-simple-select'
-                      name='vendorName'
-                      value={vendorPrefill}
-                      label='Select Vendor Name'
+                      name='vendorId'
+                      value={vendorId}
+                      label='Vendor Name'
                       onChange={(e: any) => {
-                        setFieldValue('vendorName', e?.target?.value)
-                        setVendorPrefill(e?.target?.value)
+                        setVendorId(e?.target?.value)
                       }}
                     >
-                      <MenuItem key={'Comming Soon'} value={'Comming Soon'}>
-                        {'Comming Soon'}
-                      </MenuItem>
-                      {/* {categories?.data?.map((Item: any) => (
-                        <MenuItem key={Item?.categoryName} value={Item?.id}>
-                          {Item?.categoryName}
+                      {userFilter(getUsers?.data)?.map((Item: any) => (
+                        <MenuItem key={Item?.id} value={Item?.id}>
+                          {Item?.firstName} {Item?.lastName}
                         </MenuItem>
-                      ))} */}
+                      ))}
                     </Select>
                   </FormControl>
                 </Grid>

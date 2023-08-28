@@ -28,7 +28,10 @@ import {
   InputLabel,
   MenuItem,
   Pagination,
-  Select
+  Select,
+  Theme,
+  createStyles,
+  makeStyles
 } from '@mui/material'
 
 import { AppDispatch } from 'src/store/store'
@@ -39,8 +42,9 @@ import { ErrorMessage, Form, Formik } from 'formik'
 import DeleteDialog from 'src/views/deleteDialogBox/deleteDialogBox'
 import { toast } from 'react-hot-toast'
 import * as yup from 'yup'
-import { getAllCategories } from 'src/slice/categoriesSlice'
+import { getAllCategories, updateCategory } from 'src/slice/categoriesSlice'
 import CategoryDialog from 'src/views/components/dialogBox/CategoryDialog'
+import CollapsibleTable from 'src/views/demo/demo'
 
 export type Payload = {
   id?: number
@@ -54,15 +58,12 @@ const Transition = forwardRef(function Transition(
 ) {
   return <Fade ref={ref} {...props} />
 })
+
 const allCategories = () => {
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
   const { categories, deleteCat, createCat } = useSelector((state: any) => state?.rootReducer?.categoriesReducer)
-  // console.log(createCat, 'categories')
   const [search, setSearch] = useState<string>('')
   const router = useRouter()
-
-  // const [taluka, setTaluka] = useState('')
-
   const [page, setPage] = useState<number>(1)
   const [pageCount, setPageCount] = useState<number>(1)
   const [pageLimit, setPageLimit] = useState<number>(10)
@@ -79,16 +80,9 @@ const allCategories = () => {
   const [edit, setEdit] = useState<boolean>(false)
   const [editID, setEditID] = useState<string | number>('')
   const [editField, setEditField] = useState<string | number>('')
-  console.log(editField, 'editField')
-
-  const handleClickOpen = () => {
-    setEditPrefillData('')
-    setOpen(true)
-  }
-
+  const [selectedRows, setSelectedRows] = useState<number[]>([])
   const handleClickOpenDelete = () => setOpenDelete(true)
   const handleDeleteClose = () => setOpenDelete(false)
-
   const handleChange = (event: any, value: number) => {
     setPage(value)
   }
@@ -151,7 +145,9 @@ const allCategories = () => {
     handleCancel: handleCancel
   }
   const handleSearch = () => {}
-
+  const handleSelectionChange = (selection: any) => {
+    setSelectedRows(selection.selectionModel)
+  }
   const columns: GridColDef[] = [
     {
       flex: 0.1,
@@ -188,17 +184,34 @@ const allCategories = () => {
       minWidth: 320,
       headerName: 'Category status',
       renderCell: ({ row }: any) => {
-        const { categoryStatus } = row
+        const { categoryId, categoryStatus, categoryName, id } = row
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              {/* <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {categoryStatus}
-              </Typography> */}
-              <Chip
-                label={categoryStatus === 1 ? 'Active' : 'Inactive'}
-                color={categoryStatus === 1 ? 'primary' : 'error'}
-              />
+              <Select
+                size='small'
+                labelId='demo-simple-select-label'
+                id='demo-simple-select'
+                name='categoryStatus'
+                value={categoryStatus}
+                sx={{
+                  width: '6.25rem'
+                }}
+                onChange={e => {
+                  let editPayload: any = {
+                    categoryId: categoryId,
+                    categoryName: categoryName,
+                    categoryStatus: e?.target?.value,
+                    id: id
+                  }
+                  dispatch(updateCategory(editPayload)).then(res => {
+                    dispatch(getAllCategories({ page: 1, pageLimit: 10 }))
+                  })
+                }}
+              >
+                <MenuItem value={1}>Active</MenuItem>
+                <MenuItem value={0}>InActive</MenuItem>
+              </Select>
               <Badge />
             </Box>
           </Box>
@@ -302,19 +315,18 @@ const allCategories = () => {
             </Button>
           </Box>
 
-          <DataGrid
+          {/* <DataGrid
             sx={{
               '& .MuiDataGrid-row:hover': {
                 backgroundColor: '#a4be9b'
-                // color: "red"
               }
             }}
             autoHeight
             pagination
-            // rowHeight={62}
-            // rowCount={getUsers?.totalItems}
             rows={categories?.data && categories?.data ? categories?.data : []}
             columns={columns}
+            checkboxSelection
+            onRowSelectionModelChange={handleSelectionChange}
             slots={{
               footer: CustomPagination
             }}
@@ -325,7 +337,8 @@ const allCategories = () => {
             disableColumnMenu
             disableColumnFilter
             disableColumnSelector
-          />
+          /> */}
+          <CollapsibleTable data={categories?.data} />
         </Card>
       </Grid>
       <DeleteDialog

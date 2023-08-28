@@ -20,7 +20,7 @@ import Icon from 'src/@core/components/icon'
 // ** Third Party Imports
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
-import { Button, Chip, FormControl, InputLabel, MenuItem, OutlinedInput, Pagination } from '@mui/material'
+import { Button, Chip, FormControl, InputLabel, MenuItem, OutlinedInput, Pagination, Toolbar } from '@mui/material'
 import Select from '@mui/material/Select'
 
 import { getAllDistrict, getAllFarmers, getAllState } from 'src/slice/farmers'
@@ -32,6 +32,8 @@ import DeleteDialog from 'src/views/deleteDialogBox/deleteDialogBox'
 import CustomTextField from 'src/@core/components/mui/text-field'
 import { getAllUsers } from 'src/slice/users'
 import axios from 'axios'
+import { alpha } from '@mui/system'
+import DeleteMultiFieldsDialog from 'src/views/deleteDialogBox/deleteMultiFieldsDialog'
 
 export type Payload = {
   id?: number
@@ -48,9 +50,10 @@ const Transition = forwardRef(function Transition(
 })
 
 const allFarmers = () => {
-  const [selectedRows, setSelectedRows] = useState<GridRowId[]>([])
-
   const { allFarmers, createFarmer, deleteFarmer } = useSelector((state: any) => state?.rootReducer?.farmerReducer)
+  const { allDistrict, allState, getUsers, getAddressByPinCodeData } = useSelector(
+    (state: any) => state?.rootReducer?.farmerReducer
+  )
   const [page, setPage] = useState<number>(1)
   const [DeleteID, setDeleteID] = useState()
   const [open, setOpen] = useState<boolean>(false)
@@ -63,14 +66,18 @@ const allFarmers = () => {
   const userData: any = JSON.parse(localStorage.getItem('userData'))
   const [usersData, setUsersData] = useState([])
   const [referalNames, setReferalName] = useState('')
+  const [selectedRows, setSelectedRows] = useState<number[]>([])
+  const [multiFieldDeleteOpen, setMultiFieldDeleteOpen] = useState(false)
 
-  const { allDistrict, allState, getUsers, getAddressByPinCodeData } = useSelector(
-    (state: any) => state?.rootReducer?.farmerReducer
-  )
+  const handleMultiDeleteClickOpen = () => setMultiFieldDeleteOpen(true)
+  const handleMultiDeleteClickClose = () => setMultiFieldDeleteOpen(false)
+
   const handleChange = (event: ChangeEvent<unknown>, value: number) => {
     setPage(value)
   }
+
   const [roleValue, setRoleValue] = useState<string>([])
+  const [farmerName, setFarmerName] = useState<string>('')
   const router = useRouter()
   const dispatch = useDispatch<AppDispatch>()
   const ROLE = JSON.parse(localStorage.getItem('role'))
@@ -119,11 +126,7 @@ const allFarmers = () => {
     const {
       target: { value }
     } = event
-    console.log(value)
-    setRoleValue(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value
-    )
+    setRoleValue(typeof value === 'string' ? value.split(',') : value)
   }
   function getStyles(name: string, personName: readonly string[], theme: Theme) {
     return {
@@ -132,6 +135,9 @@ const allFarmers = () => {
     }
   }
 
+  const handleSelectionChange = (selection: any) => {
+    setSelectedRows(selection)
+  }
   useEffect(() => {
     // @ts-ignore
     const payload = {
@@ -141,7 +147,8 @@ const allFarmers = () => {
       district: district ? district : '',
       taluka: taluka ? taluka : '',
       referralId: roleValue?.map(role => role?.id),
-      referralName: roleValue === '' ? '' : referalNames ? referalNames : ''
+      referralName: roleValue === '' ? '' : referalNames ? referalNames : '',
+      farmerName: farmerName ? farmerName : ''
     }
     if (userData?.role === 'admin') {
       payload.adminId = userData?.id
@@ -156,7 +163,7 @@ const allFarmers = () => {
       })
     }
     localStorage.removeItem('FarmerData')
-  }, [createFarmer, deleteFarmer, page, pageCount, pageLimit, STATE, district, taluka, roleValue])
+  }, [createFarmer, deleteFarmer, page, pageCount, pageLimit, STATE, district, taluka, roleValue, farmerName])
 
   const userApiCall = async () => {
     let headers = {
@@ -178,8 +185,6 @@ const allFarmers = () => {
   useEffect(() => {
     dispatch(getAllDistrict({ state: STATE }))
   }, [STATE])
-
-  const handleSearch = () => {}
 
   const handleEdit = (row: any) => {
     localStorage.setItem('FarmerData', JSON.stringify(row?.id))
@@ -282,150 +287,210 @@ const allFarmers = () => {
       }
     })
   }
-  const handleRolechange = id => {
-    setRoleValue(id)
-    findUserRoleByID(id)
-  }
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
           <CardHeader title='All Farmers' />
-          <Box
-            sx={{
-              gap: 2,
-              display: 'flex',
-              flexWrap: 'wrap',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              p: theme => theme.spacing(2, 5, 4, 5)
-            }}
-          >
-            {userData?.role === 'admin' ? (
-              <>
-                <Grid item sm={2} xs={12}>
-                  <FormControl fullWidth size='small'>
-                    <InputLabel id='demo-multiple-chip-label'>Role</InputLabel>
-                    <Select
-                      labelId='demo-multiple-chip-label'
-                      id='demo-multiple-chip'
-                      multiple
-                      value={roleValue}
-                      onChange={handleDropdownChange}
-                      input={<OutlinedInput id='select-multiple-chip' label='Role' />}
-                      renderValue={selected => (
-                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                          {selected.map(selectedItem => (
-                            <Chip
-                              key={selectedItem?.value}
-                              label={`${selectedItem?.firstName}${selectedItem?.lastName}`}
-                            />
-                          ))}
-                        </Box>
-                      )}
-                      MenuProps={MenuProps}
-                    >
-                      {usersData?.data?.map(name => (
-                        <MenuItem key={name} value={name}>
-                          {name?.firstName} {name?.lastName}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item sm={2} xs={12}>
-                  <FormControl fullWidth size='small'>
-                    <InputLabel>State</InputLabel>
-                    <Select
-                      id='demo-simple-select'
-                      name='state'
-                      value={STATE}
-                      label='State'
-                      onChange={(e: any) => {
-                        setSTATE(e?.target?.value)
-                      }}
-                    >
-                      {allState?.data?.map(name => (
-                        <MenuItem key={name?.name} value={name?.name}>
-                          {name?.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item sm={2} xs={12}>
-                  <Tooltip title='Please select state first'>
+          <Grid xs={12} sm={12}>
+            <Box
+              sx={{
+                gap: 2,
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                p: theme => theme.spacing(2, 5, 4, 5)
+              }}
+            >
+              {userData?.role === 'admin' ? (
+                <>
+                  <Grid item sm={2} xs={12}>
                     <FormControl fullWidth size='small'>
-                      <InputLabel id='demo-simple-select-label'>District</InputLabel>
+                      <InputLabel id='demo-multiple-chip-label'>User</InputLabel>
                       <Select
-                        labelId='demso-imple-select-label'
+                        labelId='demo-multiple-chip-label'
+                        id='demo-multiple-chip'
+                        multiple
+                        value={roleValue}
+                        onChange={handleDropdownChange}
+                        input={<OutlinedInput id='select-multiple-chip' label='User' />}
+                        renderValue={selected => (
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                            {selected.map(selectedItem => (
+                              <Chip
+                                key={selectedItem?.value}
+                                label={`${selectedItem?.firstName}${selectedItem?.lastName}`}
+                              />
+                            ))}
+                          </Box>
+                        )}
+                        MenuProps={MenuProps}
+                      >
+                        {usersData?.data?.map(name => (
+                          <MenuItem key={name} value={name}>
+                            {name?.firstName} {name?.lastName}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item sm={2} xs={12}>
+                    <FormControl fullWidth size='small'>
+                      <InputLabel>State</InputLabel>
+                      <Select
                         id='demo-simple-select'
-                        name='district'
-                        disabled={STATE?.length <= 0}
-                        value={district}
-                        label='district'
-                        onChange={e => {
-                          setDistrict(e?.target?.value)
+                        name='state'
+                        value={STATE}
+                        label='State'
+                        onChange={(e: any) => {
+                          setSTATE(e?.target?.value)
                         }}
                       >
-                        {allDistrict?.map(name => (
+                        {allState?.data?.map(name => (
                           <MenuItem key={name?.name} value={name?.name}>
                             {name?.name}
                           </MenuItem>
                         ))}
                       </Select>
                     </FormControl>
-                  </Tooltip>
-                </Grid>{' '}
-                <Grid item sm={2} xs={12}>
-                  <TextField
-                    size='small'
-                    value={taluka}
-                    onChange={e => {
-                      setTaluka(e?.target?.value)
-                    }}
-                    label='Taluka'
-                    placeholder='Taluka'
-                    sx={{
-                      width: {
-                        xs: 1,
-                        sm: 'auto'
-                      },
-                      '& .MuiInputBase-root > svg': {
-                        mr: 2
-                      }
-                    }}
-                  />
-                </Grid>
-                <Grid item sm={2} xs={12}>
-                  <Button
-                    onClick={() => {
-                      setSTATE('')
-                      setTaluka('')
-                      setDistrict('')
-                      setRoleValue([])
-                      setReferalName('')
-                    }}
-                  >
-                    {' '}
-                    Clear
-                  </Button>
-                </Grid>
-              </>
-            ) : null}
-            <Button
-              variant='contained'
-              sx={{
-                '&:hover': {
-                  backgroundColor: '#5E7954'
-                }
-              }}
-              onClick={() => router.push('/farmers/add-farmer')}
-            >
-              Add farmer
-            </Button>
-          </Box>
-
+                  </Grid>
+                  <Grid item sm={2} xs={12}>
+                    <Tooltip title='Please select state first'>
+                      <FormControl fullWidth size='small'>
+                        <InputLabel id='demo-simple-select-label'>District</InputLabel>
+                        <Select
+                          labelId='demso-imple-select-label'
+                          id='demo-simple-select'
+                          name='district'
+                          disabled={STATE?.length <= 0}
+                          value={district}
+                          label='district'
+                          onChange={e => {
+                            setDistrict(e?.target?.value)
+                          }}
+                        >
+                          {allDistrict?.map(name => (
+                            <MenuItem key={name?.name} value={name?.name}>
+                              {name?.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Tooltip>
+                  </Grid>{' '}
+                  <Grid item sm={2} xs={12}>
+                    <TextField
+                      size='small'
+                      value={taluka}
+                      onChange={e => {
+                        setTaluka(e?.target?.value)
+                      }}
+                      label='Taluka'
+                      placeholder='Taluka'
+                      sx={{
+                        width: {
+                          xs: 1,
+                          sm: 'auto'
+                        },
+                        '& .MuiInputBase-root > svg': {
+                          mr: 2
+                        }
+                      }}
+                    />
+                  </Grid>
+                  <Grid item sm={2} xs={12}>
+                    <Button
+                      onClick={() => {
+                        setSTATE('')
+                        setTaluka('')
+                        setDistrict('')
+                        setRoleValue([])
+                        setReferalName('')
+                      }}
+                    >
+                      {' '}
+                      Clear
+                    </Button>
+                  </Grid>
+                </>
+              ) : (
+                <>
+                  <Grid item sm={6} xs={6} display={'flex'} flexDirection={'row'}>
+                    <TextField
+                      size='small'
+                      value={farmerName}
+                      onChange={e => {
+                        setFarmerName(e?.target?.value)
+                      }}
+                      label='Farmer Name'
+                      placeholder='Taluka'
+                      sx={{
+                        width: {
+                          xs: 1,
+                          sm: 'auto'
+                        },
+                        '& .MuiInputBase-root > svg': {
+                          mr: 2
+                        }
+                      }}
+                    />
+                    <Button
+                      onClick={() => {
+                        setFarmerName('')
+                      }}
+                    >
+                      {' '}
+                      Clear
+                    </Button>
+                  </Grid>
+                </>
+              )}
+              <Button
+                variant='contained'
+                sx={{
+                  '&:hover': {
+                    backgroundColor: '#5E7954'
+                  }
+                }}
+                onClick={() => router.push('/farmers/add-farmer')}
+              >
+                Add farmer
+              </Button>
+            </Box>
+          </Grid>
+          {selectedRows?.length > 0 ? (
+            <>
+              <Grid xs={12} sm={12}>
+                <Toolbar
+                  sx={{
+                    px: theme => `${theme.spacing(5)} !important`,
+                    ...(selectedRows?.length > 0 && {
+                      bgcolor: theme => alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity)
+                    })
+                  }}
+                >
+                  <Typography sx={{ flex: '1 1 100%' }} color='inherit' variant='subtitle1' component='div'>
+                    {selectedRows?.length} selected
+                  </Typography>
+                  {selectedRows?.length > 0 ? (
+                    <Tooltip title='Delete'>
+                      <IconButton
+                        sx={{ color: 'error' }}
+                        onClick={() => {
+                          handleMultiDeleteClickOpen()
+                          setDeleteID(selectedRows)
+                        }}
+                      >
+                        <Icon icon='tabler:trash' />
+                      </IconButton>
+                    </Tooltip>
+                  ) : null}
+                </Toolbar>
+              </Grid>
+            </>
+          ) : null}
           <DataGrid
             sx={{
               '& .MuiDataGrid-row:hover': {
@@ -438,6 +503,8 @@ const allFarmers = () => {
             slots={{
               footer: CustomPagination
             }}
+            checkboxSelection
+            onRowSelectionModelChange={handleSelectionChange}
             hideFooterRowCount
             hideFooterSelectedRowCount
             hideFooterPagination
@@ -455,6 +522,14 @@ const allFarmers = () => {
           type='farmer'
           delelteField={delelteField}
           id={DeleteID}
+        />
+        <DeleteMultiFieldsDialog
+          open={multiFieldDeleteOpen}
+          setOpen={setMultiFieldDeleteOpen}
+          handleClickOpen={handleMultiDeleteClickOpen}
+          handleClose={handleMultiDeleteClickClose}
+          type='farmer'
+          id={selectedRows}
         />
       </Grid>
     </Grid>

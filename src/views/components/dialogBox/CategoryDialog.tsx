@@ -31,9 +31,10 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
     let editPayload: any = {
       categoryId: values?.categoryId === 'none' ? 0 : values?.categoryId,
       categoryName: values?.categoryName,
-      categoryStatus: values?.categoryStatus,
+      categoryStatus: values?.categoryStatus === '' ? 0 : values?.categoryStatus,
       id: editID
     }
+
     if (edit) {
       dispatch(updateCategory(editPayload)).then(res => {
         if (res.payload.status === 200) {
@@ -74,7 +75,7 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
               : {
                   categoryId: '',
                   categoryName: '',
-                  categoryStatus: 0
+                  categoryStatus: ''
                 }
           }
           validationSchema={validationSchema}
@@ -86,13 +87,7 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
             const { values, touched, errors, handleBlur, handleChange, handleSubmit, setFieldValue } = props
             return (
               <Form onSubmit={handleSubmit}>
-                <Grid
-                  container
-                  gap={3}
-                  // sx={{
-                  //   padding: 5
-                  // }}
-                >
+                <Grid container gap={3}>
                   <Grid xs={12}>
                     <FormControl fullWidth>
                       <InputLabel id='demo-simple-select-label'>Main Category Name</InputLabel>
@@ -107,7 +102,7 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
                         }}
                       >
                         <MenuItem key={'none'} value={'none'}>
-                          None
+                          Main Category
                         </MenuItem>
                         {categories?.data?.map((Item: any) => (
                           <MenuItem key={Item?.categoryName} value={Item?.id}>
@@ -136,14 +131,20 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
                     />
                   </Grid>
                   <Grid xs={12}>
-                    <FormControlLabel
-                      control={<Checkbox checked={values.categoryStatus} />}
-                      label='Category Status'
-                      name='categoryStatus'
-                      onChange={e => {
-                        setFieldValue('categoryStatus', e?.target?.checked)
-                      }}
-                    />
+                    <FormControl fullWidth>
+                      <InputLabel id='demo-simple-select-label'>Status</InputLabel>
+                      <Select
+                        labelId='demo-simple-select-label'
+                        id='demo-simple-select'
+                        name='categoryStatus'
+                        value={values.categoryStatus}
+                        label='Status'
+                        onChange={handleChange}
+                      >
+                        <MenuItem value={1}>Active</MenuItem>
+                        <MenuItem value={0}>InActive</MenuItem>
+                      </Select>
+                    </FormControl>
                   </Grid>
                   <Grid xs={12}>
                     <Box sx={{ marginTop: '25px' }}>

@@ -40,12 +40,14 @@ import {
   getProductById,
   updateProduct
 } from 'src/slice/productSlice'
+import { getAllUsers } from 'src/slice/farmers'
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 const editProduct = () => {
   const dispatch = useDispatch<AppDispatch>()
   const router = useRouter()
   const { categories } = useSelector((state: any) => state?.rootReducer?.categoriesReducer)
+  const { getUsers } = useSelector((state: any) => state?.rootReducer?.farmerReducer)
   const { brandsData } = useSelector((state: any) => state?.rootReducer?.brandsReducer)
   const { allUnitsData, contries, singleProductsData } = useSelector((state: any) => state?.rootReducer?.productReducer)
   const [selectedFiles, setSelectedFiles] = useState([])
@@ -57,6 +59,7 @@ const editProduct = () => {
   const [contryPrefill, setContryPrefill] = useState('')
   const [productUnits, setProductUnits] = useState('')
   const productID = localStorage.getItem('editProductID')
+  const [vendorId, setVendorId] = useState('')
 
   const ProfilePicture = styled('img')(({ theme }) => ({
     width: 108,
@@ -72,7 +75,7 @@ const editProduct = () => {
   const handleProduct = (values: any, { resetForm }: any) => {
     let formdata = new FormData()
     formdata.append('id', productID)
-    formdata.append('vendorName', values?.vendorName)
+    formdata.append('vendorId', vendorId)
     formdata.append('categoryId', values?.categoryId)
     formdata.append('productName', values?.productName)
     formdata.append('brandId', brandPrefill)
@@ -99,7 +102,11 @@ const editProduct = () => {
     }
     dispatch(updateProduct(payload)).then(res => {
       if (removeFiles?.length > 0) {
-        dispatch(deleteProductGallaryImage(payloadForDeleteImages))
+        dispatch(deleteProductGallaryImage(payloadForDeleteImages)).then(res => {
+          setSelectedFiles([])
+          setNewSelectedFiles([])
+          setRemoveFiles([])
+        })
       }
       if (res?.payload?.status === 'success') {
         router.push('/all-products')
@@ -166,6 +173,7 @@ const editProduct = () => {
   useEffect(() => {
     dispatch(getAllCategories())
     dispatch(getAllBrands())
+    dispatch(getAllUsers({ page: 1, pageSize: 10 }))
     dispatch(getAllCountry())
     dispatch(getAllUnits())
     dispatch(getProductById({ id: productID }))
@@ -175,15 +183,15 @@ const editProduct = () => {
       setCategoryIdPrefill(singleProductsData?.categoryId)
       setVendorPrefill(singleProductsData?.venderId)
       setBrandPrefill(singleProductsData?.brandId)
+      setVendorId(singleProductsData?.venderId)
       setContryPrefill(singleProductsData?.country)
       setProductUnits(singleProductsData?.productUnits)
-      // setSelectedFiles([...selectedFiles, ...singleProductsData?.productGallaryImage])
       if (Array.isArray(selectedFiles) && singleProductsData && Array.isArray(singleProductsData.productGallaryImage)) {
         setSelectedFiles([...selectedFiles, ...singleProductsData.productGallaryImage])
       } else {
-        console.error('Invalid data or types for concatenation.')
+        console.warn('Invalid data or types for concatenation.')
       }
-    })
+    }, [1000])
   }, [
     singleProductsData?.categoryId,
     singleProductsData?.venderId,
@@ -264,6 +272,9 @@ const editProduct = () => {
       return []
     }
   }
+  const userFilter = (users: any) => {
+    return users?.filter((user: any) => user.role === 'VENDORS')
+  }
   return (
     <Card
       sx={{
@@ -338,26 +349,22 @@ const editProduct = () => {
                 </Grid>
                 <Grid item xs={6} sm={6}>
                   <FormControl fullWidth>
-                    <InputLabel id='demo-simple-select-label'> Select Vendor Name</InputLabel>
+                    <InputLabel id='demo-simple-select-label'>Vendor Name</InputLabel>
                     <Select
                       labelId='demo-simple-select-label'
                       id='demo-simple-select'
-                      name='vendorName'
-                      value={vendorPrefill}
-                      label='Select Vendor Name'
+                      name='vendorId'
+                      value={vendorId}
+                      label='Vendor Name'
                       onChange={(e: any) => {
-                        setFieldValue('vendorName', e?.target?.value)
-                        setVendorPrefill(e?.target?.value)
+                        setVendorId(e?.target?.value)
                       }}
                     >
-                      <MenuItem key={'Comming Soon'} value={'Comming Soon'}>
-                        {'Comming Soon'}
-                      </MenuItem>
-                      {/* {categories?.data?.map((Item: any) => (
-                        <MenuItem key={Item?.categoryName} value={Item?.id}>
-                          {Item?.categoryName}
+                      {userFilter(getUsers?.data)?.map((Item: any) => (
+                        <MenuItem key={Item?.id} value={Item?.id}>
+                          {Item?.firstName} {Item?.lastName}
                         </MenuItem>
-                      ))} */}
+                      ))}
                     </Select>
                   </FormControl>
                 </Grid>
@@ -718,8 +725,6 @@ const editProduct = () => {
                       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                         {selectedFiles.length > 0 ? (
                           selectedFiles?.map((file, index) => {
-                            console.log('FILE', file, index)
-                            // return <ImagePreviewer file={file} index={index} />
                             return <ImagePreviewer key={index} file={{ file: file, index: index }} />
                           })
                         ) : (
@@ -727,8 +732,6 @@ const editProduct = () => {
                             src={'/images/logo/pngtree-gray-network-placeholder-png-image_3416659.jpg'}
                             alt='profile-picture'
                           />
-
-                          // <Typography>No files selected.</Typography>
                         )}
                       </div>
                       <div>
@@ -756,9 +759,7 @@ const editProduct = () => {
                       size='medium'
                       variant='contained'
                       onClick={() => {
-                        setFieldValue('categoryName', '')
-                        setEdit(false)
-                        handleCancel()
+                        router.push('/all-products')
                       }}
                     >
                       Cancel

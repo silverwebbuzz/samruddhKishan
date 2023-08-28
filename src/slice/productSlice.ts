@@ -124,6 +124,7 @@ export const deleteProductGallaryImage = createAsyncThunk(
     }
   }
 )
+
 export const deleteProduct = createAsyncThunk('user/deleteProduct', async (payload: any, { rejectWithValue }) => {
   try {
     const res = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/product/deleteProduct/${payload?.id}`, {
@@ -135,6 +136,19 @@ export const deleteProduct = createAsyncThunk('user/deleteProduct', async (paylo
     return rejectWithValue(err?.response?.data)
   }
 })
+export const deleteMultipleProduct = createAsyncThunk(
+  'farmer/deleteMultipleProduct',
+  async (payload: any, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/product/multiDeleteProduct`, payload, {
+        headers
+      })
+      return res?.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response?.data)
+    }
+  }
+)
 
 // product slice
 export const productSlice = createSlice({

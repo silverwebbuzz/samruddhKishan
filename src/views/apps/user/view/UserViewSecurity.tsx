@@ -297,6 +297,7 @@ const UserViewSecurity = () => {
                   autoFocus
                   fullWidth
                   value={mobileNumber}
+                  type='number'
                   label='Mobile number with country code'
                   onChange={e => setMobileNumber(e.target.value)}
                 />

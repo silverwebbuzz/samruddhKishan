@@ -78,7 +78,19 @@ export const deleteBrands = createAsyncThunk('user/deleteBrands', async (payload
     return rejectWithValue(err?.response?.data)
   }
 })
-
+export const deleteMultipleBrands = createAsyncThunk(
+  'user/deleteMultipleBrands',
+  async (payload: any, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/brand/multiDeleteBrand`, payload, {
+        headers
+      })
+      return res?.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response?.data)
+    }
+  }
+)
 // categories slice
 export const brandSlice = createSlice({
   name: 'brandSlice',
@@ -125,6 +137,15 @@ export const brandSlice = createSlice({
       state.deleteBrandsData = action.payload
     })
     builder.addCase(deleteBrands.rejected, state => {
+      state.isLoading = false
+    })
+    builder.addCase(deleteMultipleBrands.pending, state => {
+      state.isLoading = true
+    })
+    builder.addCase(deleteMultipleBrands.fulfilled, (state, action) => {
+      state.isLoading = false
+    })
+    builder.addCase(deleteMultipleBrands.rejected, state => {
       state.isLoading = false
     })
   }

@@ -529,14 +529,14 @@ const FarmerDetails = () => {
                         }}
                         id='demo-simple-select-label'
                       >
-                        state
+                        State
                       </InputLabel>
                       <Select
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
                         name='state'
                         value={values?.state}
-                        label='state'
+                        label='State'
                         onChange={(e: any) => {
                           setFieldValue('state', e?.target?.value)
                           setSTATE(e?.target?.value)
@@ -587,7 +587,7 @@ const FarmerDetails = () => {
                           name='district'
                           disabled={STATE.length <= 0}
                           value={values?.district}
-                          label='district'
+                          label='District'
                           onChange={handleChange}
                           sx={{
                             '& .MuiSelect-root': {
@@ -624,6 +624,7 @@ const FarmerDetails = () => {
                         handlePincode(e.target.value)
                       }}
                       fullWidth
+                      type='number'
                       label='Pin Code'
                       placeholder='Pin Code'
                       sx={{
@@ -662,15 +663,15 @@ const FarmerDetails = () => {
                           }}
                           id='demo-simple-select-label'
                         >
-                          taluka
+                          Taluka
                         </InputLabel>
                         <Select
                           labelId='demo-simple-select-label'
                           id='demo-simple-select'
                           name='taluka'
-                          disabled={pincode.length <= 0}
+                          disabled={pincode?.length <= 0}
                           value={values?.taluka && values?.taluka}
-                          label='taluka'
+                          label='Taluka'
                           onChange={handleChange}
                           noOptionsMessage={() => 'No taluka Found'}
                           sx={{
