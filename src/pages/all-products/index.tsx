@@ -495,6 +495,7 @@ const ContentPage = () => {
             }}
             //@ts-ignore
             hideFooterRowCount
+            disableRowSelectionOnClick
             hideFooterSelectedRowCount
             hideFooterPagination
             disableColumnMenu

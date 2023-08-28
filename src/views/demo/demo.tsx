@@ -25,7 +25,12 @@ const CollapsibleTable: React.FC<Props> = ({ data }) => {
     return categories?.map(category => (
       <React.Fragment key={category.id}>
         <tr>
-          <td>
+          <td
+            style={{
+              border: '1px solid #ddd',
+              padding: '8px'
+            }}
+          >
             <button
               style={{
                 backgroundColor: 'transparent',
@@ -40,23 +45,43 @@ const CollapsibleTable: React.FC<Props> = ({ data }) => {
               {expandedRows.includes(category.id) ? '▼' : '►'}
             </button>
           </td>
-          <td>{category.categoryName}</td>
-          <td style={{ display: 'flex', alignItems: 'center' }}>
-            <button
+          <td
+            style={{
+              border: '1px solid #ddd',
+              padding: '8px'
+            }}
+          >
+            {category.categoryName}
+          </td>
+          <td
+            style={{
+              border: '1px solid #ddd',
+              padding: '8px',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            <div
               style={{
-                padding: '5px 10px',
-                backgroundColor: '#3498db',
-                color: 'white',
-                border: 'none',
-                cursor: 'pointer',
-                outline: 'none',
-                borderRadius: '3px',
-                transition: 'background-color 0.2s ease-in-out'
+                display: 'flex',
+                alignItems: 'center'
               }}
             >
-              Edit
-            </button>
-            {/* Add your other action buttons here */}
+              <button
+                style={{
+                  padding: '5px 10px',
+                  backgroundColor: '#3498db',
+                  color: 'white',
+                  border: 'none',
+                  cursor: 'pointer',
+                  outline: 'none',
+                  borderRadius: '3px',
+                  transition: 'background-color 0.2s ease-in-out'
+                }}
+              >
+                Edit
+              </button>
+              {/* Add your other action buttons here */}
+            </div>
           </td>
         </tr>
         {expandedRows.includes(category.id) && category.children && (
@@ -98,13 +123,35 @@ const CollapsibleTable: React.FC<Props> = ({ data }) => {
             style={{
               backgroundColor: '#f2f2f2',
               textAlign: 'left',
-              paddingLeft: '10px'
+              paddingLeft: '10px',
+              border: '1px solid #ddd',
+              padding: '8px'
             }}
           >
             Toggle
           </th>
-          <th>Category Name</th>
-          <th>Actions</th>
+          <th
+            style={{
+              backgroundColor: '#f2f2f2',
+              textAlign: 'left',
+              paddingLeft: '10px',
+              border: '1px solid #ddd',
+              padding: '8px'
+            }}
+          >
+            Category Name
+          </th>
+          <th
+            style={{
+              backgroundColor: '#f2f2f2',
+              textAlign: 'left',
+              paddingLeft: '10px',
+              border: '1px solid #ddd',
+              padding: '8px'
+            }}
+          >
+            Actions
+          </th>
         </tr>
       </thead>
       <tbody>{renderRows(data)}</tbody>

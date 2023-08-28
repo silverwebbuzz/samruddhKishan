@@ -361,6 +361,7 @@ const brands = () => {
             }}
             //@ts-ignore
             hideFooterRowCount
+            disableRowSelectionOnClick
             hideFooterSelectedRowCount
             hideFooterPagination
             disableColumnMenu

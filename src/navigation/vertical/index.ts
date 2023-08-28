@@ -21,7 +21,7 @@ const navigation = (): VerticalNavItemsType => {
       if (UserData?.role === ROLENAME) {
         ROLEID?.map((rID: any) => {
           if (rID == permission?.id) {
-            // console.log(ROLENAME, permission)
+            console.log(ROLENAME, permission)
             ARRR.push(permission)
           }
         })

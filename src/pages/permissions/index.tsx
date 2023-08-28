@@ -226,6 +226,7 @@ const PermissionsTable = () => {
               disableColumnMenu
               disableColumnFilter
               disableColumnSelector
+              disableRowSelectionOnClick
               hideFooterRowCount
               hideFooterSelectedRowCount
               hideFooterPagination
