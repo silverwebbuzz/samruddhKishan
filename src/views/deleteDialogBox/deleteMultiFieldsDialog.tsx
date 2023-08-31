@@ -20,7 +20,7 @@ import {
   getAllFarmers,
   getAllUsers
 } from 'src/slice/farmers'
-import { deleteCategory } from 'src/slice/categoriesSlice'
+import { deleteCategory, deleteMultipleCategory, getAllCategories } from 'src/slice/categoriesSlice'
 import { deleteMultipleProduct, deleteProduct, getAllProducts } from 'src/slice/productSlice'
 import { deleteMultipleServices, deleteService, getAllServices } from 'src/slice/servicesSlice'
 import { deleteBrands, deleteMultipleBrands, getAllBrands } from 'src/slice/brandsSlice'
@@ -67,7 +67,11 @@ const DeleteMultiFieldsDialog = ({ open, type, id, handleClose }: any) => {
           dispatch(getAllBrands({ page: 1, pageSize: 10 }))
         })
         break
-
+      case 'category':
+        dispatch(deleteMultipleCategory(payload)).then(() => {
+          dispatch(getAllCategories({ page: 1, pageSize: 10 }))
+        })
+        break
       default:
         console.log('Does not exist DELETE ID!')
         break

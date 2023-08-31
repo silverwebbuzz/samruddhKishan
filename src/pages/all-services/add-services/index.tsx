@@ -28,13 +28,14 @@ import { getAllCategories } from 'src/slice/categoriesSlice'
 import { createService } from 'src/slice/servicesSlice'
 import { useRouter } from 'next/router'
 import { getAllUsers } from 'src/slice/farmers'
+import DemoSelect from 'src/views/demo/demoSelect'
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 const addServices = () => {
   const dispatch = useDispatch<AppDispatch>()
   const router = useRouter()
   const [vendorId, setVendorId] = useState(0)
-
+  const [categoryIdPrefill, setCategoryIdPrefill] = useState(0)
   const { categories } = useSelector((state: any) => state?.rootReducer?.categoriesReducer)
   const { getUsers } = useSelector((state: any) => state?.rootReducer?.farmerReducer)
   const [serviceStatusPrefill, setServiceStatusPrefill] = useState('')
@@ -51,8 +52,8 @@ const addServices = () => {
   // ** State
   const handleServices = (values: any, { resetForm }: any) => {
     let formdata = new FormData()
-    formdata.append('vendorId', vendorId)
-    formdata.append('categoryId', values?.categoryId)
+    formdata.append('vendorId', vendorId ? vendorId : 0)
+    formdata.append('categoryId', categoryIdPrefill)
     formdata.append('serviceName', values?.ServiceName)
     formdata.append('serviceType', values?.serviceType)
     formdata.append('serviceDetails', values?.serviceDetails)
@@ -177,7 +178,7 @@ const addServices = () => {
                   </Box>
                 </Grid>
                 <Grid item xs={6} sm={6}>
-                  <FormControl fullWidth>
+                  {/* <FormControl fullWidth>
                     <InputLabel id='demo-simple-select-label'> Select Category</InputLabel>
                     <Select
                       labelId='demo-simple-select-label'
@@ -195,6 +196,16 @@ const addServices = () => {
                         </MenuItem>
                       ))}
                     </Select>
+                  </FormControl> */}
+                  <FormControl fullWidth>
+                    <DemoSelect
+                      data={categories?.data}
+                      size={'medium'}
+                      //@ts-ignore
+                      selectedCategory={categoryIdPrefill}
+                      //@ts-ignore
+                      setSelectedCategory={setCategoryIdPrefill}
+                    />
                   </FormControl>
                 </Grid>
                 <Grid item xs={6} sm={6}>

@@ -36,6 +36,7 @@ import { useDispatch } from 'react-redux'
 import axios from 'axios'
 import styled from '@emotion/styled'
 import { getAllCategories } from 'src/slice/categoriesSlice'
+import DemoSelect from 'src/views/demo/demoSelect'
 
 export type Payload = {
   id?: number
@@ -73,14 +74,11 @@ const index = () => {
   }
   const validationSchema = yup.object().shape({
     role: yup.string().required('Role is required'),
-    firstName: yup
-      .string()
-      // .label('role')
-      .when('role', {
-        is: (role: any) => role !== '10' && role !== '13',
-        then: yup => yup.required('First Name is required for this role'),
-        otherwise: yup => yup.optional()
-      }),
+    firstName: yup.string().when('role', {
+      is: (role: any) => role !== '10' && role !== '13',
+      then: yup => yup.required('First Name is required for this role'),
+      otherwise: yup => yup.optional()
+    }),
     lastName: yup.string().when('role', {
       is: (role: any) => role !== '10' && role !== '13',
       then: yup => yup.required('First Name is required for this role'),
@@ -1526,7 +1524,7 @@ const index = () => {
                       </Grid>
 
                       <Grid item sm={6} xs={12}>
-                        <FormControl fullWidth>
+                        {/* <FormControl fullWidth>
                           <InputLabel id='demo-simple-select-label'> Category Name</InputLabel>
                           <Select
                             labelId='demo-simple-select-label'
@@ -1544,7 +1542,13 @@ const index = () => {
                               </MenuItem>
                             ))}
                           </Select>
-                        </FormControl>
+                        </FormControl> */}
+                        <DemoSelect
+                          data={categories?.data}
+                          selectedCategory={categoryIdPrefill}
+                          //@ts-ignore
+                          setSelectedCategory={setCategoryIdPrefill}
+                        />
                       </Grid>
                       <Grid
                         item

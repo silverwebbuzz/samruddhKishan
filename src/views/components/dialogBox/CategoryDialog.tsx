@@ -14,22 +14,25 @@ import { useSelector } from 'react-redux'
 import * as yup from 'yup'
 import { createMasterDegree, updateMasterDegreeById } from 'src/slice/masterDegreeSlice'
 import { createCategory, getAllCategories, updateCategory } from 'src/slice/categoriesSlice'
+import DemoSelect from 'src/views/demo/demoSelect'
+import { useEffect, useState } from 'react'
 
 const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField, editID }: any) => {
   // console.log(search)
   const dispatch = useDispatch<AppDispatch>()
   const { categories } = useSelector((state: any) => state?.rootReducer?.categoriesReducer)
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
 
   // ** State
   const handleCategory = (values: any, { resetForm }: any) => {
     // console.log(values)
     const payload: any = {
-      categoryId: values?.categoryId === 'none' ? 0 : values?.categoryId,
+      categoryId: selectedCategory === 'none' ? 0 : selectedCategory,
       categoryName: values?.categoryName,
       categoryStatus: values?.categoryStatus
     }
     let editPayload: any = {
-      categoryId: values?.categoryId === 'none' ? 0 : values?.categoryId,
+      categoryId: selectedCategory === 'none' ? 0 : selectedCategory,
       categoryName: values?.categoryName,
       categoryStatus: values?.categoryStatus === '' ? 0 : values?.categoryStatus,
       id: editID
@@ -54,11 +57,18 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
     }
     setEdit(false)
   }
+
+  useEffect(() => {
+    if (edit) {
+      setSelectedCategory(editField?.categoryId)
+    }
+  }, [editField?.categoryId])
   // Validations
   const validationSchema = yup.object({
     categoryName: yup.string().required('Category name is required')
   })
 
+  console.log('editField?.categoryIdeditField?.categoryId===>', editField?.categoryId)
   return (
     <Dialog maxWidth='sm' fullWidth open={show} aria-labelledby='form-dialog-title'>
       <DialogTitle id='form-dialog-title'>{edit ? 'Update Category' : 'Add Category'}</DialogTitle>
@@ -68,7 +78,7 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
           initialValues={
             edit
               ? {
-                  categoryId: editField?.categoryId === 0 ? 'none' : editField.categoryId,
+                  categoryId: selectedCategory,
                   categoryName: editField?.categoryName,
                   categoryStatus: editField?.categoryStatus
                 }
@@ -89,28 +99,11 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
               <Form onSubmit={handleSubmit}>
                 <Grid container gap={3}>
                   <Grid xs={12}>
-                    <FormControl fullWidth>
-                      <InputLabel id='demo-simple-select-label'>Main Category Name</InputLabel>
-                      <Select
-                        labelId='demo-simple-select-label'
-                        id='demo-simple-select'
-                        name='categoryId'
-                        value={values?.categoryId}
-                        label='Main Category Name'
-                        onChange={(e: any) => {
-                          setFieldValue('categoryId', e?.target?.value)
-                        }}
-                      >
-                        <MenuItem key={'none'} value={'none'}>
-                          Main Category
-                        </MenuItem>
-                        {categories?.data?.map((Item: any) => (
-                          <MenuItem key={Item?.categoryName} value={Item?.id}>
-                            {Item?.categoryName}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                    <DemoSelect
+                      data={categories?.data}
+                      selectedCategory={selectedCategory}
+                      setSelectedCategory={setSelectedCategory}
+                    />
                   </Grid>
                   <Grid xs={12}>
                     <TextField

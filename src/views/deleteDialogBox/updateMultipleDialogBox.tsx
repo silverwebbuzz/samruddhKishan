@@ -20,7 +20,7 @@ import {
   getAllFarmers,
   getAllUsers
 } from 'src/slice/farmers'
-import { deleteCategory } from 'src/slice/categoriesSlice'
+import { deleteCategory, getAllCategories, updateMultipleCategoryStatus } from 'src/slice/categoriesSlice'
 import { deleteMultipleProduct, deleteProduct, getAllProducts } from 'src/slice/productSlice'
 import {
   deleteMultipleServices,
@@ -43,7 +43,7 @@ const UpdateMultiFieldsDialog = ({ open, status, type, id, handleClose, setSelec
   const handleDelete = () => {
     const payload: any = {
       ids: id,
-      status: status
+      categoryStatus: status
     }
     // console.log(payload, 'payload')
 
@@ -51,6 +51,12 @@ const UpdateMultiFieldsDialog = ({ open, status, type, id, handleClose, setSelec
       case 'services':
         dispatch(updateMultipleServiceStatus(payload)).then(res => {
           dispatch(getAllServices({ page: 1, pageSize: 10 }))
+        })
+        break
+
+      case 'category':
+        dispatch(updateMultipleCategoryStatus(payload)).then(res => {
+          dispatch(getAllCategories({ page: 1, pageSize: 10 }))
         })
         break
 

@@ -46,6 +46,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import 'react-datepicker/dist/react-datepicker-cssmodules.min.css'
 import { DateType } from 'src/types/forms/reactDatepickerTypes'
 import PickersComponent from 'src/views/AddFarmerDialog/PickersCustomInput'
+import moment from 'moment'
 const FarmerDetails = () => {
   const { allDistrict, allState, getFarmer, getAddressByPinCodeData } = useSelector(
     (state: any) => state?.rootReducer?.farmerReducer
@@ -55,7 +56,7 @@ const FarmerDetails = () => {
   const [file, setFile] = useState('')
   const [pincode, setPincode] = useState('')
   const [date, setDate] = useState<DateType>(new Date())
-
+  const [fileForView, setFileForView] = useState('')
   const dispatch = useDispatch()
   const router = useRouter()
 
@@ -75,8 +76,8 @@ const FarmerDetails = () => {
     state: '',
     pinCode: '',
     caste: '',
-    maritalStatus: '',
-    gender: '',
+    maritalStatus: 'married',
+    gender: 'male',
     religion: '',
     landDistrict: '',
     subDivision: '',
@@ -109,6 +110,7 @@ const FarmerDetails = () => {
 
   const handleFile = async (e, param) => {
     const file = e.target.files[0]
+    setFileForView(e.target.files[0])
     const base64 = await convertBase64(file)
     if (base64) {
       setFile(base64)
@@ -119,11 +121,18 @@ const FarmerDetails = () => {
     firstName: yup.string().required('First name  is required'),
     middleName: yup.string().required('Middle name is required'),
     lastName: yup.string().required('Last name is required'),
-    // pinCode: yup.string().required('pinCode is required'),
+    pinCode: yup.string().matches(/^\d{6}$/, 'Invalid PIN code'),
     mobileNumber: yup
       .string()
       .required('Mobile number is required')
-      .matches(/^ *(?:0 *[23478](?: *\d){8}|[1-9](?: *\d)*|0 *[01569](?: *\d)*) *$/, 'Phone number is not valid'),
+      .max(10, 'Mobile number must be 10 digit')
+      // .matches(/^ *(?:0 *[23478](?: *\d){8}|[1-9](?: *\d)*|0 *[01569](?: *\d)*) *$/, 'Phone number is not valid'),
+      .matches(/^(\+91|0)?[6789]\d{9}$/, 'Invalid mobile number'),
+    wpNumber: yup
+      .string()
+      .required('Whatsapp number is required')
+      .max(10, 'Whatsapp number must be 10 digit')
+      .matches(/^(\+91|0)?[6789]\d{9}$/, 'Invalid mobile number'),
     aadharNumber: yup
       .string()
       .required('Adhar number is required')
@@ -131,6 +140,7 @@ const FarmerDetails = () => {
         /^([0-9]{4}[0-9]{4}[0-9]{4}$)|([0-9]{4}\s[0-9]{4}\s[0-9]{4}$)|([0-9]{4}-[0-9]{4}-[0-9]{4}$)/,
         'please enter a valid adhar number'
       ),
+
     appliedForSoilTesting: yup.string().required('Periods of bond is required')
   })
   const handleSubmit = (values: any) => {
@@ -140,7 +150,7 @@ const FarmerDetails = () => {
       middleName: values?.middleName,
       lastName: values?.lastName,
       // asPerAbove: values?.asPerAbove,
-      dateOfBirth: values?.DOB,
+      dateOfBirth: moment(values?.DOB).format(),
       aadharNumber: values?.aadharNumber,
       mobileNumber: values?.mobileNumber,
       wpNumber: values?.wpNumber,
@@ -165,7 +175,8 @@ const FarmerDetails = () => {
       landArea: values?.landArea,
       landType: values?.landType,
       farmerLandOwnershipType: values?.farmerLandOwnershipType,
-      appliedForSoilTesting: 'yes' ? 1 : 0
+      appliedForSoilTesting: 'yes' ? 1 : 0,
+      filename: fileForView?.name
     }
 
     if (userData?.role === 'admin') {
@@ -404,6 +415,7 @@ const FarmerDetails = () => {
                       onBlur={handleBlur}
                       error={Boolean(errors.aadharNumber && touched.aadharNumber)}
                       fullWidth
+                      type='number'
                       label='Adhar Number *'
                       placeholder='Adhar Number'
                       sx={{
@@ -620,8 +632,10 @@ const FarmerDetails = () => {
                     <TextField
                       value={pincode}
                       name='pinCode'
+                      error={Boolean(errors.pinCode && touched.pinCode)}
                       onChange={e => {
                         handlePincode(e.target.value)
+                        setFieldValue('pinCode', e.target.value)
                       }}
                       fullWidth
                       type='number'
@@ -644,6 +658,7 @@ const FarmerDetails = () => {
                         }
                       }}
                     />
+                    <ErrorMessage name='pinCode' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                   </Grid>
 
                   <Grid item sm={6} xs={12}>
@@ -784,21 +799,7 @@ const FarmerDetails = () => {
                       }}
                     />
                   </Grid>
-                  {/* <Grid item sm={6} xs={12}>
-                    <Typography variant='body1' sx={{ fontWeight: 500, color: 'text.primary' }}>
-                      Gender{' '}
-                    </Typography>
-                    <RadioGroup
-                      row
-                      aria-label='controlled'
-                      value={values?.gender && values?.gender}
-                      name='gender'
-                      onChange={handleChange}
-                    >
-                      <FormControlLabel value='male' control={<Radio value='male' />} label='Male' />
-                      <FormControlLabel value='female' control={<Radio value='female' />} label='Female' />
-                    </RadioGroup>
-                  </Grid> */}
+
                   <Grid item sm={6} xs={12}>
                     <Typography variant='body1' sx={{ fontWeight: 500, color: 'text.primary' }}>
                       Gender{' '}
@@ -1201,7 +1202,6 @@ const FarmerDetails = () => {
                       <FormControlLabel value='no' control={<Radio />} label='No' />
                     </RadioGroup>
                   </Grid>
-                  {console?.log('values?.gendervalues?.gender', values?.gender)}
 
                   {values?.appliedForSoilTesting === 'yes' ? (
                     <>
@@ -1210,24 +1210,28 @@ const FarmerDetails = () => {
                         <Typography variant='body1' sx={{ fontWeight: 500, color: 'text.primary' }}>
                           Upload Land Document
                         </Typography>
-                        <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+                        <Box display='flex' flexDirection='column' alignItems='flex-start'>
+                          {file && file.length > 0 && (
+                            <Typography variant='body2' sx={{ color: 'text.secondary', mb: 2 }}>
+                              Selected file: {fileForView?.name}
+                            </Typography>
+                          )}
                           <Button
                             variant='contained'
                             component='label'
                             sx={{
-                              mr: 1,
                               '&:hover': {
                                 backgroundColor: '#5E7954'
                               }
                             }}
                           >
-                            Upload Land Document
+                            Upload
                             <input type='file' hidden onChange={e => handleFile(e)} />
                           </Button>
                         </Box>
                         {values?.appliedForSoilTesting === 'yes' ? (
                           file?.length <= 0 ? (
-                            <div style={{ color: 'red' }}>{'please select image'}</div>
+                            <div style={{ color: 'red' }}>{'Please select an image'}</div>
                           ) : null
                         ) : null}
                       </Grid>

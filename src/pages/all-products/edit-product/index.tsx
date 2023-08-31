@@ -41,6 +41,7 @@ import {
   updateProduct
 } from 'src/slice/productSlice'
 import { getAllUsers } from 'src/slice/farmers'
+import DemoSelect from 'src/views/demo/demoSelect'
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 const editProduct = () => {
@@ -53,7 +54,7 @@ const editProduct = () => {
   const [selectedFiles, setSelectedFiles] = useState([])
   const [newSelectedFiles, setNewSelectedFiles] = useState([])
   const [removeFiles, setRemoveFiles] = useState([])
-  const [categoryIdPrefill, setCategoryIdPrefill] = useState('')
+  const [categoryIdPrefill, setCategoryIdPrefill] = useState(0)
   const [vendorPrefill, setVendorPrefill] = useState('')
   const [brandPrefill, setBrandPrefill] = useState('')
   const [contryPrefill, setContryPrefill] = useState('')
@@ -75,10 +76,10 @@ const editProduct = () => {
   const handleProduct = (values: any, { resetForm }: any) => {
     let formdata = new FormData()
     formdata.append('id', productID)
-    formdata.append('vendorId', vendorId)
-    formdata.append('categoryId', values?.categoryId)
+    formdata.append('vendorId', vendorId ? vendorId : 0)
+    formdata.append('categoryId', categoryIdPrefill ? categoryIdPrefill : 0)
     formdata.append('productName', values?.productName)
-    formdata.append('brandId', brandPrefill)
+    formdata.append('brandId', brandPrefill ? brandPrefill : 0)
     formdata.append('productShort', values?.productShort)
     formdata.append('specification', JSON.stringify(values?.specifications))
     formdata.append('producctVideoUrl', values?.producctVideoUrl)
@@ -326,7 +327,7 @@ const editProduct = () => {
               </Box>
               <Grid container spacing={5}>
                 <Grid item xs={6} sm={6}>
-                  <FormControl fullWidth>
+                  {/* <FormControl fullWidth>
                     <InputLabel id='demo-simple-select-label'> Select Category</InputLabel>
                     <Select
                       labelId='demo-simple-select-label'
@@ -345,6 +346,17 @@ const editProduct = () => {
                         </MenuItem>
                       ))}
                     </Select>
+                  </FormControl> */}
+                  <FormControl fullWidth>
+                    <DemoSelect
+                      data={categories?.data}
+                      size={'medium'}
+                      //@ts-ignore
+                      selectedCategory={categoryIdPrefill}
+                      //@ts-ignore
+                      setSelectedCategory={setCategoryIdPrefill}
+                    />
+                    {console.log('categoryIdPrefill--->', categoryIdPrefill)}
                   </FormControl>
                 </Grid>
                 <Grid item xs={6} sm={6}>

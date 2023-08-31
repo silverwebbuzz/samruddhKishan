@@ -56,6 +56,7 @@ const FarmerDetails = () => {
     wpNumber: getFarmer?.[0]?.wpNumber,
     DOB: moment(getFarmer && getFarmer?.[0]?.dateOfBirth)
       .utc()
+      .add(1, 'day')
       .format('YYYY-MM-DD'),
     aadharNumber: getFarmer?.[0]?.aadharNumber,
     mobileNumber: getFarmer?.[0]?.mobileNumber,
@@ -88,17 +89,17 @@ const FarmerDetails = () => {
     firstName: yup.string().required('First name  is required'),
     middleName: yup.string().required('Middle name is required'),
     lastName: yup.string().required('Last name is required'),
-    // pinCode: yup.string().required('pinCode is required'),
+    pinCode: yup.string().matches(/^\d{6}$/, 'Invalid PIN code'),
     mobileNumber: yup
       .string()
       .required('Mobile number is required')
       // .min(10)
-      .matches(/^ *(?:0 *[23478](?: *\d){8}|[1-9](?: *\d)*|0 *[01569](?: *\d)*) *$/, 'Phone number is not valid'),
+      .matches(/^(\+91|0)?[6789]\d{9}$/, 'Invalid mobile number'),
     wpNumber: yup
       .string()
       .required('Whatsapp number is required')
       // .min(10)
-      .matches(/^ *(?:0 *[23478](?: *\d){8}|[1-9](?: *\d)*|0 *[01569](?: *\d)*) *$/, 'Phone number is not valid'),
+      .matches(/^(\+91|0)?[6789]\d{9}$/, 'Invalid mobile number'),
     aadharNumber: yup
       .string()
       .required('Adhar number is required')
@@ -382,7 +383,7 @@ const FarmerDetails = () => {
                     <ErrorMessage name='lastName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                   </Grid>
                   <Grid item sm={6} xs={12}>
-                    <TextField
+                    {/* <TextField
                       value={values?.DOB}
                       name='DOB'
                       onChange={handleChange}
@@ -410,6 +411,23 @@ const FarmerDetails = () => {
                         '& label.MuiInputLabel-root': {
                           color: 'black' // Set the label font color to blue
                         }
+                      }}
+                    /> */}
+                    <TextField
+                      value={values?.DOB}
+                      name='DOB'
+                      onChange={handleChange}
+                      fullWidth
+                      type='date'
+                      label='Date of birth *'
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                      inputProps={{
+                        max: new Date().toISOString().split('T')[0], // Set max to today's date
+                        // Additional attributes to ensure UTC handling
+                        step: '1', // Set the step to 1 day
+                        'data-timezone': 'UTC' // Indicate the timezone
                       }}
                     />
                   </Grid>
@@ -649,10 +667,12 @@ const FarmerDetails = () => {
                         shrink: true
                       }}
                       value={pincode}
+                      error={Boolean(errors.pinCode && touched.pinCode)}
                       name='pinCode'
                       type='number'
                       onChange={e => {
                         handlePincode(e.target.value)
+                        setFieldValue('pinCode', e.target.value)
                       }}
                       fullWidth
                       label='Pin Code'
@@ -674,6 +694,7 @@ const FarmerDetails = () => {
                         }
                       }}
                     />
+                    <ErrorMessage name='pinCode' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                   </Grid>
 
                   <Grid item sm={6} xs={12}>
@@ -1003,30 +1024,6 @@ const FarmerDetails = () => {
                   </Grid>
 
                   <Grid item sm={6} xs={12}>
-                    {/* <FormControl fullWidth variant='outlined'>
-                      <InputLabel shrink htmlFor='auth-login-v2-password'>
-                        Land Village
-                      </InputLabel>
-                      <OutlinedInput
-                        id='auth-login-v2-password'
-                        label='landVillage'
-                        notched
-                        // InputLabelProps={{
-                        //   shrink: true
-                        // }}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values?.landVillage}
-                        name='landVillage'
-                        type={'number'}
-                        sx={{ mb: 4 }}
-                        endAdornment={
-                          <InputAdornment position='end'>
-                            <Box edge='end'>Sqft.</Box>
-                          </InputAdornment>
-                        }
-                      />
-                    </FormControl> */}
                     <TextField
                       value={values?.landVillage}
                       name='landVillage'
@@ -1300,7 +1297,7 @@ const FarmerDetails = () => {
                       <Grid item sm={6} xs={12}></Grid>
                       <Grid item sm={6} xs={12}>
                         <Typography variant='body1' sx={{ fontWeight: 500, color: 'text.primary' }}>
-                          {url?.length >= 0 ? 'Alredy Uploaded Your Land Document ' : 'Uploaded Your Land Document'}
+                          {url?.length > 0 ? 'Alredy Uploaded Your Land Document ' : 'Upload Your Land Document'}
                         </Typography>
                         <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
                           <Button

@@ -205,7 +205,7 @@ const allCategories = () => {
                     id: id
                   }
                   dispatch(updateCategory(editPayload)).then(res => {
-                    dispatch(getAllCategories({ page: 1, pageLimit: 10 }))
+                    dispatch(getAllCategories({ page: 1, pageSize: 10 }))
                   })
                 }}
               >
@@ -315,29 +315,6 @@ const allCategories = () => {
             </Button>
           </Box>
 
-          {/* <DataGrid
-            sx={{
-              '& .MuiDataGrid-row:hover': {
-                backgroundColor: '#a4be9b'
-              }
-            }}
-            autoHeight
-            pagination
-            rows={categories?.data && categories?.data ? categories?.data : []}
-            columns={columns}
-            checkboxSelection
-            onRowSelectionModelChange={handleSelectionChange}
-            slots={{
-              footer: CustomPagination
-            }}
-            //@ts-ignore
-            hideFooterRowCount
-            hideFooterSelectedRowCount
-            hideFooterPagination
-            disableColumnMenu
-            disableColumnFilter
-            disableColumnSelector
-          /> */}
           <CollapsibleTable data={categories?.data} />
         </Card>
       </Grid>

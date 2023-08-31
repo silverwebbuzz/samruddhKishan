@@ -34,6 +34,7 @@ import { border, borderRadius, display, padding } from '@mui/system'
 import { GridDeleteIcon } from '@mui/x-data-grid'
 import { createProduct, getAllCountry, getAllUnits } from 'src/slice/productSlice'
 import { getAllUsers } from 'src/slice/farmers'
+import DemoSelect from 'src/views/demo/demoSelect'
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 const addProduct = () => {
@@ -275,7 +276,7 @@ const addProduct = () => {
               </Box>
               <Grid container spacing={5}>
                 <Grid item xs={6} sm={6}>
-                  <FormControl fullWidth>
+                  {/* <FormControl fullWidth>
                     <InputLabel id='demo-simple-select-label'> Select Category</InputLabel>
                     <Select
                       labelId='demo-simple-select-label'
@@ -294,6 +295,16 @@ const addProduct = () => {
                         </MenuItem>
                       ))}
                     </Select>
+                  </FormControl> */}
+                  <FormControl size='small' fullWidth>
+                    <DemoSelect
+                      data={categories?.data}
+                      size={'medium'}
+                      //@ts-ignore
+                      selectedCategory={categoryIdPrefill}
+                      //@ts-ignore
+                      setSelectedCategory={setCategoryIdPrefill}
+                    />
                   </FormControl>
                 </Grid>
                 <Grid item xs={6} sm={6}>

@@ -118,26 +118,24 @@ const navigation = (): VerticalNavItemsType => {
         subject: 'all-services',
         icon: 'carbon:ibm-cloud-hyper-protect-crypto-services'
       },
-      // {
-      //   title: 'Landing Page Content',
-      //   path: '/landing-page-content',
-      //   icon: 'fluent:content-view-32-regular'
-      // },
+      {
+        title: 'Inquiry',
+        path: '/inquiry',
+        action: 'read',
+        subject: 'inquiry',
+        icon: 'wpf:ask-question'
+      },
+      {
+        title: 'Settings',
+        path: '/settings',
+        action: 'read',
+        subject: 'settings',
+        icon: 'uil:setting'
+      },
       {
         title: 'Roles & Permissions',
-        icon: 'tabler:settings',
+        icon: 'grommet-icons:user-admin',
         path: '/roles'
-
-        // children: [
-        //   {
-        //     title: 'Roles',
-        //     path: '/roles'
-        //   },
-        //   {
-        //     title: 'Permissions',
-        //     path: '/permissions'
-        //   }
-        // ]
       }
     ]
   }

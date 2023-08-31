@@ -12,13 +12,18 @@ interface RootState {
   deleteCat: Array<any>
   createcat: Array<any>
   updatecat: Array<any>
+  multipleCategories: Array<any>
+  deletemultiCategories: Array<any>
+
   isLoading: boolean
 }
 const initialState: RootState = {
   categories: [],
+  multipleCategories: [],
   deleteCat: [],
   createcat: [],
   updatecat: [],
+  deletemultiCategories: [],
   isLoading: false
 }
 
@@ -71,6 +76,19 @@ export const updateCategory = createAsyncThunk('user/updateCategory', async (pay
     return rejectWithValue(err?.response?.data)
   }
 })
+export const updateMultipleCategoryStatus = createAsyncThunk(
+  'farmer/updateMultipleCategoryStatus',
+  async (payload: any, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/categories/updateMultiSelectStatus`, payload, {
+        headers
+      })
+      return res?.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response?.data)
+    }
+  }
+)
 
 export const deleteCategory = createAsyncThunk('user/deleteCategory', async (payload: any, { rejectWithValue }) => {
   try {
@@ -83,6 +101,20 @@ export const deleteCategory = createAsyncThunk('user/deleteCategory', async (pay
     return rejectWithValue(err?.response?.data)
   }
 })
+
+export const deleteMultipleCategory = createAsyncThunk(
+  'user/deleteMultipleCategory',
+  async (payload: any, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/categories/multiDeleteCategories`, payload, {
+        headers
+      })
+      return res?.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response?.data)
+    }
+  }
+)
 
 // categories slice
 export const categoriesSlice = createSlice({
@@ -100,6 +132,17 @@ export const categoriesSlice = createSlice({
     builder.addCase(getAllCategories.rejected, state => {
       state.isLoading = false
     })
+    builder.addCase(updateMultipleCategoryStatus.pending, state => {
+      state.isLoading = true
+    })
+    builder.addCase(updateMultipleCategoryStatus.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.multipleCategories = action.payload
+    })
+    builder.addCase(updateMultipleCategoryStatus.rejected, state => {
+      state.isLoading = false
+    })
+
     builder.addCase(deleteCategory.pending, state => {
       state.isLoading = true
     })
@@ -110,6 +153,17 @@ export const categoriesSlice = createSlice({
     builder.addCase(deleteCategory.rejected, state => {
       state.isLoading = false
     })
+    builder.addCase(deleteMultipleCategory.pending, state => {
+      state.isLoading = true
+    })
+    builder.addCase(deleteMultipleCategory.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.deletemultiCategories = action.payload
+    })
+    builder.addCase(deleteMultipleCategory.rejected, state => {
+      state.isLoading = false
+    })
+
     builder.addCase(createCategory.pending, state => {
       state.isLoading = true
     })

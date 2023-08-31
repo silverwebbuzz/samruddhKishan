@@ -19,12 +19,14 @@ import Icon from 'src/@core/components/icon'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import {
+  Badge,
   Button,
   Chip,
   Dialog,
   Divider,
   FormControl,
   InputLabel,
+  Menu,
   MenuItem,
   Pagination,
   Select,
@@ -49,6 +51,7 @@ import { toast } from 'react-hot-toast'
 import * as yup from 'yup'
 import DeleteMultiFieldsDialog from 'src/views/deleteDialogBox/deleteMultiFieldsDialog'
 import { alpha } from '@mui/system'
+import { getAllInquiry, updateInquiry } from 'src/slice/inquirySlice'
 
 export type Payload = {
   id?: number
@@ -62,28 +65,13 @@ const Transition = forwardRef(function Transition(
 ) {
   return <Fade ref={ref} {...props} />
 })
-const allUsers = () => {
+const allInquiry = () => {
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
-  const {
-    getUsers,
-    getRoles,
-    getAddressByPinCodeData,
-    allDistrict,
-    allState,
-    deleteUser,
-    updateUsers12,
-    createUser12
-  } = useSelector((state: any) => state?.rootReducer?.farmerReducer)
+  const { allInquiries, deleteInq, multiDelteInq, updateInq } = useSelector(
+    (state: any) => state?.rootReducer?.inquiryReducer
+  )
   const [search, setSearch] = useState<string>('')
   const router = useRouter()
-  const [pincode, setPincode] = useState('')
-  const [STATE, setSTATE] = useState('')
-  const [district, setDistrict] = useState('')
-  const [village, setVillage] = useState('')
-  const [rolePrefill, setRolePrefill] = useState('')
-
-  // const [taluka, setTaluka] = useState('')
-
   const [page, setPage] = useState<number>(1)
   const [pageCount, setPageCount] = useState<number>(1)
   const [pageLimit, setPageLimit] = useState<number>(10)
@@ -102,26 +90,17 @@ const allUsers = () => {
     setOpen(true)
   }
   const [selectedRows, setSelectedRows] = useState<number[]>([])
+  //   console.log(selectedRows, 'dfdfdfdfdf')
   const [multiFieldDeleteOpen, setMultiFieldDeleteOpen] = useState(false)
   const [userSearch, setUserSearch] = useState('')
   const handleMultiDeleteClickOpen = () => setMultiFieldDeleteOpen(true)
   const handleMultiDeleteClickClose = () => setMultiFieldDeleteOpen(false)
 
-  const validationSchema = yup.object().shape({
-    firstName: yup.string().required('First name  is required'),
-    lastName: yup.string().required('Last name is required'),
-    password: yup
-      .string()
-      .required('Password is required')
-      .min(8, 'Password must contain 8 characters')
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-        'Must contain 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special case character'
-      )
-  })
   const handleClickOpenDelete = () => setOpenDelete(true)
   const handleDeleteClose = () => setOpenDelete(false)
 
+  const [anchorEl, setAnchorEl] = useState(null)
+  const [menuRow, setMenuRow] = useState(null)
   const handleChange = (event: any, value: number) => {
     setPage(value)
   }
@@ -162,30 +141,17 @@ const allUsers = () => {
     const userData: any = JSON.parse(localStorage.getItem('userData'))
     let payload = {
       page: page,
-      pageSize: pageLimit,
-      fullName: userSearch ? userSearch : ''
+      pageSize: pageLimit
+      //   fullName: userSearch ? userSearch : ''
     }
     //@ts-ignore
-    dispatch(getAllUsers(payload)).then(response => {
+    dispatch(getAllInquiry(payload)).then(response => {
       setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
     })
-  }, [page, pageCount, pageLimit, deleteUser, updateUsers12, createUser12, userSearch])
+  }, [page, pageCount, pageLimit, deleteInq, multiDelteInq, updateInq])
 
-  const handleSearch = () => {}
-  useEffect(() => {
-    dispatch(getAllState())
-    localStorage.removeItem('editUserId')
-  }, [])
-  useEffect(() => {
-    dispatch(getAllState())
-    dispatch(getRoleAndPermissions())
-  }, [])
-  useEffect(() => {
-    dispatch(getAllDistrict({ state: STATE }))
-  }, [STATE])
   const handleSelectionChange = (selection: any) => {
     setSelectedRows(selection)
-    console.log('handleSelectionChange', selection)
   }
   const columns: GridColDef[] = [
     {
@@ -197,18 +163,17 @@ const allUsers = () => {
     },
     {
       flex: 0.25,
-      field: 'firstName',
+      field: 'fullName',
       sortable: false,
-
       minWidth: 320,
       headerName: 'Name',
       renderCell: ({ row }: any) => {
-        const { firstName, apmcName, centerName } = row
+        const { fullName } = row
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {firstName !== '' ? firstName : centerName !== '' ? centerName : apmcName !== '' ? apmcName : ''}
+                {fullName}
               </Typography>
             </Box>
           </Box>
@@ -218,25 +183,65 @@ const allUsers = () => {
     {
       flex: 0.2,
       minWidth: 100,
-      field: 'phone',
+      field: 'mobileNumber',
       sortable: false,
-      headerName: 'Phone'
+      headerName: 'Mobile Number'
     },
     {
-      flex: 0.2,
+      flex: 0.25,
       minWidth: 100,
       sortable: false,
-
-      field: 'city',
-      headerName: 'District',
+      field: 'email',
+      headerName: 'Email',
       renderCell: ({ row }: any) => {
-        const { city, apmcDistrict, centerDistrict } = row
+        const { email } = row
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {city !== '' ? city : centerDistrict !== '' ? centerDistrict : apmcDistrict !== '' ? apmcDistrict : ''}
+                {email}
               </Typography>
+            </Box>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.2,
+      field: 'status',
+      sortable: false,
+      minWidth: 100,
+      headerName: 'Status',
+      renderCell: ({ row }: any) => {
+        const { status } = row
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Select
+                size='small'
+                labelId='demo-simple-select-label'
+                id='demo-simple-select'
+                name='status'
+                value={status}
+                sx={{
+                  width: '8rem'
+                }}
+                onChange={e => {
+                  let editPayload: any = {
+                    id: row?.id,
+                    status: e?.target?.value
+                  }
+                  dispatch(updateInquiry(editPayload)).then(res => {
+                    dispatch(getAllInquiry({ page: 1, pageLimit: 10 }))
+                  })
+                }}
+              >
+                <MenuItem value={'pending'}>Pending</MenuItem>
+                <MenuItem value={'progress'}>Progress</MenuItem>
+                <MenuItem value={'completed'}>Completed</MenuItem>
+              </Select>
+              {/* <Chip label={status} /> */}
+              <Badge />
             </Box>
           </Box>
         )
@@ -250,32 +255,104 @@ const allUsers = () => {
       headerName: 'Actions',
       renderCell: ({ row }: any) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Tooltip title='Delete'>
-            <IconButton
-              size='small'
-              sx={{ color: 'text.secondary' }}
+          <IconButton
+            size='small'
+            aria-controls={`menu-${row.id}`} // Unique ID for each row's menu
+            aria-haspopup='true'
+            sx={{ color: 'text.secondary' }}
+            onClick={event => {
+              // @ts-ignore
+              setAnchorEl(event.currentTarget)
+              setMenuRow(row)
+            }}
+          >
+            <Icon icon='tabler:menu' /> {/* Use an appropriate icon for the menu */}
+          </IconButton>
+          <Menu
+            id={`menu-${row.id}`} // Unique ID for each row's menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl) && row.id === menuRow?.id}
+            onClose={() => setAnchorEl(null)}
+          >
+            <MenuItem
               onClick={() => {
                 handleClickOpenDelete()
                 setDeleteID(row?.id)
-                setDelelteField(row?.firstName + ' ' + row?.lastName)
+                setDelelteField(row?.fullName)
               }}
             >
               <Icon icon='tabler:trash' />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title='Edit'>
-            <IconButton
-              size='small'
-              sx={{ color: 'text.secondary' }}
+              Delete
+            </MenuItem>
+            {/* <MenuItem
+              value='pending'
               onClick={() => {
-                localStorage.setItem('editUserId', row?.id)
-                router.push('/users/edit-user')
+                const payload: any = {
+                  id: row?.id
+                }
+
+                dispatch(updateInquiry(payload)).then(res => {
+                  dispatch(getAllInquiry({ page: 1, pageSize: 10 }))
+                })
               }}
             >
-              <Icon icon='tabler:edit' />
-            </IconButton>
-          </Tooltip>
+              {row?.status === 'completed' ? 'In complete' : 'completed'}
+            </MenuItem> */}
+            {/* <MenuItem
+              onClick={() => {
+                let formdata = new FormData()
+                formdata.append('id', row?.id)
+                formdata.append('status', row?.status === 'completed' ? 'completed' : 'In complete')
+                let payload = formdata
+                dispatch(updateInquiry(payload)).then(res => {
+                  dispatch(getAllInquiry({ page: 1, pageSize: 10 }))
+                })
+              }}
+            >
+              {row?.status === 'completed' ? 'In complete' : 'completed'}
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                let formdata = new FormData()
+                formdata.append('id', row?.id)
+                formdata.append('status', row?.status === 'completed' ? 'completed' : 'In complete')
+                let payload = formdata
+                dispatch(updateInquiry(payload)).then(res => {
+                  dispatch(getAllInquiry({ page: 1, pageSize: 10 }))
+                })
+              }}
+            >
+              {row?.status === 'completed' ? 'In complete' : 'completed'}
+            </MenuItem> */}
+          </Menu>
         </Box>
+        // <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        //   <Tooltip title='Delete'>
+        //     <IconButton
+        //       size='small'
+        //       sx={{ color: 'text.secondary' }}
+        //       onClick={() => {
+        //         handleClickOpenDelete()
+        //         setDeleteID(row?.id)
+        //         setDelelteField(row?.fullName)
+        //       }}
+        //     >
+        //       <Icon icon='tabler:trash' />
+        //     </IconButton>
+        //   </Tooltip>
+        //   <Tooltip title='Edit'>
+        //     <IconButton
+        //       size='small'
+        //       sx={{ color: 'text.secondary' }}
+        //       onClick={() => {
+        //         localStorage.setItem('editUserId', row?.id)
+        //         router.push('/users/edit-user')
+        //       }}
+        //     >
+        //       <Icon icon='tabler:edit' />
+        //     </IconButton>
+        //   </Tooltip>
+        // </Box>
       )
     }
   ]
@@ -284,7 +361,7 @@ const allUsers = () => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='All Users' />
+          <CardHeader title='All Inquiry' />
           <Box
             sx={{
               gap: 2,
@@ -322,7 +399,7 @@ const allUsers = () => {
                 }
               }}
             />
-            <Button
+            {/* <Button
               variant='contained'
               sx={{
                 '&:hover': {
@@ -334,7 +411,7 @@ const allUsers = () => {
               }}
             >
               Add User
-            </Button>
+            </Button> */}
           </Box>
           {selectedRows?.length > 0 ? (
             <>
@@ -383,7 +460,7 @@ const allUsers = () => {
             pagination
             // rowHeight={62}
             // rowCount={getUsers?.totalItems}
-            rows={getUsers?.data && getUsers?.data ? getUsers?.data : []}
+            rows={allInquiries?.data && allInquiries?.data ? allInquiries?.data : []}
             columns={columns}
             checkboxSelection
             onRowSelectionModelChange={handleSelectionChange}
@@ -392,7 +469,6 @@ const allUsers = () => {
             }}
             //@ts-ignore
             hideFooterRowCount
-            disableRowSelectionOnClick
             hideFooterSelectedRowCount
             hideFooterPagination
             disableColumnMenu
@@ -406,7 +482,7 @@ const allUsers = () => {
         setOpen={setOpenDelete}
         handleClickOpen={handleClickOpenDelete}
         handleClose={handleDeleteClose}
-        type='users'
+        type='inquiry'
         delelteField={delelteField}
         id={DeleteID}
       />
@@ -415,11 +491,11 @@ const allUsers = () => {
         setOpen={setMultiFieldDeleteOpen}
         handleClickOpen={handleMultiDeleteClickOpen}
         handleClose={handleMultiDeleteClickClose}
-        type='users'
+        type='inquiry'
         id={selectedRows}
       />
     </Grid>
   )
 }
 
-export default allUsers
+export default allInquiry

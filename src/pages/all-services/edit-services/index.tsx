@@ -28,6 +28,7 @@ import { getAllCategories } from 'src/slice/categoriesSlice'
 import { createService, getSingleService, updateService } from 'src/slice/servicesSlice'
 import { useRouter } from 'next/router'
 import { getAllUsers } from 'src/slice/farmers'
+import DemoSelect from 'src/views/demo/demoSelect'
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 const editServices = () => {
@@ -40,7 +41,7 @@ const editServices = () => {
   const [vendorId, setVendorId] = useState(0)
   const { getUsers } = useSelector((state: any) => state?.rootReducer?.farmerReducer)
 
-  const [categoryPrefill, setCategoryPrefill] = useState('')
+  const [categoryPrefill, setCategoryPrefill] = useState(0)
   const [vendorPrefill, setVendorPrefill] = useState('')
   const [serviceTypePrefill, setServiceTypePrefill] = useState('')
   const [availabilityEndDay, setAvailabilityEndDay] = useState('')
@@ -194,7 +195,7 @@ const editServices = () => {
                   </Box>
                 </Grid>
                 <Grid item xs={6} sm={6}>
-                  <FormControl fullWidth>
+                  {/* <FormControl fullWidth>
                     <InputLabel id='demo-simple-select-label'> Select Category</InputLabel>
                     <Select
                       labelId='demo-simple-select-label'
@@ -213,6 +214,16 @@ const editServices = () => {
                         </MenuItem>
                       ))}
                     </Select>
+                  </FormControl> */}
+                  <FormControl fullWidth>
+                    <DemoSelect
+                      data={categories?.data}
+                      size={'medium'}
+                      //@ts-ignore
+                      selectedCategory={categoryPrefill}
+                      //@ts-ignore
+                      setSelectedCategory={setCategoryPrefill}
+                    />
                   </FormControl>
                 </Grid>
                 <Grid item item xs={6} sm={6}>

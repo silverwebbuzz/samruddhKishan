@@ -51,6 +51,7 @@ import { getAllBrands } from 'src/slice/brandsSlice'
 import DeleteMultiFieldsDialog from 'src/views/deleteDialogBox/deleteMultiFieldsDialog'
 import { alpha } from '@mui/system'
 import { getAllUsers } from 'src/slice/farmers'
+import DemoSelect from 'src/views/demo/demoSelect'
 
 export type Payload = {
   id?: number
@@ -261,7 +262,6 @@ const ContentPage = () => {
       headerName: 'Vendor Name',
       renderCell: ({ row }: any) => {
         const { firstName, lastName } = row
-        console.log('@@@@@@@@@@@@@@@', firstName + lastName)
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -353,7 +353,7 @@ const ContentPage = () => {
             }}
           >
             <Grid item sm={2} xs={12}>
-              <FormControl size='small' fullWidth>
+              {/* <FormControl size='small' fullWidth>
                 <InputLabel id='demo-simple-select-label'> Category Name</InputLabel>
                 <Select
                   labelId='demo-simple-select-label'
@@ -371,6 +371,16 @@ const ContentPage = () => {
                     </MenuItem>
                   ))}
                 </Select>
+              </FormControl> */}
+              <FormControl size='small' fullWidth>
+                <DemoSelect
+                  data={categories?.data}
+                  size={'small'}
+                  //@ts-ignore
+                  selectedCategory={categoryIdPrefill}
+                  //@ts-ignore
+                  setSelectedCategory={setCategoryIdPrefill}
+                />
               </FormControl>
             </Grid>
             <Grid item sm={2} xs={12}>

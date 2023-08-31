@@ -40,6 +40,7 @@ import { alpha } from '@mui/system'
 import UpdateMultiFieldsDialog from 'src/views/deleteDialogBox/updateMultipleDialogBox'
 import styled from '@emotion/styled'
 import { getAllUsers } from 'src/slice/farmers'
+import DemoSelect from 'src/views/demo/demoSelect'
 
 export type Payload = {
   id?: number
@@ -78,7 +79,7 @@ const allCategories = () => {
   const { brandsData } = useSelector((state: any) => state?.rootReducer?.brandsReducer)
   const { getUsers } = useSelector((state: any) => state?.rootReducer?.farmerReducer)
 
-  const [categoryIdPrefill, setCategoryIdPrefill] = useState('')
+  const [categoryIdPrefill, setCategoryIdPrefill] = useState(0)
   const [brandPrefill, setBrandPrefill] = useState('')
   const [selectedRows, setSelectedRows] = useState<number[]>([])
   const [multiFieldDeleteOpen, setMultiFieldDeleteOpen] = useState(false)
@@ -297,7 +298,7 @@ const allCategories = () => {
             }}
           >
             <Grid item sm={2} xs={12}>
-              <FormControl size='small' fullWidth>
+              {/* <FormControl size='small' fullWidth>
                 <InputLabel id='demo-simple-select-label'> Category Name</InputLabel>
                 <Select
                   labelId='demo-simple-select-label'
@@ -315,6 +316,16 @@ const allCategories = () => {
                     </MenuItem>
                   ))}
                 </Select>
+              </FormControl> */}
+              <FormControl fullWidth>
+                <DemoSelect
+                  data={categories?.data}
+                  size={'small'}
+                  //@ts-ignore
+                  selectedCategory={categoryIdPrefill}
+                  //@ts-ignore
+                  setSelectedCategory={setCategoryIdPrefill}
+                />
               </FormControl>
             </Grid>
             <Grid item sm={2} xs={12}>
@@ -381,14 +392,15 @@ const allCategories = () => {
                   </Typography>
                   {selectedRows?.length > 0 ? (
                     <Tooltip title='Delete'>
-                      <IconButton
-                        sx={{ color: 'error' }}
+                      <Button
                         onClick={() => {
                           handleMultiDeleteClickOpen()
                         }}
+                        variant='outlined'
+                        startIcon={<Icon icon='tabler:trash' />}
                       >
-                        <Icon icon='tabler:trash' />
-                      </IconButton>
+                        Delete
+                      </Button>
                     </Tooltip>
                   ) : null}
                 </Toolbar>

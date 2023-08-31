@@ -34,6 +34,7 @@ import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 import { getAllCategories } from 'src/slice/categoriesSlice'
+import DemoSelect from 'src/views/demo/demoSelect'
 
 export type Payload = {
   id?: number
@@ -89,21 +90,17 @@ const index = () => {
   }
   const validationSchema = yup.object().shape({
     role: yup.string().required('Role is required'),
-    firstName: yup
-      .string()
-      // .label('role')
-      .when('role', {
-        is: (role: any) => {
-          role !== '10' && role !== '13'
-        },
-        then: yup => yup.required('First Name is required for this role'),
-        otherwise: yup => yup.optional()
-      }),
+    firstName: yup.string().when('role', {
+      is: (role: any) => role !== '10' && role !== '13',
+      then: yup => yup.required('First Name is required for this role'),
+      otherwise: yup => yup.optional()
+    }),
     lastName: yup.string().when('role', {
       is: (role: any) => role !== '10' && role !== '13',
       then: yup => yup.required('Last Name is required for this role'),
       otherwise: yup => yup.optional()
     }),
+
     email: yup.string().required('Email is required'),
     phone: yup.string().required('Phone number is required'),
     // apmcFirmName: yup.string().when('role', {
@@ -280,13 +277,6 @@ const index = () => {
     })
   }
 
-  function removeDuplicatesTaluka(getAddressByPinCodeData) {
-    const unique = getAddressByPinCodeData?.[0]?.PostOffice?.filter(
-      (obj, index) =>
-        getAddressByPinCodeData?.[0]?.PostOffice?.findIndex((item: any) => item.Block === obj.Block) === index
-    )
-    return unique
-  }
   const ProfilePicture = styled('img')(({ theme }) => ({
     width: 108,
     height: 108,
@@ -410,7 +400,7 @@ const index = () => {
                       <ErrorMessage name='role' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                     </FormControl>
                   </Grid>
-                  {values?.role === 13 ? (
+                  {values?.role == 13 ? (
                     <>
                       <Grid item sm={6} xs={12}>
                         <TextField
@@ -913,7 +903,7 @@ const index = () => {
                         />
                       </Grid>
                     </>
-                  ) : values?.role === 10 ? (
+                  ) : values?.role == 10 ? (
                     <>
                       <Grid item sm={6} xs={12}>
                         <TextField
@@ -926,7 +916,8 @@ const index = () => {
                           label='Name of the firm'
                           placeholder='Name of the firm'
                         />
-                        <ErrorMessage name='apmcFirmName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                        {console.log(errors.firstName, touched.firstName)}
+                        <ErrorMessage name='firstName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                       </Grid>
                       <Grid item sm={6} xs={12}>
                         <TextField
@@ -1062,8 +1053,8 @@ const index = () => {
                           name='phone'
                           error={Boolean(errors.phone && touched.phone)}
                           fullWidth
-                          label='Cell No.'
-                          placeholder='Cell No.'
+                          label='Phone'
+                          placeholder='Phone'
                         />
                         <ErrorMessage name='phone' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                       </Grid>
@@ -1285,23 +1276,6 @@ const index = () => {
                               value={values?.taluka && values?.taluka}
                               label='Taluka'
                               onChange={handleChange}
-                              // sx={{
-                              //   '& .MuiSelect-root': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important' // Set the desired color for the select
-                              //   },
-                              //   '& .MuiOutlinedInput-notchedOutline': {
-                              //     borderColor: 'black !important' // Set the desired border color for the select
-                              //   },
-
-                              //   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important'
-                              //   },
-                              //   '&.Mui-error': {
-                              //     color: 'red' // Set the label color when the Select is in an error state
-                              //   }
-                              // }}
                             >
                               {getAddressByPinCodeData &&
                                 removeDuplicatesTaluka(getAddressByPinCodeData)?.map(name => (
@@ -1313,19 +1287,6 @@ const index = () => {
                           </FormControl>
                         </Tooltip>
                       </Grid>
-                      {/* <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.villageName}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='villageName'
-                          error={Boolean(errors.villageName && touched.villageName)}
-                          fullWidth
-                          label='Village Name'
-                          placeholder='Village Name'
-                        />
-                        <ErrorMessage name='villageName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid> */}
 
                       <Grid item sm={6} xs={12}>
                         <Tooltip
@@ -1335,17 +1296,7 @@ const index = () => {
                           disableTouchListener={!(pincode.length <= 0)}
                         >
                           <FormControl fullWidth>
-                            <InputLabel
-                              // sx={{
-                              //   color: 'black',
-                              //   '&.Mui-focused': {
-                              //     color: 'black' // Set the label color when focused
-                              //   }
-                              // }}
-                              id='demo-simple-select-label'
-                            >
-                              Village Name
-                            </InputLabel>
+                            <InputLabel id='demo-simple-select-label'>Village Name</InputLabel>
                             <Select
                               labelId='demo-simple-select-label'
                               id='demo-simple-select'
@@ -1354,22 +1305,6 @@ const index = () => {
                               value={values?.villageName && values?.villageName}
                               label='Village Name'
                               onChange={handleChange}
-                              // sx={{
-                              //   '&.Mui-error fieldset': {
-                              //     borderColor: 'red !important'
-                              //   },
-                              //   '& fieldset': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important'
-                              //   },
-                              //   '&.Mui-focused fieldset': {
-                              //     borderColor: '#7da370 !important',
-                              //     borderWidth: '2px !important'
-                              //   },
-                              //   '& label.MuiInputLabel-root': {
-                              //     color: 'black' // Set the label font color to blue
-                              //   }
-                              // }}
                             >
                               {getAddressByPinCodeData?.[0]?.PostOffice?.map(name => (
                                 <MenuItem key={name?.Name} value={name?.Name}>
@@ -1382,7 +1317,7 @@ const index = () => {
                       </Grid>
 
                       <Grid item sm={6} xs={12}>
-                        <FormControl fullWidth>
+                        {/* <FormControl fullWidth>
                           <InputLabel id='demo-simple-select-label'> Category Name</InputLabel>
                           <Select
                             labelId='demo-simple-select-label'
@@ -1400,7 +1335,13 @@ const index = () => {
                               </MenuItem>
                             ))}
                           </Select>
-                        </FormControl>
+                        </FormControl> */}
+                        <DemoSelect
+                          data={categories?.data}
+                          selectedCategory={categoryIdPrefill}
+                          //@ts-ignore
+                          setSelectedCategory={setCategoryIdPrefill}
+                        />
                       </Grid>
                       <Grid
                         item
@@ -1411,7 +1352,6 @@ const index = () => {
                           display: 'flex'
                         }}
                       >
-                        {/* <Grid item xs={6}> */}
                         <Box
                           sx={{
                             display: 'flex'
@@ -1442,7 +1382,6 @@ const index = () => {
                           </Box>
                           <ErrorMessage name='brandLogo' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                         </Box>
-                        {/* </Grid> */}
                       </Grid>
                     </>
                   ) : (
