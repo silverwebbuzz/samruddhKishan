@@ -269,11 +269,11 @@ const allCategories = () => {
               display: 'flex',
               flexWrap: 'wrap',
               alignItems: 'center',
-              justifyContent: 'space-between',
+              justifyContent: 'end',
               p: theme => theme.spacing(2, 5, 4, 5)
             }}
           >
-            <TextField
+            {/* <TextField
               size='small'
               value={search}
               onChange={handleSearch}
@@ -299,7 +299,7 @@ const allCategories = () => {
                   mr: 2
                 }
               }}
-            />
+            /> */}
             <Button
               variant='contained'
               sx={{

@@ -106,7 +106,8 @@ export const createUser1 = createAsyncThunk('farmers/createUser', async (payload
 export const updateUser1 = createAsyncThunk('farmers/updateUser1', async (payload: any, { rejectWithValue }) => {
   try {
     const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/user/updateUsers`, payload, {
-      headers
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'multipart/form-data'
     })
     return res?.data
   } catch (err: any) {

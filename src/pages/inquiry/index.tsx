@@ -165,7 +165,7 @@ const allInquiry = () => {
       flex: 0.25,
       field: 'fullName',
       sortable: false,
-      minWidth: 320,
+      minWidth: 220,
       headerName: 'Name',
       renderCell: ({ row }: any) => {
         const { fullName } = row
@@ -181,12 +181,32 @@ const allInquiry = () => {
       }
     },
     {
+      flex: 0.25,
+      minWidth: 100,
+      sortable: false,
+      field: 'inqurytype',
+      headerName: 'Inqury Type',
+      renderCell: ({ row }: any) => {
+        const { inqurytype } = row
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
+                {inqurytype}
+              </Typography>
+            </Box>
+          </Box>
+        )
+      }
+    },
+    {
       flex: 0.2,
       minWidth: 100,
       field: 'mobileNumber',
       sortable: false,
       headerName: 'Mobile Number'
     },
+
     {
       flex: 0.25,
       minWidth: 100,
@@ -440,6 +460,7 @@ const allInquiry = () => {
             slots={{
               footer: CustomPagination
             }}
+            disableRowSelectionOnClick
             //@ts-ignore
             hideFooterRowCount
             hideFooterSelectedRowCount

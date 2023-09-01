@@ -55,7 +55,6 @@ const editProduct = () => {
   const [newSelectedFiles, setNewSelectedFiles] = useState([])
   const [removeFiles, setRemoveFiles] = useState([])
   const [categoryIdPrefill, setCategoryIdPrefill] = useState(0)
-  const [vendorPrefill, setVendorPrefill] = useState('')
   const [brandPrefill, setBrandPrefill] = useState('')
   const [contryPrefill, setContryPrefill] = useState('')
   const [productUnits, setProductUnits] = useState('')
@@ -110,6 +109,7 @@ const editProduct = () => {
         })
       }
       if (res?.payload?.status === 'success') {
+        setSelectedFiles([])
         router.push('/all-products')
       }
     })
@@ -166,10 +166,25 @@ const editProduct = () => {
     }
   }
 
+  // const handleFileChange = event => {
+  //   const file = event.target.files[0] // Only allow selecting one file at a time
+  //   setSelectedFiles([...selectedFiles, file])
+  //   setNewSelectedFiles([...newSelectedFiles, file])
+  // }
   const handleFileChange = event => {
     const file = event.target.files[0] // Only allow selecting one file at a time
-    setSelectedFiles([...selectedFiles, file])
-    setNewSelectedFiles([...newSelectedFiles, file])
+    console.log('Selected File:', file)
+
+    // Check the current state of selectedFiles and newSelectedFiles
+    console.log('Current selectedFiles:', selectedFiles)
+    console.log('Current newSelectedFiles:', newSelectedFiles)
+
+    setSelectedFiles(prevSelectedFiles => [...prevSelectedFiles, file])
+    setNewSelectedFiles(prevNewSelectedFiles => [...prevNewSelectedFiles, file])
+
+    // Log the updated state after setting the new file
+    console.log('Updated selectedFiles:', selectedFiles)
+    console.log('Updated newSelectedFiles:', newSelectedFiles)
   }
   useEffect(() => {
     dispatch(getAllCategories())
@@ -179,28 +194,48 @@ const editProduct = () => {
     dispatch(getAllUnits())
     dispatch(getProductById({ id: productID }))
   }, [])
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setCategoryIdPrefill(singleProductsData?.categoryId)
+  //     setBrandPrefill(singleProductsData?.brandId)
+  //     setVendorId(singleProductsData?.vendorId)
+  //     setContryPrefill(singleProductsData?.country)
+  //     setProductUnits(singleProductsData?.productUnits)
+  //     setSelectedFiles([...selectedFiles, ...singleProductsData.productGallaryImage])
+  //   }, [1000])
+  // }, [
+  //   singleProductsData?.categoryId,
+  //   singleProductsData?.vendorId,
+  //   singleProductsData?.brandId,
+  //   singleProductsData?.productName,
+  //   singleProductsData?.country,
+  //   singleProductsData?.productUnits
+  // ])
   useEffect(() => {
     setTimeout(() => {
-      setCategoryIdPrefill(singleProductsData?.categoryId)
-      setVendorPrefill(singleProductsData?.venderId)
-      setBrandPrefill(singleProductsData?.brandId)
-      setVendorId(singleProductsData?.venderId)
-      setContryPrefill(singleProductsData?.country)
-      setProductUnits(singleProductsData?.productUnits)
-      if (Array.isArray(selectedFiles) && singleProductsData && Array.isArray(singleProductsData.productGallaryImage)) {
-        setSelectedFiles([...selectedFiles, ...singleProductsData.productGallaryImage])
-      } else {
-        console.warn('Invalid data or types for concatenation.')
+      setCategoryIdPrefill(singleProductsData?.categoryId || 0)
+      setBrandPrefill(singleProductsData?.brandId || '')
+      setVendorId(singleProductsData?.vendorId || '')
+      setContryPrefill(singleProductsData?.country || '')
+      setProductUnits(singleProductsData?.productUnits || '')
+
+      const productGallaryImage = singleProductsData?.productGallaryImage
+
+      // Check if singleProductsData.productGallaryImage is truthy and has a length property
+      if (productGallaryImage && productGallaryImage.length !== undefined) {
+        setSelectedFiles([...productGallaryImage])
       }
-    }, [1000])
+    }, 1000)
   }, [
     singleProductsData?.categoryId,
-    singleProductsData?.venderId,
+    singleProductsData?.vendorId,
     singleProductsData?.brandId,
     singleProductsData?.productName,
     singleProductsData?.country,
-    singleProductsData?.productUnits
+    singleProductsData?.productUnits,
+    singleProductsData?.productGallaryImage // Include this dependency
   ])
+
   const handleRemoveFile = (indexToRemove: any, id: any) => {
     setSelectedFiles(prevFiles => prevFiles.filter((_, index) => index !== indexToRemove))
     setRemoveFiles([...removeFiles, id])
@@ -333,7 +368,6 @@ const editProduct = () => {
                       //@ts-ignore
                       setSelectedCategory={setCategoryIdPrefill}
                     />
-                    {console.log('categoryIdPrefill--->', categoryIdPrefill)}
                   </FormControl>
                 </Grid>
                 <Grid item xs={6} sm={6}>

@@ -393,6 +393,8 @@ const addServices = () => {
                         <MenuItem value={'Wednesday'}>Wednesday</MenuItem>
                         <MenuItem value={'Thursday '}>Thursday </MenuItem>
                         <MenuItem value={'Friday'}>Friday</MenuItem>
+                        <MenuItem value={'Saturday'}>Saturday</MenuItem>
+                        <MenuItem value={'Sunday'}>Sunday</MenuItem>
                       </Select>
                     </FormControl>
                   </Box>

@@ -238,53 +238,59 @@ const index = () => {
   //  const selectedOption = options.find((option) => option.id === selectedOptionId);
 
   const handleSubmit = (values: any) => {
-    let payload = {
-      id: userData?.id,
-      firstName: values?.firstName,
-      lastName: values?.lastName,
-      email: values?.email,
-      password: values?.password,
-      phone: values?.phone,
-      state: values?.state,
-      city: district,
-      taluka: values?.taluka,
-      village: village,
-      pinCode: pincode,
-      // role: rolePrefill,
-      roleId: rolePrefill,
-      //centers
-      centerName: values?.centerName,
-      centerRegisterUnderCompanyDate: values?.centerRegisterUnderCompanyDate,
-      centerKeyPerson: values?.centerKeyPerson,
-      centerHandlingPersonName: values?.centerHandlingPersonName,
-      centerTaluka: values?.centerTaluka,
-      centerDistrict: district,
-      centerTurnover: values?.centerTurnover,
-      centerMemberFarmer: values?.centerMemberFarmer,
-      centerPerDayMilkCollection: values?.centerPerDayMilkCollection,
-      centerMilkStorageCapacity: values?.centerMilkStorageCapacity,
-      centerSellingMilkFor: values?.centerSellingMilkFor,
-      centerOtherCompetitors: values?.centerOtherCompetitors,
-      centerPaymentCycle: values?.centerPaymentCycle,
-      centerOtherFacltyByMilkAgency: values?.centerOtherFacltyByMilkAgency,
-      centerFarmarPaymentProcess: values?.centerFarmarPaymentProcess,
-      centerMembersOnBoard: values?.centerMembersOnBoard,
-      centerCurrentHurdeles: values?.centerCurrentHurdeles,
-      centerNeededFacultys: values?.centerNeededFacultys,
-      centerAllFinancialAudits: values?.centerAllFinancialAudits,
-      // apmc traders
-      apmcFirmName: values?.apmcFirmName,
-      apmcAddress: values?.apmcAddress,
-      apmcName: values?.apmcName,
-      apmcTaluka: values?.apmcTaluka,
-      apmcDistrict: district,
-      apmcPersonName: values?.apmcPersonName,
-      apmcConnectedFarmers: values?.apmcConnectedFarmers,
-      apmcMajorCropsSelling: values?.apmcMajorCropsSelling,
-      districtFarmerComingSellProduct: values?.districtFarmerComingSellProduct,
-      categoryId: categoryIdPrefill
-    }
-    dispatch(updateUser1(payload)).then((res: any) => {
+    let payload = [
+      { id: userData?.id },
+      { firstName: values?.firstName },
+      { lastName: values?.lastName },
+      { email: values?.email },
+      { password: values?.password },
+      { phone: values?.phone },
+      { state: values?.state },
+      { city: district },
+      { taluka: values?.taluka },
+      { village: village },
+      { pinCode: pincode },
+      { roleId: rolePrefill },
+
+      { centerName: values?.centerName },
+      { centerRegisterUnderCompanyDate: values?.centerRegisterUnderCompanyDate },
+      { centerKeyPerson: values?.centerKeyPerson },
+      { centerHandlingPersonName: values?.centerHandlingPersonName },
+      { centerTaluka: values?.centerTaluka },
+      { centerDistrict: district },
+      { centerTurnover: values?.centerTurnover },
+      { centerMemberFarmer: values?.centerMemberFarmer },
+      { centerPerDayMilkCollection: values?.centerPerDayMilkCollection },
+      { centerMilkStorageCapacity: values?.centerMilkStorageCapacity },
+      { centerSellingMilkFor: values?.centerSellingMilkFor },
+      { centerOtherCompetitors: values?.centerOtherCompetitors },
+      { centerPaymentCycle: values?.centerPaymentCycle },
+      { centerOtherFacltyByMilkAgency: values?.centerOtherFacltyByMilkAgency },
+      { centerFarmarPaymentProcess: values?.centerFarmarPaymentProcess },
+      { centerMembersOnBoard: values?.centerMembersOnBoard },
+      { centerCurrentHurdeles: values?.centerCurrentHurdeles },
+      { centerNeededFacultys: values?.centerNeededFacultys },
+      { centerAllFinancialAudits: values?.centerAllFinancialAudits },
+
+      { apmcFirmName: values?.apmcFirmName },
+      { apmcAddress: values?.apmcAddress },
+      { apmcName: values?.apmcName },
+      { apmcTaluka: values?.apmcTaluka },
+      { apmcDistrict: district },
+      { apmcPersonName: values?.apmcPersonName },
+      { apmcConnectedFarmers: values?.apmcConnectedFarmers },
+      { apmcMajorCropsSelling: values?.apmcMajorCropsSelling },
+      { districtFarmerComingSellProduct: values?.districtFarmerComingSellProduct },
+      { vendorImage: values?.vendorImage },
+      { categoryId: categoryIdPrefill }
+    ]
+    let formData = new FormData()
+    payload.forEach(entry => {
+      const key = Object.keys(entry)[0] // Extracting the key from the object
+      const value = entry[key] // Extracting the value from the object
+      formData.append(key, value) // Appending the key-value pair to the formData
+    })
+    dispatch(updateUser1(formData)).then((res: any) => {
       if (res?.payload?.status === 200) {
         router.push('/users')
       }
@@ -388,7 +394,6 @@ const index = () => {
                         error={Boolean(errors?.role && touched?.role)}
                         label='Role'
                         onChange={e => {
-                          console.log(e?.target?.value)
                           setFieldValue('role', e?.target?.value)
                           setFieldValue('email', '')
                           setFieldValue('phone', '')
@@ -419,7 +424,7 @@ const index = () => {
                       <ErrorMessage name='role' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                     </FormControl>
                   </Grid>
-                  {values?.role === 13 ? (
+                  {rolePrefill == 13 ? (
                     <>
                       <Grid item sm={6} xs={12}>
                         <TextField
@@ -947,7 +952,7 @@ const index = () => {
                         />
                       </Grid>
                     </>
-                  ) : values?.role === 10 ? (
+                  ) : rolePrefill == 10 ? (
                     <>
                       <Grid item sm={6} xs={12}>
                         <TextField
@@ -1212,7 +1217,7 @@ const index = () => {
                         />
                       </Grid>
                     </>
-                  ) : values?.role === 17 ? (
+                  ) : rolePrefill == 17 ? (
                     <>
                       <Grid item sm={6} xs={12}>
                         <TextField

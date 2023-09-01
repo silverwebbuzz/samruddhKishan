@@ -42,11 +42,13 @@ const UpdateMultiFieldsDialog = ({ open, status, type, id, handleClose, setSelec
 
   const handleDelete = () => {
     const payload: any = {
-      ids: id,
-      categoryStatus: status
+      ids: id
     }
-    // console.log(payload, 'payload')
-
+    if (type === 'services') {
+      payload.status = status
+    } else {
+      payload.categoryStatus = status
+    }
     switch (type) {
       case 'services':
         dispatch(updateMultipleServiceStatus(payload)).then(res => {

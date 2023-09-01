@@ -279,7 +279,7 @@ const allCategories = () => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {`${firstName ? firstName : ''}${''}${lastName ? lastName : ''}`}
+                {`${firstName ? firstName : ''}${' '}${lastName ? lastName : ''}`}
               </Typography>
             </Box>
           </Box>

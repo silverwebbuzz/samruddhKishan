@@ -30,7 +30,6 @@ import { createBrands, getAllBrands, updateBrands } from 'src/slice/brandsSlice'
 const BrandsDialog = ({ show, setShow, handleCancel, edit, setEdit, editField, editID }: any) => {
   // console.log(search)
   const dispatch = useDispatch<AppDispatch>()
-
   // ** State
   const handleCategory = (values: any, { resetForm }: any) => {
     const formData = new FormData()

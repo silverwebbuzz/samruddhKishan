@@ -4,10 +4,12 @@ import {
   Box,
   Button,
   Checkbox,
+  FormControl,
   Grid,
   IconButton,
   Menu,
   MenuItem,
+  Pagination,
   Select,
   Table,
   TableBody,
@@ -48,10 +50,13 @@ const CollapsibleTable: React.FC<Props> = ({ data }) => {
   const [dialogName, setDialogName] = useState<string>('')
   const [edit, setEdit] = useState<boolean>(false)
   const [editID, setEditID] = useState<number | string>('')
-  const [editField, setEditField] = useState<Category | number>('')
+  const [editField, setEditField] = useState<Category | number>()
   const [anchorEl, setAnchorEl] = useState(null)
   const [menuRow, setMenuRow] = useState(null)
   const [categoryStatus, setCategoryStatus] = useState('')
+  const [page, setPage] = useState(1) // Current page number
+  const [pageLimit, setPageLimit] = useState(10) // Rows per page
+  const pageCount = Math.ceil(data?.length / pageLimit)
 
   const dispatch = useDispatch<AppDispatch>()
   const handleClickOpenDelete = () => setOpenDelete(true)
@@ -64,7 +69,9 @@ const CollapsibleTable: React.FC<Props> = ({ data }) => {
   const handleMultiUpdateClickClose = () => {
     setMultiFieldUpdateOpen(false)
   }
-
+  const handleChange = (event, newPage) => {
+    setPage(newPage)
+  }
   const handleMultiDeleteClickClose = () => {
     setMultiFieldDeleteOpen(false)
   }
@@ -72,7 +79,37 @@ const CollapsibleTable: React.FC<Props> = ({ data }) => {
     setShow(true)
     setDialogName(dialogName)
   }
+  const CustomPagination = () => {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'right',
+          alignItems: 'center',
+          padding: '1rem'
+        }}
+      >
+        <label>Row per page</label>
+        <FormControl sx={{ m: 1, width: '60px' }}>
+          <Select
+            size='small'
+            defaultValue='10'
+            value={pageLimit}
+            onChange={(e: any) => {
+              setPageLimit(e?.target?.value)
+              setPage(1)
+            }}
+          >
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={20}>20</MenuItem>
+            <MenuItem value={30}>30</MenuItem>
+          </Select>
+        </FormControl>
 
+        <Pagination count={pageCount} page={page} onChange={handleChange} />
+      </Box>
+    )
+  }
   const handleCancel = () => {
     setShow(false)
     setDialogName('')
@@ -88,7 +125,7 @@ const CollapsibleTable: React.FC<Props> = ({ data }) => {
 
   const handleSelectAll = () => {
     const allRowIds = getAllChildIds(data || [])
-    if (selectedRows.length === allRowIds.length) {
+    if (selectedRows?.length === allRowIds?.length) {
       setSelectedRows([])
     } else {
       setSelectedRows(allRowIds)
@@ -129,7 +166,10 @@ const CollapsibleTable: React.FC<Props> = ({ data }) => {
     parentId: number | null = null,
     level: number = 0
   ) => {
-    return categories?.map(category => (
+    const startIndex = (page - 1) * pageLimit
+    const endIndex = startIndex + pageLimit
+
+    return categories?.slice(startIndex, endIndex).map(category => (
       <React.Fragment key={category.id}>
         <TableRow>
           <TableCell
@@ -191,7 +231,7 @@ const CollapsibleTable: React.FC<Props> = ({ data }) => {
                   setMenuRow(category)
                 }}
               >
-                <Icon icon='tabler:menu' /> {/* Use an appropriate icon for the menu */}
+                <Icon icon='tabler:menu' />
               </IconButton>
               <Menu
                 id={`menu-${category.id}`} // Unique ID for each row's menu
@@ -350,16 +390,20 @@ const CollapsibleTable: React.FC<Props> = ({ data }) => {
         </>
       ) : null}
       <Table>
-        <TableHead>
+        <TableHead
+          sx={{
+            backgroundColor: '#f6f6f7'
+          }}
+        >
           <TableRow>
             <TableCell style={{ padding: '8px', borderRight: 'none', borderTop: 'none' }}>
               <Checkbox
-                checked={selectedRows.length === getAllChildIds(data || []).length}
+                checked={selectedRows?.length === getAllChildIds(data || [])?.length}
                 onChange={handleSelectAll}
               />
             </TableCell>
             <TableCell style={{ padding: '8px', borderLeft: 'none', borderTop: 'none' }}>Category Name</TableCell>
-            {/* <TableCell style={{ padding: '8px', borderLeft: 'none', borderTop: 'none' }}> Status</TableCell> */}
+
             <TableCell style={{ padding: '8px', borderLeft: 'none', borderTop: 'none' }}>Status</TableCell>
 
             <TableCell style={{ padding: '8px', borderLeft: 'none', borderTop: 'none' }}>Actions</TableCell>
@@ -396,6 +440,7 @@ const CollapsibleTable: React.FC<Props> = ({ data }) => {
         />
         {dialogName === 'category' && <CategoryDialog {...props} />}
       </Table>
+      <CustomPagination />
     </>
   )
 }
