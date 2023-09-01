@@ -232,19 +232,6 @@ const FarmerDetails = () => {
     dispatch(getAllDistrict({ state: STATE }))
   }, [STATE])
 
-  function removeDuplicatesTaluka(getAddressByPinCodeData) {
-    const unique = getAddressByPinCodeData?.[0]?.PostOffice?.filter(
-      (obj, index) => getAddressByPinCodeData?.[0]?.PostOffice?.findIndex(item => item.Block === obj.Block) === index
-    )
-    return unique
-  }
-
-  const isDateDisabled = (date: Date) => {
-    const currentDate = new Date()
-    console.log('isDateDisabled', date < currentDate)
-    return date < currentDate
-  }
-
   return (
     <>
       <Card
@@ -707,10 +694,10 @@ const FarmerDetails = () => {
                             }
                           }}
                         >
-                          {getAddressByPinCodeData &&
-                            removeDuplicatesTaluka(getAddressByPinCodeData)?.map(name => (
-                              <MenuItem key={name?.Block} value={name?.Block}>
-                                {name?.Block}
+                          {getAddressByPinCodeData?.taluka &&
+                            getAddressByPinCodeData?.taluka?.map(name => (
+                              <MenuItem key={name} value={name}>
+                                {name}
                               </MenuItem>
                             ))}
                         </Select>
@@ -761,9 +748,9 @@ const FarmerDetails = () => {
                             }
                           }}
                         >
-                          {getAddressByPinCodeData?.[0]?.PostOffice?.map(name => (
-                            <MenuItem key={name?.Name} value={name?.Name}>
-                              {name?.Name}
+                          {getAddressByPinCodeData?.village?.map(name => (
+                            <MenuItem key={name} value={name}>
+                              {name}
                             </MenuItem>
                           ))}
                         </Select>

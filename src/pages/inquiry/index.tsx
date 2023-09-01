@@ -232,7 +232,7 @@ const allInquiry = () => {
                     status: e?.target?.value
                   }
                   dispatch(updateInquiry(editPayload)).then(res => {
-                    dispatch(getAllInquiry({ page: 1, pageLimit: 10 }))
+                    dispatch(getAllInquiry({ page: 1, pageSize: 10 }))
                   })
                 }}
               >
@@ -284,46 +284,19 @@ const allInquiry = () => {
               <Icon icon='tabler:trash' />
               Delete
             </MenuItem>
-            {/* <MenuItem
-              value='pending'
-              onClick={() => {
-                const payload: any = {
-                  id: row?.id
-                }
+            <MenuItem
+            // onClick={() => {
+            //   const payload: any = {
+            //     id: row?.id
+            //   }
 
-                dispatch(updateInquiry(payload)).then(res => {
-                  dispatch(getAllInquiry({ page: 1, pageSize: 10 }))
-                })
-              }}
-            >
-              {row?.status === 'completed' ? 'In complete' : 'completed'}
-            </MenuItem> */}
-            {/* <MenuItem
-              onClick={() => {
-                let formdata = new FormData()
-                formdata.append('id', row?.id)
-                formdata.append('status', row?.status === 'completed' ? 'completed' : 'In complete')
-                let payload = formdata
-                dispatch(updateInquiry(payload)).then(res => {
-                  dispatch(getAllInquiry({ page: 1, pageSize: 10 }))
-                })
-              }}
+            //   dispatch(updateInquiry(payload)).then(res => {
+            //     dispatch(getAllInquiry({ page: 1, pageSize: 10 }))
+            //   })
+            // }}
             >
               {row?.status === 'completed' ? 'In complete' : 'completed'}
             </MenuItem>
-            <MenuItem
-              onClick={() => {
-                let formdata = new FormData()
-                formdata.append('id', row?.id)
-                formdata.append('status', row?.status === 'completed' ? 'completed' : 'In complete')
-                let payload = formdata
-                dispatch(updateInquiry(payload)).then(res => {
-                  dispatch(getAllInquiry({ page: 1, pageSize: 10 }))
-                })
-              }}
-            >
-              {row?.status === 'completed' ? 'In complete' : 'completed'}
-            </MenuItem> */}
           </Menu>
         </Box>
         // <Box sx={{ display: 'flex', alignItems: 'center' }}>

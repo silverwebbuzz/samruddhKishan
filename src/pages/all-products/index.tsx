@@ -211,7 +211,7 @@ const ContentPage = () => {
       flex: 0.25,
       minWidth: 190,
       field: 'productImage',
-      headerName: 'product Image',
+      headerName: 'Image',
       renderCell: (params: GridRenderCellParams) => {
         return <Box sx={{ display: 'flex', alignItems: 'center' }}>{renderClient(params)}</Box>
       }
@@ -221,15 +221,25 @@ const ContentPage = () => {
       field: 'productName',
       sortable: false,
       minWidth: 220,
-      headerName: 'Product Name',
+      headerName: 'Name',
       renderCell: ({ row }: any) => {
         const { productName } = row
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
+              <p
+                style={{
+                  cursor: 'pointer'
+                }}
+                onClick={() => {
+                  setEditID(row?.id)
+                  setEditField(row)
+                  localStorage.setItem('editProductID', row?.id)
+                  router.push('/all-products/edit-product')
+                }}
+              >
                 {productName}
-              </Typography>
+              </p>
             </Box>
           </Box>
         )
@@ -240,7 +250,7 @@ const ContentPage = () => {
       field: 'categoryName',
       sortable: false,
       minWidth: 220,
-      headerName: 'Product Category',
+      headerName: 'Category',
       renderCell: ({ row }: any) => {
         const { categoryName } = row
         return (
@@ -353,25 +363,6 @@ const ContentPage = () => {
             }}
           >
             <Grid item sm={2} xs={12}>
-              {/* <FormControl size='small' fullWidth>
-                <InputLabel id='demo-simple-select-label'> Category Name</InputLabel>
-                <Select
-                  labelId='demo-simple-select-label'
-                  id='demo-simple-select'
-                  name='categoryId'
-                  value={categoryIdPrefill}
-                  label='Category Name'
-                  onChange={(e: any) => {
-                    setCategoryIdPrefill(e?.target?.value)
-                  }}
-                >
-                  {categories?.data?.map((Item: any) => (
-                    <MenuItem key={Item?.categoryName} value={Item?.id}>
-                      {Item?.categoryName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl> */}
               <FormControl size='small' fullWidth>
                 <DemoSelect
                   data={categories?.data}

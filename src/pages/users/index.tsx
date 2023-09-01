@@ -187,6 +187,11 @@ const allUsers = () => {
     setSelectedRows(selection)
     console.log('handleSelectionChange', selection)
   }
+  const handleEdit = (row: any) => {
+    localStorage.setItem('editUserId', row?.id)
+    router.push('/users/edit-user')
+  }
+
   const columns: GridColDef[] = [
     {
       flex: 0.1,
@@ -207,9 +212,14 @@ const allUsers = () => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {firstName !== '' ? firstName : centerName !== '' ? centerName : apmcName !== '' ? apmcName : ''}
-              </Typography>
+              <p
+                style={{
+                  cursor: 'pointer'
+                }}
+                onClick={() => handleEdit(row)}
+              >
+                {firstName !== '' ? firstName : centerName !== '' ? centerName : apmcName !== '' ? apmcName : ''}{' '}
+              </p>
             </Box>
           </Box>
         )
@@ -268,8 +278,7 @@ const allUsers = () => {
               size='small'
               sx={{ color: 'text.secondary' }}
               onClick={() => {
-                localStorage.setItem('editUserId', row?.id)
-                router.push('/users/edit-user')
+                handleEdit(row)
               }}
             >
               <Icon icon='tabler:edit' />
@@ -307,7 +316,14 @@ const allUsers = () => {
                   </Box>
                 ),
                 endAdornment: (
-                  <IconButton size='small' title='Clear' aria-label='Clear'>
+                  <IconButton
+                    size='small'
+                    title='Clear'
+                    aria-label='Clear'
+                    onClick={() => {
+                      setUserSearch('')
+                    }}
+                  >
                     <Icon icon='tabler:x' fontSize={20} />
                   </IconButton>
                 )

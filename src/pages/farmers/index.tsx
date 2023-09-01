@@ -34,6 +34,7 @@ import { getAllUsers } from 'src/slice/users'
 import axios from 'axios'
 import { alpha } from '@mui/system'
 import DeleteMultiFieldsDialog from 'src/views/deleteDialogBox/deleteMultiFieldsDialog'
+import Link from 'next/link'
 
 export type Payload = {
   id?: number
@@ -214,9 +215,14 @@ const allFarmers = () => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
+              <p
+                style={{
+                  cursor: 'pointer'
+                }}
+                onClick={() => handleEdit(row)}
+              >
                 {firstName} {lastName}
-              </Typography>
+              </p>
             </Box>
           </Box>
         )

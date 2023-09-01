@@ -30,13 +30,13 @@ import { createBrands, getAllBrands, updateBrands } from 'src/slice/brandsSlice'
 const BrandsDialog = ({ show, setShow, handleCancel, edit, setEdit, editField, editID }: any) => {
   // console.log(search)
   const dispatch = useDispatch<AppDispatch>()
-  const { brandsData } = useSelector((state: any) => state?.rootReducer?.brandsReducer)
 
   // ** State
   const handleCategory = (values: any, { resetForm }: any) => {
     const formData = new FormData()
     formData.append('brandName', values?.brandName)
     formData.append('brandLogo', values?.brandLogo)
+
     let payload = formData
     if (edit) {
       payload.append('id', editID)

@@ -9,7 +9,7 @@ import Tooltip from '@mui/material/Tooltip'
 import CardHeader from '@mui/material/CardHeader'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import { DataGrid, GridColDef, GridDeleteIcon } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridDeleteIcon, GridRenderCellParams } from '@mui/x-data-grid'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 // ** Third Party Imports
@@ -41,6 +41,8 @@ import UpdateMultiFieldsDialog from 'src/views/deleteDialogBox/updateMultipleDia
 import styled from '@emotion/styled'
 import { getAllUsers } from 'src/slice/farmers'
 import DemoSelect from 'src/views/demo/demoSelect'
+import CustomAvatar from 'src/@core/components/mui/avatar'
+import { ThemeColor } from 'src/@core/layouts/types'
 
 export type Payload = {
   id?: number
@@ -170,6 +172,26 @@ const allCategories = () => {
   const userFilter = (users: any) => {
     return users?.filter((user: any) => user.role === 'VENDORS')
   }
+  const renderClient = (params: GridRenderCellParams) => {
+    const { row } = params
+    const stateNum = Math.floor(Math.random() * 6)
+    const states = ['success', 'error', 'warning', 'info', 'primary', 'secondary']
+    const color = states[stateNum]
+
+    if (row?.serviceBannerImage?.length) {
+      return <CustomAvatar src={`${row?.serviceBannerImage}`} sx={{ mr: 3, width: '2.575rem', height: '2.575rem' }} />
+    } else {
+      return (
+        <CustomAvatar
+          skin='light'
+          color={color as ThemeColor}
+          sx={{ mr: 3, fontSize: '.8rem', width: '2.575rem', height: '2.575rem' }}
+        >
+          {/* {getInitials(row.full_name ? row.full_name : 'John Doe')} */}
+        </CustomAvatar>
+      )
+    }
+  }
   const columns: GridColDef[] = [
     {
       flex: 0.1,
@@ -178,13 +200,22 @@ const allCategories = () => {
       sortable: false,
       headerName: 'ID'
     },
+    {
+      flex: 0.25,
+      minWidth: 190,
+      field: 'serviceBannerImage',
+      headerName: 'Image',
+      renderCell: (params: GridRenderCellParams) => {
+        return <Box sx={{ display: 'flex', alignItems: 'center' }}>{renderClient(params)}</Box>
+      }
+    },
 
     {
       flex: 0.25,
       field: 'serviceName',
       sortable: false,
-      minWidth: 320,
-      headerName: 'Services Name',
+      minWidth: 220,
+      headerName: 'Name',
       renderCell: ({ row }: any) => {
         const { serviceName } = row
         return (
@@ -203,8 +234,8 @@ const allCategories = () => {
       flex: 0.25,
       field: 'status',
       sortable: false,
-      minWidth: 320,
-      headerName: 'services status',
+      minWidth: 120,
+      headerName: 'status',
       renderCell: ({ row }: any) => {
         const { status } = row
         return (
@@ -212,6 +243,44 @@ const allCategories = () => {
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Chip label={status === 1 ? 'Active' : 'Inactive'} color={status === 1 ? 'primary' : 'error'} />
               <Badge />
+            </Box>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.25,
+      field: 'categoryName',
+      sortable: false,
+      minWidth: 220,
+      headerName: 'Category',
+      renderCell: ({ row }: any) => {
+        const { categoryName } = row
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
+                {categoryName}
+              </Typography>
+            </Box>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.25,
+      field: 'firstName',
+      sortable: false,
+      minWidth: 220,
+      headerName: 'Vendor Name',
+      renderCell: ({ row }: any) => {
+        const { firstName, lastName } = row
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
+                {`${firstName ? firstName : ''}${''}${lastName ? lastName : ''}`}
+              </Typography>
             </Box>
           </Box>
         )
@@ -298,25 +367,6 @@ const allCategories = () => {
             }}
           >
             <Grid item sm={2} xs={12}>
-              {/* <FormControl size='small' fullWidth>
-                <InputLabel id='demo-simple-select-label'> Category Name</InputLabel>
-                <Select
-                  labelId='demo-simple-select-label'
-                  id='demo-simple-select'
-                  name='categoryId'
-                  value={categoryIdPrefill}
-                  label='Category Name'
-                  onChange={(e: any) => {
-                    setCategoryIdPrefill(e?.target?.value)
-                  }}
-                >
-                  {categories?.data?.map((Item: any) => (
-                    <MenuItem key={Item?.categoryName} value={Item?.id}>
-                      {Item?.categoryName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl> */}
               <FormControl fullWidth>
                 <DemoSelect
                   data={categories?.data}

@@ -192,8 +192,7 @@ export const getAdressByPincode = createAsyncThunk(
       const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/farmer/GetPinCode/${payload?.pincode}`, {
         headers
       })
-      console.log('res?.datares?.datares?.data', res)
-      return res?.data
+      return res?.data ? res?.data : []
     } catch (err: any) {
       return rejectWithValue(err?.response?.data)
     }

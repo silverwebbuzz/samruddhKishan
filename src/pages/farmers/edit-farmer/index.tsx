@@ -239,13 +239,6 @@ const FarmerDetails = () => {
     return () => clearTimeout(timer)
   }, [getFarmer?.[0]?.state, getFarmer?.[0]?.taluka, getFarmer?.[0]?.pinCode, getFarmer?.[0]?.landDistrict])
 
-  function removeDuplicatesTaluka(getAddressByPinCodeData) {
-    const unique = getAddressByPinCodeData?.[0]?.PostOffice?.filter(
-      (obj, index) => getAddressByPinCodeData?.[0]?.PostOffice?.findIndex(item => item.Block === obj.Block) === index
-    )
-
-    return unique
-  }
   return (
     <>
       <Card
@@ -746,12 +739,11 @@ const FarmerDetails = () => {
                             }
                           }}
                         >
-                          {getAddressByPinCodeData &&
-                            removeDuplicatesTaluka(getAddressByPinCodeData)?.map(name => (
-                              <MenuItem key={name?.Block} value={name?.Block}>
-                                {name?.Block}
-                              </MenuItem>
-                            ))}
+                          {getAddressByPinCodeData?.taluka?.map(name => (
+                            <MenuItem key={name} value={name}>
+                              {name}
+                            </MenuItem>
+                          ))}
                         </Select>
                       </FormControl>
                     </Tooltip>
@@ -804,9 +796,9 @@ const FarmerDetails = () => {
                             }
                           }}
                         >
-                          {getAddressByPinCodeData?.[0]?.PostOffice?.map(name => (
-                            <MenuItem key={name?.Name} value={name?.Name}>
-                              {name?.Name}
+                          {getAddressByPinCodeData?.village?.map(name => (
+                            <MenuItem key={name} value={name}>
+                              {name}
                             </MenuItem>
                           ))}
                         </Select>

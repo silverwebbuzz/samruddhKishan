@@ -129,6 +129,7 @@ const settings = () => {
 
   const handleGeneral = (values: any, { resetForm }: any, submitType) => {
     let formdata = new FormData()
+
     if (submitType === 'general') {
       formdata.append('id', 1)
       formdata.append('applicationName', values?.applicationName ? values?.applicationName : '')
@@ -162,6 +163,18 @@ const settings = () => {
       formdata.append('linkedin', values?.linkedin ? values?.linkedin : '')
       const socialPayload = formdata
       dispatch(updateGeneralSetting(socialPayload))
+    } else if (submitType === 'googleAnalytics') {
+      formdata.append('id', 1)
+      formdata.append('googleAnalyticsCode', values?.googleAnalyticsCode ? values?.googleAnalyticsCode : '')
+      const googleAnalyticsPayload = formdata
+      dispatch(updateGeneralSetting(googleAnalyticsPayload))
+    } else if (submitType === 'seo') {
+      formdata.append('id', 1)
+      formdata.append('metaTitle', values?.metaTitle ? values?.metaTitle : '')
+      formdata.append('metaKeywords', values?.metaKeywords ? values?.metaKeywords : '')
+      formdata.append('metaDescription', values?.metaDescription ? values?.metaDescription : '')
+      const seoPayload = formdata
+      dispatch(updateGeneralSetting(seoPayload))
     } else {
       return null
     }
@@ -225,6 +238,12 @@ const settings = () => {
             />
             <Tab value='email' label='E-mail Settings' icon={<Icon fontSize='1.125rem' icon='ic:outline-email' />} />
             <Tab value='social' label='Social Settings' icon={<Icon fontSize='1.125rem' icon='tabler:link' />} />
+            <Tab
+              value='googleAnalytics'
+              label='Google Analytics Settings'
+              icon={<Icon fontSize='1.125rem' icon='tabler:link' />}
+            />
+            <Tab value='seo' label='SEO Settings' icon={<Icon fontSize='1.125rem' icon='tabler:link' />} />
           </TabList>
           <Card sx={{ px: 6 }}>
             <Box sx={{ mt: 6 }}>
@@ -583,6 +602,128 @@ const settings = () => {
                                 onChange={handleChange}
                                 label='Linkedin'
                                 placeholder='Linkedin'
+                                InputLabelProps={{
+                                  shrink: true
+                                }}
+                              />
+                            </Grid>
+                            <Grid item xs={12} sx={{ pt: theme => `${theme.spacing(6.5)} !important` }}>
+                              <Button type='submit' variant='contained' sx={{ mr: 4 }}>
+                                Save Changes
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        </Form>
+                      )
+                    }}
+                  </Formik>
+                </CardContent>
+              </TabPanel>
+              <TabPanel sx={{ p: 0 }} value='googleAnalytics'>
+                <CardContent>
+                  <Typography sx={{ py: 4 }} variant='h4'>
+                    Google Analytics Settings
+                  </Typography>
+                  <Formik
+                    enableReinitialize
+                    initialValues={{
+                      googleAnalyticsCode: generalData?.googleAnalyticsCode ? generalData?.googleAnalyticsCode : ''
+                    }}
+                    // validationSchema={validationSchema}
+                    onSubmit={(values: any, { resetForm }) => {
+                      handleGeneral(values, { resetForm }, 'googleAnalytics')
+                    }}
+                  >
+                    {(props: FormikProps<any>) => {
+                      const { values, touched, errors, handleBlur, handleChange, handleSubmit } = props
+                      return (
+                        <Form onSubmit={handleSubmit}>
+                          <Grid container spacing={5}>
+                            <Grid item xs={12} sm={12}>
+                              <TextField
+                                fullWidth
+                                multiline
+                                rows={8}
+                                label='Google Analytics Code'
+                                placeholder='Google Analytics Code'
+                                value={values?.googleAnalyticsCode}
+                                name='googleAnalyticsCode'
+                                onChange={handleChange}
+                                InputLabelProps={{
+                                  shrink: true
+                                }}
+                              />
+                            </Grid>
+                            <Grid item xs={12} sx={{ pt: theme => `${theme.spacing(6.5)} !important` }}>
+                              <Button type='submit' variant='contained' sx={{ mr: 4 }}>
+                                Save Changes
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        </Form>
+                      )
+                    }}
+                  </Formik>
+                </CardContent>
+              </TabPanel>
+              <TabPanel sx={{ p: 0 }} value='seo'>
+                <CardContent>
+                  <Typography sx={{ py: 4 }} variant='h4'>
+                    SEO Settings
+                  </Typography>
+                  <Formik
+                    enableReinitialize
+                    initialValues={{
+                      metaTitle: generalData?.metaTitle ? generalData?.metaTitle : '',
+                      metaKeywords: generalData?.metaKeywords ? generalData?.metaKeywords : '',
+                      metaDescription: generalData?.metaDescription ? generalData?.metaDescription : ''
+                    }}
+                    // validationSchema={validationSchema}
+                    onSubmit={(values: any, { resetForm }) => {
+                      handleGeneral(values, { resetForm }, 'seo')
+                    }}
+                  >
+                    {(props: FormikProps<any>) => {
+                      const { values, touched, errors, handleBlur, handleChange, handleSubmit } = props
+                      return (
+                        <Form onSubmit={handleSubmit}>
+                          <Grid container spacing={5}>
+                            <Grid item xs={12} sm={6}>
+                              <TextField
+                                fullWidth
+                                label='Meta title'
+                                placeholder='Meta title'
+                                value={values?.metaTitle}
+                                name='metaTitle'
+                                onChange={handleChange}
+                                InputLabelProps={{
+                                  shrink: true
+                                }}
+                              />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                              <TextField
+                                fullWidth
+                                label='Meta Keywords'
+                                placeholder='Meta keywords'
+                                value={values?.metaKeywords}
+                                name='metaKeywords'
+                                onChange={handleChange}
+                                InputLabelProps={{
+                                  shrink: true
+                                }}
+                              />
+                            </Grid>
+                            <Grid item xs={12} sm={12}>
+                              <TextField
+                                fullWidth
+                                multiline
+                                rows={4}
+                                label='Meta Description'
+                                placeholder='Meta Description'
+                                value={values?.metaDescription}
+                                name='metaDescription'
+                                onChange={handleChange}
                                 InputLabelProps={{
                                   shrink: true
                                 }}

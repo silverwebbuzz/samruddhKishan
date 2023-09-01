@@ -209,14 +209,6 @@ const index = () => {
     // localStorage.removeItem('FarmerData')
   }, [page, pageCount, pageLimit, deleteUser, updateUsers12, createUser12])
 
-  function removeDuplicatesTaluka(getAddressByPinCodeData: any) {
-    const unique = getAddressByPinCodeData?.[0]?.PostOffice?.filter(
-      (obj: any, index: any) =>
-        getAddressByPinCodeData?.[0]?.PostOffice?.findIndex((item: any) => item.Block === obj.Block) === index
-    )
-    return unique
-  }
-
   const handleSubmit = (values: any) => {
     let payload = [
       //other
@@ -530,23 +522,6 @@ const index = () => {
                               setFieldValue('state', e?.target?.value)
                               setSTATE(e?.target?.value)
                             }}
-                            // sx={{
-                            //   '& .MuiSelect-root': {
-                            //     borderWidth: '1px !important',
-                            //     borderColor: '#8d8686 !important' // Set the desired color for the select
-                            //   },
-                            //   '& .MuiOutlinedInput-notchedOutline': {
-                            //     borderColor: 'black !important' // Set the desired border color for the select
-                            //   },
-
-                            //   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                            //     borderWidth: '1px !important',
-                            //     borderColor: '#8d8686 !important'
-                            //   },
-                            //   '&.Mui-error': {
-                            //     color: 'red' // Set the label color when the Select is in an error state
-                            //   }
-                            // }}
                           >
                             {allState?.data?.map(name => (
                               <MenuItem key={name?.name} value={name?.name}>
@@ -569,23 +544,6 @@ const index = () => {
                               value={values?.district}
                               label='district'
                               onChange={handleChange}
-                              // sx={{
-                              //   '& .MuiSelect-root': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important' // Set the desired color for the select
-                              //   },
-                              //   '& .MuiOutlinedInput-notchedOutline': {
-                              //     borderColor: 'black !important' // Set the desired border color for the select
-                              //   },
-
-                              //   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important'
-                              //   },
-                              //   '&.Mui-error': {
-                              //     color: 'red' // Set the label color when the Select is in an error state
-                              //   }
-                              // }}
                             >
                               {allDistrict?.map(name => (
                                 <MenuItem key={name?.name} value={name?.name}>
@@ -644,54 +602,24 @@ const index = () => {
                           disableTouchListener={!(pincode.length <= 0)}
                         >
                           <FormControl fullWidth>
-                            <InputLabel id='demo-simple-select-label'>taluka</InputLabel>
+                            <InputLabel id='demo-simple-select-label'>Taluka</InputLabel>
                             <Select
                               labelId='demo-simple-select-label'
                               id='demo-simple-select'
-                              name='centerTaluka'
+                              name='taluka'
                               disabled={pincode.length <= 0}
-                              value={values?.centerTaluka && values?.centerTaluka}
-                              label='taluka'
+                              value={values?.taluka && values?.taluka}
+                              label='Taluka'
                               onChange={handleChange}
-                              // sx={{
-                              //   '& .MuiSelect-root': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important' // Set the desired color for the select
-                              //   },
-                              //   '& .MuiOutlinedInput-notchedOutline': {
-                              //     borderColor: 'black !important' // Set the desired border color for the select
-                              //   },
-
-                              //   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important'
-                              //   },
-                              //   '&.Mui-error': {
-                              //     color: 'red' // Set the label color when the Select is in an error state
-                              //   }
-                              // }}
                             >
-                              {getAddressByPinCodeData &&
-                                removeDuplicatesTaluka(getAddressByPinCodeData)?.map(name => (
-                                  <MenuItem key={name?.Block} value={name?.Block}>
-                                    {name?.Block}
-                                  </MenuItem>
-                                ))}
+                              {getAddressByPinCodeData?.taluka?.map((name: any) => (
+                                <MenuItem key={name} value={name}>
+                                  {name}
+                                </MenuItem>
+                              ))}
                             </Select>
                           </FormControl>
                         </Tooltip>
-                        {/* <TextField
-                          value={values?.centerTaluka}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='centerTaluka'
-                          error={Boolean(errors.centerTaluka && touched.centerTaluka)}
-                          fullWidth
-                          label='Taluka of center'
-                          placeholder='Taluka of center'
-                        />
-                        centerTaluka
-                        <ErrorMessage name='centerTaluka' render={msg => <div style={{ color: 'red' }}>{msg}</div>} /> */}
                       </Grid>
 
                       <Grid item sm={6} xs={12}>
@@ -1021,12 +949,11 @@ const index = () => {
                               label='Taluka'
                               onChange={handleChange}
                             >
-                              {getAddressByPinCodeData &&
-                                removeDuplicatesTaluka(getAddressByPinCodeData)?.map((name: any) => (
-                                  <MenuItem key={name?.Block} value={name?.Block}>
-                                    {name?.Block}
-                                  </MenuItem>
-                                ))}
+                              {getAddressByPinCodeData?.taluka?.map(name => (
+                                <MenuItem key={name} value={name}>
+                                  {name}
+                                </MenuItem>
+                              ))}
                             </Select>
                           </FormControl>
                         </Tooltip>
@@ -1277,12 +1204,11 @@ const index = () => {
                               label='Taluka'
                               onChange={handleChange}
                             >
-                              {getAddressByPinCodeData &&
-                                removeDuplicatesTaluka(getAddressByPinCodeData)?.map(name => (
-                                  <MenuItem key={name?.Block} value={name?.Block}>
-                                    {name?.Block}
-                                  </MenuItem>
-                                ))}
+                              {getAddressByPinCodeData?.taluka?.map(name => (
+                                <MenuItem key={name} value={name}>
+                                  {name}
+                                </MenuItem>
+                              ))}
                             </Select>
                           </FormControl>
                         </Tooltip>
@@ -1306,9 +1232,9 @@ const index = () => {
                               label='Village Name'
                               onChange={handleChange}
                             >
-                              {getAddressByPinCodeData?.[0]?.PostOffice?.map(name => (
-                                <MenuItem key={name?.Name} value={name?.Name}>
-                                  {name?.Name}
+                              {getAddressByPinCodeData?.village?.map(name => (
+                                <MenuItem key={name} value={name}>
+                                  {name}
                                 </MenuItem>
                               ))}
                             </Select>
@@ -1543,12 +1469,11 @@ const index = () => {
                               //   }
                               // }}
                             >
-                              {getAddressByPinCodeData &&
-                                removeDuplicatesTaluka(getAddressByPinCodeData)?.map(name => (
-                                  <MenuItem key={name?.Block} value={name?.Block}>
-                                    {name?.Block}
-                                  </MenuItem>
-                                ))}
+                              {getAddressByPinCodeData?.taluka?.map(name => (
+                                <MenuItem key={name} value={name}>
+                                  {name}
+                                </MenuItem>
+                              ))}
                             </Select>
                           </FormControl>
                         </Tooltip>
@@ -1610,9 +1535,9 @@ const index = () => {
                               //   }
                               // }}
                             >
-                              {getAddressByPinCodeData?.[0]?.PostOffice?.map(name => (
-                                <MenuItem key={name?.Name} value={name?.Name}>
-                                  {name?.Name}
+                              {getAddressByPinCodeData?.village?.map((name: any) => (
+                                <MenuItem key={name} value={name}>
+                                  {name}
                                 </MenuItem>
                               ))}
                             </Select>

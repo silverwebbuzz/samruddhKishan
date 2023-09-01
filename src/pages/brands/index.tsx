@@ -211,9 +211,19 @@ const brands = () => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
+              <p
+                style={{
+                  cursor: 'pointer'
+                }}
+                onClick={() => {
+                  handleShow('brands')
+                  setEdit(true)
+                  setEditID(row?.id)
+                  setEditField(row)
+                }}
+              >
                 {brandName}
-              </Typography>
+              </p>
             </Box>
           </Box>
         )

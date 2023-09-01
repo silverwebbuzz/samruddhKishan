@@ -167,72 +167,52 @@ const index = () => {
     apiCallToGetUser(payload).then(response => {
       setUserData(response?.data?.data)
     })
-
     dispatch(getAllState())
     dispatch(getAllCategories({ page: 1, pageSize: 10 }))
-
     dispatch(getRoleAndPermissions())
   }, [])
-  useEffect(() => {
-    if (userData && userData?.pinCode) {
-      const res = axios
-        .get(`${process.env.NEXT_PUBLIC_BASE_URL}/farmer/GetPinCode/${userData?.pinCode}`, {
-          headers
-        })
-        .then(response => {
-          setPinCodeAddress(response?.data?.[0]?.PostOffice)
-          console.log('response?.data?.[0]?.PostOffice', response?.data?.[0]?.PostOffice)
-          return response
-        })
-        .then(res => {
-          setTimeout(() => {
-            setTaluka(userData?.taluka && userData?.taluka)
-            setVillage(userData?.village && userData?.village)
-          }, [1000])
-          return res
-        })
 
-      return res?.data
+  useEffect(() => {
+    let payload = {
+      pincode: userData?.pincode
+    }
+    if (userData && userData?.pinCode) {
+      dispatch(getAdressByPincode(payload))
     }
   }, [userData?.pinCode])
-  const handlePincode = e => {
+  const handlePincode = (e: any) => {
     setPincode(e)
     let payload = {
       pincode: e ? e : ''
     }
-    const res = axios
-      .get(`${process.env.NEXT_PUBLIC_BASE_URL}/farmer/GetPinCode/${payload?.pincode}`, {
-        headers
-      })
-      .then(response => {
-        setPinCodeAddress(response?.data?.[0]?.PostOffice)
-      })
-    return res?.data
-    // dispatch(getAdressByPincode(payload))
+    dispatch(getAdressByPincode(payload))
   }
-  const pincodeAutoCall = () => {
-    let payload = {
-      pincode: pincode ? pincode : ''
-    }
-    getAdressByPincode(payload)
-  }
-  useEffect(() => {
-    if (pincode) {
-      pincodeAutoCall()
-    }
-  }, [pincode])
+
   useEffect(() => {
     dispatch(getAllDistrict({ state: STATE }))
   }, [STATE])
-  const setPincodeprefill = (state: any) => {
-    setPincode(state)
-  }
+
   useEffect(() => {
-    let payload = {
-      pincode: userData?.pinCode
+    if (userData?.pinCode) {
+      setPincode(userData?.pinCode)
+      dispatch(getAdressByPincode({ pincode: userData?.pinCode })).then(res => {
+        console.log('#$#$#$#', res)
+        setTaluka(userData?.taluka && userData?.taluka)
+        setVillage(userData?.village && userData?.village)
+      })
     }
-    getAdressByPincode(payload)
   }, [userData?.pinCode])
+
+  // useEffect(() => {
+  //   let payload = {
+  //     pincode: userData?.pinCode
+  //   }
+  //   dispatch(getAdressByPincode(payload)).then(res => {
+  //     console.log('#$#$#$#', res)
+  //     setTaluka(userData?.taluka && userData?.taluka)
+  //     setVillage(userData?.village && userData?.village)
+  //   })
+  // }, [userData?.pinCode])
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -240,9 +220,7 @@ const index = () => {
         setRolePrefill(userData?.roleId && userData?.roleId)
         setSTATE(userData?.state && userData?.state)
         setDistrict(userData?.city && userData?.city)
-        setPincodeprefill(userData?.pinCode)
-        // setTaluka(userData?.taluka && userData?.taluka)
-        // setVillage(userData?.village && userData?.village)
+
         setCategoryIdPrefill(userData?.categoryId && userData?.categoryId)
       }
     }, 1000)
@@ -311,22 +289,6 @@ const index = () => {
         router.push('/users')
       }
     })
-  }
-  function removeDuplicatesTaluka(getAddressByPinCodeData: any) {
-    if (getAddressByPinCodeData) {
-      const unique = getAddressByPinCodeData?.[0]?.PostOffice?.filter(
-        (obj, index) => getAddressByPinCodeData?.[0]?.PostOffice?.findIndex(item => item.Block === obj.Block) === index
-      )
-      return unique
-    }
-  }
-  function removeDuplicatesTalukaS(getAddressByPinCodeData: any) {
-    if (getAddressByPinCodeData) {
-      const unique = getAddressByPinCodeData?.filter(
-        (obj, index) => getAddressByPinCodeData?.findIndex(item => item.Block === obj.Block) === index
-      )
-      return unique
-    }
   }
 
   const ProfilePicture = styled('img')(({ theme }) => ({
@@ -704,42 +666,24 @@ const index = () => {
                           disableTouchListener={!(pincode?.length <= 0)}
                         >
                           <FormControl fullWidth>
-                            <InputLabel id='demo-simple-select-label'>taluka</InputLabel>
+                            <InputLabel id='demo-simple-select-label'>Taluka</InputLabel>
                             <Select
                               labelId='demo-simple-select-label'
                               id='demo-simple-select'
                               name='centerTaluka'
                               disabled={pincode?.length <= 0}
                               value={taluka}
-                              label='taluka'
+                              label='Taluka'
                               onChange={e => {
                                 setFieldValue('centerTaluka', e?.target?.value)
                                 setTaluka(e?.target?.value)
                               }}
-                              // sx={{
-                              //   '& .MuiSelect-root': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important' // Set the desired color for the select
-                              //   },
-                              //   '& .MuiOutlinedInput-notchedOutline': {
-                              //     borderColor: 'black !important' // Set the desired border color for the select
-                              //   },
-
-                              //   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important'
-                              //   },
-                              //   '&.Mui-error': {
-                              //     color: 'red' // Set the label color when the Select is in an error state
-                              //   }
-                              // }}
                             >
-                              {pinCodeAddress &&
-                                removeDuplicatesTalukaS(pinCodeAddress)?.map(name => (
-                                  <MenuItem key={name?.Block} value={name?.Block}>
-                                    {name?.Block}
-                                  </MenuItem>
-                                ))}
+                              {getAddressByPinCodeData?.taluka?.map((name: any) => (
+                                <MenuItem key={name} value={name}>
+                                  {name}
+                                </MenuItem>
+                              ))}
                             </Select>
                           </FormControl>
                         </Tooltip>
@@ -1084,9 +1028,12 @@ const index = () => {
                               id='demo-simple-select'
                               name='apmcDistrict'
                               disabled={STATE?.length <= 0}
-                              value={values?.apmcDistrict}
+                              value={district}
                               label='district'
-                              onChange={handleChange}
+                              onChange={e => {
+                                setDistrict(e?.target?.value)
+                                setFieldValue('apmcDistrict', e?.target?.value)
+                              }}
                             >
                               {allDistrict?.map((name: any) => (
                                 <MenuItem key={name?.name} value={name?.name}>
@@ -1130,12 +1077,11 @@ const index = () => {
                                 setTaluka(e?.target?.value)
                               }}
                             >
-                              {pinCodeAddress &&
-                                removeDuplicatesTalukaS(pinCodeAddress)?.map((name: any) => (
-                                  <MenuItem key={name?.Block} value={name?.Block}>
-                                    {name?.Block}
-                                  </MenuItem>
-                                ))}
+                              {getAddressByPinCodeData?.taluka?.map((name: any) => (
+                                <MenuItem key={name} value={name}>
+                                  {name}
+                                </MenuItem>
+                              ))}
                             </Select>
                           </FormControl>
                         </Tooltip>
@@ -1355,7 +1301,7 @@ const index = () => {
                             labelId='demo-simple-select-label'
                             id='demo-simple-select'
                             name='state'
-                            value={values?.state}
+                            value={STATE}
                             label='State'
                             onChange={(e: any) => {
                               setFieldValue('state', e?.target?.value)
@@ -1379,9 +1325,12 @@ const index = () => {
                               id='demo-simple-select'
                               name='district'
                               disabled={STATE.length <= 0}
-                              value={values?.district}
+                              value={district}
                               label='District'
-                              onChange={handleChange}
+                              onChange={e => {
+                                setFieldValue('district', e?.target?.value)
+                                setDistrict(e?.target?.value)
+                              }}
                             >
                               {allDistrict?.map((name: any) => (
                                 <MenuItem key={name?.name} value={name?.name}>
@@ -1427,47 +1376,16 @@ const index = () => {
                                 setFieldValue('taluka', e?.target?.value)
                                 setTaluka(e?.target?.value)
                               }}
-                              // sx={{
-                              //   '& .MuiSelect-root': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important' // Set the desired color for the select
-                              //   },
-                              //   '& .MuiOutlinedInput-notchedOutline': {
-                              //     borderColor: 'black !important' // Set the desired border color for the select
-                              //   },
-
-                              //   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important'
-                              //   },
-                              //   '&.Mui-error': {
-                              //     color: 'red' // Set the label color when the Select is in an error state
-                              //   }
-                              // }}
                             >
-                              {getAddressByPinCodeData &&
-                                removeDuplicatesTaluka(getAddressByPinCodeData)?.map(name => (
-                                  <MenuItem key={name?.Block} value={name?.Block}>
-                                    {name?.Block}
-                                  </MenuItem>
-                                ))}
+                              {getAddressByPinCodeData?.taluka?.map((name: any) => (
+                                <MenuItem key={name} value={name}>
+                                  {name}
+                                </MenuItem>
+                              ))}
                             </Select>
                           </FormControl>
                         </Tooltip>
                       </Grid>
-                      {/* <Grid item sm={6} xs={12}>
-                      <TextField
-                        value={values?.villageName}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        name='villageName'
-                        error={Boolean(errors.villageName && touched.villageName)}
-                        fullWidth
-                        label='Village Name'
-                        placeholder='Village Name'
-                      />
-                      <ErrorMessage name='villageName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                    </Grid> */}
 
                       <Grid item sm={6} xs={12}>
                         <Tooltip
@@ -1477,17 +1395,7 @@ const index = () => {
                           disableTouchListener={!(pincode.length <= 0)}
                         >
                           <FormControl fullWidth>
-                            <InputLabel
-                              // sx={{
-                              //   color: 'black',
-                              //   '&.Mui-focused': {
-                              //     color: 'black' // Set the label color when focused
-                              //   }
-                              // }}
-                              id='demo-simple-select-label'
-                            >
-                              Village Name
-                            </InputLabel>
+                            <InputLabel id='demo-simple-select-label'>Village Name</InputLabel>
                             <Select
                               labelId='demo-simple-select-label'
                               id='demo-simple-select'
@@ -1496,26 +1404,10 @@ const index = () => {
                               value={values?.villageName && values?.villageName}
                               label='Village Name'
                               onChange={handleChange}
-                              // sx={{
-                              //   '&.Mui-error fieldset': {
-                              //     borderColor: 'red !important'
-                              //   },
-                              //   '& fieldset': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important'
-                              //   },
-                              //   '&.Mui-focused fieldset': {
-                              //     borderColor: '#7da370 !important',
-                              //     borderWidth: '2px !important'
-                              //   },
-                              //   '& label.MuiInputLabel-root': {
-                              //     color: 'black' // Set the label font color to blue
-                              //   }
-                              // }}
                             >
-                              {getAddressByPinCodeData?.[0]?.PostOffice?.map(name => (
-                                <MenuItem key={name?.Name} value={name?.Name}>
-                                  {name?.Name}
+                              {getAddressByPinCodeData?.village?.map((name: any) => (
+                                <MenuItem key={name} value={name}>
+                                  {name}
                                 </MenuItem>
                               ))}
                             </Select>
@@ -1524,25 +1416,6 @@ const index = () => {
                       </Grid>
 
                       <Grid item sm={6} xs={12}>
-                        {/* <FormControl fullWidth>
-                          <InputLabel id='demo-simple-select-label'> Category Name</InputLabel>
-                          <Select
-                            labelId='demo-simple-select-label'
-                            id='demo-simple-select'
-                            name='categoryId'
-                            value={categoryIdPrefill}
-                            label='Category Name'
-                            onChange={(e: any) => {
-                              setCategoryIdPrefill(e?.target?.value)
-                            }}
-                          >
-                            {categories?.data?.map((Item: any) => (
-                              <MenuItem key={Item?.categoryName} value={Item?.id}>
-                                {Item?.categoryName}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl> */}
                         <DemoSelect
                           data={categories?.data}
                           selectedCategory={categoryIdPrefill}
@@ -1780,30 +1653,12 @@ const index = () => {
                                 setFieldValue('taluka', e?.target?.value)
                                 setTaluka(e?.target?.value)
                               }}
-                              // sx={{
-                              //   '& .MuiSelect-root': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important' // Set the desired color for the select
-                              //   },
-                              //   '& .MuiOutlinedInput-notchedOutline': {
-                              //     borderColor: 'black !important' // Set the desired border color for the select
-                              //   },
-
-                              //   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important'
-                              //   },
-                              //   '&.Mui-error': {
-                              //     color: 'red' // Set the label color when the Select is in an error state
-                              //   }
-                              // }}
                             >
-                              {pinCodeAddress &&
-                                removeDuplicatesTalukaS(pinCodeAddress)?.map((name: any) => (
-                                  <MenuItem key={name?.Block} value={name?.Block}>
-                                    {name?.Block}
-                                  </MenuItem>
-                                ))}
+                              {getAddressByPinCodeData?.taluka?.map((name: any) => (
+                                <MenuItem key={name} value={name}>
+                                  {name}
+                                </MenuItem>
+                              ))}
                             </Select>
                           </FormControl>
                         </Tooltip>
@@ -1860,17 +1715,7 @@ const index = () => {
                           disableTouchListener={!(pincode?.length <= 0)}
                         >
                           <FormControl fullWidth>
-                            <InputLabel
-                              // sx={{
-                              //   color: 'black',
-                              //   '&.Mui-focused': {
-                              //     color: 'black' // Set the label color when focused
-                              //   }
-                              // }}
-                              id='demo-simple-select-label'
-                            >
-                              Village Name
-                            </InputLabel>
+                            <InputLabel id='demo-simple-select-label'>Village Name</InputLabel>
                             <Select
                               labelId='demo-simple-select-label'
                               id='demo-simple-select'
@@ -1882,29 +1727,12 @@ const index = () => {
                                 setFieldValue('villageName', e?.target?.value)
                                 setVillage(e?.target?.value)
                               }}
-                              // sx={{
-                              //   '&.Mui-error fieldset': {
-                              //     borderColor: 'red !important'
-                              //   },
-                              //   '& fieldset': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important'
-                              //   },
-                              //   '&.Mui-focused fieldset': {
-                              //     borderColor: '#7da370 !important',
-                              //     borderWidth: '2px !important'
-                              //   },
-                              //   '& label.MuiInputLabel-root': {
-                              //     color: 'black' // Set the label font color to blue
-                              //   }
-                              // }}
                             >
-                              {pinCodeAddress &&
-                                pinCodeAddress?.map((name: any) => (
-                                  <MenuItem key={name?.Name} value={name?.Name}>
-                                    {name?.Name}
-                                  </MenuItem>
-                                ))}
+                              {getAddressByPinCodeData?.village?.map((name: any) => (
+                                <MenuItem key={name} value={name}>
+                                  {name}
+                                </MenuItem>
+                              ))}
                             </Select>
                           </FormControl>
                         </Tooltip>
