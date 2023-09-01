@@ -29,6 +29,7 @@ import {
   updateMultipleServiceStatus
 } from 'src/slice/servicesSlice'
 import { deleteBrands, getAllBrands } from 'src/slice/brandsSlice'
+import { getAllInquiry, updateMultipleInquiryStatus } from 'src/slice/inquirySlice'
 
 const Transition = forwardRef(function Transition(
   props: SlideProps & { children?: ReactElement<any, any> },
@@ -49,6 +50,11 @@ const UpdateMultiFieldsDialog = ({ open, status, type, id, handleClose, setSelec
     } else {
       payload.categoryStatus = status
     }
+
+    const inqPayload = {
+      ids: id,
+      status: status
+    }
     switch (type) {
       case 'services':
         dispatch(updateMultipleServiceStatus(payload)).then(res => {
@@ -61,7 +67,11 @@ const UpdateMultiFieldsDialog = ({ open, status, type, id, handleClose, setSelec
           dispatch(getAllCategories({ page: 1, pageSize: 10 }))
         })
         break
-
+      case 'inquiry':
+        dispatch(updateMultipleInquiryStatus(inqPayload)).then(res => {
+          dispatch(getAllInquiry({ page: 1, pageSize: 10 }))
+        })
+        break
       default:
         console.log('Does not exist UPDATE ID!')
         break

@@ -220,7 +220,6 @@ const index = () => {
         setRolePrefill(userData?.roleId && userData?.roleId)
         setSTATE(userData?.state && userData?.state)
         setDistrict(userData?.city && userData?.city)
-
         setCategoryIdPrefill(userData?.categoryId && userData?.categoryId)
       }
     }, 1000)

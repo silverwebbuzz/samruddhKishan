@@ -35,6 +35,7 @@ import { useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 import { getAllCategories } from 'src/slice/categoriesSlice'
 import DemoSelect from 'src/views/demo/demoSelect'
+import CentersForm from 'src/views/components/UsersFormComponents/CentersForm'
 
 export type Payload = {
   id?: number
@@ -72,7 +73,7 @@ const index = () => {
   const [roleID, setRoleID] = useState('')
   const [categoryIdPrefill, setCategoryIdPrefill] = useState(0)
 
-  // const [taluka, setTaluka] = useState('')
+  const [taluka, setTaluka] = useState('')
 
   const [page, setPage] = useState<number>(1)
   const [pageCount, setPageCount] = useState<number>(1)
@@ -102,7 +103,11 @@ const index = () => {
     }),
 
     email: yup.string().required('Email is required'),
-    phone: yup.string().required('Phone number is required'),
+    phone: yup
+      .string()
+      .required('Phone number is required')
+      .max(10, 'Mobile number must be 10 digit')
+      .matches(/^(\+91|0)?[6789]\d{9}$/, 'Invalid mobile number'),
     // apmcFirmName: yup.string().when('role', {
     //   is: (role: any) => role === 'APMC TRADERS',
     //   then: yup => yup.required('Apmc firm name is required for this role'),
@@ -147,7 +152,7 @@ const index = () => {
     centerDistrict: '',
     centerTurnover: 0,
     centerMemberFarmer: 0,
-    centerPerDayMilkCollection: '',
+    centerPerDayMilkCollection: 0,
     centerMilkStorageCapacity: 0,
     centerSellingMilkFor: '',
     centerOtherCompetitors: '',
@@ -219,7 +224,7 @@ const index = () => {
       { phone: values?.phone },
       { state: values?.state },
       { city: values?.district },
-      { taluka: values?.taluka },
+      { taluka: taluka },
       { village: values?.villageName },
       { pinCode: pincode },
       { roleId: values?.role },
@@ -393,444 +398,27 @@ const index = () => {
                     </FormControl>
                   </Grid>
                   {values?.role == 13 ? (
-                    <>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerName}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='centerName'
-                          error={Boolean(errors.centerName && touched.centerName)}
-                          fullWidth
-                          label='Name of the center '
-                          placeholder='Center Name'
-                        />
-                        <ErrorMessage name='centerName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-
-                      <Grid item sm={6} xs={12}>
-                        <FormControl fullWidth>
-                          <InputLabel id='demo-simple-select-label'>
-                            Center registration under company registration date
-                          </InputLabel>
-                          <Select
-                            labelId='demo-simple-select-label'
-                            id='demo-simple-select'
-                            name='centerRegisterUnderCompanyDate'
-                            value={values?.centerRegisterUnderCompanyDate}
-                            label='Center registration under company registration date'
-                            onChange={(e: any) => {
-                              setFieldValue('centerRegisterUnderCompanyDate', e?.target?.value)
-                            }}
-                          >
-                            <MenuItem value={'PVT LTD '}>PVT LTD </MenuItem>
-                            <MenuItem value={'CO-OP'}>CO-OP</MenuItem>
-                            <MenuItem value={'PROP'}>PROP</MenuItem>
-                            <MenuItem value={'PARTNERSHIP'}>PARTNERSHIP</MenuItem>
-                            <MenuItem value={'FPO'}>FPO</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.firstName}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='firstName'
-                          error={Boolean(errors.firstName && touched.firstName)}
-                          fullWidth
-                          label='Name of key person'
-                          placeholder='Name of key person'
-                        />
-                        <ErrorMessage name='firstName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.phone}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='phone'
-                          error={Boolean(errors.phone && touched.phone)}
-                          fullWidth
-                          label='Center phone no'
-                          placeholder='Center phone no'
-                        />
-                        <ErrorMessage name='phone' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.email}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='email'
-                          error={Boolean(errors.email && touched.email)}
-                          fullWidth
-                          label='Center email'
-                          placeholder='Center email'
-                        />
-                        <ErrorMessage name='email' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.password}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='password'
-                          error={Boolean(errors.password && touched.password)}
-                          fullWidth
-                          label='Password '
-                          placeholder='Password'
-                        />
-                        <ErrorMessage name='password' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerHandlingPersonName}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='centerHandlingPersonName'
-                          error={Boolean(errors.centerHandlingPersonName && touched.centerHandlingPersonName)}
-                          fullWidth
-                          label='Name of handling person'
-                          placeholder='Name of handling person'
-                        />
-                        <ErrorMessage
-                          name='centerHandlingPersonName'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <FormControl fullWidth>
-                          <InputLabel
-                            sx={{
-                              color: 'black',
-                              '&.Mui-focused': {
-                                color: 'black' // Set the label color when focused
-                              }
-                            }}
-                            id='demo-simple-select-label'
-                          >
-                            state
-                          </InputLabel>
-                          <Select
-                            labelId='demo-simple-select-label'
-                            id='demo-simple-select'
-                            name='state'
-                            value={values?.state}
-                            label='state'
-                            onChange={(e: any) => {
-                              setFieldValue('state', e?.target?.value)
-                              setSTATE(e?.target?.value)
-                            }}
-                          >
-                            {allState?.data?.map(name => (
-                              <MenuItem key={name?.name} value={name?.name}>
-                                {name?.name}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        {/* <Grid item sm={6} xs={12}> */}
-                        <Tooltip title='Please select state first'>
-                          <FormControl fullWidth>
-                            <InputLabel id='demo-simple-select-label'>District</InputLabel>
-                            <Select
-                              labelId='demo-simple-select-label'
-                              id='demo-simple-select'
-                              name='district'
-                              disabled={STATE.length <= 0}
-                              value={values?.district}
-                              label='district'
-                              onChange={handleChange}
-                            >
-                              {allDistrict?.map(name => (
-                                <MenuItem key={name?.name} value={name?.name}>
-                                  {name?.name}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Tooltip>
-                        {/* </Grid> */}
-                        {/* <TextField
-                          value={values?.centerDistrict}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='centerDistrict'
-                          error={Boolean(errors.centerDistrict && touched.centerDistrict)}
-                          fullWidth
-                          label='District of center'
-                          placeholder='District of center'
-                        />
-                        <ErrorMessage name='centerDistrict' render={msg => <div style={{ color: 'red' }}>{msg}</div>} /> */}
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={pincode}
-                          name='pinCode'
-                          onChange={e => {
-                            handlePincode(e.target.value)
-                          }}
-                          fullWidth
-                          label='Pin Code'
-                          placeholder='Pin Code'
-                          // sx={{
-                          //   '&.Mui-error fieldset': {
-                          //     borderColor: 'red !important'
-                          //   },
-                          //   '& fieldset': {
-                          //     borderWidth: '1px !important',
-                          //     borderColor: '#8d8686 !important'
-                          //   },
-                          //   '&.Mui-focused fieldset': {
-                          //     borderColor: '#7da370 !important',
-                          //     borderWidth: '2px !important'
-                          //   },
-                          //   '& label.MuiInputLabel-root': {
-                          //     color: 'black' // Set the label font color to blue
-                          //   }
-                          // }}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <Tooltip
-                          title='Please enter pincode first'
-                          disableFocusListener={!(pincode.length <= 0)}
-                          disableHoverListener={!(pincode.length <= 0)}
-                          disableTouchListener={!(pincode.length <= 0)}
-                        >
-                          <FormControl fullWidth>
-                            <InputLabel id='demo-simple-select-label'>Taluka</InputLabel>
-                            <Select
-                              labelId='demo-simple-select-label'
-                              id='demo-simple-select'
-                              name='taluka'
-                              disabled={pincode.length <= 0}
-                              value={values?.taluka && values?.taluka}
-                              label='Taluka'
-                              onChange={handleChange}
-                            >
-                              {getAddressByPinCodeData?.taluka?.map((name: any) => (
-                                <MenuItem key={name} value={name}>
-                                  {name}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Tooltip>
-                      </Grid>
-
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerTurnover}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='centerTurnover'
-                          error={Boolean(errors.centerTurnover && touched.centerTurnover)}
-                          fullWidth
-                          type='number'
-                          label='Turnover of center'
-                          placeholder='Turnover of center'
-                        />
-                        <ErrorMessage name='centerTurnover' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerMemberFarmer}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='centerMemberFarmer'
-                          error={Boolean(errors.centerMemberFarmer && touched.centerMemberFarmer)}
-                          fullWidth
-                          type='number'
-                          label='How many farmers are members'
-                          placeholder='How many farmers are members'
-                        />
-                        <ErrorMessage
-                          name='centerMemberFarmer'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerPerDayMilkCollection}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='centerPerDayMilkCollection'
-                          error={Boolean(errors.centerPerDayMilkCollection && touched.centerPerDayMilkCollection)}
-                          fullWidth
-                          label='Total  milk collection per day'
-                          placeholder='Total  milk collection per day'
-                        />
-                        <ErrorMessage
-                          name='centerPerDayMilkCollection'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerMilkStorageCapacity}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='centerMilkStorageCapacity'
-                          error={Boolean(errors.centerMilkStorageCapacity && touched.centerMilkStorageCapacity)}
-                          fullWidth
-                          type='number'
-                          label='Milk collection storage capacity'
-                          placeholder='Milk collection storage capacity'
-                        />
-                        <ErrorMessage
-                          name='centerPerDayMilkCollection'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerSellingMilkFor}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='centerSellingMilkFor'
-                          error={Boolean(errors.centerSellingMilkFor && touched.centerSellingMilkFor)}
-                          fullWidth
-                          label='To whom they are selling the milk'
-                          placeholder='To whom they are selling the milk'
-                        />
-                        <ErrorMessage
-                          name='centerSellingMilkFor'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerOtherCompetitors}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='centerOtherCompetitors'
-                          error={Boolean(errors.centerOtherCompetitors && touched.centerOtherCompetitors)}
-                          fullWidth
-                          label='Who are other competitors'
-                          placeholder='Who are other competitors'
-                        />
-                        <ErrorMessage
-                          name='centerOtherCompetitors'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerPaymentCycle}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='centerPaymentCycle'
-                          error={Boolean(errors.centerPaymentCycle && touched.centerPaymentCycle)}
-                          fullWidth
-                          label='What is the payment cycle'
-                          placeholder='What is payment cycle'
-                        />
-                        <ErrorMessage
-                          name='centerPaymentCycle'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerOtherFacltyByMilkAgency}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='centerOtherFacltyByMilkAgency'
-                          error={Boolean(errors.centerOtherFacltyByMilkAgency && touched.centerOtherFacltyByMilkAgency)}
-                          fullWidth
-                          label='Other faclity provided by milk collection agency'
-                          placeholder='Other faclity provided by milk collection agency'
-                        />
-                        <ErrorMessage
-                          name='centerPaymentCycle'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerFarmarPaymentProcess}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='centerFarmarPaymentProcess'
-                          error={Boolean(errors.centerFarmarPaymentProcess && touched.centerOtherFacltyByMilkAgency)}
-                          fullWidth
-                          label='How you make payment to farmers'
-                          placeholder='How you make payment to farmers'
-                        />
-                        <ErrorMessage
-                          name='centerFarmarPaymentProcess'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerMembersOnBoard}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='centerMembersOnBoard'
-                          error={Boolean(errors.centerMembersOnBoard && touched.centerMembersOnBoard)}
-                          fullWidth
-                          label='If CO-OP how many members on board'
-                          placeholder='How you make payment to farmers'
-                        />
-                        <ErrorMessage
-                          name='centerMembersOnBoard'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerCurrentHurdeles}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='centerCurrentHurdeles'
-                          error={Boolean(errors.centerCurrentHurdeles && touched.centerCurrentHurdeles)}
-                          fullWidth
-                          label='What are the hurdeles you are facing now'
-                          placeholder='What are the hurdeles you are facing now'
-                        />
-                        <ErrorMessage
-                          name='centerCurrentHurdeles'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerNeededFacultys}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='centerNeededFacultys'
-                          error={Boolean(errors.centerNeededFacultys && touched.centerNeededFacultys)}
-                          fullWidth
-                          label='What are the faclity you require to grow'
-                          placeholder='What are the faclity you require to grow'
-                        />
-                        <ErrorMessage
-                          name='centerNeededFacultys'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerAllFinancialAudits}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='centerAllFinancialAudits'
-                          error={Boolean(errors.centerAllFinancialAudits && touched.centerAllFinancialAudits)}
-                          fullWidth
-                          label='Have all financial audits filed regularly'
-                          placeholder='Have all financial audits filed regularly'
-                        />
-                        <ErrorMessage
-                          name='centerAllFinancialAudits'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                    </>
+                    <CentersForm
+                      // POR={(values, handleChange, handleBlur, errors, touched, setFieldValue, resetForm)}
+                      value={values}
+                      allState={allState}
+                      STATE={STATE}
+                      setSTATE={setSTATE}
+                      setDistrict={setDistrict}
+                      district={district}
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      errors={errors}
+                      touched={touched}
+                      setFieldValue={setFieldValue}
+                      allDistrict={allDistrict}
+                      handlePincode={handlePincode}
+                      pincode={pincode}
+                      setTaluka={setTaluka}
+                      taluka={taluka}
+                      getAddressByPinCodeData={getAddressByPinCodeData}
+                      resetForm={resetForm}
+                    />
                   ) : values?.role == 10 ? (
                     <>
                       <Grid item sm={6} xs={12}>
@@ -844,7 +432,6 @@ const index = () => {
                           label='Name of the firm'
                           placeholder='Name of the firm'
                         />
-                        {console.log(errors.firstName, touched.firstName)}
                         <ErrorMessage name='firstName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                       </Grid>
                       <Grid item sm={6} xs={12}>
@@ -905,9 +492,12 @@ const index = () => {
                               id='demo-simple-select'
                               name='apmcDistrict'
                               disabled={STATE.length <= 0}
-                              value={values?.apmcDistrict}
+                              value={district}
                               label='District'
-                              onChange={handleChange}
+                              onChange={e => {
+                                setFieldValue('apmcDistrict', e?.target?.value)
+                                setDistrict(e?.target?.value)
+                              }}
                             >
                               {allDistrict?.map((name: any) => (
                                 <MenuItem key={name?.name} value={name?.name}>

@@ -24,6 +24,7 @@ import { deleteCategory, deleteMultipleCategory, getAllCategories } from 'src/sl
 import { deleteMultipleProduct, deleteProduct, getAllProducts } from 'src/slice/productSlice'
 import { deleteMultipleServices, deleteService, getAllServices } from 'src/slice/servicesSlice'
 import { deleteBrands, deleteMultipleBrands, getAllBrands } from 'src/slice/brandsSlice'
+import { getAllInquiry, muiltiDeleteInquiry } from 'src/slice/inquirySlice'
 
 const Transition = forwardRef(function Transition(
   props: SlideProps & { children?: ReactElement<any, any> },
@@ -65,6 +66,11 @@ const DeleteMultiFieldsDialog = ({ open, type, id, handleClose }: any) => {
       case 'brands':
         dispatch(deleteMultipleBrands(payload)).then(res => {
           dispatch(getAllBrands({ page: 1, pageSize: 10 }))
+        })
+        break
+      case 'inquiry':
+        dispatch(muiltiDeleteInquiry(payload)).then(() => {
+          dispatch(getAllInquiry({ page: 1, pageSize: 10 }))
         })
         break
       case 'category':

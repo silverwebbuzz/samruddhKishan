@@ -276,83 +276,93 @@ const settings = () => {
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                               <Grid container spacing={5}>
                                 <Grid item xs={12} sm={12} md={6}>
-                                  <Box
-                                    sx={{
-                                      display: 'flex',
-                                      flexDirection: 'row',
-                                      justifyContent: 'space-around'
-                                    }}
-                                  >
-                                    <FilePreview file={values.logo} />
-                                    <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
-                                      <Button
-                                        variant='contained'
-                                        component='label'
-                                        sx={{
-                                          mr: 1,
-                                          '&:hover': {
-                                            backgroundColor: '#5E7954'
-                                          }
-                                        }}
-                                      >
-                                        Upload
-                                        <input
-                                          type='file'
-                                          hidden
-                                          onChange={e => {
-                                            setFieldValue('logo', e.target?.files[0])
+                                  <Box sx={{ border: '1px solid #acaab0', padding: '10px', borderRadius: '6px' }}>
+                                    <Typography textAlign='center' variant='h5'>
+                                      Upload Logo
+                                    </Typography>
+                                    <Box
+                                      sx={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-around'
+                                      }}
+                                    >
+                                      <FilePreview file={values.logo} />
+                                      <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+                                        <Button
+                                          variant='contained'
+                                          component='label'
+                                          sx={{
+                                            mr: 1,
+                                            '&:hover': {
+                                              backgroundColor: '#5E7954'
+                                            }
                                           }}
-                                        />
-                                      </Button>
-                                      <Button
-                                        variant='outlined'
-                                        onClick={() => {
-                                          setFieldValue('logo', '')
-                                        }}
-                                      >
-                                        Reset
-                                      </Button>
+                                        >
+                                          Upload
+                                          <input
+                                            type='file'
+                                            hidden
+                                            onChange={e => {
+                                              setFieldValue('logo', e.target?.files[0])
+                                            }}
+                                          />
+                                        </Button>
+                                        <Button
+                                          variant='outlined'
+                                          onClick={() => {
+                                            setFieldValue('logo', '')
+                                          }}
+                                        >
+                                          Reset
+                                        </Button>
+                                      </Box>
                                     </Box>
                                   </Box>
                                 </Grid>
 
                                 <Grid item xs={12} sm={12} md={6}>
-                                  <Box
-                                    sx={{
-                                      display: 'flex',
-                                      flexDirection: 'row',
-                                      justifyContent: 'space-around'
-                                    }}
-                                  >
-                                    <FilePreview file={values.favIcon} />
-                                    <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
-                                      <Button
-                                        variant='contained'
-                                        component='label'
-                                        sx={{
-                                          mr: 1,
-                                          '&:hover': {
-                                            backgroundColor: '#5E7954'
-                                          }
-                                        }}
-                                      >
-                                        Upload
-                                        <input
-                                          type='file'
-                                          hidden
-                                          onChange={e => {
-                                            setFieldValue('favIcon', e.target?.files[0])
+                                  <Box sx={{ border: '1px solid #acaab0', padding: '10px', borderRadius: '6px' }}>
+                                    <Typography textAlign='center' variant='h5'>
+                                      Upload Favicon
+                                    </Typography>
+                                    <Box
+                                      sx={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-around'
+                                      }}
+                                    >
+                                      <FilePreview file={values.favIcon} />
+                                      <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+                                        <Button
+                                          variant='contained'
+                                          component='label'
+                                          sx={{
+                                            mr: 1,
+                                            '&:hover': {
+                                              backgroundColor: '#5E7954'
+                                            }
                                           }}
-                                        />
-                                      </Button>
-                                      <Button
-                                        variant='outlined'
-                                        onClick={() => {
-                                          setFieldValue('favIcon', '')
-                                        }}
-                                      >
-                                        Reset
-                                      </Button>
+                                        >
+                                          Upload
+                                          <input
+                                            type='file'
+                                            hidden
+                                            onChange={e => {
+                                              setFieldValue('favIcon', e.target?.files[0])
+                                            }}
+                                          />
+                                        </Button>
+                                        <Button
+                                          variant='outlined'
+                                          onClick={() => {
+                                            setFieldValue('favIcon', '')
+                                          }}
+                                        >
+                                          Reset
+                                        </Button>
+                                      </Box>
                                     </Box>
                                   </Box>
                                 </Grid>

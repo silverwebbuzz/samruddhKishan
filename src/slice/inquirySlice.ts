@@ -12,6 +12,7 @@ interface RootState {
   deleteInq: Array<any>
   updateInq: Array<any>
   multiDelteInq: Array<any>
+  multiUpdateInq: Array<any>
   isLoading: boolean
 }
 const initialState: RootState = {
@@ -19,6 +20,7 @@ const initialState: RootState = {
   deleteInq: [],
   updateInq: [],
   multiDelteInq: [],
+  multiUpdateInq: [],
   isLoading: false
 }
 
@@ -65,6 +67,20 @@ export const deleteInquiry = createAsyncThunk('user/deleteInquiry', async (paylo
     return rejectWithValue(err?.response?.data)
   }
 })
+
+export const updateMultipleInquiryStatus = createAsyncThunk(
+  'user/updateMultipleInquiryStatus',
+  async (payload: any, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/enquiry/updateEnquiryStatus`, payload, {
+        headers
+      })
+      return res?.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response?.data)
+    }
+  }
+)
 
 export const muiltiDeleteInquiry = createAsyncThunk(
   'user/muiltiDeleteInquiry',
@@ -114,6 +130,16 @@ export const inquirySlice = createSlice({
       state.allInquiries = action.payload
     })
     builder.addCase(deleteInquiry.rejected, state => {
+      state.isLoading = false
+    })
+    builder.addCase(updateMultipleInquiryStatus.pending, state => {
+      state.isLoading = true
+    })
+    builder.addCase(updateMultipleInquiryStatus.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.multiUpdateInq = action.payload
+    })
+    builder.addCase(updateMultipleInquiryStatus.rejected, state => {
       state.isLoading = false
     })
     builder.addCase(muiltiDeleteInquiry.pending, state => {

@@ -13,50 +13,43 @@ import EcommercePopularProducts from 'src/views/dashboards/ecommerce/EcommercePo
 import EcommerceCongratulationsJohn from 'src/views/dashboards/ecommerce/EcommerceCongratulationsJohn'
 import EcommerceTransactionsVertical from 'src/views/dashboards/ecommerce/EcommerceTransactionsVertical'
 import EcommerceTransactionsHorizontal from 'src/views/dashboards/ecommerce/EcommerceTransactionsHorizontal'
-
+import Icon from 'src/@core/components/icon'
 // ** Custom Component Import
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
+import RoleCard from 'src/views/roleCard'
 
+{
+  // / <EcommerceCongratulationsJohn /> /
+}
 const dashboard = () => {
   return (
     <ApexChartWrapper>
       <Grid container spacing={6}>
-        <Grid item xs={12} md={4}>
-          <EcommerceCongratulationsJohn />
-        </Grid>
-        <Grid item xs={12} md={8}>
-          <EcommerceTransactionsHorizontal />
-        </Grid>
-        <Grid item xs={12} lg={4}>
-          <Grid container spacing={6}>
-            <Grid item xs={6} md={3} lg={6}>
-              <EcommerceExpenses />
-            </Grid>
-            <Grid item xs={6} md={3} lg={6}>
-              <EcommerceProfit />
-            </Grid>
-            <Grid item xs={12} md={6} lg={12}>
-              <EcommerceGeneratedLeads />
-            </Grid>
+        <Grid gap={4} spacing={6} display='flex' flexWrap='wrap' item xs={12} sm={12}>
+          <Grid item xs={12} sm={3.5}>
+            <RoleCard roleName={'Number of Farmers'} />
           </Grid>
+          <Grid item xs={12} sm={3.5}>
+            <RoleCard roleName={'Number of APMC Traders'} />
+          </Grid>
+          <Grid item xs={12} sm={3.5}>
+            <RoleCard roleName={'Number of Centers'} />
+          </Grid>
+          <Grid item xs={12} sm={3.5}>
+            <RoleCard roleName={'Number of Vendors'} />
+          </Grid>
+          <Grid item xs={12} sm={3.5}>
+            <RoleCard roleName={'Number of Agent'} />
+          </Grid>
+          {/* <Grid item xs={12} sm={3.5}>
+            <RoleCard roleName={'Number of Agent'} />
+          </Grid> */}
         </Grid>
         <Grid item xs={12} lg={8}>
           <EcommerceRevenueReport />
         </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <EcommerceEarningReports />
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <EcommercePopularProducts />
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <EcommerceOrders />
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          <EcommerceTransactionsVertical />
-        </Grid>
-        <Grid item xs={12} lg={8}>
-          <EcommerceInvoiceTable />
+        <Grid item xs={12} lg={4}>
+          <EcommerceGeneratedLeads />
         </Grid>
       </Grid>
     </ApexChartWrapper>
