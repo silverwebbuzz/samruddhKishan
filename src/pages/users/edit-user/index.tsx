@@ -37,6 +37,9 @@ import axios from 'axios'
 import styled from '@emotion/styled'
 import { getAllCategories } from 'src/slice/categoriesSlice'
 import DemoSelect from 'src/views/demo/demoSelect'
+import ApmcForm from 'src/views/components/UsersFormComponents/ApmcForm'
+import CentersForm from 'src/views/components/UsersFormComponents/CentersForm'
+import VendorForm from 'src/views/components/UsersFormComponents/VendorForm'
 
 export type Payload = {
   id?: number
@@ -203,17 +206,6 @@ const index = () => {
     }
   }, [userData?.pinCode])
 
-  // useEffect(() => {
-  //   let payload = {
-  //     pincode: userData?.pinCode
-  //   }
-  //   dispatch(getAdressByPincode(payload)).then(res => {
-  //     console.log('#$#$#$#', res)
-  //     setTaluka(userData?.taluka && userData?.taluka)
-  //     setVillage(userData?.village && userData?.village)
-  //   })
-  // }, [userData?.pinCode])
-
   useEffect(() => {
     const timer = setTimeout(() => {
       if (userData) {
@@ -233,8 +225,6 @@ const index = () => {
     userData?.pinCode,
     userData?.role
   ])
-
-  //  const selectedOption = options.find((option) => option.id === selectedOptionId);
 
   const handleSubmit = (values: any) => {
     let payload = [
@@ -424,1053 +414,1118 @@ const index = () => {
                     </FormControl>
                   </Grid>
                   {rolePrefill == 13 ? (
-                    <>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerName}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='centerName'
-                          error={Boolean(errors.centerName && touched.centerName)}
-                          fullWidth
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          label='Name of the center '
-                          placeholder='Center Name'
-                        />
-                        <ErrorMessage name='centerName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
+                    <CentersForm
+                      // POR={(values, handleChange, handleBlur, errors, touched, setFieldValue, resetForm)}
+                      values={values}
+                      allState={allState}
+                      STATE={STATE}
+                      setSTATE={setSTATE}
+                      setDistrict={setDistrict}
+                      district={district}
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      errors={errors}
+                      touched={touched}
+                      setFieldValue={setFieldValue}
+                      allDistrict={allDistrict}
+                      handlePincode={handlePincode}
+                      pincode={pincode}
+                      setTaluka={setTaluka}
+                      taluka={taluka}
+                      getAddressByPinCodeData={getAddressByPinCodeData}
+                      resetForm={resetForm}
+                    />
+                  ) : // <>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.centerName}
+                  //       onChange={handleChange}
+                  //       onBlur={handleBlur}
+                  //       name='centerName'
+                  //       error={Boolean(errors.centerName && touched.centerName)}
+                  //       fullWidth
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       label='Name of the center '
+                  //       placeholder='Center Name'
+                  //     />
+                  //     <ErrorMessage name='centerName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                  //   </Grid>
 
-                      <Grid item sm={6} xs={12}>
-                        <FormControl fullWidth>
-                          <InputLabel id='demo-simple-select-label'>
-                            Center registration under company registration date
-                          </InputLabel>
-                          <Select
-                            labelId='demo-simple-select-label'
-                            id='demo-simple-select'
-                            name='centerRegisterUnderCompanyDate'
-                            value={values?.centerRegisterUnderCompanyDate}
-                            label='Center registration under company registration date'
-                            onChange={(e: any) => {
-                              setFieldValue('centerRegisterUnderCompanyDate', e?.target?.value)
-                            }}
-                          >
-                            <MenuItem value={'PVT LTD '}>PVT LTD </MenuItem>
-                            <MenuItem value={'CO-OP'}>CO-OP</MenuItem>
-                            <MenuItem value={'PROP'}>PROP</MenuItem>
-                            <MenuItem value={'PARTNERSHIP'}>PARTNERSHIP</MenuItem>
-                            <MenuItem value={'FPO'}>FPO</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.firstName}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='firstName'
-                          error={Boolean(errors.firstName && touched.firstName)}
-                          fullWidth
-                          label='Name of key person'
-                          placeholder='Name of key person'
-                        />
-                        <ErrorMessage
-                          name='centerKeyPerson'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.phone}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='phone'
-                          error={Boolean(errors.phone && touched.phone)}
-                          fullWidth
-                          label='Center phone no'
-                          placeholder='Center phone no'
-                        />
-                        <ErrorMessage name='phone' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.email}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='email'
-                          error={Boolean(errors.email && touched.email)}
-                          fullWidth
-                          label='Center email'
-                          placeholder='Center email'
-                        />
-                        <ErrorMessage name='email' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.password}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='password'
-                          error={Boolean(errors.password && touched.password)}
-                          fullWidth
-                          label='Password '
-                          placeholder='Password'
-                        />
-                        <ErrorMessage name='password' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerHandlingPersonName}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='centerHandlingPersonName'
-                          error={Boolean(errors.centerHandlingPersonName && touched.centerHandlingPersonName)}
-                          fullWidth
-                          label='Name of handling person'
-                          placeholder='Name of handling person'
-                        />
-                        <ErrorMessage
-                          name='centerHandlingPersonName'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <FormControl fullWidth>
-                          <InputLabel
-                            // sx={{
-                            //   color: 'black',
-                            //   '&.Mui-focused': {
-                            //     color: 'black' // Set the label color when focused
-                            //   }
-                            // }}
-                            id='demo-simple-select-label'
-                          >
-                            State
-                          </InputLabel>
-                          <Select
-                            labelId='demo-simple-select-label'
-                            id='demo-simple-select'
-                            name='state'
-                            value={STATE}
-                            label='State'
-                            onChange={(e: any) => {
-                              setFieldValue('state', e?.target?.value)
-                              setSTATE(e?.target?.value)
-                            }}
-                          >
-                            {allState?.data?.map((name: any) => (
-                              <MenuItem key={name?.name} value={name?.name}>
-                                {name?.name}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        {/* <Grid item sm={6} xs={12}> */}
-                        <Tooltip title='Please select state first'>
-                          <FormControl fullWidth>
-                            <InputLabel
-                              // sx={{
-                              //   color: 'black',
-                              //   '&.Mui-focused': {
-                              //     color: 'black' // Set the label color when focused
-                              //   }
-                              // }}
-                              id='demo-simple-select-label'
-                            >
-                              District
-                            </InputLabel>
-                            <Select
-                              labelId='demo-simple-select-label'
-                              id='demo-simple-select'
-                              name='centerDistrict'
-                              disabled={STATE?.length <= 0}
-                              value={district && district}
-                              label='district'
-                              onChange={e => {
-                                setFieldValue('centerDistrict', e?.target?.value)
-                                setDistrict(e?.target?.value)
-                              }}
-                            >
-                              {allDistrict?.map(name => (
-                                <MenuItem key={name?.name} value={name?.name}>
-                                  {name?.name}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Tooltip>
-                        {/* </Grid> */}
-                        {/* <TextField
-                          value={values?.centerDistrict}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='centerDistrict'
-                          error={Boolean(errors.centerDistrict && touched.centerDistrict)}
-                          fullWidth
-                          label='District of center'
-                          placeholder='District of center'
-                        />
-                        <ErrorMessage name='centerDistrict' render={msg => <div style={{ color: 'red' }}>{msg}</div>} /> */}
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={pincode}
-                          name='pinCode'
-                          onChange={e => {
-                            handlePincode(e.target.value)
-                          }}
-                          fullWidth
-                          label='Pin Code'
-                          placeholder='Pin Code'
-                          // sx={{
-                          //   '&.Mui-error fieldset': {
-                          //     borderColor: 'red !important'
-                          //   },
-                          //   '& fieldset': {
-                          //     borderWidth: '1px !important',
-                          //     borderColor: '#8d8686 !important'
-                          //   },
-                          //   '&.Mui-focused fieldset': {
-                          //     borderColor: '#7da370 !important',
-                          //     borderWidth: '2px !important'
-                          //   },
-                          //   '& label.MuiInputLabel-root': {
-                          //     color: 'black' // Set the label font color to blue
-                          //   }
-                          // }}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <Tooltip
-                          title='Please enter pincode first'
-                          disableFocusListener={!(pincode?.length <= 0)}
-                          disableHoverListener={!(pincode?.length <= 0)}
-                          disableTouchListener={!(pincode?.length <= 0)}
-                        >
-                          <FormControl fullWidth>
-                            <InputLabel id='demo-simple-select-label'>Taluka</InputLabel>
-                            <Select
-                              labelId='demo-simple-select-label'
-                              id='demo-simple-select'
-                              name='centerTaluka'
-                              disabled={pincode?.length <= 0}
-                              value={taluka}
-                              label='Taluka'
-                              onChange={e => {
-                                setFieldValue('centerTaluka', e?.target?.value)
-                                setTaluka(e?.target?.value)
-                              }}
-                            >
-                              {getAddressByPinCodeData?.taluka?.map((name: any) => (
-                                <MenuItem key={name} value={name}>
-                                  {name}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Tooltip>
-                        {/* <TextField
-                          value={values?.centerTaluka}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='centerTaluka'
-                          error={Boolean(errors.centerTaluka && touched.centerTaluka)}
-                          fullWidth
-                          label='Taluka of center'
-                          placeholder='Taluka of center'
-                        />
-                        <ErrorMessage name='centerTaluka' render={msg => <div style={{ color: 'red' }}>{msg}</div>} /> */}
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerTurnover}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='centerTurnover'
-                          error={Boolean(errors.centerTurnover && touched.centerTurnover)}
-                          fullWidth
-                          label='Turnover of center'
-                          placeholder='Turnover of center'
-                        />
-                        <ErrorMessage name='centerTurnover' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerMemberFarmer}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='centerMemberFarmer'
-                          error={Boolean(errors.centerMemberFarmer && touched.centerMemberFarmer)}
-                          fullWidth
-                          label='How many farmers are members'
-                          placeholder='How many farmers are members'
-                        />
-                        <ErrorMessage
-                          name='centerMemberFarmer'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerPerDayMilkCollection}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='centerPerDayMilkCollection'
-                          error={Boolean(errors.centerPerDayMilkCollection && touched.centerPerDayMilkCollection)}
-                          fullWidth
-                          label='Total  milk collection per day'
-                          placeholder='Total  milk collection per day'
-                        />
-                        <ErrorMessage
-                          name='centerPerDayMilkCollection'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerMilkStorageCapacity}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='centerMilkStorageCapacity'
-                          error={Boolean(errors.centerMilkStorageCapacity && touched.centerMilkStorageCapacity)}
-                          fullWidth
-                          label='Milk collection storage capacity'
-                          placeholder='Milk collection storage capacity'
-                        />
-                        <ErrorMessage
-                          name='centerPerDayMilkCollection'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerSellingMilkFor}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='centerSellingMilkFor'
-                          error={Boolean(errors.centerSellingMilkFor && touched.centerSellingMilkFor)}
-                          fullWidth
-                          label='To whom they are selling the milk'
-                          placeholder='To whom they are selling the milk'
-                        />
-                        <ErrorMessage
-                          name='centerSellingMilkFor'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerOtherCompetitors}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='centerOtherCompetitors'
-                          error={Boolean(errors.centerOtherCompetitors && touched.centerOtherCompetitors)}
-                          fullWidth
-                          label='Who are other competitors'
-                          placeholder='Who are other competitors'
-                        />
-                        <ErrorMessage
-                          name='centerOtherCompetitors'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerPaymentCycle}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='centerPaymentCycle'
-                          error={Boolean(errors.centerPaymentCycle && touched.centerPaymentCycle)}
-                          fullWidth
-                          label='What is the payment cycle'
-                          placeholder='What is payment cycle'
-                        />
-                        <ErrorMessage
-                          name='centerPaymentCycle'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerOtherFacltyByMilkAgency}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='centerOtherFacltyByMilkAgency'
-                          error={Boolean(errors.centerOtherFacltyByMilkAgency && touched.centerOtherFacltyByMilkAgency)}
-                          fullWidth
-                          label='Other faclity provided by milk collection agency'
-                          placeholder='Other faclity provided by milk collection agency'
-                        />
-                        <ErrorMessage
-                          name='centerPaymentCycle'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerFarmarPaymentProcess}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='centerFarmarPaymentProcess'
-                          error={Boolean(errors.centerFarmarPaymentProcess && touched.centerOtherFacltyByMilkAgency)}
-                          fullWidth
-                          label='How you make payment to farmers'
-                          placeholder='How you make payment to farmers'
-                        />
-                        <ErrorMessage
-                          name='centerFarmarPaymentProcess'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerMembersOnBoard}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='centerMembersOnBoard'
-                          error={Boolean(errors.centerMembersOnBoard && touched.centerMembersOnBoard)}
-                          fullWidth
-                          label='If CO-OP how many members on board'
-                          placeholder='How you make payment to farmers'
-                        />
-                        <ErrorMessage
-                          name='centerMembersOnBoard'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerCurrentHurdeles}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='centerCurrentHurdeles'
-                          error={Boolean(errors.centerCurrentHurdeles && touched.centerCurrentHurdeles)}
-                          fullWidth
-                          label='What are the hurdeles you are facing now'
-                          placeholder='What are the hurdeles you are facing now'
-                        />
-                        <ErrorMessage
-                          name='centerCurrentHurdeles'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerNeededFacultys}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='centerNeededFacultys'
-                          error={Boolean(errors.centerNeededFacultys && touched.centerNeededFacultys)}
-                          fullWidth
-                          label='What are the faclity you require to grow'
-                          placeholder='What are the faclity you require to grow'
-                        />
-                        <ErrorMessage
-                          name='centerNeededFacultys'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.centerAllFinancialAudits}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='centerAllFinancialAudits'
-                          error={Boolean(errors.centerAllFinancialAudits && touched.centerAllFinancialAudits)}
-                          fullWidth
-                          label='Have all financial audits filed regularly'
-                          placeholder='Have all financial audits filed regularly'
-                        />
-                        <ErrorMessage
-                          name='centerAllFinancialAudits'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                    </>
-                  ) : rolePrefill == 10 ? (
-                    <>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.firstName}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='firstName'
-                          error={Boolean(errors.firstName && touched.firstName)}
-                          fullWidth
-                          label='Name of the firm'
-                          placeholder='Name of the firm'
-                        />
-                        <ErrorMessage name='apmcFirmName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.apmcAddress}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='apmcAddress'
-                          error={Boolean(errors.apmcAddress && touched.apmcAddress)}
-                          fullWidth
-                          label='Address'
-                          placeholder='Address'
-                        />
-                        <ErrorMessage name='apmcAddress' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.apmcName}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='apmcName'
-                          error={Boolean(errors.apmcName && touched.apmcName)}
-                          fullWidth
-                          label='Name of the apmc'
-                          placeholder='Name of the apmc'
-                        />
-                        <ErrorMessage name='apmcName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <FormControl fullWidth>
-                          <InputLabel id='demo-simple-select-label'>State</InputLabel>
-                          <Select
-                            labelId='demo-simple-select-label'
-                            id='demo-simple-select'
-                            name='state'
-                            value={values?.state}
-                            label='State'
-                            onChange={(e: any) => {
-                              setFieldValue('state', e?.target?.value)
-                              setSTATE(e?.target?.value)
-                            }}
-                          >
-                            {allState?.data?.map((name: any) => (
-                              <MenuItem key={name?.name} value={name?.name}>
-                                {name?.name}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <Tooltip title='Please select state first'>
-                          <FormControl fullWidth>
-                            <InputLabel id='demo-simple-select-label'>District</InputLabel>
-                            <Select
-                              labelId='demo-simple-select-label'
-                              id='demo-simple-select'
-                              name='apmcDistrict'
-                              disabled={STATE?.length <= 0}
-                              value={district}
-                              label='district'
-                              onChange={e => {
-                                setDistrict(e?.target?.value)
-                                setFieldValue('apmcDistrict', e?.target?.value)
-                              }}
-                            >
-                              {allDistrict?.map((name: any) => (
-                                <MenuItem key={name?.name} value={name?.name}>
-                                  {name?.name}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Tooltip>
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={pincode}
-                          name='pinCode'
-                          onChange={e => {
-                            handlePincode(e.target.value)
-                          }}
-                          fullWidth
-                          label='Pin Code'
-                          placeholder='Pin Code'
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <Tooltip
-                          title='Please enter pincode first'
-                          disableFocusListener={!(pincode?.length <= 0)}
-                          disableHoverListener={!(pincode?.length <= 0)}
-                          disableTouchListener={!(pincode?.length <= 0)}
-                        >
-                          <FormControl fullWidth>
-                            <InputLabel id='demo-simple-select-label'>taluka</InputLabel>
-                            <Select
-                              labelId='demo-simple-select-label'
-                              id='demo-simple-select'
-                              name='taluka'
-                              disabled={pincode?.length <= 0}
-                              value={taluka}
-                              label='taluka'
-                              onChange={e => {
-                                setFieldValue('taluka', e?.target?.value)
-                                setTaluka(e?.target?.value)
-                              }}
-                            >
-                              {getAddressByPinCodeData?.taluka?.map((name: any) => (
-                                <MenuItem key={name} value={name}>
-                                  {name}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Tooltip>
-                      </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <FormControl fullWidth>
+                  //       <InputLabel id='demo-simple-select-label'>
+                  //         Center registration under company registration date
+                  //       </InputLabel>
+                  //       <Select
+                  //         labelId='demo-simple-select-label'
+                  //         id='demo-simple-select'
+                  //         name='centerRegisterUnderCompanyDate'
+                  //         value={values?.centerRegisterUnderCompanyDate}
+                  //         label='Center registration under company registration date'
+                  //         onChange={(e: any) => {
+                  //           setFieldValue('centerRegisterUnderCompanyDate', e?.target?.value)
+                  //         }}
+                  //       >
+                  //         <MenuItem value={'PVT LTD '}>PVT LTD </MenuItem>
+                  //         <MenuItem value={'CO-OP'}>CO-OP</MenuItem>
+                  //         <MenuItem value={'PROP'}>PROP</MenuItem>
+                  //         <MenuItem value={'PARTNERSHIP'}>PARTNERSHIP</MenuItem>
+                  //         <MenuItem value={'FPO'}>FPO</MenuItem>
+                  //       </Select>
+                  //     </FormControl>
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.firstName}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='firstName'
+                  //       error={Boolean(errors.firstName && touched.firstName)}
+                  //       fullWidth
+                  //       label='Name of key person'
+                  //       placeholder='Name of key person'
+                  //     />
+                  //     <ErrorMessage
+                  //       name='centerKeyPerson'
+                  //       render={msg => <div style={{ color: 'red' }}>{msg}</div>}
+                  //     />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.phone}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='phone'
+                  //       error={Boolean(errors.phone && touched.phone)}
+                  //       fullWidth
+                  //       label='Center phone no'
+                  //       placeholder='Center phone no'
+                  //     />
+                  //     <ErrorMessage name='phone' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.email}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='email'
+                  //       error={Boolean(errors.email && touched.email)}
+                  //       fullWidth
+                  //       label='Center email'
+                  //       placeholder='Center email'
+                  //     />
+                  //     <ErrorMessage name='email' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.password}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='password'
+                  //       error={Boolean(errors.password && touched.password)}
+                  //       fullWidth
+                  //       label='Password '
+                  //       placeholder='Password'
+                  //     />
+                  //     <ErrorMessage name='password' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.centerHandlingPersonName}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='centerHandlingPersonName'
+                  //       error={Boolean(errors.centerHandlingPersonName && touched.centerHandlingPersonName)}
+                  //       fullWidth
+                  //       label='Name of handling person'
+                  //       placeholder='Name of handling person'
+                  //     />
+                  //     <ErrorMessage
+                  //       name='centerHandlingPersonName'
+                  //       render={msg => <div style={{ color: 'red' }}>{msg}</div>}
+                  //     />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <FormControl fullWidth>
+                  //       <InputLabel
+                  //         // sx={{
+                  //         //   color: 'black',
+                  //         //   '&.Mui-focused': {
+                  //         //     color: 'black' // Set the label color when focused
+                  //         //   }
+                  //         // }}
+                  //         id='demo-simple-select-label'
+                  //       >
+                  //         State
+                  //       </InputLabel>
+                  //       <Select
+                  //         labelId='demo-simple-select-label'
+                  //         id='demo-simple-select'
+                  //         name='state'
+                  //         value={STATE}
+                  //         label='State'
+                  //         onChange={(e: any) => {
+                  //           setFieldValue('state', e?.target?.value)
+                  //           setSTATE(e?.target?.value)
+                  //         }}
+                  //       >
+                  //         {allState?.data?.map((name: any) => (
+                  //           <MenuItem key={name?.name} value={name?.name}>
+                  //             {name?.name}
+                  //           </MenuItem>
+                  //         ))}
+                  //       </Select>
+                  //     </FormControl>
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     {/* <Grid item sm={6} xs={12}> */}
+                  //     <Tooltip title='Please select state first'>
+                  //       <FormControl fullWidth>
+                  //         <InputLabel
+                  //           // sx={{
+                  //           //   color: 'black',
+                  //           //   '&.Mui-focused': {
+                  //           //     color: 'black' // Set the label color when focused
+                  //           //   }
+                  //           // }}
+                  //           id='demo-simple-select-label'
+                  //         >
+                  //           District
+                  //         </InputLabel>
+                  //         <Select
+                  //           labelId='demo-simple-select-label'
+                  //           id='demo-simple-select'
+                  //           name='centerDistrict'
+                  //           disabled={STATE?.length <= 0}
+                  //           value={district && district}
+                  //           label='district'
+                  //           onChange={e => {
+                  //             setFieldValue('centerDistrict', e?.target?.value)
+                  //             setDistrict(e?.target?.value)
+                  //           }}
+                  //         >
+                  //           {allDistrict?.map(name => (
+                  //             <MenuItem key={name?.name} value={name?.name}>
+                  //               {name?.name}
+                  //             </MenuItem>
+                  //           ))}
+                  //         </Select>
+                  //       </FormControl>
+                  //     </Tooltip>
+                  //     {/* </Grid> */}
+                  //     {/* <TextField
+                  //       value={values?.centerDistrict}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='centerDistrict'
+                  //       error={Boolean(errors.centerDistrict && touched.centerDistrict)}
+                  //       fullWidth
+                  //       label='District of center'
+                  //       placeholder='District of center'
+                  //     />
+                  //     <ErrorMessage name='centerDistrict' render={msg => <div style={{ color: 'red' }}>{msg}</div>} /> */}
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={pincode}
+                  //       name='pinCode'
+                  //       onChange={e => {
+                  //         handlePincode(e.target.value)
+                  //       }}
+                  //       fullWidth
+                  //       label='Pin Code'
+                  //       placeholder='Pin Code'
+                  //       // sx={{
+                  //       //   '&.Mui-error fieldset': {
+                  //       //     borderColor: 'red !important'
+                  //       //   },
+                  //       //   '& fieldset': {
+                  //       //     borderWidth: '1px !important',
+                  //       //     borderColor: '#8d8686 !important'
+                  //       //   },
+                  //       //   '&.Mui-focused fieldset': {
+                  //       //     borderColor: '#7da370 !important',
+                  //       //     borderWidth: '2px !important'
+                  //       //   },
+                  //       //   '& label.MuiInputLabel-root': {
+                  //       //     color: 'black' // Set the label font color to blue
+                  //       //   }
+                  //       // }}
+                  //     />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <Tooltip
+                  //       title='Please enter pincode first'
+                  //       disableFocusListener={!(pincode?.length <= 0)}
+                  //       disableHoverListener={!(pincode?.length <= 0)}
+                  //       disableTouchListener={!(pincode?.length <= 0)}
+                  //     >
+                  //       <FormControl fullWidth>
+                  //         <InputLabel id='demo-simple-select-label'>Taluka</InputLabel>
+                  //         <Select
+                  //           labelId='demo-simple-select-label'
+                  //           id='demo-simple-select'
+                  //           name='centerTaluka'
+                  //           disabled={pincode?.length <= 0}
+                  //           value={taluka}
+                  //           label='Taluka'
+                  //           onChange={e => {
+                  //             setFieldValue('centerTaluka', e?.target?.value)
+                  //             setTaluka(e?.target?.value)
+                  //           }}
+                  //         >
+                  //           {getAddressByPinCodeData?.taluka?.map((name: any) => (
+                  //             <MenuItem key={name} value={name}>
+                  //               {name}
+                  //             </MenuItem>
+                  //           ))}
+                  //         </Select>
+                  //       </FormControl>
+                  //     </Tooltip>
+                  //     {/* <TextField
+                  //       value={values?.centerTaluka}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='centerTaluka'
+                  //       error={Boolean(errors.centerTaluka && touched.centerTaluka)}
+                  //       fullWidth
+                  //       label='Taluka of center'
+                  //       placeholder='Taluka of center'
+                  //     />
+                  //     <ErrorMessage name='centerTaluka' render={msg => <div style={{ color: 'red' }}>{msg}</div>} /> */}
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.centerTurnover}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='centerTurnover'
+                  //       error={Boolean(errors.centerTurnover && touched.centerTurnover)}
+                  //       fullWidth
+                  //       label='Turnover of center'
+                  //       placeholder='Turnover of center'
+                  //     />
+                  //     <ErrorMessage name='centerTurnover' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.centerMemberFarmer}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='centerMemberFarmer'
+                  //       error={Boolean(errors.centerMemberFarmer && touched.centerMemberFarmer)}
+                  //       fullWidth
+                  //       label='How many farmers are members'
+                  //       placeholder='How many farmers are members'
+                  //     />
+                  //     <ErrorMessage
+                  //       name='centerMemberFarmer'
+                  //       render={msg => <div style={{ color: 'red' }}>{msg}</div>}
+                  //     />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.centerPerDayMilkCollection}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='centerPerDayMilkCollection'
+                  //       error={Boolean(errors.centerPerDayMilkCollection && touched.centerPerDayMilkCollection)}
+                  //       fullWidth
+                  //       label='Total  milk collection per day'
+                  //       placeholder='Total  milk collection per day'
+                  //     />
+                  //     <ErrorMessage
+                  //       name='centerPerDayMilkCollection'
+                  //       render={msg => <div style={{ color: 'red' }}>{msg}</div>}
+                  //     />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.centerMilkStorageCapacity}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='centerMilkStorageCapacity'
+                  //       error={Boolean(errors.centerMilkStorageCapacity && touched.centerMilkStorageCapacity)}
+                  //       fullWidth
+                  //       label='Milk collection storage capacity'
+                  //       placeholder='Milk collection storage capacity'
+                  //     />
+                  //     <ErrorMessage
+                  //       name='centerPerDayMilkCollection'
+                  //       render={msg => <div style={{ color: 'red' }}>{msg}</div>}
+                  //     />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.centerSellingMilkFor}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='centerSellingMilkFor'
+                  //       error={Boolean(errors.centerSellingMilkFor && touched.centerSellingMilkFor)}
+                  //       fullWidth
+                  //       label='To whom they are selling the milk'
+                  //       placeholder='To whom they are selling the milk'
+                  //     />
+                  //     <ErrorMessage
+                  //       name='centerSellingMilkFor'
+                  //       render={msg => <div style={{ color: 'red' }}>{msg}</div>}
+                  //     />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.centerOtherCompetitors}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='centerOtherCompetitors'
+                  //       error={Boolean(errors.centerOtherCompetitors && touched.centerOtherCompetitors)}
+                  //       fullWidth
+                  //       label='Who are other competitors'
+                  //       placeholder='Who are other competitors'
+                  //     />
+                  //     <ErrorMessage
+                  //       name='centerOtherCompetitors'
+                  //       render={msg => <div style={{ color: 'red' }}>{msg}</div>}
+                  //     />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.centerPaymentCycle}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='centerPaymentCycle'
+                  //       error={Boolean(errors.centerPaymentCycle && touched.centerPaymentCycle)}
+                  //       fullWidth
+                  //       label='What is the payment cycle'
+                  //       placeholder='What is payment cycle'
+                  //     />
+                  //     <ErrorMessage
+                  //       name='centerPaymentCycle'
+                  //       render={msg => <div style={{ color: 'red' }}>{msg}</div>}
+                  //     />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.centerOtherFacltyByMilkAgency}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='centerOtherFacltyByMilkAgency'
+                  //       error={Boolean(errors.centerOtherFacltyByMilkAgency && touched.centerOtherFacltyByMilkAgency)}
+                  //       fullWidth
+                  //       label='Other faclity provided by milk collection agency'
+                  //       placeholder='Other faclity provided by milk collection agency'
+                  //     />
+                  //     <ErrorMessage
+                  //       name='centerPaymentCycle'
+                  //       render={msg => <div style={{ color: 'red' }}>{msg}</div>}
+                  //     />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.centerFarmarPaymentProcess}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='centerFarmarPaymentProcess'
+                  //       error={Boolean(errors.centerFarmarPaymentProcess && touched.centerOtherFacltyByMilkAgency)}
+                  //       fullWidth
+                  //       label='How you make payment to farmers'
+                  //       placeholder='How you make payment to farmers'
+                  //     />
+                  //     <ErrorMessage
+                  //       name='centerFarmarPaymentProcess'
+                  //       render={msg => <div style={{ color: 'red' }}>{msg}</div>}
+                  //     />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.centerMembersOnBoard}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='centerMembersOnBoard'
+                  //       error={Boolean(errors.centerMembersOnBoard && touched.centerMembersOnBoard)}
+                  //       fullWidth
+                  //       label='If CO-OP how many members on board'
+                  //       placeholder='How you make payment to farmers'
+                  //     />
+                  //     <ErrorMessage
+                  //       name='centerMembersOnBoard'
+                  //       render={msg => <div style={{ color: 'red' }}>{msg}</div>}
+                  //     />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.centerCurrentHurdeles}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='centerCurrentHurdeles'
+                  //       error={Boolean(errors.centerCurrentHurdeles && touched.centerCurrentHurdeles)}
+                  //       fullWidth
+                  //       label='What are the hurdeles you are facing now'
+                  //       placeholder='What are the hurdeles you are facing now'
+                  //     />
+                  //     <ErrorMessage
+                  //       name='centerCurrentHurdeles'
+                  //       render={msg => <div style={{ color: 'red' }}>{msg}</div>}
+                  //     />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.centerNeededFacultys}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='centerNeededFacultys'
+                  //       error={Boolean(errors.centerNeededFacultys && touched.centerNeededFacultys)}
+                  //       fullWidth
+                  //       label='What are the faclity you require to grow'
+                  //       placeholder='What are the faclity you require to grow'
+                  //     />
+                  //     <ErrorMessage
+                  //       name='centerNeededFacultys'
+                  //       render={msg => <div style={{ color: 'red' }}>{msg}</div>}
+                  //     />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.centerAllFinancialAudits}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='centerAllFinancialAudits'
+                  //       error={Boolean(errors.centerAllFinancialAudits && touched.centerAllFinancialAudits)}
+                  //       fullWidth
+                  //       label='Have all financial audits filed regularly'
+                  //       placeholder='Have all financial audits filed regularly'
+                  //     />
+                  //     <ErrorMessage
+                  //       name='centerAllFinancialAudits'
+                  //       render={msg => <div style={{ color: 'red' }}>{msg}</div>}
+                  //     />
+                  //   </Grid>
+                  // </>
+                  rolePrefill == 10 ? (
+                    <ApmcForm
+                      values={values}
+                      allState={allState}
+                      STATE={STATE}
+                      setSTATE={setSTATE}
+                      setDistrict={setDistrict}
+                      district={district}
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      errors={errors}
+                      touched={touched}
+                      setFieldValue={setFieldValue}
+                      allDistrict={allDistrict}
+                      handlePincode={handlePincode}
+                      pincode={pincode}
+                      setTaluka={setTaluka}
+                      taluka={taluka}
+                      getAddressByPinCodeData={getAddressByPinCodeData}
+                      resetForm={resetForm}
+                    />
+                  ) : // <>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.firstName}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='firstName'
+                  //       error={Boolean(errors.firstName && touched.firstName)}
+                  //       fullWidth
+                  //       label='Name of the firm'
+                  //       placeholder='Name of the firm'
+                  //     />
+                  //     <ErrorMessage name='apmcFirmName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.apmcAddress}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='apmcAddress'
+                  //       error={Boolean(errors.apmcAddress && touched.apmcAddress)}
+                  //       fullWidth
+                  //       label='Address'
+                  //       placeholder='Address'
+                  //     />
+                  //     <ErrorMessage name='apmcAddress' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.apmcName}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='apmcName'
+                  //       error={Boolean(errors.apmcName && touched.apmcName)}
+                  //       fullWidth
+                  //       label='Name of the apmc'
+                  //       placeholder='Name of the apmc'
+                  //     />
+                  //     <ErrorMessage name='apmcName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <FormControl fullWidth>
+                  //       <InputLabel id='demo-simple-select-label'>State</InputLabel>
+                  //       <Select
+                  //         labelId='demo-simple-select-label'
+                  //         id='demo-simple-select'
+                  //         name='state'
+                  //         value={values?.state}
+                  //         label='State'
+                  //         onChange={(e: any) => {
+                  //           setFieldValue('state', e?.target?.value)
+                  //           setSTATE(e?.target?.value)
+                  //         }}
+                  //       >
+                  //         {allState?.data?.map((name: any) => (
+                  //           <MenuItem key={name?.name} value={name?.name}>
+                  //             {name?.name}
+                  //           </MenuItem>
+                  //         ))}
+                  //       </Select>
+                  //     </FormControl>
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <Tooltip title='Please select state first'>
+                  //       <FormControl fullWidth>
+                  //         <InputLabel id='demo-simple-select-label'>District</InputLabel>
+                  //         <Select
+                  //           labelId='demo-simple-select-label'
+                  //           id='demo-simple-select'
+                  //           name='apmcDistrict'
+                  //           disabled={STATE?.length <= 0}
+                  //           value={district}
+                  //           label='district'
+                  //           onChange={e => {
+                  //             setDistrict(e?.target?.value)
+                  //             setFieldValue('apmcDistrict', e?.target?.value)
+                  //           }}
+                  //         >
+                  //           {allDistrict?.map((name: any) => (
+                  //             <MenuItem key={name?.name} value={name?.name}>
+                  //               {name?.name}
+                  //             </MenuItem>
+                  //           ))}
+                  //         </Select>
+                  //       </FormControl>
+                  //     </Tooltip>
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={pincode}
+                  //       name='pinCode'
+                  //       onChange={e => {
+                  //         handlePincode(e.target.value)
+                  //       }}
+                  //       fullWidth
+                  //       label='Pin Code'
+                  //       placeholder='Pin Code'
+                  //     />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <Tooltip
+                  //       title='Please enter pincode first'
+                  //       disableFocusListener={!(pincode?.length <= 0)}
+                  //       disableHoverListener={!(pincode?.length <= 0)}
+                  //       disableTouchListener={!(pincode?.length <= 0)}
+                  //     >
+                  //       <FormControl fullWidth>
+                  //         <InputLabel id='demo-simple-select-label'>taluka</InputLabel>
+                  //         <Select
+                  //           labelId='demo-simple-select-label'
+                  //           id='demo-simple-select'
+                  //           name='taluka'
+                  //           disabled={pincode?.length <= 0}
+                  //           value={taluka}
+                  //           label='taluka'
+                  //           onChange={e => {
+                  //             setFieldValue('taluka', e?.target?.value)
+                  //             setTaluka(e?.target?.value)
+                  //           }}
+                  //         >
+                  //           {getAddressByPinCodeData?.taluka?.map((name: any) => (
+                  //             <MenuItem key={name} value={name}>
+                  //               {name}
+                  //             </MenuItem>
+                  //           ))}
+                  //         </Select>
+                  //       </FormControl>
+                  //     </Tooltip>
+                  //   </Grid>
 
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.apmcPersonName}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='apmcPersonName'
-                          error={Boolean(errors.apmcPersonName && touched.apmcPersonName)}
-                          fullWidth
-                          label='Name of the person'
-                          placeholder='Name of the person'
-                        />
-                        <ErrorMessage name='apmcPersonName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.phone}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='phone'
-                          error={Boolean(errors.phone && touched.phone)}
-                          fullWidth
-                          label='Cell No.'
-                          placeholder='Cell No.'
-                        />
-                        <ErrorMessage name='phone' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.email}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='email'
-                          error={Boolean(errors.email && touched.email)}
-                          fullWidth
-                          label='Email Address'
-                          placeholder='EMAIL ID'
-                        />
-                        <ErrorMessage name='email' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.password}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='password'
-                          error={Boolean(errors.password && touched.password)}
-                          fullWidth
-                          label='Password '
-                          placeholder='Password'
-                        />
-                        <ErrorMessage name='password' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.apmcConnectedFarmers}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='apmcConnectedFarmers'
-                          error={Boolean(errors.apmcConnectedFarmers && touched.apmcConnectedFarmers)}
-                          fullWidth
-                          type='number'
-                          label='How many farmers are connected with you'
-                          placeholder='How many farmers are connected with you'
-                        />
-                        <ErrorMessage
-                          name='apmcConnectedFarmers'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.apmcMajorCropsSelling}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='apmcMajorCropsSelling'
-                          error={Boolean(errors.apmcMajorCropsSelling && touched.apmcMajorCropsSelling)}
-                          fullWidth
-                          label='What are the major crops you are selling'
-                          placeholder='What are the major crops you are selling'
-                        />
-                        <ErrorMessage
-                          name='apmcMajorCropsSelling'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.districtFarmerComingSellProduct}
-                          onChange={handleChange}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          onBlur={handleBlur}
-                          name='districtFarmerComingSellProduct'
-                          error={Boolean(
-                            errors.districtFarmerComingSellProduct && touched.districtFarmerComingSellProduct
-                          )}
-                          fullWidth
-                          label='From which area of your districts farmers are coming to sell the products'
-                          placeholder='From which area of your districts farmers are coming to sell the products'
-                        />
-                        <ErrorMessage
-                          name='apmcMajorCropsSelling'
-                          render={msg => <div style={{ color: 'red' }}>{msg}</div>}
-                        />
-                      </Grid>
-                    </>
-                  ) : rolePrefill == 17 ? (
-                    <>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.firstName}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='firstName'
-                          error={Boolean(errors.firstName && touched.firstName)}
-                          fullWidth
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          label='First Name'
-                          placeholder='First Name'
-                        />
-                        <ErrorMessage name='firstName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.lastName}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='lastName'
-                          error={Boolean(errors.lastName && touched.lastName)}
-                          fullWidth
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          label='Last Name'
-                          placeholder='Last Name'
-                        />
-                        <ErrorMessage name='lastName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.email}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='email'
-                          error={Boolean(errors.email && touched.email)}
-                          fullWidth
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          label='Email'
-                          placeholder='Email'
-                        />
-                        <ErrorMessage name='email' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.password}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='password'
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          error={Boolean(errors.password && touched.password)}
-                          fullWidth
-                          label='Password'
-                          placeholder='Password'
-                        />
-                        <ErrorMessage name='password' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={values?.phone}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name='phone'
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          error={Boolean(errors.phone && touched.phone)}
-                          fullWidth
-                          label='Phone'
-                          placeholder='Phone'
-                        />
-                        <ErrorMessage name='phone' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <FormControl fullWidth>
-                          <InputLabel id='demo-simple-select-label'>State</InputLabel>
-                          <Select
-                            labelId='demo-simple-select-label'
-                            id='demo-simple-select'
-                            name='state'
-                            value={STATE}
-                            label='State'
-                            onChange={(e: any) => {
-                              setFieldValue('state', e?.target?.value)
-                              setSTATE(e?.target?.value)
-                            }}
-                          >
-                            {allState?.data?.map(name => (
-                              <MenuItem key={name?.name} value={name?.name}>
-                                {name?.name}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <Tooltip title='Please select state first'>
-                          <FormControl fullWidth>
-                            <InputLabel id='demo-simple-select-label'>District</InputLabel>
-                            <Select
-                              labelId='demo-simple-select-label'
-                              id='demo-simple-select'
-                              name='district'
-                              disabled={STATE.length <= 0}
-                              value={district}
-                              label='District'
-                              onChange={e => {
-                                setFieldValue('district', e?.target?.value)
-                                setDistrict(e?.target?.value)
-                              }}
-                            >
-                              {allDistrict?.map((name: any) => (
-                                <MenuItem key={name?.name} value={name?.name}>
-                                  {name?.name}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Tooltip>
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          value={pincode}
-                          name='pinCode'
-                          onChange={e => {
-                            handlePincode(e.target.value)
-                          }}
-                          InputLabelProps={{
-                            shrink: true
-                          }}
-                          fullWidth
-                          label='Pin Code'
-                          placeholder='Pin Code'
-                        />
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <Tooltip
-                          title='Please enter pincode first'
-                          disableFocusListener={!(pincode?.length <= 0)}
-                          disableHoverListener={!(pincode?.length <= 0)}
-                          disableTouchListener={!(pincode?.length <= 0)}
-                        >
-                          <FormControl fullWidth>
-                            <InputLabel id='demo-simple-select-label'>Taluka</InputLabel>
-                            <Select
-                              labelId='demo-simple-select-label'
-                              id='demo-simple-select'
-                              name='taluka'
-                              disabled={pincode?.length <= 0}
-                              value={taluka}
-                              label='Taluka'
-                              onChange={e => {
-                                setFieldValue('taluka', e?.target?.value)
-                                setTaluka(e?.target?.value)
-                              }}
-                            >
-                              {getAddressByPinCodeData?.taluka?.map((name: any) => (
-                                <MenuItem key={name} value={name}>
-                                  {name}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Tooltip>
-                      </Grid>
-
-                      <Grid item sm={6} xs={12}>
-                        <Tooltip
-                          title='Please enter pincode first'
-                          disableFocusListener={!(pincode.length <= 0)}
-                          disableHoverListener={!(pincode.length <= 0)}
-                          disableTouchListener={!(pincode.length <= 0)}
-                        >
-                          <FormControl fullWidth>
-                            <InputLabel id='demo-simple-select-label'>Village Name</InputLabel>
-                            <Select
-                              labelId='demo-simple-select-label'
-                              id='demo-simple-select'
-                              name='villageName'
-                              disabled={pincode.length <= 0}
-                              value={values?.villageName && values?.villageName}
-                              label='Village Name'
-                              onChange={handleChange}
-                            >
-                              {getAddressByPinCodeData?.village?.map((name: any) => (
-                                <MenuItem key={name} value={name}>
-                                  {name}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                        </Tooltip>
-                      </Grid>
-
-                      <Grid item sm={6} xs={12}>
-                        <DemoSelect
-                          data={categories?.data}
-                          selectedCategory={categoryIdPrefill}
-                          //@ts-ignore
-                          setSelectedCategory={setCategoryIdPrefill}
-                        />
-                      </Grid>
-                      <Grid
-                        item
-                        xs={12}
-                        sm={12}
-                        sx={{
-                          marginTop: '20px',
-                          display: 'flex'
-                        }}
-                      >
-                        {/* <Grid item xs={6}> */}
-                        <Box
-                          sx={{
-                            display: 'flex'
-                          }}
-                        >
-                          <FilePreview file={values.vendorImage} />
-                          <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
-                            <Button
-                              variant='contained'
-                              component='label'
-                              sx={{
-                                mr: 1,
-                                ml: 2,
-                                '&:hover': {
-                                  backgroundColor: '#5E7954'
-                                }
-                              }}
-                            >
-                              Upload
-                              <input
-                                type='file'
-                                hidden
-                                onChange={e => {
-                                  setFieldValue('vendorImage', e.target?.files[0])
-                                }}
-                              />
-                            </Button>
-                          </Box>
-                          <ErrorMessage name='brandLogo' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                        </Box>
-                        {/* </Grid> */}
-                      </Grid>
-                    </>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.apmcPersonName}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='apmcPersonName'
+                  //       error={Boolean(errors.apmcPersonName && touched.apmcPersonName)}
+                  //       fullWidth
+                  //       label='Name of the person'
+                  //       placeholder='Name of the person'
+                  //     />
+                  //     <ErrorMessage name='apmcPersonName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.phone}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='phone'
+                  //       error={Boolean(errors.phone && touched.phone)}
+                  //       fullWidth
+                  //       label='Cell No.'
+                  //       placeholder='Cell No.'
+                  //     />
+                  //     <ErrorMessage name='phone' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.email}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='email'
+                  //       error={Boolean(errors.email && touched.email)}
+                  //       fullWidth
+                  //       label='Email Address'
+                  //       placeholder='EMAIL ID'
+                  //     />
+                  //     <ErrorMessage name='email' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.password}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='password'
+                  //       error={Boolean(errors.password && touched.password)}
+                  //       fullWidth
+                  //       label='Password '
+                  //       placeholder='Password'
+                  //     />
+                  //     <ErrorMessage name='password' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.apmcConnectedFarmers}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='apmcConnectedFarmers'
+                  //       error={Boolean(errors.apmcConnectedFarmers && touched.apmcConnectedFarmers)}
+                  //       fullWidth
+                  //       type='number'
+                  //       label='How many farmers are connected with you'
+                  //       placeholder='How many farmers are connected with you'
+                  //     />
+                  //     <ErrorMessage
+                  //       name='apmcConnectedFarmers'
+                  //       render={msg => <div style={{ color: 'red' }}>{msg}</div>}
+                  //     />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.apmcMajorCropsSelling}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='apmcMajorCropsSelling'
+                  //       error={Boolean(errors.apmcMajorCropsSelling && touched.apmcMajorCropsSelling)}
+                  //       fullWidth
+                  //       label='What are the major crops you are selling'
+                  //       placeholder='What are the major crops you are selling'
+                  //     />
+                  //     <ErrorMessage
+                  //       name='apmcMajorCropsSelling'
+                  //       render={msg => <div style={{ color: 'red' }}>{msg}</div>}
+                  //     />
+                  //   </Grid>
+                  //   <Grid item sm={6} xs={12}>
+                  //     <TextField
+                  //       value={values?.districtFarmerComingSellProduct}
+                  //       onChange={handleChange}
+                  //       InputLabelProps={{
+                  //         shrink: true
+                  //       }}
+                  //       onBlur={handleBlur}
+                  //       name='districtFarmerComingSellProduct'
+                  //       error={Boolean(
+                  //         errors.districtFarmerComingSellProduct && touched.districtFarmerComingSellProduct
+                  //       )}
+                  //       fullWidth
+                  //       label='From which area of your districts farmers are coming to sell the products'
+                  //       placeholder='From which area of your districts farmers are coming to sell the products'
+                  //     />
+                  //     <ErrorMessage
+                  //       name='apmcMajorCropsSelling'
+                  //       render={msg => <div style={{ color: 'red' }}>{msg}</div>}
+                  //     />
+                  //   </Grid>
+                  // </>
+                  rolePrefill == 17 ? (
+                    <VendorForm
+                      values={values}
+                      allState={allState}
+                      STATE={STATE}
+                      setSTATE={setSTATE}
+                      setDistrict={setDistrict}
+                      district={district}
+                      handleChange={handleChange}
+                      handleBlur={handleBlur}
+                      errors={errors}
+                      touched={touched}
+                      setFieldValue={setFieldValue}
+                      allDistrict={allDistrict}
+                      handlePincode={handlePincode}
+                      pincode={pincode}
+                      setTaluka={setTaluka}
+                      taluka={taluka}
+                      getAddressByPinCodeData={getAddressByPinCodeData}
+                      resetForm={resetForm}
+                      categories={categories}
+                      setCategoryIdPrefill={setCategoryIdPrefill}
+                      categoryIdPrefill={categoryIdPrefill}
+                      FilePreview={FilePreview}
+                    />
                   ) : (
+                    // <>
+                    //   <Grid item sm={6} xs={12}>
+                    //     <TextField
+                    //       value={values?.firstName}
+                    //       onChange={handleChange}
+                    //       onBlur={handleBlur}
+                    //       name='firstName'
+                    //       error={Boolean(errors.firstName && touched.firstName)}
+                    //       fullWidth
+                    //       InputLabelProps={{
+                    //         shrink: true
+                    //       }}
+                    //       label='First Name'
+                    //       placeholder='First Name'
+                    //     />
+                    //     <ErrorMessage name='firstName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                    //   </Grid>
+                    //   <Grid item sm={6} xs={12}>
+                    //     <TextField
+                    //       value={values?.lastName}
+                    //       onChange={handleChange}
+                    //       onBlur={handleBlur}
+                    //       name='lastName'
+                    //       error={Boolean(errors.lastName && touched.lastName)}
+                    //       fullWidth
+                    //       InputLabelProps={{
+                    //         shrink: true
+                    //       }}
+                    //       label='Last Name'
+                    //       placeholder='Last Name'
+                    //     />
+                    //     <ErrorMessage name='lastName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                    //   </Grid>
+                    //   <Grid item sm={6} xs={12}>
+                    //     <TextField
+                    //       value={values?.email}
+                    //       onChange={handleChange}
+                    //       onBlur={handleBlur}
+                    //       name='email'
+                    //       error={Boolean(errors.email && touched.email)}
+                    //       fullWidth
+                    //       InputLabelProps={{
+                    //         shrink: true
+                    //       }}
+                    //       label='Email'
+                    //       placeholder='Email'
+                    //     />
+                    //     <ErrorMessage name='email' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                    //   </Grid>
+                    //   <Grid item sm={6} xs={12}>
+                    //     <TextField
+                    //       value={values?.password}
+                    //       onChange={handleChange}
+                    //       onBlur={handleBlur}
+                    //       name='password'
+                    //       InputLabelProps={{
+                    //         shrink: true
+                    //       }}
+                    //       error={Boolean(errors.password && touched.password)}
+                    //       fullWidth
+                    //       label='Password'
+                    //       placeholder='Password'
+                    //     />
+                    //     <ErrorMessage name='password' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                    //   </Grid>
+                    //   <Grid item sm={6} xs={12}>
+                    //     <TextField
+                    //       value={values?.phone}
+                    //       onChange={handleChange}
+                    //       onBlur={handleBlur}
+                    //       name='phone'
+                    //       InputLabelProps={{
+                    //         shrink: true
+                    //       }}
+                    //       error={Boolean(errors.phone && touched.phone)}
+                    //       fullWidth
+                    //       label='Phone'
+                    //       placeholder='Phone'
+                    //     />
+                    //     <ErrorMessage name='phone' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                    //   </Grid>
+                    //   <Grid item sm={6} xs={12}>
+                    //     <FormControl fullWidth>
+                    //       <InputLabel id='demo-simple-select-label'>State</InputLabel>
+                    //       <Select
+                    //         labelId='demo-simple-select-label'
+                    //         id='demo-simple-select'
+                    //         name='state'
+                    //         value={STATE}
+                    //         label='State'
+                    //         onChange={(e: any) => {
+                    //           setFieldValue('state', e?.target?.value)
+                    //           setSTATE(e?.target?.value)
+                    //         }}
+                    //       >
+                    //         {allState?.data?.map(name => (
+                    //           <MenuItem key={name?.name} value={name?.name}>
+                    //             {name?.name}
+                    //           </MenuItem>
+                    //         ))}
+                    //       </Select>
+                    //     </FormControl>
+                    //   </Grid>
+                    //   <Grid item sm={6} xs={12}>
+                    //     <Tooltip title='Please select state first'>
+                    //       <FormControl fullWidth>
+                    //         <InputLabel id='demo-simple-select-label'>District</InputLabel>
+                    //         <Select
+                    //           labelId='demo-simple-select-label'
+                    //           id='demo-simple-select'
+                    //           name='district'
+                    //           disabled={STATE.length <= 0}
+                    //           value={district}
+                    //           label='District'
+                    //           onChange={e => {
+                    //             setFieldValue('district', e?.target?.value)
+                    //             setDistrict(e?.target?.value)
+                    //           }}
+                    //         >
+                    //           {allDistrict?.map((name: any) => (
+                    //             <MenuItem key={name?.name} value={name?.name}>
+                    //               {name?.name}
+                    //             </MenuItem>
+                    //           ))}
+                    //         </Select>
+                    //       </FormControl>
+                    //     </Tooltip>
+                    //   </Grid>
+                    //   <Grid item sm={6} xs={12}>
+                    //     <TextField
+                    //       value={pincode}
+                    //       name='pinCode'
+                    //       onChange={e => {
+                    //         handlePincode(e.target.value)
+                    //       }}
+                    //       InputLabelProps={{
+                    //         shrink: true
+                    //       }}
+                    //       fullWidth
+                    //       label='Pin Code'
+                    //       placeholder='Pin Code'
+                    //     />
+                    //   </Grid>
+                    //   <Grid item sm={6} xs={12}>
+                    //     <Tooltip
+                    //       title='Please enter pincode first'
+                    //       disableFocusListener={!(pincode?.length <= 0)}
+                    //       disableHoverListener={!(pincode?.length <= 0)}
+                    //       disableTouchListener={!(pincode?.length <= 0)}
+                    //     >
+                    //       <FormControl fullWidth>
+                    //         <InputLabel id='demo-simple-select-label'>Taluka</InputLabel>
+                    //         <Select
+                    //           labelId='demo-simple-select-label'
+                    //           id='demo-simple-select'
+                    //           name='taluka'
+                    //           disabled={pincode?.length <= 0}
+                    //           value={taluka}
+                    //           label='Taluka'
+                    //           onChange={e => {
+                    //             setFieldValue('taluka', e?.target?.value)
+                    //             setTaluka(e?.target?.value)
+                    //           }}
+                    //         >
+                    //           {getAddressByPinCodeData?.taluka?.map((name: any) => (
+                    //             <MenuItem key={name} value={name}>
+                    //               {name}
+                    //             </MenuItem>
+                    //           ))}
+                    //         </Select>
+                    //       </FormControl>
+                    //     </Tooltip>
+                    //   </Grid>
+
+                    //   <Grid item sm={6} xs={12}>
+                    //     <Tooltip
+                    //       title='Please enter pincode first'
+                    //       disableFocusListener={!(pincode.length <= 0)}
+                    //       disableHoverListener={!(pincode.length <= 0)}
+                    //       disableTouchListener={!(pincode.length <= 0)}
+                    //     >
+                    //       <FormControl fullWidth>
+                    //         <InputLabel id='demo-simple-select-label'>Village Name</InputLabel>
+                    //         <Select
+                    //           labelId='demo-simple-select-label'
+                    //           id='demo-simple-select'
+                    //           name='villageName'
+                    //           disabled={pincode.length <= 0}
+                    //           value={values?.villageName && values?.villageName}
+                    //           label='Village Name'
+                    //           onChange={handleChange}
+                    //         >
+                    //           {getAddressByPinCodeData?.village?.map((name: any) => (
+                    //             <MenuItem key={name} value={name}>
+                    //               {name}
+                    //             </MenuItem>
+                    //           ))}
+                    //         </Select>
+                    //       </FormControl>
+                    //     </Tooltip>
+                    //   </Grid>
+
+                    //   <Grid item sm={6} xs={12}>
+                    //     <DemoSelect
+                    //       data={categories?.data}
+                    //       selectedCategory={categoryIdPrefill}
+                    //       //@ts-ignore
+                    //       setSelectedCategory={setCategoryIdPrefill}
+                    //     />
+                    //   </Grid>
+                    //   <Grid
+                    //     item
+                    //     xs={12}
+                    //     sm={12}
+                    //     sx={{
+                    //       marginTop: '20px',
+                    //       display: 'flex'
+                    //     }}
+                    //   >
+                    //     {/* <Grid item xs={6}> */}
+                    //     <Box
+                    //       sx={{
+                    //         display: 'flex'
+                    //       }}
+                    //     >
+                    //       <FilePreview file={values.vendorImage} />
+                    //       <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+                    //         <Button
+                    //           variant='contained'
+                    //           component='label'
+                    //           sx={{
+                    //             mr: 1,
+                    //             ml: 2,
+                    //             '&:hover': {
+                    //               backgroundColor: '#5E7954'
+                    //             }
+                    //           }}
+                    //         >
+                    //           Upload
+                    //           <input
+                    //             type='file'
+                    //             hidden
+                    //             onChange={e => {
+                    //               setFieldValue('vendorImage', e.target?.files[0])
+                    //             }}
+                    //           />
+                    //         </Button>
+                    //       </Box>
+                    //       <ErrorMessage name='brandLogo' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                    //     </Box>
+                    //     {/* </Grid> */}
+                    //   </Grid>
+                    // </>
                     <>
                       <Grid item sm={6} xs={12}>
                         <TextField

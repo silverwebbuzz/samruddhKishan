@@ -101,7 +101,7 @@ const DeleteMultiFieldsDialog = ({ open, type, id, handleClose }: any) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions className='dialog-actions-dense'>
-          <Button variant='contained' onClick={handleClose}>
+          <Button variant='outlined' onClick={handleClose}>
             Cancel
           </Button>
           <Button

@@ -1,6 +1,7 @@
 import { combineReducers } from '@reduxjs/toolkit'
 import brandSlice from 'src/slice/brandsSlice'
 import categoriesSlice from 'src/slice/categoriesSlice'
+import dashboardSlice from 'src/slice/dashboardSlice'
 import farmersSlice from 'src/slice/farmers'
 import inquirySlice from 'src/slice/inquirySlice'
 import productSlice from 'src/slice/productSlice'
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   brandsReducer: brandSlice,
   productReducer: productSlice,
   settingsReducer: settingsSlice,
+  dashboardReducer: dashboardSlice,
   inquiryReducer: inquirySlice
 })
 

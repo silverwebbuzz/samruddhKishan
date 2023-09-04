@@ -74,6 +74,7 @@ const CollapsibleTable: React.FC<Props> = ({ data }) => {
   }
   const handleMultiDeleteClickClose = () => {
     setMultiFieldDeleteOpen(false)
+    setSelectedRows([])
   }
   const handleShow = (dialogName: string) => {
     setShow(true)
@@ -244,6 +245,7 @@ const CollapsibleTable: React.FC<Props> = ({ data }) => {
                     handleClickOpenDelete()
                     setDeleteID(category.id)
                     setDelelteField(category.categoryName)
+                    setAnchorEl(null)
                   }}
                 >
                   <Icon icon='tabler:trash' />
@@ -255,6 +257,7 @@ const CollapsibleTable: React.FC<Props> = ({ data }) => {
                     setEdit(true)
                     setEditID(category.id)
                     setEditField(category)
+                    setAnchorEl(null)
                   }}
                 >
                   <Icon icon='tabler:edit' /> Edit
@@ -268,6 +271,7 @@ const CollapsibleTable: React.FC<Props> = ({ data }) => {
                     dispatch(updateCategory(payload)).then(() => {
                       dispatch(getAllCategories({ page: 1, pageSize: 10 }))
                     })
+                    setAnchorEl(null)
                   }}
                 >
                   {category?.categoryStatus === 0 ? 'Set Active' : 'Set Inactive'}

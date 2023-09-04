@@ -91,6 +91,7 @@ const RolesCards = () => {
       setSelectedCheckbox([...arr])
     } else {
       setSelectedCheckbox(prev => [...prev, id])
+      // selectedCheckbox.push(id)
     }
   }
   const handleClickOpenDelete = () => setOpenDelete(true)
@@ -105,9 +106,9 @@ const RolesCards = () => {
   const removeDuplicates = (arr: any) => {
     return arr.filter((item: any, index: any) => arr.indexOf(item) === index)
   }
-  useEffect(() => {
-    setSelectedCheckbox([])
-  }, [])
+  // useEffect(() => {
+  //   setSelectedCheckbox([])
+  // }, [])
   const onSubmitClick = (values: any) => {
     if (dialogTitle === 'Edit') {
       let payload = {
@@ -158,7 +159,8 @@ const RolesCards = () => {
   const checkedCheckbox = () => {
     roleEditValue?.rolePermission &&
       JSON.parse(roleEditValue?.rolePermission)?.map((Item: any) => {
-        setSelectedCheckbox(prev => [...prev, Item])
+        // setSelectedCheckbox(prev => [...prev, Item])
+        selectedCheckbox.push(Item)
       })
   }
   useEffect(() => {

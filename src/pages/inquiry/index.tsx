@@ -47,7 +47,6 @@ const allInquiry = () => {
   const [page, setPage] = useState<number>(1)
   const [pageCount, setPageCount] = useState<number>(1)
   const [pageLimit, setPageLimit] = useState<number>(10)
-
   const dispatch = useDispatch<AppDispatch>()
   const [DeleteID, setDeleteID] = useState()
   const [openDelete, setOpenDelete] = useState<boolean>(false)
@@ -64,7 +63,6 @@ const allInquiry = () => {
   }
   const handleClickOpenDelete = () => setOpenDelete(true)
   const handleDeleteClose = () => setOpenDelete(false)
-
   const [anchorEl, setAnchorEl] = useState(null)
   const [menuRow, setMenuRow] = useState(null)
   const handleChange = (event: any, value: number) => {
@@ -202,19 +200,21 @@ const allInquiry = () => {
       headerName: 'Actions',
       renderCell: ({ row }: any) => (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <IconButton
-            size='small'
-            aria-controls={`menu-${row.id}`} // Unique ID for each row's menu
-            aria-haspopup='true'
-            sx={{ color: 'text.secondary' }}
-            onClick={event => {
-              // @ts-ignore
-              setAnchorEl(event.currentTarget)
-              setMenuRow(row)
-            }}
-          >
-            <Icon icon='tabler:menu' />
-          </IconButton>
+          <Tooltip title='Delete'>
+            <IconButton
+              size='small'
+              aria-controls={`menu-${row.id}`} // Unique ID for each row's menu
+              aria-haspopup='true'
+              sx={{ color: 'text.secondary' }}
+              onClick={event => {
+                // @ts-ignore
+                setAnchorEl(event.currentTarget)
+                setMenuRow(row)
+              }}
+            >
+              <Icon icon='tabler:menu' />
+            </IconButton>
+          </Tooltip>
           <Menu
             id={`menu-${row.id}`} // Unique ID for each row's menu
             anchorEl={anchorEl}
@@ -233,10 +233,11 @@ const allInquiry = () => {
             </MenuItem>
             <MenuItem
               onClick={() => {
-                const editPayload: any = {
+                let editPayload: any = {
                   id: row?.id,
                   status: 'pending'
                 }
+
                 dispatch(updateInquiry(editPayload)).then(res => {
                   dispatch(getAllInquiry({ page: 1, pageSize: 10 }))
                 })
@@ -246,7 +247,7 @@ const allInquiry = () => {
             </MenuItem>
             <MenuItem
               onClick={() => {
-                const editPayload: any = {
+                let editPayload: any = {
                   id: row?.id,
                   status: 'progress'
                 }
@@ -259,7 +260,7 @@ const allInquiry = () => {
             </MenuItem>
             <MenuItem
               onClick={() => {
-                const editPayload: any = {
+                let editPayload: any = {
                   id: row?.id,
                   status: 'completed'
                 }
@@ -271,6 +272,7 @@ const allInquiry = () => {
               Set Completed
             </MenuItem>
           </Menu>
+          {console.log(Boolean(anchorEl) && row.id === menuRow?.id)}
         </Box>
       )
     }

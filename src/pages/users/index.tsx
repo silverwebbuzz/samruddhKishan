@@ -185,7 +185,6 @@ const allUsers = () => {
   }, [STATE])
   const handleSelectionChange = (selection: any) => {
     setSelectedRows(selection)
-    console.log('handleSelectionChange', selection)
   }
   const handleEdit = (row: any) => {
     localStorage.setItem('editUserId', row?.id)

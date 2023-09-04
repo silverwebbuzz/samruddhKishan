@@ -68,7 +68,7 @@ const editServices = () => {
     formdata.append('serviceType', values?.serviceType)
     formdata.append('serviceDetails', values?.serviceDetails)
     formdata.append('serviceLocation', values?.serviceLocation)
-    formdata.append('minOrderQuantity', values?.minOrderQuantity)
+    formdata.append('minOrderQuantity', values?.minOrderQuantity ? values?.minOrderQuantity : 0)
     formdata.append('availabilityStartDay', values?.availabilityStartDay)
     formdata.append('availabilityEndDay', values?.availabilityEndDay)
     formdata.append('serviceBannerImage', values?.serviceBannerImage)

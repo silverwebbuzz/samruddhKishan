@@ -1,4 +1,15 @@
-import { FormControl, Grid, InputLabel, MenuItem, Select, TextField, Tooltip } from '@mui/material'
+import {
+  Box,
+  FormControl,
+  Grid,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  TextField,
+  Tooltip
+} from '@mui/material'
 import { ErrorMessage } from 'formik'
 
 const CentersForm = ({
@@ -145,17 +156,7 @@ const CentersForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <FormControl fullWidth>
-          <InputLabel
-            // sx={{
-            //   color: 'black',
-            //   '&.Mui-focused': {
-            //     color: 'black' // Set the label color when focused
-            //   }
-            // }}
-            id='demo-simple-select-label'
-          >
-            State
-          </InputLabel>
+          <InputLabel id='demo-simple-select-label'>State</InputLabel>
           <Select
             labelId='demo-simple-select-label'
             id='demo-simple-select'
@@ -176,20 +177,9 @@ const CentersForm = ({
         </FormControl>
       </Grid>
       <Grid item sm={6} xs={12}>
-        {/* <Grid item sm={6} xs={12}> */}
         <Tooltip title='Please select state first'>
           <FormControl fullWidth>
-            <InputLabel
-              // sx={{
-              //   color: 'black',
-              //   '&.Mui-focused': {
-              //     color: 'black' // Set the label color when focused
-              //   }
-              // }}
-              id='demo-simple-select-label'
-            >
-              District
-            </InputLabel>
+            <InputLabel id='demo-simple-select-label'>District</InputLabel>
             <Select
               labelId='demo-simple-select-label'
               id='demo-simple-select'
@@ -210,21 +200,6 @@ const CentersForm = ({
             </Select>
           </FormControl>
         </Tooltip>
-        {/* </Grid> */}
-        {/* <TextField
-        value={values?.centerDistrict}
-        onChange={handleChange}
-        InputLabelProps={{
-          shrink: true
-        }}
-        onBlur={handleBlur}
-        name='centerDistrict'
-        error={Boolean(errors.centerDistrict && touched.centerDistrict)}
-        fullWidth
-        label='District of center'
-        placeholder='District of center'
-      />
-      <ErrorMessage name='centerDistrict' render={msg => <div style={{ color: 'red' }}>{msg}</div>} /> */}
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
@@ -236,22 +211,6 @@ const CentersForm = ({
           fullWidth
           label='Pin Code'
           placeholder='Pin Code'
-          // sx={{
-          //   '&.Mui-error fieldset': {
-          //     borderColor: 'red !important'
-          //   },
-          //   '& fieldset': {
-          //     borderWidth: '1px !important',
-          //     borderColor: '#8d8686 !important'
-          //   },
-          //   '&.Mui-focused fieldset': {
-          //     borderColor: '#7da370 !important',
-          //     borderWidth: '2px !important'
-          //   },
-          //   '& label.MuiInputLabel-root': {
-          //     color: 'black' // Set the label font color to blue
-          //   }
-          // }}
         />
       </Grid>
       <Grid item sm={6} xs={12}>
@@ -283,23 +242,9 @@ const CentersForm = ({
             </Select>
           </FormControl>
         </Tooltip>
-        {/* <TextField
-        value={values?.centerTaluka}
-        onChange={handleChange}
-        InputLabelProps={{
-          shrink: true
-        }}
-        onBlur={handleBlur}
-        name='centerTaluka'
-        error={Boolean(errors.centerTaluka && touched.centerTaluka)}
-        fullWidth
-        label='Taluka of center'
-        placeholder='Taluka of center'
-      />
-      <ErrorMessage name='centerTaluka' render={msg => <div style={{ color: 'red' }}>{msg}</div>} /> */}
       </Grid>
       <Grid item sm={6} xs={12}>
-        <TextField
+        {/* <TextField
           value={values?.centerTurnover}
           onChange={handleChange}
           InputLabelProps={{
@@ -313,7 +258,26 @@ const CentersForm = ({
           label='Turnover of center'
           placeholder='Turnover of center'
         />
-        <ErrorMessage name='centerTurnover' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+        <ErrorMessage name='centerTurnover' render={msg => <div style={{ color: 'red' }}>{msg}</div>} /> */}
+        <FormControl fullWidth>
+          <InputLabel shrink htmlFor='auth-login-v2-password'>
+            Turnover of center
+          </InputLabel>
+          <OutlinedInput
+            label='Turnover of center'
+            onChange={handleChange}
+            onBlur={handleBlur}
+            notched
+            value={values?.centerTurnover}
+            name='centerTurnover'
+            type={'number'}
+            endAdornment={
+              <InputAdornment position='end'>
+                <Box>Ltr.</Box>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
@@ -333,7 +297,7 @@ const CentersForm = ({
         <ErrorMessage name='centerMemberFarmer' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
       </Grid>
       <Grid item sm={6} xs={12}>
-        <TextField
+        {/* <TextField
           value={values?.centerPerDayMilkCollection}
           onChange={handleChange}
           InputLabelProps={{
@@ -347,10 +311,29 @@ const CentersForm = ({
           label='Total  milk collection per day'
           placeholder='Total  milk collection per day'
         />
-        <ErrorMessage name='centerPerDayMilkCollection' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+        <ErrorMessage name='centerPerDayMilkCollection' render={msg => <div style={{ color: 'red' }}>{msg}</div>} /> */}
+        <FormControl fullWidth>
+          <InputLabel shrink htmlFor='auth-login-v2-password'>
+            Total milk collection per day{' '}
+          </InputLabel>
+          <OutlinedInput
+            label='Total  milk collection per day'
+            onChange={handleChange}
+            onBlur={handleBlur}
+            notched
+            value={values?.centerPerDayMilkCollection}
+            name='centerPerDayMilkCollection'
+            type={'number'}
+            endAdornment={
+              <InputAdornment position='end'>
+                <Box>Ltr.</Box>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
       </Grid>
       <Grid item sm={6} xs={12}>
-        <TextField
+        {/* <TextField
           value={values?.centerMilkStorageCapacity}
           onChange={handleChange}
           InputLabelProps={{
@@ -364,7 +347,35 @@ const CentersForm = ({
           label='Milk collection storage capacity'
           placeholder='Milk collection storage capacity'
         />
-        <ErrorMessage name='centerPerDayMilkCollection' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+        <ErrorMessage name='centerPerDayMilkCollection' render={msg => <div style={{ color: 'red' }}>{msg}</div>} /> */}
+        <FormControl fullWidth>
+          <InputLabel
+            sx={{
+              color: 'black',
+              '&.Mui-focused': {
+                color: 'black' // Set the label color when focused
+              }
+            }}
+            shrink
+            htmlFor='auth-login-v2-password'
+          >
+            Milk collection storage capacity
+          </InputLabel>
+          <OutlinedInput
+            label='Milk collection storage capacity'
+            onChange={handleChange}
+            onBlur={handleBlur}
+            notched
+            value={values?.centerMilkStorageCapacity}
+            name='centerMilkStorageCapacity'
+            type={'number'}
+            endAdornment={
+              <InputAdornment position='end'>
+                <Box>Ltr.</Box>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
@@ -458,7 +469,7 @@ const CentersForm = ({
           error={Boolean(errors.centerMembersOnBoard && touched.centerMembersOnBoard)}
           fullWidth
           label='If CO-OP how many members on board'
-          placeholder='How you make payment to farmers'
+          placeholder='If CO-OP how many members on board'
         />
         <ErrorMessage name='centerMembersOnBoard' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
       </Grid>

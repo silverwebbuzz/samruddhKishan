@@ -145,7 +145,7 @@ const addServices = () => {
           serviceType: '',
           serviceDetails: '',
           serviceLocation: '',
-          minOrderQuantity: '',
+          minOrderQuantity: 0,
           availabilityStartDay: '',
           availabilityEndDay: '',
           serviceBannerImage: '',

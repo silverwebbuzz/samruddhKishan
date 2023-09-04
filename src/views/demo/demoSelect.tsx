@@ -11,10 +11,9 @@ interface Props {
   data: Category[]
   selectedCategory: number | null
   setSelectedCategory: (category: number | null) => void
-  preselectedCategoryId: number | null // New prop for preselection at level 3
 }
 
-const DemoSelect: React.FC<Props> = ({ data, size, selectedCategory, setSelectedCategory, preselectedCategoryId }) => {
+const DemoSelect: React.FC<Props> = ({ data, size, selectedCategory, setSelectedCategory }: any) => {
   const [expandedCategories, setExpandedCategories] = useState<number[]>([])
 
   const toggleCategory = (event: React.MouseEvent, categoryId: number) => {

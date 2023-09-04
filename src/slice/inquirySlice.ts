@@ -117,7 +117,7 @@ export const inquirySlice = createSlice({
     })
     builder.addCase(updateInquiry.fulfilled, (state, action) => {
       state.isLoading = false
-      state.allInquiries = action.payload
+      state.updateInq = action.payload
     })
     builder.addCase(updateInquiry.rejected, state => {
       state.isLoading = false
@@ -127,7 +127,7 @@ export const inquirySlice = createSlice({
     })
     builder.addCase(deleteInquiry.fulfilled, (state, action) => {
       state.isLoading = false
-      state.allInquiries = action.payload
+      state.deleteInq = action.payload
     })
     builder.addCase(deleteInquiry.rejected, state => {
       state.isLoading = false
