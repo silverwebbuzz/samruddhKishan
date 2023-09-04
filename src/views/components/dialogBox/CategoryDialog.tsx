@@ -6,7 +6,7 @@ import Dialog from '@mui/material/Dialog'
 import TextField from '@mui/material/TextField'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
-import { Formik, Form, FormikProps } from 'formik'
+import { Formik, Form, FormikProps, ErrorMessage } from 'formik'
 import { Box, Checkbox, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select } from '@mui/material'
 import { AppDispatch, RootState } from 'src/store/store'
 import { useDispatch } from 'react-redux'
@@ -65,10 +65,10 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
   }, [editField?.categoryId])
   // Validations
   const validationSchema = yup.object({
-    categoryName: yup.string().required('Category name is required')
+    categoryName: yup.string().required('Category name is required'),
+    categoryStatus: yup.string().required('Category status is required')
   })
 
-  console.log('editField?.categoryIdeditField?.categoryId===>', editField?.categoryId)
   return (
     <Dialog maxWidth='sm' fullWidth open={show} aria-labelledby='form-dialog-title'>
       <DialogTitle id='form-dialog-title'>{edit ? 'Update Category' : 'Add Category'}</DialogTitle>
@@ -111,7 +111,6 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
                       autoComplete='off'
                       value={values?.categoryName}
                       type='text'
-                      helperText={errors?.categoryName && touched?.categoryName ? errors?.categoryName : ''}
                       error={errors?.categoryName && touched?.categoryName ? true : false}
                       onBlur={handleBlur}
                       onChange={handleChange}
@@ -122,9 +121,10 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
                         shrink: true
                       }}
                     />
+                    <ErrorMessage name='categoryName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                   </Grid>
                   <Grid xs={12}>
-                    <FormControl fullWidth>
+                    <FormControl fullWidth error={errors?.categoryStatus && touched?.categoryStatus ? true : false}>
                       <InputLabel id='demo-simple-select-label'>Status</InputLabel>
                       <Select
                         labelId='demo-simple-select-label'
@@ -138,6 +138,7 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
                         <MenuItem value={0}>InActive</MenuItem>
                       </Select>
                     </FormControl>
+                    <ErrorMessage name='categoryStatus' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                   </Grid>
                   <Grid xs={12}>
                     <Box sx={{ marginTop: '25px' }}>

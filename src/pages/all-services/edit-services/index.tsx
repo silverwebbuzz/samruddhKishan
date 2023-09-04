@@ -37,7 +37,7 @@ const editServices = () => {
   const { categories } = useSelector((state: any) => state?.rootReducer?.categoriesReducer)
   const { singleService } = useSelector((state: any) => state?.rootReducer?.servicesReducer)
   const serviceId = localStorage.getItem('serviceID')
-  const [serviceStatusPrefill, setServiceStatusPrefill] = useState('')
+  const [serviceStatusPrefill, setServiceStatusPrefill] = useState(0)
   const [vendorId, setVendorId] = useState(0)
   const { getUsers } = useSelector((state: any) => state?.rootReducer?.farmerReducer)
 

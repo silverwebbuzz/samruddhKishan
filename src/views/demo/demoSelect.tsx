@@ -13,7 +13,7 @@ interface Props {
   setSelectedCategory: (category: number | null) => void
 }
 
-const DemoSelect: React.FC<Props> = ({ data, size, selectedCategory, setSelectedCategory }: any) => {
+const DemoSelect: React.FC<Props> = ({ data, shrink, size, selectedCategory, setSelectedCategory }: any) => {
   const [expandedCategories, setExpandedCategories] = useState<number[]>([])
 
   const toggleCategory = (event: React.MouseEvent, categoryId: number) => {

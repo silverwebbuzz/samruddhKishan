@@ -60,6 +60,9 @@ const ApmcForm = ({
           name='apmcName'
           error={Boolean(errors.apmcName && touched.apmcName)}
           fullWidth
+          InputLabelProps={{
+            shrink: true
+          }}
           label='Name of the apmc'
           placeholder='Name of the apmc'
         />

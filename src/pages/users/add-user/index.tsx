@@ -432,7 +432,7 @@ const index = () => {
                       getAddressByPinCodeData={getAddressByPinCodeData}
                       resetForm={resetForm}
                     />
-                  ) : values?.role === 17 ? (
+                  ) : values?.role == 17 ? (
                     <VendorForm
                       values={values}
                       allState={allState}

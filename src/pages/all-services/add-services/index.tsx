@@ -149,7 +149,7 @@ const addServices = () => {
           availabilityStartDay: '',
           availabilityEndDay: '',
           serviceBannerImage: '',
-          serviceStatus: ''
+          serviceStatus: 0
         }}
         validationSchema={validationSchema}
         onSubmit={(values: any, { resetForm }) => {

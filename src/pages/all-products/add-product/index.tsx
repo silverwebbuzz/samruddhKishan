@@ -45,9 +45,8 @@ const addProduct = () => {
   const { getUsers } = useSelector((state: any) => state?.rootReducer?.farmerReducer)
   const { allUnitsData, contries } = useSelector((state: any) => state?.rootReducer?.productReducer)
   const [selectedFiles, setSelectedFiles] = useState([])
-  const [categoryIdPrefill, setCategoryIdPrefill] = useState('')
-  const [vendorPrefill, setVendorPrefill] = useState('')
-  const [brandPrefill, setBrandPrefill] = useState('')
+  const [categoryIdPrefill, setCategoryIdPrefill] = useState(0)
+  const [brandPrefill, setBrandPrefill] = useState(0)
   const [contryPrefill, setContryPrefill] = useState('')
   const [productUnits, setProductUnits] = useState('')
   const [vendorId, setVendorId] = useState(0)
@@ -300,6 +299,7 @@ const addProduct = () => {
                   <FormControl size='small' fullWidth>
                     <DemoSelect
                       data={categories?.data}
+                      shrink={false}
                       size={'medium'}
                       //@ts-ignore
                       selectedCategory={categoryIdPrefill}

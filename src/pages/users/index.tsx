@@ -354,11 +354,6 @@ const allUsers = () => {
           {selectedRows?.length > 0 ? (
             <>
               <Grid xs={12} sm={12}>
-                {/* <Typography variant='body'>Delete all selected farmers:</Typography> */}
-                {/* <Button variant='outlined' color='error'>
-              Delete All Selected Farmers
-            </Button> */}
-
                 <Toolbar
                   sx={{
                     px: theme => `${theme.spacing(5)} !important`,
