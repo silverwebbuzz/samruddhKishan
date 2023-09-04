@@ -139,7 +139,7 @@ const editServices = () => {
     }
     dispatch(getSingleService(payload))
     dispatch(getAllCategories())
-    dispatch(getAllUsers({ page: 1, pageSize: 10 }))
+    dispatch(getAllUsers())
   }, [])
   useEffect(() => {
     // e?.target?.value
@@ -550,7 +550,7 @@ const editServices = () => {
                 >
                   <Grid item sm={12} xs={12}>
                     <Typography variant='h6'>Content :</Typography>
-                    <Field sx={{ marginTop: '10px', marginBottom: '20px' }} name='content'>
+                    <Field sx={{ marginTop: '10px', marginBottom: '20px' }} name='serviceDetails'>
                       {({ field }: any) => (
                         <div
                           style={{

@@ -207,12 +207,17 @@ const CentersForm = ({
           name='pinCode'
           onChange={e => {
             handlePincode(e.target.value)
+            setFieldValue('pinCode', e?.target?.value)
           }}
+          type='number'
+          onBlur={handleBlur}
           fullWidth
           label='Pin Code'
           placeholder='Pin Code'
         />
+        <ErrorMessage name='pinCode' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
       </Grid>
+
       <Grid item sm={6} xs={12}>
         <Tooltip
           title='Please enter pincode first'

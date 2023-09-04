@@ -141,13 +141,13 @@ const ContentPage = () => {
     let payload: any = {
       page: page,
       pageSize: pageLimit,
-      categoryId: categoryIdPrefill ? categoryIdPrefill : '',
-      brandId: brandPrefill ? brandPrefill : '',
-      vendorId: vendorId ? vendorId : ''
+      categoryId: categoryIdPrefill ? categoryIdPrefill : 0,
+      brandId: brandPrefill ? brandPrefill : 0,
+      vendorId: vendorId ? vendorId : 0
     }
     dispatch(getAllCategories({ page: 1, pageSize: 10 }))
     dispatch(getAllBrands({ page: 1, pageSize: 10 }))
-    dispatch(getAllUsers({ page: 1, pageSize: 10 }))
+    dispatch(getAllUsers())
     dispatch(getAllProducts(payload)).then(response => {
       setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
     })

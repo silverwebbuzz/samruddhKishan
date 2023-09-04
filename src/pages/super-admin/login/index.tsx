@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, ReactNode, MouseEvent } from 'react'
+import { useState, ReactNode, MouseEvent, useEffect } from 'react'
 
 // ** MUI Components
 import Button from '@mui/material/Button'
@@ -30,6 +30,10 @@ import { Stack } from '@mui/system'
 import { ErrorMessage, Form, Formik } from 'formik'
 import { Card, Link, Paper } from '@mui/material'
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
+import { getLogoAPI } from 'src/slice/settingSlice'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from 'src/store/store'
+import { useSelector } from 'react-redux'
 // ** Styled Components
 const LoginIllustration = styled('img')(({ theme }) => ({
   zIndex: 2,
@@ -73,6 +77,8 @@ const LoginPage = () => {
   const auth = useAuth()
   const theme = useTheme()
   const { settings } = useSettings()
+  const dispatch = useDispatch<AppDispatch>()
+  const { getLogo } = useSelector((state: any) => state?.rootReducer?.settingsReducer)
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
   // ** Vars
   const { skin } = settings
@@ -91,6 +97,10 @@ const LoginPage = () => {
   const handleErrCallback = (err: any) => {
     console.log(err)
   }
+
+  useEffect(() => {
+    dispatch(getLogoAPI())
+  }, [dispatch])
 
   const handleLogin = (values: any) => {
     let email = values.email
@@ -143,7 +153,7 @@ const LoginPage = () => {
           >
             <Box sx={{ my: 6, textAlign: 'center' }}>
               <img
-                src='/images/pages/logo1234.png'
+                src={getLogo?.logo ? getLogo?.logo : '/images/logo/placeholder-logo-1.png'}
                 style={{
                   height: 'auto',
                   width: '209px'
@@ -170,7 +180,7 @@ const LoginPage = () => {
                       onBlur={handleBlur}
                       onChange={handleChange}
                       error={Boolean(errors.email && touched.email)}
-                      placeholder='Superadmin@gmail.com'
+                      placeholder='superadmin@gmail.com'
                       InputProps={{
                         //@ts-ignore
                         startAdornment: (

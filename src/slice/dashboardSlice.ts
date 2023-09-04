@@ -20,11 +20,11 @@ const initialState: RootState = {
 
 export const getDashboardData = createAsyncThunk('settings/getGraphCount', async (_, { rejectWithValue }) => {
   try {
-    const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/settings/getGraphCount`, {
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/settings/getGraphCount`, {
       headers
     })
 
-    return res?.data?.data
+    return res?.data
   } catch (err: any) {
     return rejectWithValue(err?.response?.data)
   }

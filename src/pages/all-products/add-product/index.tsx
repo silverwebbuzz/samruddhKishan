@@ -213,7 +213,7 @@ const addProduct = () => {
   }
   useEffect(() => {
     dispatch(getAllCategories())
-    dispatch(getAllUsers({ page: 1, pageSize: 10 }))
+    dispatch(getAllUsers())
     dispatch(getAllBrands())
     dispatch(getAllCountry())
     dispatch(getAllUnits())
@@ -247,6 +247,7 @@ const addProduct = () => {
           availbilityStock: '',
           minPrice: 0,
           maxPrice: 0,
+          productCode: '',
           productUnits: '',
           country: '',
           status: ''

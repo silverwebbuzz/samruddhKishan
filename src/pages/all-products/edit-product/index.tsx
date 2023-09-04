@@ -189,7 +189,7 @@ const editProduct = () => {
   useEffect(() => {
     dispatch(getAllCategories())
     dispatch(getAllBrands())
-    dispatch(getAllUsers({ page: 1, pageSize: 10 }))
+    dispatch(getAllUsers())
     dispatch(getAllCountry())
     dispatch(getAllUnits())
     dispatch(getProductById({ id: productID }))

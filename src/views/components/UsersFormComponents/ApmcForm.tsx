@@ -119,11 +119,15 @@ const ApmcForm = ({
           name='pinCode'
           onChange={e => {
             handlePincode(e.target.value)
+            setFieldValue('pinCode', e?.target?.value)
           }}
+          type='number'
+          onBlur={handleBlur}
           fullWidth
           label='Pin Code'
           placeholder='Pin Code'
         />
+        <ErrorMessage name='pinCode' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
       </Grid>
 
       <Grid item sm={6} xs={12}>
@@ -140,9 +144,12 @@ const ApmcForm = ({
               id='demo-simple-select'
               name='apmcTaluka'
               disabled={pincode.length <= 0}
-              value={values?.apmcTaluka && values?.apmcTaluka}
+              value={taluka}
               label='Taluka'
-              onChange={handleChange}
+              onChange={e => {
+                setFieldValue('taluka', e?.target?.value)
+                setTaluka(e?.target?.value)
+              }}
             >
               {getAddressByPinCodeData?.taluka?.map((name: any) => (
                 <MenuItem key={name} value={name}>
@@ -175,6 +182,7 @@ const ApmcForm = ({
           name='phone'
           error={Boolean(errors.phone && touched.phone)}
           fullWidth
+          type='number'
           label='Phone'
           placeholder='Phone'
         />

@@ -10,11 +10,13 @@ const headers = {
 interface RootState {
   updateGeneral: Array<any>
   getGeneral: Array<any>
+  getLogo: Array<any>
   isLoading: boolean
 }
 const initialState: RootState = {
   updateGeneral: [],
   getGeneral: [],
+  getLogo: [],
   isLoading: false
 }
 
@@ -37,6 +39,18 @@ export const updateGeneralSetting = createAsyncThunk(
 export const getGeneralSetting = createAsyncThunk('user/getGeneralSetting', async (payload, { rejectWithValue }) => {
   try {
     const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/settings/getSingleSetting`, payload, {
+      headers
+    })
+
+    return res?.data?.data
+  } catch (err: any) {
+    return rejectWithValue(err?.response?.data)
+  }
+})
+
+export const getLogoAPI = createAsyncThunk('user/getLogoAPI', async (_, { rejectWithValue }) => {
+  try {
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/settings/getLogo`, {
       headers
     })
 
@@ -70,6 +84,16 @@ export const settingsSlice = createSlice({
       state.getGeneral = action.payload
     })
     builder.addCase(getGeneralSetting.rejected, state => {
+      state.isLoading = false
+    })
+    builder.addCase(getLogoAPI.pending, state => {
+      state.isLoading = true
+    })
+    builder.addCase(getLogoAPI.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.getLogo = action.payload
+    })
+    builder.addCase(getLogoAPI.rejected, state => {
       state.isLoading = false
     })
   }

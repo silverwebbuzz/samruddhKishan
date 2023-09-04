@@ -30,7 +30,7 @@ import TabPanel from '@mui/lab/TabPanel'
 import MuiTab, { TabProps } from '@mui/material/Tab'
 import MuiTabList, { TabListProps } from '@mui/lab/TabList'
 import { styled } from '@mui/material/styles'
-import { getGeneralSetting, updateGeneralSetting } from 'src/slice/settingSlice'
+import { getGeneralSetting, getLogoAPI, updateGeneralSetting } from 'src/slice/settingSlice'
 export type Payload = {
   id?: number
   search?: string
@@ -121,6 +121,7 @@ const settings = () => {
       id: 1
     }
     dispatch(getGeneralSetting(payload))
+    dispatch(getLogoAPI())
   }, [updateGeneral])
 
   const handleChangeLogo = (e: any) => {

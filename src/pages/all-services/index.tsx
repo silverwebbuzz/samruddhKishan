@@ -150,7 +150,7 @@ const allCategories = () => {
     }
     dispatch(getAllCategories({ page: 1, pageSize: 10 }))
     dispatch(getAllBrands({ page: 1, pageSize: 10 }))
-    dispatch(getAllUsers({ page: 1, pageSize: 10 }))
+    dispatch(getAllUsers())
 
     dispatch(getAllServices(payload)).then((response: any) => {
       setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))

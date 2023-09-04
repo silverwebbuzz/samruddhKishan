@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, ReactNode, MouseEvent } from 'react'
+import { useState, ReactNode, MouseEvent, useEffect } from 'react'
 
 // ** MUI Components
 import Button from '@mui/material/Button'
@@ -31,6 +31,10 @@ import { ErrorMessage, Form, Formik } from 'formik'
 import { Card, Link, Paper } from '@mui/material'
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 import axios from 'axios'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from 'src/store/store'
+import { getLogoAPI } from 'src/slice/settingSlice'
+import { useSelector } from 'react-redux'
 // ** Styled Components
 const LoginIllustration = styled('img')(({ theme }) => ({
   zIndex: 2,
@@ -75,13 +79,17 @@ const LoginPage = () => {
   const theme = useTheme()
   const { settings } = useSettings()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
+  const dispatch = useDispatch<AppDispatch>()
+  const { getLogo } = useSelector((state: any) => state?.rootReducer?.settingsReducer)
   // ** Vars
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json'
   }
   const { skin } = settings
-
+  useEffect(() => {
+    dispatch(getLogoAPI())
+  }, [dispatch])
   const { login } = auth
   const validationSchema = yup.object().shape({
     email: yup.string().required('Email or phone number is required'),
@@ -148,7 +156,7 @@ const LoginPage = () => {
           >
             <Box sx={{ my: 6, textAlign: 'center' }}>
               <img
-                src='/images/pages/logo1234.png'
+                src={getLogo?.logo ? getLogo?.logo : '/images/logo/placeholder-logo-1.png'}
                 style={{
                   height: 'auto',
                   width: '209px'

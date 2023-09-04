@@ -7,6 +7,8 @@ const VendorForm = ({
   setSTATE,
   STATE,
   allState,
+  setDistrict,
+  district,
   handleChange,
   handleBlur,
   errors,
@@ -83,6 +85,7 @@ const VendorForm = ({
           name='phone'
           error={Boolean(errors.phone && touched.phone)}
           fullWidth
+          type='number'
           label='Phone'
           placeholder='Phone'
         />
@@ -119,9 +122,12 @@ const VendorForm = ({
               id='demo-simple-select'
               name='district'
               disabled={STATE.length <= 0}
-              value={values?.district}
+              value={district}
               label='District'
-              onChange={handleChange}
+              onChange={e => {
+                setFieldValue('district', e?.targe?.value)
+                setDistrict(e?.target?.value)
+              }}
             >
               {allDistrict?.map((name: any) => (
                 <MenuItem key={name?.name} value={name?.name}>
@@ -138,11 +144,15 @@ const VendorForm = ({
           name='pinCode'
           onChange={e => {
             handlePincode(e.target.value)
+            setFieldValue('pinCode', e?.target?.value)
           }}
+          onBlur={handleBlur}
+          type='number'
           fullWidth
           label='Pin Code'
           placeholder='Pin Code'
         />
+        <ErrorMessage name='pinCode' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
       </Grid>
       <Grid item sm={6} xs={12}>
         <Tooltip

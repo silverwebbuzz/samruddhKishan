@@ -103,10 +103,12 @@ const index = () => {
       then: yup => yup.required('Last Name is required for this role'),
       otherwise: yup => yup.optional()
     }),
-    email: yup.string().required('Email is required'),
+    pinCode: yup.string().matches(/^\d{6}$/, 'Invalid PIN code'),
+    email: yup.string().email('Invalid email address').required('Email is required'),
     phone: yup
       .string()
       .required('Phone number is required')
+      .max(10, 'Mobile number must be 10 digit')
       .max(10, 'Mobile number must be 10 digit')
       .matches(/^(\+91|0)?[6789]\d{9}$/, 'Invalid mobile number'),
     password: yup
@@ -213,7 +215,7 @@ const index = () => {
       { password: values?.password },
       { phone: values?.phone },
       { state: values?.state },
-      { city: values?.district },
+      { city: district },
       { taluka: taluka },
       { village: values?.villageName },
       { pinCode: pincode },
@@ -517,6 +519,7 @@ const index = () => {
                           name='phone'
                           error={Boolean(errors.phone && touched.phone)}
                           fullWidth
+                          type='number'
                           label='Phone'
                           placeholder='Phone'
                         />
@@ -547,15 +550,16 @@ const index = () => {
                       <Grid item sm={6} xs={12}>
                         <Tooltip title='Please select state first'>
                           <FormControl fullWidth>
-                            <InputLabel id='demo-simple-select-label'>District</InputLabel>
+                            <InputLabel>District</InputLabel>
                             <Select
-                              labelId='demo-simple-select-label'
-                              id='demo-simple-select'
                               name='district'
                               disabled={STATE.length <= 0}
-                              value={values?.district}
+                              value={district}
                               label='District'
-                              onChange={handleChange}
+                              onChange={e => {
+                                setFieldValue('district', e?.target?.value)
+                                setDistrict(e?.target?.value)
+                              }}
                             >
                               {allDistrict?.map((name: any) => (
                                 <MenuItem key={name?.name} value={name?.name}>

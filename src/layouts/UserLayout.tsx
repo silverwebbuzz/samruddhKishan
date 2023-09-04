@@ -1,5 +1,5 @@
 // ** React Imports
-import { ReactNode } from 'react'
+import { ReactNode, useEffect } from 'react'
 
 // ** MUI Imports
 import { Theme } from '@mui/material/styles'
@@ -24,6 +24,10 @@ import HorizontalAppBarContent from './components/horizontal/AppBarContent'
 // ** Hook Import
 import { useSettings } from 'src/@core/hooks/useSettings'
 import { Box } from '@mui/material'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from 'src/store/store'
+import { getLogoAPI } from 'src/slice/settingSlice'
 
 interface Props {
   children: ReactNode
@@ -33,7 +37,12 @@ interface Props {
 const UserLayout = ({ children, contentHeightFixed }: Props) => {
   // ** Hooks
   const { settings, saveSettings } = useSettings()
+  const { getLogo } = useSelector((state: any) => state?.rootReducer?.settingsReducer)
 
+  const dispatch = useDispatch<AppDispatch>()
+  useEffect(() => {
+    dispatch(getLogoAPI())
+  }, [dispatch])
   // ** Vars for server side navigation
   // const { menuItems: verticalMenuItems } = ServerSideVerticalNavItems()
   // const { menuItems: horizontalMenuItems } = ServerSideHorizontalNavItems()
@@ -54,7 +63,13 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
   const AppBrand = () => {
     return (
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <img src='/images/pages/logo1234.png' alt='logo' style={{ objectFit: 'contain' }} width='150' height='80' />
+        <img
+          src={getLogo?.logo ? getLogo?.logo : '/images/logo/placeholder-logo-1.png'}
+          alt='Samruddh Kisan Logo'
+          style={{ objectFit: 'contain' }}
+          width='150'
+          height='80'
+        />
       </Box>
     )
   }

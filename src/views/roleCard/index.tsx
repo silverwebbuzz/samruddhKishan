@@ -20,7 +20,7 @@ import { Avatar, AvatarGroup } from '@mui/material'
 
 const series = [32, 41, 41, 70]
 
-const RoleCard = ({ roleName }: any) => {
+const RoleCard = ({ data, roleName }: any) => {
   // ** Hook
   const theme = useTheme()
 
@@ -105,12 +105,12 @@ const RoleCard = ({ roleName }: any) => {
           <Box sx={{ gap: 2, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
               <Typography variant='h6' sx={{ mb: 0.5 }}>
-                {roleName}
+                {`Number of ${data?.roleType}`}
               </Typography>
             </div>
             <div>
               <Typography color={'primary'} variant='h6' sx={{ mb: 0.5 }}>
-                4,350
+                {data?.count}
               </Typography>
             </div>
           </Box>
@@ -127,13 +127,6 @@ const RoleCard = ({ roleName }: any) => {
               <Avatar src={`/images/avatars/5.png`} />
             </AvatarGroup>
           </Box>
-          {/* 
-          <Box>
-            <Icon fontSize='40px' icon='fa:users' />
-          </Box> */}
-          {/* <CustomAvatar skin='light' variant='rounded' color={'primary'} sx={{ mb: 3.5, width: 50, height: 50 }}>
-            <Icon fontSize='20px' icon='fa:users' />
-          </CustomAvatar> */}
         </Box>
       </CardContent>
     </Card>
