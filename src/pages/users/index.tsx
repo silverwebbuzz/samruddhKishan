@@ -101,7 +101,7 @@ const allUsers = () => {
     setPincode('')
     setOpen(true)
   }
-  const [selectedRows, setSelectedRows] = useState<number[]>([])
+  const [selectedRows, setSelectedRows] = useState<any[]>([])
   const [multiFieldDeleteOpen, setMultiFieldDeleteOpen] = useState(false)
   const [userSearch, setUserSearch] = useState('')
   const handleMultiDeleteClickOpen = () => setMultiFieldDeleteOpen(true)
@@ -160,15 +160,25 @@ const allUsers = () => {
   useEffect(() => {
     //@ts-ignore
     const userData: any = JSON.parse(localStorage.getItem('userData'))
-    let payload = {
-      page: page,
-      pageSize: pageLimit,
-      fullName: userSearch ? userSearch : ''
+    if (userSearch?.length < 0) {
+      let payload = {
+        page: page,
+        pageSize: pageLimit,
+        fullName: userSearch ? userSearch : ''
+      }
+      //@ts-ignore
+      dispatch(getAllUsers(payload)).then(response => {
+        setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
+      })
+    } else {
+      let payload = {
+        fullName: userSearch ? userSearch : ''
+      }
+      //@ts-ignore
+      dispatch(getAllUsers(payload)).then(response => {
+        setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
+      })
     }
-    //@ts-ignore
-    dispatch(getAllUsers(payload)).then(response => {
-      setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
-    })
   }, [page, pageCount, pageLimit, deleteUser, updateUsers12, createUser12, userSearch])
 
   const handleSearch = () => {}

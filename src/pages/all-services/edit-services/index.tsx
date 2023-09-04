@@ -133,7 +133,6 @@ const editServices = () => {
     }
   }
   useEffect(() => {
-    // console.log(serviceId)
     let payload = {
       id: serviceId
     }
