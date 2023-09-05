@@ -13,6 +13,16 @@ const navigation = (): VerticalNavItemsType => {
 
   let FilterRoles = JSON?.parse(roles ? roles : null)
   let ARRR = []
+
+  const uniqueRoutes = (ARR: any) => {
+    const uniqueArray = ARR.filter((value, index) => {
+      // Check if the current object is the first occurrence in the array
+      const firstIndex = ARR.findIndex(item => item.title === value.title)
+
+      return index === firstIndex
+    })
+    return uniqueArray
+  }
   //@ts-ignore
   const output = FilterRoles?.map(function (roleId, index) {
     FilterPermissions?.filter((permission: any) => {
@@ -70,7 +80,8 @@ const navigation = (): VerticalNavItemsType => {
         }
       })
     })
-    return FinalRoute
+
+    return uniqueRoutes(FinalRoute)
   } else {
     return [
       {
