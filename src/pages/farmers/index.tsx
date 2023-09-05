@@ -157,8 +157,13 @@ const allFarmers = () => {
         setPageCount(Math.ceil(response?.payload?.totalFilterCount / pageLimit))
       })
     } else {
-      payload.referralId = userData?.id
-      payload.referralName = userData?.role
+      let payload = {
+        page: page,
+        pageSize: pageLimit,
+        farmerName: farmerName ? farmerName : '',
+        referralId: userData?.id,
+        referralName: userData?.role
+      }
       dispatch(getAllFarmers(payload)).then(response => {
         setPageCount(Math.ceil(response?.payload?.totalFilterCount / pageLimit))
       })

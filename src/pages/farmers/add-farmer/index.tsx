@@ -135,7 +135,7 @@ const FarmerDetails = () => {
       .matches(/^(\+91|0)?[6789]\d{9}$/, 'Invalid mobile number'),
     aadharNumber: yup
       .string()
-      .required('Adhar number is required')
+      .required('Aadhar number is required')
       .matches(
         /^([0-9]{4}[0-9]{4}[0-9]{4}$)|([0-9]{4}\s[0-9]{4}\s[0-9]{4}$)|([0-9]{4}-[0-9]{4}-[0-9]{4}$)/,
         'please enter a valid adhar number'
@@ -403,8 +403,8 @@ const FarmerDetails = () => {
                       error={Boolean(errors.aadharNumber && touched.aadharNumber)}
                       fullWidth
                       type='number'
-                      label='Adhar Number *'
-                      placeholder='Adhar Number'
+                      label='Aadhar Number *'
+                      placeholder='Aadhar Number'
                       sx={{
                         '&.Mui-error fieldset': {
                           borderColor: 'red !important'

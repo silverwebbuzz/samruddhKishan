@@ -157,29 +157,31 @@ const allUsers = () => {
     )
   }
 
+  const handleUserSearch = e => {
+    setUserSearch(e)
+    let payload = {
+      fullName: e
+    }
+    //@ts-ignore
+    dispatch(getAllUsers(payload)).then(response => {
+      setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
+    })
+  }
+
   useEffect(() => {
     //@ts-ignore
     const userData: any = JSON.parse(localStorage.getItem('userData'))
-    if (userSearch?.length < 0) {
-      let payload = {
-        page: page,
-        pageSize: pageLimit,
-        fullName: userSearch ? userSearch : ''
-      }
-      //@ts-ignore
-      dispatch(getAllUsers(payload)).then(response => {
-        setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
-      })
-    } else {
-      let payload = {
-        fullName: userSearch ? userSearch : ''
-      }
-      //@ts-ignore
-      dispatch(getAllUsers(payload)).then(response => {
-        setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
-      })
+
+    let payload = {
+      page: page,
+      pageSize: pageLimit,
+      fullName: userSearch ? userSearch : ''
     }
-  }, [page, pageCount, pageLimit, deleteUser, updateUsers12, createUser12, userSearch])
+    //@ts-ignore
+    dispatch(getAllUsers(payload)).then(response => {
+      setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
+    })
+  }, [page, pageCount, pageLimit, deleteUser, updateUsers12, createUser12])
 
   const handleSearch = () => {}
   useEffect(() => {
@@ -217,7 +219,7 @@ const allUsers = () => {
       minWidth: 320,
       headerName: 'Name',
       renderCell: ({ row }: any) => {
-        const { firstName, apmcName, centerName } = row
+        const { firstName, lastName, apmcName, centerName } = row
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -227,7 +229,13 @@ const allUsers = () => {
                 }}
                 onClick={() => handleEdit(row)}
               >
-                {firstName !== '' ? firstName : centerName !== '' ? centerName : apmcName !== '' ? apmcName : ''}{' '}
+                {firstName !== ''
+                  ? firstName + ' ' + lastName
+                  : centerName !== ''
+                  ? centerName
+                  : apmcName !== ''
+                  ? apmcName
+                  : ''}{' '}
               </p>
             </Box>
           </Box>
@@ -316,7 +324,7 @@ const allUsers = () => {
             <TextField
               size='small'
               value={userSearch}
-              onChange={e => setUserSearch(e?.target?.value)}
+              onChange={e => handleUserSearch(e?.target?.value)}
               placeholder='Search…'
               InputProps={{
                 startAdornment: (
