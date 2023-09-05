@@ -714,6 +714,7 @@ const FarmerDetails = () => {
                       error={Boolean(errors.pinCode && touched.pinCode)}
                       name='pinCode'
                       type='number'
+                      onBlur={handleBlur}
                       onChange={e => {
                         handlePincode(e.target.value)
                         setFieldValue('pinCode', e.target.value)

@@ -68,57 +68,69 @@ CustomDocument.getInitialProps = async ctx => {
 }
 
 export default CustomDocument
-
-// ---------------------------------------------------------------->
-
+// --------------------------------------------------------------------------------------------------------------->
+// // Your CustomDocument component with TypeScript
+// import { Children } from 'react'
 // import Document, { Html, Head, Main, NextScript } from 'next/document'
-// import { extractCritical } from '@emotion/server/create-instance'
 // import createEmotionServer from '@emotion/server/create-instance'
+// import { createEmotionCache } from 'src/@core/utils/create-emotion-cache'
+// import useFavicon from 'src/hooks/useFavicon' // Import the custom hook
 
-// class CustomDocument extends Document {
-//   static async getInitialProps(ctx) {
-//     const initialProps = await Document.getInitialProps(ctx)
-//     const { extractCriticalToChunks } = createEmotionServer()
+// const CustomDocument = () => {
+//   const faviconUrl = useFavicon('/images/favicon.png') // Provide the initial favicon URL
 
-//     const styles = extractCriticalToChunks(initialProps.html)
+//   return (
+//     <Html lang='en'>
+//       <Head>
+//         <link rel='preconnect' href='https://fonts.googleapis.com' />
+//         <link rel='preconnect' href='https://fonts.gstatic.com' />
+//         <link
+//           rel='stylesheet'
+//           href='https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap'
+//         />
+//         <link rel='apple-touch-icon' sizes='180x180' href='/images/apple-touch-icon.png' />
+//         {/* Update the href attribute with the favicon URL */}
+//         <link rel='shortcut icon' href={faviconUrl} />
+//       </Head>
+//       <body>
+//         <Main />
+//         <NextScript />
+//       </body>
+//     </Html>
+//   )
+// }
 
-//     return {
-//       ...initialProps,
-//       styles: (
-//         <>
-//           {initialProps.styles}
-//           {styles.styles.map((style, index) => (
-//             <style
-//               key={index}
-//               data-emotion={`${style.key} ${style.ids.join(' ')}`}
-//               dangerouslySetInnerHTML={{ __html: style.css }}
-//             />
-//           ))}
-//         </>
-//       )
-//     }
-//   }
+// CustomDocument.getInitialProps = async ctx => {
+//   const originalRenderPage = ctx.renderPage
+//   const cache = createEmotionCache()
+//   const { extractCriticalToChunks } = createEmotionServer(cache)
 
-//   render() {
-//     return (
-//       <Html lang='en'>
-//         <Head>
-//           <link rel='preconnect' href='https://fonts.googleapis.com' />
-//           <link rel='preconnect' href='https://fonts.gstatic.com' />
-//           <link
-//             rel='stylesheet'
-//             href='https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap'
+//   ctx.renderPage = () =>
+//     originalRenderPage({
+//       enhanceApp: App => props =>
+//         (
+//           <App
+//             {...props} // @ts-ignore
+//             emotionCache={cache}
 //           />
-//           <link rel='apple-touch-icon' sizes='180x180' href='/images/apple-touch-icon.png' />
-//           {/* Add your other head elements here */}
-//           {/* ... */}
-//         </Head>
-//         <body>
-//           <Main />
-//           <NextScript />
-//         </body>
-//       </Html>
+//         )
+//     })
+
+//   const initialProps = await Document.getInitialProps(ctx)
+//   const emotionStyles = extractCriticalToChunks(initialProps.html)
+//   const emotionStyleTags = emotionStyles.styles.map(style => {
+//     return (
+//       <style
+//         key={style.key}
+//         dangerouslySetInnerHTML={{ __html: style.css }}
+//         data-emotion={`${style.key} ${style.ids.join(' ')}`}
+//       />
 //     )
+//   })
+
+//   return {
+//     ...initialProps,
+//     styles: [...Children.toArray(initialProps.styles), ...emotionStyleTags]
 //   }
 // }
 

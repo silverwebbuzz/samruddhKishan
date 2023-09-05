@@ -49,7 +49,7 @@ const dashboard = () => {
           <EcommerceRevenueReport data={dashboardData} />
         </Grid>
         <Grid item xs={12} lg={4}>
-          <EcommerceGeneratedLeads data={dashboardData?.counts} />
+          <EcommerceGeneratedLeads data={dashboardData && dashboardData?.counts} />
         </Grid>
       </Grid>
     </ApexChartWrapper>

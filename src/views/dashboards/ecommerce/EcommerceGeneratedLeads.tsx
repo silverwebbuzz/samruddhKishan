@@ -111,10 +111,22 @@ const EcommerceGeneratedLeads = ({ data }: any) => {
               <Typography variant='h5' sx={{ mb: 0.5 }}>
                 {data?.totalEnquiry}
               </Typography>
-              {/* <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'success.main' } }}>
-                <Icon icon='tabler:chevron-up' fontSize='1.25rem' />
-                <Typography sx={{ fontWeight: 500, color: 'success.main' }}>15.8%</Typography>
-              </Box> */}
+              <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'success.main' } }}>
+                {data?.percentage < 0 ? (
+                  <>
+                    {/* <Icon icon='tabler:chevron-down' fontSize='1.25rem' /> */}
+                    <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
+                      <path fill='red' d='m5.84 9.59l5.66 5.66l5.66-5.66l-.71-.7l-4.95 4.95l-4.95-4.95l-.71.7Z' />
+                    </svg>
+                    <Typography sx={{ fontWeight: 500, color: 'error.main' }}>{data?.percentage}%</Typography>
+                  </>
+                ) : (
+                  <>
+                    <Icon icon='tabler:chevron-up' fontSize='1.25rem' />
+                    <Typography sx={{ fontWeight: 500, color: 'success.main' }}>{data?.percentage}%</Typography>
+                  </>
+                )}
+              </Box>
             </div>
           </Box>
           <ReactApexcharts type='donut' width={150} height={179} series={series} options={options} />
