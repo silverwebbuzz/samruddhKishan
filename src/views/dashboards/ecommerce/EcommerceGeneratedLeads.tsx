@@ -17,11 +17,10 @@ import ReactApexcharts from 'src/@core/components/react-apexcharts'
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 
-const series = [32, 41, 41, 70]
-
-const EcommerceGeneratedLeads = () => {
+const EcommerceGeneratedLeads = ({ data }: any) => {
   // ** Hook
   const theme = useTheme()
+  const series = [data?.Product, data?.Service]
 
   const options: ApexOptions = {
     colors: [
@@ -34,7 +33,7 @@ const EcommerceGeneratedLeads = () => {
     legend: { show: false },
     tooltip: { enabled: false },
     dataLabels: { enabled: false },
-    labels: ['Electronic', 'Sports', 'Decor', 'Fashion'],
+    labels: ['Products', 'Services'],
     states: {
       hover: {
         filter: { type: 'none' }
@@ -110,12 +109,12 @@ const EcommerceGeneratedLeads = () => {
             </div>
             <div>
               <Typography variant='h5' sx={{ mb: 0.5 }}>
-                4,350
+                {data?.totalEnquiry}
               </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'success.main' } }}>
+              {/* <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'success.main' } }}>
                 <Icon icon='tabler:chevron-up' fontSize='1.25rem' />
                 <Typography sx={{ fontWeight: 500, color: 'success.main' }}>15.8%</Typography>
-              </Box>
+              </Box> */}
             </div>
           </Box>
           <ReactApexcharts type='donut' width={150} height={179} series={series} options={options} />

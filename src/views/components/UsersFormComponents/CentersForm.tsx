@@ -278,7 +278,7 @@ const CentersForm = ({
             type={'number'}
             endAdornment={
               <InputAdornment position='end'>
-                <Box>Ltr.</Box>
+                <Box>Rs.</Box>
               </InputAdornment>
             }
           />

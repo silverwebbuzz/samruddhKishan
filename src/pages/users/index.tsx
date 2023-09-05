@@ -126,7 +126,7 @@ const allUsers = () => {
     setPage(value)
   }
   const CustomPagination = () => {
-    return (
+    return userSearch?.length <= 0 ? (
       <Box
         sx={{
           display: 'flex',
@@ -154,34 +154,36 @@ const allUsers = () => {
 
         <Pagination count={pageCount} page={page} onChange={handleChange} />
       </Box>
+    ) : (
+      <></>
     )
   }
 
-  const handleUserSearch = e => {
+  const handleUserSearch = (e: any) => {
     setUserSearch(e)
     let payload = {
       fullName: e
     }
     //@ts-ignore
-    dispatch(getAllUsers(payload)).then(response => {
-      setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
-    })
+    dispatch(getAllUsers(payload))
   }
 
   useEffect(() => {
-    //@ts-ignore
-    const userData: any = JSON.parse(localStorage.getItem('userData'))
+    if (userSearch?.length <= 0) {
+      //@ts-ignore
+      const userData: any = JSON.parse(localStorage.getItem('userData'))
 
-    let payload = {
-      page: page,
-      pageSize: pageLimit,
-      fullName: userSearch ? userSearch : ''
+      let payload = {
+        page: page,
+        pageSize: pageLimit,
+        fullName: userSearch ? userSearch : ''
+      }
+      //@ts-ignore
+      dispatch(getAllUsers(payload)).then(response => {
+        setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
+      })
     }
-    //@ts-ignore
-    dispatch(getAllUsers(payload)).then(response => {
-      setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
-    })
-  }, [page, pageCount, pageLimit, deleteUser, updateUsers12, createUser12])
+  }, [page, pageCount, pageLimit, deleteUser, updateUsers12, userSearch, createUser12])
 
   const handleSearch = () => {}
   useEffect(() => {

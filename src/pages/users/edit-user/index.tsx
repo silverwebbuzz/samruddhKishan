@@ -13,7 +13,8 @@ import {
   Pagination,
   Select,
   TextField,
-  Tooltip
+  Tooltip,
+  Typography
 } from '@mui/material'
 import {
   createUser1,
@@ -201,7 +202,6 @@ const index = () => {
     if (userData?.pinCode) {
       setPincode(userData?.pinCode)
       dispatch(getAdressByPincode({ pincode: userData?.pinCode })).then(res => {
-        console.log('#$#$#$#', res)
         setTaluka(userData?.taluka && userData?.taluka)
         setVillage(userData?.village && userData?.village)
       })
@@ -384,6 +384,7 @@ const index = () => {
                         labelId='demo-simple-select-label'
                         id='demo-simple-select'
                         name='role'
+                        disabled={userData?.flag === 1 ? true : false}
                         value={rolePrefill && rolePrefill}
                         error={Boolean(errors?.role && touched?.role)}
                         label='Role'
@@ -415,6 +416,11 @@ const index = () => {
                           </MenuItem>
                         ))}
                       </Select>
+                      <Typography sx={{ color: '#898989' }} p={2}>
+                        {userData?.flag === 1
+                          ? '*Note: This user has added some records related to farmers, products, or services, so this user should not be edited'
+                          : null}
+                      </Typography>
                       <ErrorMessage name='role' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                     </FormControl>
                   </Grid>

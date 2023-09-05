@@ -29,6 +29,17 @@ import {
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
+import styled from '@emotion/styled'
+
+const ProfilePicture = styled('img')(({ theme }) => ({
+  width: 108,
+  height: 108,
+  borderRadius: theme.shape.borderRadius,
+  border: `4px solid ${theme.palette.common.white}`,
+  [theme.breakpoints.down('md')]: {
+    marginBottom: theme.spacing(4)
+  }
+}))
 
 const FarmerDetails = () => {
   const { allDistrict, allState, getFarmer, getAddressByPinCodeData } = useSelector(
@@ -45,6 +56,8 @@ const FarmerDetails = () => {
   const [villageName, setVillageName] = useState('')
   const [landDistrict, setLandDistrict] = useState('')
   const [url, setUrl] = useState('')
+  const [fileForView, setFileForView] = useState('')
+  // console.log(fileForView, 'fileForView.fileForView')
 
   const dispatch = useDispatch()
   const router = useRouter()
@@ -105,7 +118,7 @@ const FarmerDetails = () => {
       .required('Aadhar number is required')
       .matches(
         /^([0-9]{4}[0-9]{4}[0-9]{4}$)|([0-9]{4}\s[0-9]{4}\s[0-9]{4}$)|([0-9]{4}-[0-9]{4}-[0-9]{4}$)/,
-        'please enter a valid adhar number'
+        'please enter a valid aadhar number'
       )
   })
   const handleSubmit = (values: any) => {
@@ -200,7 +213,11 @@ const FarmerDetails = () => {
   useEffect(() => {
     dispatch(getAllDistrict({ state: STATE }))
   }, [STATE])
-
+  useEffect(() => {
+    if (getFarmer?.[0]?.file) {
+      setFileForView(getFarmer?.[0]?.file)
+    }
+  }, [getFarmer?.[0]?.file])
   const convertBase64 = file => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader()
@@ -218,9 +235,43 @@ const FarmerDetails = () => {
 
   const handleFile = async (e, param) => {
     const file = e.target.files[0]
+    setFileForView(e?.target?.files[0])
     const base64 = await convertBase64(file)
     if (base64) {
       setFile(base64)
+    }
+  }
+  const isValidUrl = (urlString: any) => {
+    try {
+      return Boolean(new URL(urlString))
+    } catch (e) {
+      return false
+    }
+  }
+  const FilePreview = ({ file, onRemove }: any) => {
+    if (isValidUrl(file)) {
+      return (
+        <Box>
+          <ProfilePicture src={file} alt='profile-picture' />
+        </Box>
+      )
+    } else {
+      if (file?.type?.startsWith('image')) {
+        return (
+          <Box>
+            <ProfilePicture src={URL.createObjectURL(file)} alt='profile-picture' />
+          </Box>
+        )
+      } else {
+        return (
+          <Box>
+            <ProfilePicture
+              src={'/images/logo/pngtree-gray-network-placeholder-png-image_3416659.jpg'}
+              alt='profile-picture'
+            />
+          </Box>
+        )
+      }
     }
   }
   useEffect(() => {
@@ -278,7 +329,7 @@ const FarmerDetails = () => {
                     padding: '10px'
                   }}
                 >
-                  {console.log(getFarmer?.[0]?.dateOfBirth)}
+                  {/* {console.log(getFarmer?.[0]?.dateOfBirth)} */}
                   <Grid item sm={6} xs={12}>
                     <TextField
                       value={values?.firstName}
@@ -1289,7 +1340,10 @@ const FarmerDetails = () => {
                       <Grid item sm={6} xs={12}></Grid>
                       <Grid item sm={6} xs={12}>
                         <Typography variant='body1' sx={{ fontWeight: 500, color: 'text.primary' }}>
-                          {url?.length > 0 ? 'Alredy Uploaded Your Land Document ' : 'Upload Your Land Document'}
+                          {/* <FilePreview  /> */}
+                          <FilePreview file={fileForView} />
+                          {/* {(console.log(getFarmer?.[0]), 'heelo')} */}
+                          {/* {url?.length > 0 ? 'Alredy Uploaded Your Land Document ' : 'Upload Your Land Document'} */}
                         </Typography>
                         <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
                           <Button
@@ -1306,6 +1360,11 @@ const FarmerDetails = () => {
                             <input type='file' hidden onChange={e => handleFile(e)} />
                           </Button>
                         </Box>
+                        {values?.appliedForSoilTesting === 'yes' ? (
+                          file?.length <= 0 ? (
+                            <div style={{ color: 'red' }}>{'Please select an image'}</div>
+                          ) : null
+                        ) : null}
                       </Grid>
                     </>
                   ) : null}

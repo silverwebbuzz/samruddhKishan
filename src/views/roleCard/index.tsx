@@ -17,6 +17,7 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 import { Avatar, AvatarGroup } from '@mui/material'
+import { textTransform } from '@mui/system'
 
 const series = [32, 41, 41, 70]
 
@@ -104,29 +105,49 @@ const RoleCard = ({ data, roleName }: any) => {
         <Box sx={{ gap: 2, display: 'flex', alignItems: 'stretch', justifyContent: 'space-between' }}>
           <Box sx={{ gap: 2, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
-              <Typography variant='h6' sx={{ mb: 0.5 }}>
-                {`Number of ${data?.roleType}`}
+              <Typography variant='h4' sx={{ fontSize: { xs: 20, md: 21 }, mb: 0.5 }}>
+                {data?.roleType}
               </Typography>
-            </div>
-            <div>
-              <Typography color={'primary'} variant='h6' sx={{ mb: 0.5 }}>
+              <Typography variant='body1' sx={{ color: '#898989', textTransform: 'capitalize' }}>
+                Number of {data?.roleType?.toLowerCase()}
+              </Typography>
+              <Typography color={'primary'} variant='h4' sx={{ mb: 0.5, fontWeight: '700' }}>
                 {data?.count}
               </Typography>
             </div>
           </Box>
           <Box sx={{ mb: 1.5, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <AvatarGroup
-              max={4}
-              className='pull-up'
-              sx={{ '& .MuiAvatar-root': { width: 32, height: 32, fontSize: '0.875rem' } }}
-            >
-              <Avatar src={`/images/avatars/1.png`} />
-              <Avatar src={`/images/avatars/2.png`} />
-              <Avatar src={`/images/avatars/3.png`} />
-              <Avatar src={`/images/avatars/4.png`} />
-              <Avatar src={`/images/avatars/5.png`} />
-            </AvatarGroup>
+            <div>
+              <AvatarGroup
+                max={4}
+                className='pull-up'
+                sx={{
+                  '& .MuiAvatar-root': {
+                    width: 30,
+                    height: 30,
+                    fontSize: '0.875rem',
+                    '@media (max-width:700px)': {
+                      width: 28, // Adjust the width for xs screen size
+                      height: 28 // Adjust the height for xs screen size
+                    }
+                  }
+                }}
+              >
+                <Avatar src={`/images/avatars/1.png`} />
+                <Avatar src={`/images/avatars/2.png`} />
+                <Avatar src={`/images/avatars/3.png`} />
+                <Avatar src={`/images/avatars/4.png`} />
+                <Avatar src={` /images/avatars/5.png`} />
+                <Avatar src={`/images/avatars/4.png`} />
+                <Avatar src={` /images/avatars/5.png`} />
+                <Avatar src={`/images/avatars/4.png`} />
+                <Avatar src={` /images/avatars/5.png`} />
+              </AvatarGroup>
+            </div>
           </Box>
+          {/* <Typography color={'primary'} variant='h4' sx={{ mb: 0.5, fontWeight: '900' }}>
+            {data?.count}
+          </Typography> */}
         </Box>
       </CardContent>
     </Card>

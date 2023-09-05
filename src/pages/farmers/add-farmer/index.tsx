@@ -47,6 +47,18 @@ import 'react-datepicker/dist/react-datepicker-cssmodules.min.css'
 import { DateType } from 'src/types/forms/reactDatepickerTypes'
 import PickersComponent from 'src/views/AddFarmerDialog/PickersCustomInput'
 import moment from 'moment'
+import styled from '@emotion/styled'
+
+const ProfilePicture = styled('img')(({ theme }) => ({
+  width: 108,
+  height: 108,
+  borderRadius: theme.shape.borderRadius,
+  border: `4px solid ${theme.palette.common.white}`,
+  [theme.breakpoints.down('md')]: {
+    marginBottom: theme.spacing(4)
+  }
+}))
+
 const FarmerDetails = () => {
   const { allDistrict, allState, getFarmer, getAddressByPinCodeData } = useSelector(
     (state: any) => state?.rootReducer?.farmerReducer
@@ -57,6 +69,7 @@ const FarmerDetails = () => {
   const [pincode, setPincode] = useState('')
   const [date, setDate] = useState<DateType>(new Date())
   const [fileForView, setFileForView] = useState('')
+  console.log(fileForView, 'fileForView')
   const dispatch = useDispatch()
   const router = useRouter()
 
@@ -117,6 +130,40 @@ const FarmerDetails = () => {
     }
   }
 
+  const isValidUrl = (urlString: any) => {
+    try {
+      return Boolean(new URL(urlString))
+    } catch (e) {
+      return false
+    }
+  }
+  const FilePreview = ({ file, onRemove }: any) => {
+    if (isValidUrl(file)) {
+      return (
+        <Box>
+          <ProfilePicture src={file} alt='profile-picture' />
+        </Box>
+      )
+    } else {
+      if (file?.type?.startsWith('image')) {
+        return (
+          <Box>
+            <ProfilePicture src={URL.createObjectURL(file)} alt='profile-picture' />
+          </Box>
+        )
+      } else {
+        return (
+          <Box>
+            <ProfilePicture
+              src={'/images/logo/pngtree-gray-network-placeholder-png-image_3416659.jpg'}
+              alt='profile-picture'
+            />
+          </Box>
+        )
+      }
+    }
+  }
+
   const validationSchema = yup.object().shape({
     firstName: yup.string().required('First name  is required'),
     middleName: yup.string().required('Middle name is required'),
@@ -138,7 +185,7 @@ const FarmerDetails = () => {
       .required('Aadhar number is required')
       .matches(
         /^([0-9]{4}[0-9]{4}[0-9]{4}$)|([0-9]{4}\s[0-9]{4}\s[0-9]{4}$)|([0-9]{4}-[0-9]{4}-[0-9]{4}$)/,
-        'please enter a valid adhar number'
+        'please enter a valid aadhar number'
       ),
 
     appliedForSoilTesting: yup.string().required('Periods of bond is required')
@@ -1198,11 +1245,13 @@ const FarmerDetails = () => {
                           Upload Land Document
                         </Typography>
                         <Box display='flex' flexDirection='column' alignItems='flex-start'>
-                          {file && file.length > 0 && (
+                          <FilePreview file={fileForView} />
+                          {/* <ProfilePicture src={fileForView} /> */}
+                          {/* {file && file.length > 0 && (
                             <Typography variant='body2' sx={{ color: 'text.secondary', mb: 2 }}>
                               Selected file: {fileForView?.name}
                             </Typography>
-                          )}
+                          )} */}
                           <Button
                             variant='contained'
                             component='label'
@@ -1241,6 +1290,16 @@ const FarmerDetails = () => {
                     }}
                   >
                     Submit
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      router.back()
+                    }}
+                    variant='outlined'
+                    type='button'
+                    color='secondary'
+                  >
+                    Cancel
                   </Button>
                 </Box>
               </Form>

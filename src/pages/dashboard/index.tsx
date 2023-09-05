@@ -2,17 +2,10 @@
 import Grid from '@mui/material/Grid'
 
 // ** Demo Component Imports
-import EcommerceProfit from 'src/views/dashboards/ecommerce/EcommerceProfit'
-import EcommerceOrders from 'src/views/dashboards/ecommerce/EcommerceOrders'
-import EcommerceExpenses from 'src/views/dashboards/ecommerce/EcommerceExpenses'
-import EcommerceEarningReports from 'src/views/dashboards/ecommerce/EcommerceEarningReports'
-import EcommerceInvoiceTable from 'src/views/dashboards/ecommerce/EcommerceInvoiceTable'
+
 import EcommerceRevenueReport from 'src/views/dashboards/ecommerce/EcommerceRevenueReport'
 import EcommerceGeneratedLeads from 'src/views/dashboards/ecommerce/EcommerceGeneratedLeads'
-import EcommercePopularProducts from 'src/views/dashboards/ecommerce/EcommercePopularProducts'
-import EcommerceCongratulationsJohn from 'src/views/dashboards/ecommerce/EcommerceCongratulationsJohn'
-import EcommerceTransactionsVertical from 'src/views/dashboards/ecommerce/EcommerceTransactionsVertical'
-import EcommerceTransactionsHorizontal from 'src/views/dashboards/ecommerce/EcommerceTransactionsHorizontal'
+
 import Icon from 'src/@core/components/icon'
 // ** Custom Component Import
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
@@ -37,23 +30,26 @@ const dashboard = () => {
   return (
     <ApexChartWrapper>
       <Grid container spacing={6}>
-        <Grid gap={4} spacing={6} display='flex' flexWrap='wrap' item xs={12} sm={12}>
-          <Grid item xs={12} sm={3.5}>
-            <RoleCard roleName={'Number of Farmers'} data={dashboardData?.TotalFarmerCount} />
-          </Grid>
-          {dashboardData?.allRoleCount?.map((Item: any) => {
-            return (
-              <Grid item xs={12} sm={3.5}>
-                <RoleCard data={Item} />
-              </Grid>
-            )
-          })}
+        <Grid item xs={12} sm={6} md={3} lg={4}>
+          <RoleCard roleName={'Number of Farmers'} data={dashboardData?.TotalFarmerCount} />
         </Grid>
+        {/* <Grid gap={4} spacing={6} display='flex' flexWrap='wrap' item xs={12} sm={12}>
+          <Grid item xs={12} sm={3.5}>
+          </Grid> */}
+        {dashboardData?.allRoleCount?.map((Item: any) => {
+          return (
+            <Grid item xs={12} sm={6} md={3} lg={4}>
+              <RoleCard data={Item} />
+            </Grid>
+          )
+        })}
+      </Grid>
+      <Grid container spacing={6} sx={{ mt: 1 }}>
         <Grid item xs={12} lg={8}>
           <EcommerceRevenueReport data={dashboardData} />
         </Grid>
         <Grid item xs={12} lg={4}>
-          <EcommerceGeneratedLeads />
+          <EcommerceGeneratedLeads data={dashboardData?.counts} />
         </Grid>
       </Grid>
     </ApexChartWrapper>

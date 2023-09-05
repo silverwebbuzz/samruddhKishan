@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useCallback, useState } from 'react'
+import { useEffect, useCallback, useState, ChangeEvent } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
@@ -161,7 +161,7 @@ const UserList = () => {
     setPage(value)
   }
   const CustomPagination = () => {
-    return (
+    return value?.length <= 0 ? (
       <Box
         sx={{
           display: 'flex',
@@ -189,10 +189,17 @@ const UserList = () => {
 
         <Pagination count={pageCount} page={page} onChange={handleChange} />
       </Box>
+    ) : (
+      <></>
     )
   }
   const handleFilter = useCallback((val: string) => {
     setValue(val)
+    let payload = {
+      fullName: val
+    }
+    //@ts-ignore
+    dispatch(getAllUsers(payload))
   }, [])
 
   const getUserRolesApiCall = () => {
@@ -207,8 +214,11 @@ const UserList = () => {
     })
   }
   useEffect(() => {
-    getUserRolesApiCall()
-  }, [page, pageCount, pageLimit, createURole, updateRole])
+    if (value?.length <= 0) {
+      getUserRolesApiCall()
+    }
+  }, [page, pageCount, pageLimit, createURole, updateRole, value])
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>

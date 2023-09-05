@@ -106,7 +106,6 @@ const App = (props: ExtendedAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps, ...rest } = props
   const router = useRouter()
   const [district, setDistrict] = useState('')
-  console.log('-------> in  Index', district)
   // Variables
   const contentHeightFixed = Component.contentHeightFixed ?? false
   const getLayout =

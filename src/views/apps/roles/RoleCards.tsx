@@ -66,16 +66,19 @@ const RolesCards = () => {
   const [open, setOpen] = useState<boolean>(false)
   const [dialogTitle, setDialogTitle] = useState<'Add' | 'Edit'>('Add')
   const [selectedCheckbox, setSelectedCheckbox] = useState<any[]>([])
-  const [useffectCall, setUseffectCall] = useState(false)
   const [DeleteID, setDeleteID] = useState()
   const [openDelete, setOpenDelete] = useState<boolean>(false)
   const [delelteField, setDelelteField] = useState<string>('')
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
 
   const { getRoles, createURole, getPermission, isLoading } = useSelector(
     (state: any) => state?.rootReducer?.farmerReducer
   )
   const [roleEditValue, setRoleEditValue] = useState<any>()
-  const handleClickOpen = () => setOpen(true)
+  const handleClickOpen = () => {
+    setOpen(true)
+    setIsDialogOpen(true)
+  }
   const dispatch = useDispatch<AppDispatch>()
   const validationSchema = yup.object().shape({
     roleName: yup.string().required('Role Name is required')
@@ -83,6 +86,7 @@ const RolesCards = () => {
   const handleClose = () => {
     setSelectedCheckbox([])
     setOpen(false)
+    setIsDialogOpen(false)
   }
   const togglePermission = (id: string) => {
     const arr = removeDuplicates(selectedCheckbox)
@@ -169,7 +173,12 @@ const RolesCards = () => {
     } else {
       setSelectedCheckbox([])
     }
-  }, [open])
+  }, [open, dialogTitle])
+  useEffect(() => {
+    if (!isDialogOpen) {
+      setSelectedCheckbox([])
+    }
+  }, [isDialogOpen])
   //@ts-ignore
   const renderCards = () =>
     getRoles.map((item: any, index: number) => (
@@ -188,7 +197,6 @@ const RolesCards = () => {
                   onClick={e => {
                     e.preventDefault()
                     setRoleEditValue(item)
-                    setUseffectCall(true)
                     setDialogTitle('Edit')
                     handleClickOpen()
                   }}
