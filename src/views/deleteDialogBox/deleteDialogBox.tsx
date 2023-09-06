@@ -31,7 +31,6 @@ const DeleteDialog = ({ open, type, id, handleClose, delelteField }: any) => {
     const payload: any = {
       id: id
     }
-    // console.log(payload, 'payload')
 
     switch (type) {
       case 'farmer':

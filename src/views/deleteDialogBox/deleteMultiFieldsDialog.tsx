@@ -40,7 +40,6 @@ const DeleteMultiFieldsDialog = ({ open, type, id, handleClose }: any) => {
     const payload: any = {
       ids: id
     }
-    // console.log(payload, 'payload')
 
     switch (type) {
       case 'farmer':

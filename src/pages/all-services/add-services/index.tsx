@@ -484,18 +484,27 @@ const addServices = () => {
                       Save
                     </Button>
                     <Button
-                      color='error'
                       sx={{ marginLeft: '10px' }}
                       size='medium'
-                      variant='contained'
+                      variant='outlined'
+                      color='secondary'
                       onClick={() => {
                         setFieldValue('categoryName', '')
-                        setEdit(false)
-                        handleCancel()
+                        router.back()
                       }}
                     >
                       Cancel
                     </Button>
+                    {/* <Button
+                      onClick={() => {
+                        router.back()
+                      }}
+                      variant='outlined'
+                      type='button'
+                      color='secondary'
+                    >
+                      Cancel
+                    </Button> */}
                   </Box>
                 </Grid>
               </Grid>

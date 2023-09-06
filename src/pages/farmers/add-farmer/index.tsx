@@ -40,12 +40,9 @@ import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
 import * as yup from 'yup'
-// import { DatePicker } from '@material-ui/pickers'
-import DatePicker, { ReactDatePickerProps } from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-datepicker/dist/react-datepicker-cssmodules.min.css'
 import { DateType } from 'src/types/forms/reactDatepickerTypes'
-import PickersComponent from 'src/views/AddFarmerDialog/PickersCustomInput'
 import moment from 'moment'
 import styled from '@emotion/styled'
 
@@ -69,7 +66,6 @@ const FarmerDetails = () => {
   const [pincode, setPincode] = useState('')
   const [date, setDate] = useState<DateType>(new Date())
   const [fileForView, setFileForView] = useState('')
-  console.log(fileForView, 'fileForView')
   const dispatch = useDispatch()
   const router = useRouter()
 

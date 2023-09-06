@@ -29,7 +29,6 @@ import { useEffect, useState } from 'react'
 import { createProduct, getAllProducts, updateProduct } from 'src/slice/productSlice'
 
 const ProductDialog = ({ show, setShow, handleCancel, edit, setEdit, editField, editID }: any) => {
-  // console.log(search)
   const dispatch = useDispatch<AppDispatch>()
   // ** State
   const [categories1, setCategories] = useState('')

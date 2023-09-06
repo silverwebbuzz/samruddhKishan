@@ -53,7 +53,7 @@ const CollapsibleTable: React.FC<Props> = ({ data }) => {
   const [editField, setEditField] = useState<Category | number>()
   const [anchorEl, setAnchorEl] = useState(null)
   const [menuRow, setMenuRow] = useState(null)
-  const [categoryStatus, setCategoryStatus] = useState('')
+  const [categoryStatus, setCategoryStatus] = useState(0)
   const [page, setPage] = useState(1) // Current page number
   const [pageLimit, setPageLimit] = useState(10) // Rows per page
   const pageCount = Math.ceil(data?.length / pageLimit)

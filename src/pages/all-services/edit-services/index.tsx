@@ -577,14 +577,13 @@ const editServices = () => {
                       Save
                     </Button>
                     <Button
-                      color='error'
                       sx={{ marginLeft: '10px' }}
                       size='medium'
-                      variant='contained'
+                      variant='outlined'
+                      color='secondary'
                       onClick={() => {
                         setFieldValue('categoryName', '')
-                        setEdit(false)
-                        handleCancel()
+                        router.back()
                       }}
                     >
                       Cancel

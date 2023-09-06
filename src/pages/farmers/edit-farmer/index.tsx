@@ -57,7 +57,6 @@ const FarmerDetails = () => {
   const [landDistrict, setLandDistrict] = useState('')
   const [url, setUrl] = useState('')
   const [fileForView, setFileForView] = useState('')
-  // console.log(fileForView, 'fileForView.fileForView')
 
   const dispatch = useDispatch()
   const router = useRouter()
@@ -329,7 +328,6 @@ const FarmerDetails = () => {
                     padding: '10px'
                   }}
                 >
-                  {/* {console.log(getFarmer?.[0]?.dateOfBirth)} */}
                   <Grid item sm={6} xs={12}>
                     <TextField
                       value={values?.firstName}
@@ -1341,10 +1339,7 @@ const FarmerDetails = () => {
                       <Grid item sm={6} xs={12}></Grid>
                       <Grid item sm={6} xs={12}>
                         <Typography variant='body1' sx={{ fontWeight: 500, color: 'text.primary' }}>
-                          {/* <FilePreview  /> */}
                           <FilePreview file={fileForView} />
-                          {/* {(console.log(getFarmer?.[0]), 'heelo')} */}
-                          {/* {url?.length > 0 ? 'Alredy Uploaded Your Land Document ' : 'Upload Your Land Document'} */}
                         </Typography>
                         <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
                           <Button
@@ -1386,6 +1381,16 @@ const FarmerDetails = () => {
                     }}
                   >
                     Submit
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      router.back()
+                    }}
+                    variant='outlined'
+                    type='button'
+                    color='secondary'
+                  >
+                    Cancel
                   </Button>
                 </Box>
               </Form>

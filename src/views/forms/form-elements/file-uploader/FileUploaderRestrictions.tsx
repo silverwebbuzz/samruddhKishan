@@ -34,7 +34,6 @@ const FileUploaderRestrictions = ({ files, setFiles }: any) => {
     },
     onDrop: (acceptedFiles: File[]) => {
       setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
-      console.log('acceptedFiles ------>', acceptedFiles?.[0])
       setFiles([...files, acceptedFiles[0]])
     },
     onDropRejected: () => {

@@ -18,21 +18,19 @@ import DemoSelect from 'src/views/demo/demoSelect'
 import { useEffect, useState } from 'react'
 
 const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField, editID }: any) => {
-  // console.log(search)
   const dispatch = useDispatch<AppDispatch>()
   const { categories } = useSelector((state: any) => state?.rootReducer?.categoriesReducer)
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(0)
 
   // ** State
   const handleCategory = (values: any, { resetForm }: any) => {
-    // console.log(values)
     const payload: any = {
-      categoryId: selectedCategory === 'none' ? 0 : selectedCategory,
+      categoryId: selectedCategory == 0 ? 0 : selectedCategory,
       categoryName: values?.categoryName,
       categoryStatus: values?.categoryStatus
     }
     let editPayload: any = {
-      categoryId: selectedCategory === 'none' ? 0 : selectedCategory,
+      categoryId: selectedCategory == 0 ? 0 : selectedCategory,
       categoryName: values?.categoryName,
       categoryStatus: values?.categoryStatus === '' ? 0 : values?.categoryStatus,
       id: editID
@@ -83,7 +81,7 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
                   categoryStatus: editField?.categoryStatus
                 }
               : {
-                  categoryId: '',
+                  categoryId: 0,
                   categoryName: '',
                   categoryStatus: ''
                 }

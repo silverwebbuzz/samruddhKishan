@@ -99,8 +99,6 @@ export const updateProduct = createAsyncThunk('user/updateProduct', async (paylo
       'Access-Control-Allow-Origin': '*',
       'Content-Type': 'multipart/form-data'
     })
-    // toast.success('Product updated successfully')
-    console.log('res=======', res)
     return res?.data
   } catch (err: any) {
     return rejectWithValue(err?.response?.data)

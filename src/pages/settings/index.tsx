@@ -30,7 +30,16 @@ import TabPanel from '@mui/lab/TabPanel'
 import MuiTab, { TabProps } from '@mui/material/Tab'
 import MuiTabList, { TabListProps } from '@mui/lab/TabList'
 import { styled } from '@mui/material/styles'
-import { getGeneralSetting, getLogoAPI, updateGeneralSetting } from 'src/slice/settingSlice'
+import {
+  createGoogleAPI,
+  createSeoAPI,
+  createSocialSettingAPI,
+  getEmailAPI,
+  getGeneralAPI,
+  getGeneralSetting,
+  getLogoAPI,
+  updateGeneralSetting
+} from 'src/slice/settingSlice'
 export type Payload = {
   id?: number
   search?: string
@@ -107,22 +116,50 @@ const settings = () => {
   const [activeTab, setActiveTab] = useState<string>('general')
   const [imageLogo, setImageLogo] = useState<any>()
   // const [isLoading, setIsLoading] = useState<boolean>(true)
-  const { updateGeneral, getGeneral } = useSelector((state: any) => state?.rootReducer?.settingsReducer)
-  const generalData = getGeneral[0]
+  const {
+    updateGeneral,
+    getGeneral,
+    singleSetting,
+    updateEmial,
+    createSocialData,
+    createGoogleSetting,
+    createSeoData
+  } = useSelector((state: any) => state?.rootReducer?.settingsReducer)
+  const generalData = singleSetting?.[0]
+  // console.log(generalData, 'generalData')
+
+  const isValidJSON = value => {
+    if (JSON.parse(value)) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  // console.log(generalID?.[0]?.id, 'generalID')
+  // useEffect(() => {
+  //   localStorage.setItem('updateGeneral', JSON.stringify(generalData))
+  // }, [updateGeneral])
 
   const dispatch = useDispatch<AppDispatch>()
+
   const handleChange = (event: SyntheticEvent, value: string) => {
     // setIsLoading(true)
     setActiveTab(value)
   }
 
+  const generalID = isValidJSON(localStorage.getItem('updateGeneral'))
+    ? JSON.parse(localStorage.getItem('updateGeneral'))
+    : null
+  const getGeneralID = generalID?.[0]?.id
+
+  // console.log(generalID?.data?>, 'getGeneralID')
+
   useEffect(() => {
-    const payload = {
-      id: 1
-    }
-    dispatch(getGeneralSetting(payload))
+    // dispatch(getGeneralSetting(payload))
+    dispatch(getGeneralAPI())
     dispatch(getLogoAPI())
-  }, [updateGeneral])
+  }, [updateGeneral, updateEmial, createSocialData, createGoogleSetting, createSeoData])
 
   const handleChangeLogo = (e: any) => {
     setImageLogo(e?.target?.file)
@@ -130,55 +167,69 @@ const settings = () => {
 
   const handleGeneral = (values: any, { resetForm }: any, submitType) => {
     let formdata = new FormData()
-
-    if (submitType === 'general') {
-      formdata.append('id', 1)
-      formdata.append('applicationName', values?.applicationName ? values?.applicationName : '')
-      formdata.append('applicationTitle', values?.applicationTitle ? values?.applicationTitle : '')
-      formdata.append('adminEmail', values?.adminEmail ? values?.adminEmail : '')
-      formdata.append('adminPhone', values?.adminPhone ? values?.adminPhone : '')
-      formdata.append('adminAddress', values?.adminAddress ? values?.adminAddress : '')
-      if (!isValidUrl(values?.logo)) {
-        formdata.append('logo', values?.logo ? values?.logo : '')
-      }
-      if (!isValidUrl(values?.favIcon)) {
-        formdata.append('favIcon', values?.favIcon ? values?.favIcon : '')
-      }
-      const generalPayload = formdata
-      dispatch(updateGeneralSetting(generalPayload))
-    } else if (submitType === 'email') {
-      formdata.append('id', 1)
-      formdata.append('mailProtocol', values?.mailProtocol ? values?.mailProtocol : '')
-      formdata.append('mailTitle', values?.mailTitle ? values?.mailTitle : '')
-      formdata.append('mailHost', values?.mailHost ? values?.mailHost : '')
-      formdata.append('mailPort', values?.mailPort ? values?.mailPort : '')
-      formdata.append('mailUsername', values?.mailUsername ? values?.mailUsername : '')
-      formdata.append('mailPassword', values?.mailPassword ? values?.mailPassword : '')
-      const emailPayload = formdata
-      dispatch(updateGeneralSetting(emailPayload))
-    } else if (submitType === 'social') {
-      formdata.append('id', 1)
-      formdata.append('facebook', values?.facebook ? values?.facebook : '')
-      formdata.append('twitter', values?.twitter ? values?.twitter : '')
-      formdata.append('instagram', values?.instagram ? values?.instagram : '')
-      formdata.append('linkedin', values?.linkedin ? values?.linkedin : '')
-      const socialPayload = formdata
-      dispatch(updateGeneralSetting(socialPayload))
-    } else if (submitType === 'googleAnalytics') {
-      formdata.append('id', 1)
-      formdata.append('googleAnalyticsCode', values?.googleAnalyticsCode ? values?.googleAnalyticsCode : '')
-      const googleAnalyticsPayload = formdata
-      dispatch(updateGeneralSetting(googleAnalyticsPayload))
-    } else if (submitType === 'seo') {
-      formdata.append('id', 1)
-      formdata.append('metaTitle', values?.metaTitle ? values?.metaTitle : '')
-      formdata.append('metaKeywords', values?.metaKeywords ? values?.metaKeywords : '')
-      formdata.append('metaDescription', values?.metaDescription ? values?.metaDescription : '')
-      const seoPayload = formdata
-      dispatch(updateGeneralSetting(seoPayload))
-    } else {
-      return null
+    // {
+    //   generalData?.id && formdata.append('id', getGeneralID)
+    // }
+    // {
+    //   formdata.append('id', 1) ? formdata.append('id', getGeneralID) : null
+    // }
+    formdata.append('applicationName', values?.applicationName ? values?.applicationName : '')
+    formdata.append('applicationTitle', values?.applicationTitle ? values?.applicationTitle : '')
+    formdata.append('adminEmail', values?.adminEmail ? values?.adminEmail : '')
+    formdata.append('adminPhone', values?.adminPhone ? values?.adminPhone : '')
+    formdata.append('adminAddress', values?.adminAddress ? values?.adminAddress : '')
+    if (!isValidUrl(values?.logo)) {
+      formdata.append('logo', values?.logo ? values?.logo : '')
     }
+    if (!isValidUrl(values?.favIcon)) {
+      formdata.append('favIcon', values?.favIcon ? values?.favIcon : '')
+    }
+
+    generalData?.id ? formdata.append('id', generalData?.id) : false
+    const generalPayload = formdata
+    dispatch(updateGeneralSetting(generalPayload))
+  }
+
+  const handleEmailSetting = (values: any, { resetForm }: any, submitType) => {
+    const payload = {
+      mailProtocol: values?.mailProtocol ? values?.mailProtocol : '',
+      mailTitle: values?.mailTitle ? values?.mailTitle : '',
+      mailHost: values?.mailHost ? values?.mailHost : '',
+      mailPort: values?.mailPort ? values?.mailPort : '',
+      mailUsername: values?.mailUsername ? values?.mailUsername : '',
+      mailPassword: values?.mailPassword ? values?.mailPassword : ''
+    }
+    generalData?.id ? (payload.id = generalData?.id) : false
+    dispatch(getEmailAPI(payload))
+  }
+
+  const handleSocialSetting = (values: any, { resetForm }: any, submitType) => {
+    const payload = {
+      facebook: values?.facebook ? values?.facebook : '',
+      twitter: values?.twitter ? values?.twitter : '',
+      instagram: values?.instagram ? values?.instagram : '',
+      linkedin: values?.linkedin ? values?.linkedin : ''
+    }
+    generalData?.id ? (payload.id = generalData?.id) : false
+    dispatch(createSocialSettingAPI(payload))
+  }
+
+  const handleGoogleSetting = (values: any, { resetForm }: any, submitType) => {
+    const payload = {
+      googleAnalyticsCode: values?.googleAnalyticsCode ? values?.googleAnalyticsCode : ''
+    }
+    generalData?.id ? (payload.id = generalData?.id) : false
+    dispatch(createGoogleAPI(payload))
+  }
+
+  const handleSEOSetting = (values: any, { resetForm }: any, submitType) => {
+    const payload = {
+      metaTitle: values?.metaTitle ? values?.metaTitle : '',
+      metaKeywords: values?.metaKeywords ? values?.metaKeywords : '',
+      metaDescription: values?.metaDescription ? values?.metaDescription : ''
+    }
+    generalData?.id ? (payload.id = generalData?.id) : false
+    dispatch(createSeoAPI(payload))
   }
   const ProfilePicture = styled('img')(({ theme }) => ({
     width: '150px',
@@ -458,7 +509,7 @@ const settings = () => {
                     }}
                     // validationSchema={validationSchema}
                     onSubmit={(values: any, { resetForm }) => {
-                      handleGeneral(values, { resetForm }, 'email')
+                      handleEmailSetting(values, { resetForm })
                     }}
                   >
                     {(props: FormikProps<any>) => {
@@ -557,7 +608,7 @@ const settings = () => {
                     }}
                     // validationSchema={validationSchema}
                     onSubmit={(values: any, { resetForm }) => {
-                      handleGeneral(values, { resetForm }, 'social')
+                      handleSocialSetting(values, { resetForm })
                     }}
                   >
                     {(props: FormikProps<any>) => {
@@ -642,7 +693,7 @@ const settings = () => {
                     }}
                     // validationSchema={validationSchema}
                     onSubmit={(values: any, { resetForm }) => {
-                      handleGeneral(values, { resetForm }, 'googleAnalytics')
+                      handleGoogleSetting(values, { resetForm })
                     }}
                   >
                     {(props: FormikProps<any>) => {
@@ -691,7 +742,7 @@ const settings = () => {
                     }}
                     // validationSchema={validationSchema}
                     onSubmit={(values: any, { resetForm }) => {
-                      handleGeneral(values, { resetForm }, 'seo')
+                      handleSEOSetting(values, { resetForm })
                     }}
                   >
                     {(props: FormikProps<any>) => {

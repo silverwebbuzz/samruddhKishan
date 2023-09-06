@@ -713,6 +713,16 @@ const index = () => {
                   >
                     Submit
                   </Button>
+                  <Button
+                    onClick={() => {
+                      router.back()
+                    }}
+                    variant='outlined'
+                    type='button'
+                    color='secondary'
+                  >
+                    Cancel
+                  </Button>
                 </Box>
               </Form>
             </Box>

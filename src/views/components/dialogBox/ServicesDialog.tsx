@@ -17,7 +17,6 @@ import { createCategory, getAllCategories, updateCategory } from 'src/slice/cate
 import styled from '@emotion/styled'
 
 const ServicesDialog = ({ show, setShow, handleCancel, edit, setEdit, editField, editID }: any) => {
-  // console.log(search)
   const dispatch = useDispatch<AppDispatch>()
   const { categories } = useSelector((state: any) => state?.rootReducer?.categoriesReducer)
   const ProfilePicture = styled('img')(({ theme }) => ({
@@ -32,7 +31,6 @@ const ServicesDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
 
   // ** State
   const handleCategory = (values: any, { resetForm }: any) => {
-    // console.log(values)
     const payload: any = {
       categoryName: values?.categoryName?.trim()
     }

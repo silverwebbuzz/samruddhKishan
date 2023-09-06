@@ -62,7 +62,7 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
   }
   const AppBrand = () => {
     return (
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', padding: 2 }}>
         <img
           src={getLogo?.logo ? getLogo?.logo : '/images/logo/placeholder-logo-1.png'}
           alt='Samruddh Kisan Logo'

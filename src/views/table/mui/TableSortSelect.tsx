@@ -234,9 +234,7 @@ const EnhancedTable = () => {
   const handleSelectAllClick = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       const newSelecteds = rows.map(n => n.name)
-      console.log(newSelecteds)
       setSelected(newSelecteds)
-
       return
     }
     setSelected([])
@@ -255,7 +253,6 @@ const EnhancedTable = () => {
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1))
     }
-    console.log(newSelected)
 
     setSelected(newSelected)
   }

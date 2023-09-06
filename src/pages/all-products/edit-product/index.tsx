@@ -166,25 +166,11 @@ const editProduct = () => {
     }
   }
 
-  // const handleFileChange = event => {
-  //   const file = event.target.files[0] // Only allow selecting one file at a time
-  //   setSelectedFiles([...selectedFiles, file])
-  //   setNewSelectedFiles([...newSelectedFiles, file])
-  // }
   const handleFileChange = event => {
     const file = event.target.files[0] // Only allow selecting one file at a time
-    console.log('Selected File:', file)
-
-    // Check the current state of selectedFiles and newSelectedFiles
-    console.log('Current selectedFiles:', selectedFiles)
-    console.log('Current newSelectedFiles:', newSelectedFiles)
 
     setSelectedFiles(prevSelectedFiles => [...prevSelectedFiles, file])
     setNewSelectedFiles(prevNewSelectedFiles => [...prevNewSelectedFiles, file])
-
-    // Log the updated state after setting the new file
-    console.log('Updated selectedFiles:', selectedFiles)
-    console.log('Updated newSelectedFiles:', newSelectedFiles)
   }
   useEffect(() => {
     dispatch(getAllCategories())
@@ -194,23 +180,7 @@ const editProduct = () => {
     dispatch(getAllUnits())
     dispatch(getProductById({ id: productID }))
   }, [])
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setCategoryIdPrefill(singleProductsData?.categoryId)
-  //     setBrandPrefill(singleProductsData?.brandId)
-  //     setVendorId(singleProductsData?.vendorId)
-  //     setContryPrefill(singleProductsData?.country)
-  //     setProductUnits(singleProductsData?.productUnits)
-  //     setSelectedFiles([...selectedFiles, ...singleProductsData.productGallaryImage])
-  //   }, [1000])
-  // }, [
-  //   singleProductsData?.categoryId,
-  //   singleProductsData?.vendorId,
-  //   singleProductsData?.brandId,
-  //   singleProductsData?.productName,
-  //   singleProductsData?.country,
-  //   singleProductsData?.productUnits
-  // ])
+
   useEffect(() => {
     setTimeout(() => {
       setCategoryIdPrefill(singleProductsData?.categoryId || 0)

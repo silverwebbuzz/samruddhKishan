@@ -98,7 +98,6 @@ const VerticalNavLink = ({
 
   // ** Vars
   const { navCollapsed } = settings
-  console.log('active menue using Nav')
   const icon = parent && !item.icon ? themeConfig.navSubItemIcon : item.icon
   const handleChildRoutes = (router: NextRouter, path: string | undefined) => {
     //@ts-ignore

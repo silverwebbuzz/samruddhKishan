@@ -64,7 +64,6 @@ const EcommerceRevenueReport = ({ data }: any) => {
     { name: 'Farmers', data: Object.values(data?.farmerCount?.[0] ? data?.farmerCount[0] : {}) },
     { name: 'Vendors', data: Object.values(data?.farmerCount?.[0] ? data?.vendorCount[0] : {}) }
   ]
-  console.log('datadatadata--->')
   const barOptions: ApexOptions = {
     chart: {
       stacked: true,

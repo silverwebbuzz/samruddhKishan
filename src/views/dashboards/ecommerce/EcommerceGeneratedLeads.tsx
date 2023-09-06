@@ -20,8 +20,10 @@ import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 const EcommerceGeneratedLeads = ({ data }: any) => {
   // ** Hook
   const theme = useTheme()
-  const series = [data?.Product, data?.Service]
-
+  let series = []
+  if (data) {
+    series = [data?.Product, data?.Service]
+  }
   const options: ApexOptions = {
     colors: [
       theme.palette.success.main,
@@ -129,7 +131,13 @@ const EcommerceGeneratedLeads = ({ data }: any) => {
               </Box>
             </div>
           </Box>
-          <ReactApexcharts type='donut' width={150} height={179} series={series} options={options} />
+          <ReactApexcharts
+            type='donut'
+            width={150}
+            height={179}
+            series={series && series}
+            options={options && options}
+          />
         </Box>
       </CardContent>
     </Card>

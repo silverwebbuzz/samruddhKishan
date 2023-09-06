@@ -1,5 +1,5 @@
 // ** React Imports
-import { ReactNode, createContext, useState } from 'react'
+import { ReactNode, createContext, useEffect, useState } from 'react'
 
 // ** Next Imports
 import Head from 'next/head'
@@ -63,6 +63,7 @@ import '../../styles/about.css'
 
 import { Provider } from 'react-redux'
 import store from 'src/store/store'
+import axios from 'axios'
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {
   Component: NextPage
@@ -106,6 +107,7 @@ const App = (props: ExtendedAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps, ...rest } = props
   const router = useRouter()
   const [district, setDistrict] = useState('')
+  const [seoData, setSeoData] = useState([])
   // Variables
   const contentHeightFixed = Component.contentHeightFixed ?? false
   const getLayout =
@@ -119,16 +121,42 @@ const App = (props: ExtendedAppProps) => {
 
   const aclAbilities = Component.acl ?? defaultACLObj
 
+  const getSeoData = async () => {
+    try {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/settings/getSingleSetting`)
+      setSeoData(response?.data?.data?.[0])
+    } catch (error) {
+      console.error('API Error:', error)
+    }
+  }
+  useEffect(() => {
+    getSeoData()
+  }, [])
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/settings/getLogo`)
+      .then(response => response.json())
+      .then(data => {
+        const faviconUrl = data?.data?.favIcon
+        const link = document.querySelector("link[rel*='icon']") || document.createElement('link')
+        link.type = 'image/x-icon'
+        link.rel = 'icon'
+        link.href = faviconUrl
+        document.head.appendChild(link)
+      })
+  }, [])
   return (
     <Provider store={store}>
       <CacheProvider value={emotionCache}>
         <Head>
-          <title>{`${themeConfig.templateName} `}</title>
+          <title>{seoData?.applicationTitle}</title>
           <meta
             name='description'
-            content={`${themeConfig.templateName} – Material Design React Admin Dashboard Template – is the most developer friendly & highly customizable Admin Dashboard Template based on MUI v5.`}
+            content={`${seoData?.applicationName ? seoData?.applicationName : seoData?.applicationTitle} - ${
+              seoData?.metaDescription
+            }`}
           />
-          <meta name='keywords' content='Material Design, MUI, Admin Template, React Admin Template' />
+          <meta name='keywords' content={seoData?.metaKeywords} />
           <meta name='viewport' content='initial-scale=1, width=device-width' />
         </Head>
 

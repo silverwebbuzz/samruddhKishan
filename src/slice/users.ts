@@ -4,7 +4,6 @@ import axios from 'axios'
 let TOKEN = null
 if (typeof window !== 'undefined') {
   TOKEN = localStorage.getItem('accessToken')
-  console.log('object', TOKEN)
 }
 const headers = {
   'Access-Control-Allow-Origin': '*',

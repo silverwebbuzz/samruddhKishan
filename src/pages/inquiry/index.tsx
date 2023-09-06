@@ -272,7 +272,6 @@ const allInquiry = () => {
               Set Completed
             </MenuItem>
           </Menu>
-          {console.log(Boolean(anchorEl) && row.id === menuRow?.id)}
         </Box>
       )
     }

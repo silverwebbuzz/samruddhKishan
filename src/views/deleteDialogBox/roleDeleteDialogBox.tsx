@@ -35,7 +35,7 @@ const RoleDeleteDialog = ({ open, type, id, handleClose, delelteField }: any) =>
           if (res?.payload?.status === 400) {
             toast.error('This role is assigned to another users')
           } else if (res?.payload?.status === 200) {
-            toast.error('Role has been deleted successfully')
+            toast.success('Role has been deleted successfully')
             dispatch(getRoleAndPermissions())
           }
         })

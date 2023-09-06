@@ -115,21 +115,6 @@ const ContentPage = () => {
     )
   }
 
-  // const FilePreview = ({ file, onRemove }: any) => {
-  //   console.log('file?.name', file?.name)
-  //   if (file?.type?.startsWith('image')) {
-  //     return (
-  //       <div>
-  //         <img width={38} height={38} alt={file?.name} src={URL.createObjectURL(file as any)} />
-  //         <Button variant='contained' color='secondary' startIcon={<Icon icon='tabler:trash' />}>
-  //           Delete
-  //         </Button>
-  //       </div>
-  //     )
-  //   } else {
-  //     return <Icon icon='tabler:file-description' />
-  //   }
-  // }
   const FilePreview = ({ file, onRemove }: any) => {
     if (file?.type.startsWith('image')) {
       return (

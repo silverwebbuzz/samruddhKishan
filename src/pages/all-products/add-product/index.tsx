@@ -87,7 +87,6 @@ const addProduct = () => {
     })
 
     let payload = formdata
-    // console.log()
     dispatch(createProduct(payload)).then(res => {
       if (res?.payload?.status === 'success') {
         router.push('/all-products')
@@ -686,8 +685,6 @@ const addProduct = () => {
                       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                         {selectedFiles.length > 0 ? (
                           selectedFiles?.map((file, index) => {
-                            console.log('FILE', file, index)
-                            // return <ImagePreviewer file={file} index={index} />
                             return <ImagePreviewer key={index} file={{ file: file, index: index }} />
                           })
                         ) : (
