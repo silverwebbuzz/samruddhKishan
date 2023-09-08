@@ -4,8 +4,8 @@ import { ReactNode, createContext, useEffect, useState } from 'react'
 // ** Next Imports
 import Head from 'next/head'
 import { Router, useRouter } from 'next/router'
-import type { NextPage } from 'next'
-import type { AppProps } from 'next/app'
+// import type { NextPage } from 'next'
+// import type { AppProps } from 'next/app'
 
 // ** Loader Import
 import NProgress from 'nprogress'
@@ -64,6 +64,8 @@ import '../../styles/about.css'
 import { Provider } from 'react-redux'
 import store from 'src/store/store'
 import axios from 'axios'
+import { NextPage } from 'next/types'
+import { AppProps } from 'next/dist/shared/lib/router/router'
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {
   Component: NextPage
@@ -111,7 +113,7 @@ const App = (props: ExtendedAppProps) => {
   // Variables
   const contentHeightFixed = Component.contentHeightFixed ?? false
   const getLayout =
-    Component.getLayout ?? (page => <UserLayout contentHeightFixed={contentHeightFixed}>{page}</UserLayout>)
+    Component.getLayout ?? ((page: any) => <UserLayout contentHeightFixed={contentHeightFixed}>{page}</UserLayout>)
 
   const setConfig = Component.setConfig ?? undefined
 
@@ -137,12 +139,15 @@ const App = (props: ExtendedAppProps) => {
     fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/settings/getLogo`)
       .then(response => response.json())
       .then(data => {
+        console.log('HELLO sdkajlakjdlkjaldjla')
         const faviconUrl = data?.data?.favIcon
+        console.log(faviconUrl, 'faviconUrl.....')
         const link = document.querySelector("link[rel*='icon']") || document.createElement('link')
         link.type = 'image/x-icon'
         link.rel = 'icon'
         link.href = faviconUrl
         document.head.appendChild(link)
+        console.log('document.head', document.head.appendChild(link))
       })
   }, [])
   return (
