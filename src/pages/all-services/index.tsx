@@ -62,8 +62,8 @@ const allCategories = () => {
   const [search, setSearch] = useState<string>('')
   const router = useRouter()
   const [page, setPage] = useState<number>(1)
-  const [pageCount, setPageCount] = useState<number>(1)
-  const [pageLimit, setPageLimit] = useState<number>(10)
+  const [pageCount, setPageCount] = useState<number | any>(1)
+  const [pageLimit, setPageLimit] = useState<number | any>(10)
   const [editPrefillData, setEditPrefillData] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
   const dispatch = useDispatch<AppDispatch>()
@@ -81,7 +81,7 @@ const allCategories = () => {
   const { brandsData } = useSelector((state: any) => state?.rootReducer?.brandsReducer)
   const { getUsers } = useSelector((state: any) => state?.rootReducer?.farmerReducer)
 
-  const [categoryIdPrefill, setCategoryIdPrefill] = useState(0)
+  const [categoryIdPrefill, setCategoryIdPrefill] = useState<number | any>(0)
   const [brandPrefill, setBrandPrefill] = useState('')
   const [selectedRows, setSelectedRows] = useState<number[]>([])
   const [multiFieldDeleteOpen, setMultiFieldDeleteOpen] = useState(false)
@@ -106,7 +106,7 @@ const allCategories = () => {
   }
 
   const [anchorEl, setAnchorEl] = useState(null)
-  const [menuRow, setMenuRow] = useState(null)
+  const [menuRow, setMenuRow] = useState<any>(null)
   const CustomPagination = () => {
     return (
       <Box
@@ -150,6 +150,7 @@ const allCategories = () => {
     }
     dispatch(getAllCategories({ page: 1, pageSize: 10 }))
     dispatch(getAllBrands({ page: 1, pageSize: 10 }))
+    //@ts-ignore
     dispatch(getAllUsers())
 
     dispatch(getAllServices(payload)).then((response: any) => {
@@ -333,7 +334,7 @@ const allCategories = () => {
             </MenuItem>
             <MenuItem
               onClick={() => {
-                let formdata = new FormData()
+                let formdata: any = new FormData()
 
                 formdata.append('id', row?.id)
                 formdata.append('status', row?.status === 0 ? 1 : 0)
@@ -479,7 +480,6 @@ const allCategories = () => {
                       }}
                     >
                       <Typography
-                        variant='body'
                         sx={{
                           minWidth: '126px'
                         }}

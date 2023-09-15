@@ -13,13 +13,13 @@ import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import * as yup from 'yup'
 import { createMasterDegree, updateMasterDegreeById } from 'src/slice/masterDegreeSlice'
-import { createCategory, getAllCategories, updateCategory } from 'src/slice/categoriesSlice'
+import { createCategory, getAllCategories, getAllCategoriesForSelect, updateCategory } from 'src/slice/categoriesSlice'
 import DemoSelect from 'src/views/demo/demoSelect'
 import { useEffect, useState } from 'react'
 
 const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField, editID }: any) => {
   const dispatch = useDispatch<AppDispatch>()
-  const { categories } = useSelector((state: any) => state?.rootReducer?.categoriesReducer)
+  const { categories, getCategoriesForSelect } = useSelector((state: any) => state?.rootReducer?.categoriesReducer)
   const [selectedCategory, setSelectedCategory] = useState<number | null>(0)
 
   // ** State
@@ -61,6 +61,9 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
       setSelectedCategory(editField?.categoryId)
     }
   }, [editField?.categoryId])
+  useEffect(() => {
+    dispatch(getAllCategoriesForSelect())
+  }, [])
   // Validations
   const validationSchema = yup.object({
     categoryName: yup.string().required('Category name is required'),
@@ -98,7 +101,7 @@ const CategoryDialog = ({ show, setShow, handleCancel, edit, setEdit, editField,
                 <Grid container gap={3}>
                   <Grid xs={12}>
                     <DemoSelect
-                      data={categories?.data}
+                      data={getCategoriesForSelect?.data}
                       selectedCategory={selectedCategory}
                       setSelectedCategory={setSelectedCategory}
                     />

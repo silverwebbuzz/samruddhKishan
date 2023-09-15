@@ -869,10 +869,7 @@ const FarmerDetails = () => {
                     />
                   </Divider>
                 </Box>
-                {/* <FormControlLabel
-                  control={<Checkbox checked={values.asPerAbove} onChange={setFieldValue} name='asPerAbove' />}
-                  label='Land Address As Per Above'
-                /> */}
+
                 <Grid
                   container
                   spacing={6}
@@ -1127,7 +1124,6 @@ const FarmerDetails = () => {
                         value={values?.landArea}
                         name='landArea'
                         type={'number'}
-                        // sx={{ mb: 4 }}
                         endAdornment={
                           <InputAdornment position='end'>
                             <Box
@@ -1242,12 +1238,7 @@ const FarmerDetails = () => {
                         </Typography>
                         <Box display='flex' flexDirection='column' alignItems='flex-start'>
                           <FilePreview file={fileForView} />
-                          {/* <ProfilePicture src={fileForView} /> */}
-                          {/* {file && file.length > 0 && (
-                            <Typography variant='body2' sx={{ color: 'text.secondary', mb: 2 }}>
-                              Selected file: {fileForView?.name}
-                            </Typography>
-                          )} */}
+
                           <Button
                             variant='contained'
                             component='label'

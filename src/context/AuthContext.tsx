@@ -28,7 +28,7 @@ const defaultProvider: AuthValuesType = {
   logout: () => Promise.resolve()
 }
 
-const AuthContext = createContext(defaultProvider)
+const AuthContext = createContext<any>(defaultProvider)
 
 type Props = {
   children: ReactNode

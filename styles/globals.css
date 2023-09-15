@@ -46,15 +46,37 @@ code[class*='language-'] {
   font-family: var(--defalt-font) !important;
 }
 .login-btn {
-  padding: 12px !important;
+  padding: 12px 30px !important;
   text-transform: capitalize;
-  color: var(--font-color) !important;
-  background-color: var(--btn-color) !important;
+  color: var(--heading-color) !important;
+  background-color: var(--secondry-color) !important;
   font-weight: 700 !important;
   font-family: var(--defalt-font) !important;
+  overflow: hidden;
+  z-index: 1;
+}
+.login-btn::after {
+  position: absolute;
+  top: 50%;
+  right: inherit;
+  bottom: inherit;
+  left: -20%;
+  content: '';
+  height: 150px;
+  width: 115%;
+  z-index: -1;
+  background-color: var(--btn-color);
+  -webkit-transition: all 0.25s ease-in-out;
+  transition: all 0.25s ease-in-out;
+  -webkit-transform: translateY(-45%) skew(25deg) scale(0);
+  transform: translateY(-45%) skew(25deg) scale(0);
+}
+.login-btn:hover::after {
+  -webkit-transform: translateY(-45%) skew(25deg) scale(1.3);
+  transform: translateY(-45%) skew(25deg) scale(1.3);
 }
 .login-btn:hover {
-  background-color: var(--btn-hover) !important;
+  color: var(--font-color) !important;
 }
 .logo-img {
   width: 200px;
@@ -70,7 +92,7 @@ code[class*='language-'] {
   text-decoration: none;
 }
 .menu-item {
-  padding: 10px 10px;
+  padding: 10px 15px;
   font-size: 14px;
   font-weight: 900;
   font-family: var(--defalt-font);
@@ -355,6 +377,63 @@ code[class*='language-'] {
 }
 
 /*9-8-23(Amit Css)  */
+/* Topbar css Starts */
+.top_bar_left {
+  display: flex;
+  justify-content: flex-start;
+  background: #1f4e3d;
+  padding: 15px 15px 15px 10%;
+  width: calc(100% - 230px);
+  column-gap: 30px;
+}
+.top_bar_right {
+  padding: 15px 30px;
+  background: #f7c35f;
+  width: 230px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.top_bar_right svg {
+  color: #fff;
+}
+.top_bar_left p {
+  padding-right: 30px;
+  padding-left: 20px;
+  border-right: 1px solid rgba(255, 255, 255, 0.4);
+}
+.top_bar_left ul li {
+  display: flex;
+  align-items: center;
+  column-gap: 5px;
+  font-weight: 500;
+}
+.top_bar {
+  display: flex;
+  padding: 0 10% 0 0;
+}
+.top_bar {
+  color: #fff;
+}
+.top_bar p {
+  margin: 0;
+  font-weight: 500;
+}
+.top_bar ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+  margin: 0;
+  column-gap: 25px;
+}
+.top_bar_right_social ul {
+  justify-content: space-around;
+}
+.top_bar_right_social a {
+  display: flex;
+}
+/* Topbar css ends */
 .sec_sub_title {
   text-transform: uppercase;
   color: var(--btn-color);
@@ -1155,7 +1234,28 @@ code[class*='language-'] {
 .testimonial_right {
   padding-left: 20px;
 }
+.landingPage.nav_open {
+  overflow: hidden;
+}
+.landingPage.nav_open::before {
+  content: '';
+  background-color: rgb(0 0 0 / 60%);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99;
+}
 /* Amit Responsive css */
+@media (min-width: 1025px) {
+  .mobile_navbar {
+    display: none !important;
+  }
+  .desk_navbar {
+    flex-direction: row !important;
+  }
+}
 @media only screen and (max-width: 1400px) {
   .about-text {
     padding-right: 0;
@@ -1172,6 +1272,9 @@ code[class*='language-'] {
   .card2 {
     margin-top: 0;
     margin-left: 10px;
+  }
+  .main-menu .menu-link .menu-item {
+    padding: 10px;
   }
 }
 @media (max-width: 1200px) {
@@ -1231,6 +1334,38 @@ code[class*='language-'] {
     background-size: 130px, 170px;
     background-position: left top, right top;
   }
+  .top_bar {
+    padding: 0 8% 0 0 !important;
+  }
+  .top_bar_left {
+    padding: 15px 15px 15px 10% !important;
+    width: calc(100% - 200px) !important;
+    column-gap: 15px !important;
+  }
+  .top_bar ul {
+    column-gap: 15px;
+  }
+  .top_bar_left p {
+    padding-left: 0px !important;
+    padding-right: 15px !important;
+  }
+  .top_bar_right {
+    width: 200px !important;
+  }
+  .menu_right_btn {
+    margin-left: 15px !important;
+  }
+}
+@media (max-width: 1100px) {
+  .logo-img {
+    width: 160px;
+  }
+  .landing_home_page_header .MuiContainer-root {
+    min-height: 90px !important;
+  }
+  .landing_home_page_header::after {
+    bottom: -90px;
+  }
 }
 @media only screen and (max-width: 1064px) {
   .menu-item {
@@ -1245,6 +1380,20 @@ code[class*='language-'] {
   }
 }
 @media (max-width: 1024px) {
+  .desk_navbar {
+    align-items: flex-start !important;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .desk_navbar .main-menu {
+    margin: 0 !important;
+  }
+  .desk_navbar .main-menu .sub-menu {
+    flex-direction: column;
+  }
+  .menu_right_btn {
+    margin-left: 0 !important;
+  }
   .logo-img {
     width: 150px;
   }
@@ -1346,6 +1495,16 @@ code[class*='language-'] {
     width: 50px;
     height: 50px;
   }
+  .top_bar_right {
+    width: 180px !important;
+  }
+  .top_bar_left {
+    padding: 15px 15px 15px 5% !important;
+    width: calc(100% - 180px) !important;
+  }
+  .top_bar {
+    padding: 0 5% 0 0 !important;
+  }
 }
 @media (max-width: 991px) {
   .banner-style-one h2 {
@@ -1427,6 +1586,16 @@ code[class*='language-'] {
   .card-section .card-heading,
   .card-section .card-text {
     text-align: center;
+  }
+  .top_bar_right {
+    display: none;
+  }
+  .top_bar_left {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+  .top_bar {
+    padding-right: 0 !important;
   }
 }
 @media (max-width: 900px) {
@@ -1585,6 +1754,16 @@ code[class*='language-'] {
   .product_gallery_btm_counter_left .sec_title {
     max-width: 100%;
   }
+  .top_bar {
+    display: none !important;
+  }
+  .home-form .email_phone_row .email_row,
+  .home-form .email_phone_row .phone_row {
+    width: 100%;
+  }
+  .home-form .email_phone_row {
+    flex-direction: column;
+  }
 }
 @media (max-width: 600px) {
   .testimonial_section .testimonial_left,
@@ -1674,10 +1853,13 @@ code[class*='language-'] {
   .product_gallery_btm_counter_right .counter .timer {
     font-size: 30px;
   }
+  .desk_navbar {
+    width: 80% !important;
+  }
 }
 @media (max-width: 480px) {
   .fresh_product_cards .single_item {
-    width: 47.4%;
+    width: 47.3%;
   }
   .testimonial_section .testimonial_left {
     height: 300px;
@@ -1693,6 +1875,9 @@ code[class*='language-'] {
   .banner-area .banner-style-one h2 {
     margin-top: 10px;
     margin-bottom: 10px;
+  }
+  .desk_navbar {
+    width: 100% !important;
   }
 }
 @media (max-width: 415px) {

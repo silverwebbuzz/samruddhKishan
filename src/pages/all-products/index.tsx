@@ -202,14 +202,14 @@ const ContentPage = () => {
     {
       flex: 0.1,
       field: 'id',
-      minWidth: 100,
+      minWidth: 80,
       sortable: false,
       headerName: 'ID'
     },
 
     {
       flex: 0.25,
-      minWidth: 190,
+      minWidth: 120,
       field: 'productImage',
       headerName: 'Image',
       renderCell: (params: GridRenderCellParams) => {
@@ -276,7 +276,7 @@ const ContentPage = () => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {`${firstName ? firstName : ''}${''}${lastName ? lastName : ''}`}
+                {`${firstName ? firstName : ''}${'  '}${lastName ? lastName : ''}`}
               </Typography>
             </Box>
           </Box>

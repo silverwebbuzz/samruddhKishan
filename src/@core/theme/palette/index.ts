@@ -109,27 +109,6 @@ const DefaultPalette = (mode: Palette['mode'], skin: Skin): Palette => {
       disabled: `rgba(94,121,84)`,
       disabledBackground: `rgba(94,121,84)`,
       focus: `rgba(94,121,84)`
-      //green
-      // active: `rgba(62,156,8)`,
-      // hover: `rgba(62,156,8)`,
-      // selected: `rgba(62,156,8)`,
-      // disabled: `rgba(62,156,8)`,
-      // disabledBackground: `rgba(62,156,8)`,
-      // focus: `rgba(62,156,8)`
-      //lakada
-      // active: `rgba(155,120,68)`,
-      // hover: `rgba(155,120,68)`,
-      // selected: `rgba(155,120,68)`,
-      // disabled: `rgba(155,120,68)`,
-      // disabledBackground: `rgba(155,120,68)`,
-      // focus: `rgba(155,120,68)`
-      //theam
-      // active: `rgba(${mainColor}, 0.54)`,
-      // hover: `rgba(${mainColor}, 0.04)`,
-      // selected: `rgba(${mainColor}, 0.08)`,
-      // disabled: `rgba(${mainColor}, 0.26)`,
-      // disabledBackground: `rgba(${mainColor}, 0.12)`,
-      // focus: `rgba(${mainColor}, 0.12)`
     }
   } as Palette
 }

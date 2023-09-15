@@ -142,10 +142,14 @@ const navigation = (): HorizontalNavItemsType => {
         icon: 'uil:setting'
       },
       {
+        title: 'Landing Page Content',
+        path: '/landing-page-content',
+        icon: 'fluent:content-view-32-regular'
+      },
+      {
         title: 'Roles & Permissions',
         icon: 'tabler:settings',
-        path: '/roles',
-        icon: 'grommet-icons:user-admin'
+        path: '/roles'
       }
     ]
   }

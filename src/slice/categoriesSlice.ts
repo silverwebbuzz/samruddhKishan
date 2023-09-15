@@ -14,7 +14,7 @@ interface RootState {
   updatecat: Array<any>
   multipleCategories: Array<any>
   deletemultiCategories: Array<any>
-
+  getCategoriesForSelect: Array<any>
   isLoading: boolean
 }
 const initialState: RootState = {
@@ -24,7 +24,8 @@ const initialState: RootState = {
   createcat: [],
   updatecat: [],
   deletemultiCategories: [],
-  isLoading: false
+  isLoading: false,
+  getCategoriesForSelect: []
 }
 
 export const getAllCategories = createAsyncThunk(
@@ -47,7 +48,21 @@ export const getAllCategories = createAsyncThunk(
     }
   }
 )
+//
 
+export const getAllCategoriesForSelect = createAsyncThunk(
+  'user/getAllCategoriesForSelect',
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/categories/GetAllCategory`, {
+        headers
+      })
+      return res?.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response?.data)
+    }
+  }
+)
 export const createCategory = createAsyncThunk('user/createCategory', async (payload, { rejectWithValue }) => {
   try {
     const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/categories/createCategories`, payload, {
@@ -132,6 +147,18 @@ export const categoriesSlice = createSlice({
     builder.addCase(getAllCategories.rejected, state => {
       state.isLoading = false
     })
+
+    builder.addCase(getAllCategoriesForSelect.pending, state => {
+      state.isLoading = true
+    })
+    builder.addCase(getAllCategoriesForSelect.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.getCategoriesForSelect = action.payload
+    })
+    builder.addCase(getAllCategoriesForSelect.rejected, state => {
+      state.isLoading = false
+    })
+
     builder.addCase(updateMultipleCategoryStatus.pending, state => {
       state.isLoading = true
     })

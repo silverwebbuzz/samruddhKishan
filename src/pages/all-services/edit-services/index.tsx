@@ -63,7 +63,7 @@ const editServices = () => {
     let formdata = new FormData()
     formdata.append('id', serviceId)
     formdata.append('vendorId', vendorId)
-    formdata.append('categoryId', values?.categoryId)
+    formdata.append('categoryId', categoryPrefill)
     formdata.append('serviceName', values?.serviceName)
     formdata.append('serviceType', values?.serviceType)
     formdata.append('serviceDetails', values?.serviceDetails)
@@ -141,7 +141,6 @@ const editServices = () => {
     dispatch(getAllUsers())
   }, [])
   useEffect(() => {
-    // e?.target?.value
     setTimeout(() => {
       setCategoryPrefill(singleService?.categoryId)
       setVendorId(singleService?.vendorId)
@@ -251,8 +250,6 @@ const editServices = () => {
                   <TextField
                     label='Services Name'
                     autoComplete='off'
-                    // rows={4}
-                    // multiline
                     value={values?.serviceName}
                     type='text'
                     helperText={errors?.serviceName && touched?.serviceName ? errors?.serviceName : ''}
@@ -300,8 +297,6 @@ const editServices = () => {
                   <TextField
                     label='Service Location:'
                     autoComplete='off'
-                    // rows={4}
-                    // multiline
                     value={values?.serviceLocation}
                     type='text'
                     helperText={errors?.serviceLocation && touched?.serviceLocation ? errors?.serviceLocation : ''}
@@ -320,8 +315,6 @@ const editServices = () => {
                   <TextField
                     label='Min Order Quantity'
                     autoComplete='off'
-                    // rows={4}
-                    // multiline
                     value={values?.minOrderQuantity}
                     type='text'
                     helperText={errors?.minOrderQuantity && touched?.minOrderQuantity ? errors?.minOrderQuantity : ''}
@@ -411,7 +404,6 @@ const editServices = () => {
                   <FormControl fullWidth>
                     <InputLabel>Select Status</InputLabel>
                     <Select
-                      // size='small'
                       labelId='demo-simple-select-label'
                       id='demo-simple-select'
                       name='status'
@@ -432,7 +424,6 @@ const editServices = () => {
                     sx={{
                       display: 'flex',
                       alignItems: 'center'
-                      // margin: 5
                     }}
                   >
                     <Typography variant='body'>Availability :</Typography>
@@ -526,9 +517,7 @@ const editServices = () => {
                             type='file'
                             hidden
                             onChange={e => {
-                              // setFilePreviewForproductImage(e?.target?.files[0])
                               setFieldValue('serviceBannerImage', e.target?.files[0])
-                              // setBrandLogoUpdated(true)
                             }}
                           />
                         </Button>

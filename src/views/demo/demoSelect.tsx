@@ -11,9 +11,11 @@ interface Props {
   data: Category[]
   selectedCategory: number | null
   setSelectedCategory: (category: number | null) => void
+  size?: string | any
+  shrink?: boolean
 }
 
-const DemoSelect: React.FC<Props> = ({ data, shrink, size, selectedCategory, setSelectedCategory }: any) => {
+const DemoSelect: React.FC<Props> = ({ data, shrink, size, selectedCategory, setSelectedCategory }) => {
   const [expandedCategories, setExpandedCategories] = useState<number[]>([])
 
   const toggleCategory = (event: React.MouseEvent, categoryId: number) => {
@@ -86,6 +88,7 @@ const DemoSelect: React.FC<Props> = ({ data, shrink, size, selectedCategory, set
     <div>
       <FormControl size={size ? size : 'medium'} fullWidth>
         <InputLabel shrink={true}>Categories</InputLabel>
+        {/* @ts-ignore */}
         <Select notched value={selectedCategory} onChange={handleCategoryChange} label='Categories'>
           {renderCategories(data)}
         </Select>

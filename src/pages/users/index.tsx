@@ -64,16 +64,9 @@ const Transition = forwardRef(function Transition(
 })
 const allUsers = () => {
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
-  const {
-    getUsers,
-    getRoles,
-    getAddressByPinCodeData,
-    allDistrict,
-    allState,
-    deleteUser,
-    updateUsers12,
-    createUser12
-  } = useSelector((state: any) => state?.rootReducer?.farmerReducer)
+  const { getUsers, getRoles, deleteUser, updateUsers12, createUser12 } = useSelector(
+    (state: any) => state?.rootReducer?.farmerReducer
+  )
   const [search, setSearch] = useState<string>('')
   const router = useRouter()
   const [pincode, setPincode] = useState('')
@@ -85,8 +78,8 @@ const allUsers = () => {
   // const [taluka, setTaluka] = useState('')
 
   const [page, setPage] = useState<number>(1)
-  const [pageCount, setPageCount] = useState<number>(1)
-  const [pageLimit, setPageLimit] = useState<number>(10)
+  const [pageCount, setPageCount] = useState<number | any>(1)
+  const [pageLimit, setPageLimit] = useState<number | any>(10)
   const [editPrefillData, setEditPrefillData] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
 
@@ -101,9 +94,10 @@ const allUsers = () => {
     setPincode('')
     setOpen(true)
   }
-  const [selectedRows, setSelectedRows] = useState<any[]>([])
+  const [selectedRows, setSelectedRows] = useState<any>([])
   const [multiFieldDeleteOpen, setMultiFieldDeleteOpen] = useState(false)
   const [userSearch, setUserSearch] = useState('')
+  const [ROLEID, setROLEID] = useState(0)
   const handleMultiDeleteClickOpen = () => setMultiFieldDeleteOpen(true)
   const handleMultiDeleteClickClose = () => setMultiFieldDeleteOpen(false)
 
@@ -176,15 +170,18 @@ const allUsers = () => {
       let payload = {
         page: page,
         pageSize: pageLimit,
-        fullName: userSearch ? userSearch : ''
+        fullName: userSearch ? userSearch : '',
+        roleId: ROLEID
       }
       //@ts-ignore
       dispatch(getAllUsers(payload)).then(response => {
         setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit))
       })
     }
-  }, [page, pageCount, pageLimit, deleteUser, updateUsers12, userSearch, createUser12])
-
+  }, [page, pageCount, pageLimit, deleteUser, updateUsers12, userSearch, createUser12, ROLEID])
+  useEffect(() => {
+    dispatch(getRoleAndPermissions())
+  }, [])
   const handleSearch = () => {}
   useEffect(() => {
     dispatch(getAllState())
@@ -313,6 +310,7 @@ const allUsers = () => {
       <Grid item xs={12}>
         <Card>
           <CardHeader title='All Users' />
+
           <Box
             sx={{
               gap: 2,
@@ -323,53 +321,90 @@ const allUsers = () => {
               p: theme => theme.spacing(2, 5, 4, 5)
             }}
           >
-            <TextField
-              size='small'
-              value={userSearch}
-              onChange={e => handleUserSearch(e?.target?.value)}
-              placeholder='Search…'
-              InputProps={{
-                startAdornment: (
-                  <Box sx={{ mr: 2, display: 'flex' }}>
-                    <Icon icon='tabler:search' fontSize={20} />
-                  </Box>
-                ),
-                endAdornment: (
-                  <IconButton
-                    size='small'
-                    title='Clear'
-                    aria-label='Clear'
-                    onClick={() => {
-                      setUserSearch('')
-                    }}
-                  >
-                    <Icon icon='tabler:x' fontSize={20} />
-                  </IconButton>
-                )
-              }}
-              sx={{
-                width: {
-                  xs: 1,
-                  sm: 'auto'
-                },
-                '& .MuiInputBase-root > svg': {
-                  mr: 2
-                }
-              }}
-            />
-            <Button
-              variant='contained'
-              sx={{
-                '&:hover': {
-                  backgroundColor: '#5E7954'
-                }
-              }}
-              onClick={() => {
-                router.push('/users/add-user')
-              }}
-            >
-              Add User
-            </Button>
+            <Grid item sm={2} xs={12}>
+              <TextField
+                size='small'
+                value={userSearch}
+                onChange={e => handleUserSearch(e?.target?.value)}
+                placeholder='Search…'
+                InputProps={{
+                  startAdornment: (
+                    <Box sx={{ mr: 2, display: 'flex' }}>
+                      <Icon icon='tabler:search' fontSize={20} />
+                    </Box>
+                  ),
+                  endAdornment: (
+                    <IconButton
+                      size='small'
+                      title='Clear'
+                      aria-label='Clear'
+                      onClick={() => {
+                        setUserSearch('')
+                      }}
+                    >
+                      <Icon icon='tabler:x' fontSize={20} />
+                    </IconButton>
+                  )
+                }}
+                sx={{
+                  width: {
+                    xs: 1,
+                    sm: 'auto'
+                  },
+                  '& .MuiInputBase-root > svg': {
+                    mr: 2
+                  }
+                }}
+              />
+            </Grid>
+            <Grid item sm={2} xs={12}>
+              <FormControl fullWidth size='small'>
+                <InputLabel id='demo-simple-select-label'>Role</InputLabel>
+                <Select
+                  labelId='demo-simple-select-label'
+                  id='demo-simple-select'
+                  name='role'
+                  value={ROLEID}
+                  label='Role'
+                  onChange={(e: any) => {
+                    setROLEID(e?.target?.value)
+                  }}
+                >
+                  {getRoles?.map((Item: any) => (
+                    <MenuItem key={Item?.id} value={Item?.id}>
+                      {Item?.roleType}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item sm={2} xs={12}>
+              <Button
+                onClick={() => {
+                  setROLEID(0)
+                  setUserSearch('')
+                }}
+              >
+                {' '}
+                Clear
+              </Button>
+            </Grid>
+            <Grid item sm={2} xs={12}>
+              <Button
+                variant='contained'
+                sx={{
+                  '&:hover': {
+                    backgroundColor: '#5E7954'
+                  },
+                  marginLeft: '40px'
+                }}
+                onClick={() => {
+                  router.push('/users/add-user')
+                }}
+              >
+                Add User
+              </Button>
+            </Grid>
           </Box>
           {selectedRows?.length > 0 ? (
             <>
@@ -411,8 +446,6 @@ const allUsers = () => {
             }}
             autoHeight
             pagination
-            // rowHeight={62}
-            // rowCount={getUsers?.totalItems}
             rows={getUsers?.data && getUsers?.data ? getUsers?.data : []}
             columns={columns}
             checkboxSelection

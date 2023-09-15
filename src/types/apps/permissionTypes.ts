@@ -1,5 +1,5 @@
 export type PermissionRowType = {
-  id: number
+  id: number | string
   moduleName: string
   createdDate: string
   assignedTo: string[]

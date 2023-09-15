@@ -4,8 +4,6 @@ import { ReactNode, createContext, useEffect, useState } from 'react'
 // ** Next Imports
 import Head from 'next/head'
 import { Router, useRouter } from 'next/router'
-// import type { NextPage } from 'next'
-// import type { AppProps } from 'next/app'
 
 // ** Loader Import
 import NProgress from 'nprogress'
@@ -68,7 +66,7 @@ import { NextPage } from 'next/types'
 import { AppProps } from 'next/dist/shared/lib/router/router'
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {
-  Component: NextPage
+  Component: NextPage | any
   emotionCache: EmotionCache
 }
 
@@ -103,13 +101,17 @@ const Guard = ({ children, authGuard, guestGuard }: GuardProps) => {
   }
 }
 export const MyContext = createContext<any | undefined>(undefined)
-
+interface SeoData {
+  applicationTitle: string
+  applicationName: string
+  metaDescription: string
+  metaKeywords?: string
+}
 // ** Configure JSS & ClassName
 const App = (props: ExtendedAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps, ...rest } = props
-  const router = useRouter()
   const [district, setDistrict] = useState('')
-  const [seoData, setSeoData] = useState([])
+  const [seoData, setSeoData] = useState<SeoData>()
   // Variables
   const contentHeightFixed = Component.contentHeightFixed ?? false
   const getLayout =
@@ -131,6 +133,7 @@ const App = (props: ExtendedAppProps) => {
       console.error('API Error:', error)
     }
   }
+
   useEffect(() => {
     getSeoData()
   }, [])
@@ -139,15 +142,12 @@ const App = (props: ExtendedAppProps) => {
     fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/settings/getLogo`)
       .then(response => response.json())
       .then(data => {
-        console.log('HELLO sdkajlakjdlkjaldjla')
         const faviconUrl = data?.data?.favIcon
-        console.log(faviconUrl, 'faviconUrl.....')
-        const link = document.querySelector("link[rel*='icon']") || document.createElement('link')
+        const link: HTMLLinkElement = document.querySelector("link[rel*='icon']") || document.createElement('link')
         link.type = 'image/x-icon'
         link.rel = 'icon'
         link.href = faviconUrl
         document.head.appendChild(link)
-        console.log('document.head', document.head.appendChild(link))
       })
   }, [])
   return (
@@ -163,6 +163,7 @@ const App = (props: ExtendedAppProps) => {
           />
           <meta name='keywords' content={seoData?.metaKeywords} />
           <meta name='viewport' content='initial-scale=1, width=device-width' />
+          <meta http-equiv='Content-Security-Policy' content='upgrade-insecure-requests' />
         </Head>
 
         <AuthProvider>

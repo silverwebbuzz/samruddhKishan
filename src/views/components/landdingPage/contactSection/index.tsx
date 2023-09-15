@@ -1,6 +1,7 @@
 import React from 'react'
 import { Box, Grid } from '@mui/material'
 import Icon from 'src/@core/components/icon'
+import { Form, Formik, FormikProps } from 'formik'
 const ContactSection = () => {
   return (
     <section className='home-contact sec_padding'>
@@ -10,28 +11,73 @@ const ContactSection = () => {
             <div className='form-section'>
               <h5 className='sec_sub_title'>HAVE QUESTIONS?</h5>
               <h2 className='sec_title'>Send us a Massage</h2>
-              <form className='home-form'>
-                <div className='name_row'>
-                  <input type='text' placeholder='Name' />
-                </div>
-                <div className='email_phone_row'>
-                  <div className='email_row'>
-                    <input type='email' placeholder='Email*' />
-                  </div>
-                  <div className='phone_row'>
-                    <input type='number' placeholder='Phone' />
-                  </div>
-                </div>
-                <div className='textarea_row'>
-                  <textarea name='' id='' cols='30' rows='10' placeholder='Tell Us About Project*'></textarea>
-                </div>
-                <div>
-                  <button className='submit_btn yellowbtn'>
-                    <Icon icon='vaadin:paperplane' />
-                    Get in Touch
-                  </button>
-                </div>
-              </form>
+              <Formik
+                initialValues={{
+                  fullName: '',
+                  email: '',
+                  mobileNumber: '',
+                  productName: ''
+                }}
+                onSubmit={(values, { resetForm }) => {
+                  console.log(values)
+                  resetForm('')
+                }}
+              >
+                {(props: FormikProps<any>) => {
+                  const { values, setFieldValue } = props
+
+                  return (
+                    <Form className='home-form'>
+                      <div className='name_row'>
+                        <input
+                          type='text'
+                          placeholder='Name'
+                          name='fullName'
+                          value={values?.fullName}
+                          onChange={e => setFieldValue('fullName', e?.target?.value)}
+                        />
+                      </div>
+                      <div className='email_phone_row'>
+                        <div className='email_row'>
+                          <input
+                            type='email'
+                            placeholder='Email*'
+                            name='email'
+                            value={values?.email}
+                            onChange={e => setFieldValue('email', e?.target?.value)}
+                          />
+                        </div>
+                        <div className='phone_row'>
+                          <input
+                            type='number'
+                            placeholder='Phone'
+                            name='mobileNumber'
+                            value={values?.mobileNumber}
+                            onChange={e => setFieldValue('mobileNumber', e?.target?.value)}
+                          />
+                        </div>
+                      </div>
+                      <div className='textarea_row'>
+                        <textarea
+                          id=''
+                          cols={30}
+                          rows={10}
+                          placeholder='Tell Us About Project*'
+                          name='productName'
+                          value={values?.productName}
+                          onChange={e => setFieldValue('productName', e?.target?.value)}
+                        ></textarea>
+                      </div>
+                      <div>
+                        <button type='submit' className='submit_btn yellowbtn'>
+                          <Icon icon='vaadin:paperplane' />
+                          Get in Touch
+                        </button>
+                      </div>
+                    </Form>
+                  )
+                }}
+              </Formik>
             </div>
           </Box>
         </Grid>

@@ -247,7 +247,7 @@ export const getRoleAndPermissions = createAsyncThunk(
 )
 export const getAllUsers = createAsyncThunk(
   'farmers/getAllUsers',
-  async (payload: { page: string | number; pageSize: string | number }, { rejectWithValue }) => {
+  async (payload: { page?: string | number; pageSize?: string | number }, { rejectWithValue }) => {
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/user/getAllUsers`, payload, {
         headers

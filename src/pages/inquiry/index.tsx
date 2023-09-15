@@ -45,8 +45,8 @@ const allInquiry = () => {
     (state: any) => state?.rootReducer?.inquiryReducer
   )
   const [page, setPage] = useState<number>(1)
-  const [pageCount, setPageCount] = useState<number>(1)
-  const [pageLimit, setPageLimit] = useState<number>(10)
+  const [pageCount, setPageCount] = useState<number | any>(1)
+  const [pageLimit, setPageLimit] = useState<number | any>(10)
   const dispatch = useDispatch<AppDispatch>()
   const [DeleteID, setDeleteID] = useState()
   const [openDelete, setOpenDelete] = useState<boolean>(false)
@@ -64,7 +64,7 @@ const allInquiry = () => {
   const handleClickOpenDelete = () => setOpenDelete(true)
   const handleDeleteClose = () => setOpenDelete(false)
   const [anchorEl, setAnchorEl] = useState(null)
-  const [menuRow, setMenuRow] = useState(null)
+  const [menuRow, setMenuRow] = useState<any>(null)
   const handleChange = (event: any, value: number) => {
     setPage(value)
   }
@@ -106,7 +106,6 @@ const allInquiry = () => {
     let payload = {
       page: page,
       pageSize: pageLimit
-      //   fullName: userSearch ? userSearch : ''
     }
     //@ts-ignore
     dispatch(getAllInquiry(payload)).then(response => {
@@ -291,48 +290,7 @@ const allInquiry = () => {
               justifyContent: 'space-between',
               p: theme => theme.spacing(2, 5, 4, 5)
             }}
-          >
-            {/* <TextField
-              size='small'
-              value={userSearch}
-              onChange={e => setUserSearch(e?.target?.value)}
-              placeholder='Search…'
-              InputProps={{
-                startAdornment: (
-                  <Box sx={{ mr: 2, display: 'flex' }}>
-                    <Icon icon='tabler:search' fontSize={20} />
-                  </Box>
-                ),
-                endAdornment: (
-                  <IconButton size='small' title='Clear' aria-label='Clear'>
-                    <Icon icon='tabler:x' fontSize={20} />
-                  </IconButton>
-                )
-              }}
-              sx={{
-                width: {
-                  xs: 1,
-                  sm: 'auto'
-                },
-                '& .MuiInputBase-root > svg': {
-                  mr: 2
-                }
-              }}
-            /> */}
-            {/* <Button
-              variant='contained'
-              sx={{
-                '&:hover': {
-                  backgroundColor: '#5E7954'
-                }
-              }}
-              onClick={() => {
-                router.push('/users/add-user')
-              }}
-            >
-              Add User
-            </Button> */}
-          </Box>
+          ></Box>
           {selectedRows?.length > 0 ? (
             <>
               <Grid xs={12} sm={12}>
@@ -386,7 +344,6 @@ const allInquiry = () => {
                       }}
                     >
                       <Typography
-                        variant='body'
                         sx={{
                           minWidth: '126px'
                         }}
@@ -436,8 +393,6 @@ const allInquiry = () => {
             }}
             autoHeight
             pagination
-            // rowHeight={62}
-            // rowCount={getUsers?.totalItems}
             rows={allInquiries?.data && allInquiries?.data ? allInquiries?.data : []}
             columns={columns}
             checkboxSelection

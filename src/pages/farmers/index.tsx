@@ -291,13 +291,6 @@ const allFarmers = () => {
       )
     }
   ]
-  const findUserRoleByID = id => {
-    usersData?.data?.filter(user => {
-      if (user.id === id) {
-        setReferalName(user?.role)
-      }
-    })
-  }
 
   return (
     <Grid container spacing={6}>

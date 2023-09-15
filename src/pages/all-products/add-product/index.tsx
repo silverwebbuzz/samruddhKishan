@@ -193,13 +193,11 @@ const addProduct = () => {
               aria-label='delete'
               color='error'
               onClick={() => {
-                // dlajks
                 handleRemoveFile(index)
               }}
             >
               <GridDeleteIcon />
             </IconButton>
-            {/* <Typography>{file.name}</Typography> */}
           </div>
         )
       }
@@ -275,26 +273,6 @@ const addProduct = () => {
               </Box>
               <Grid container spacing={5}>
                 <Grid item xs={6} sm={6}>
-                  {/* <FormControl fullWidth>
-                    <InputLabel id='demo-simple-select-label'> Select Category</InputLabel>
-                    <Select
-                      labelId='demo-simple-select-label'
-                      id='demo-simple-select'
-                      name='categoryId'
-                      value={categoryIdPrefill}
-                      label='Category Name'
-                      onChange={(e: any) => {
-                        setFieldValue('categoryId', e?.target?.value)
-                        setCategoryIdPrefill(e?.target?.value)
-                      }}
-                    >
-                      {categories?.data?.map((Item: any) => (
-                        <MenuItem key={Item?.categoryName} value={Item?.id}>
-                          {Item?.categoryName}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl> */}
                   <FormControl size='small' fullWidth>
                     <DemoSelect
                       data={categories?.data}

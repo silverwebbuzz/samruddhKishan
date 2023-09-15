@@ -85,12 +85,12 @@ const PermissionsTable = () => {
   const { createPermission, getPermission, updatePermission, deletePermission } = useSelector(
     (state: any) => state?.rootReducer?.farmerReducer
   )
-  const [DeleteID, setDeleteID] = useState('')
+  const [DeleteID, setDeleteID] = useState<string | number | any>('')
   const [open, setOpen] = useState<boolean>(false)
   const [delelteField, setDelelteField] = useState<string>('')
   const [page, setPage] = useState<number>(1)
   const [pageCount, setPageCount] = useState<number>(1)
-  const [pageLimit, setPageLimit] = useState<number>(10)
+  const [pageLimit, setPageLimit] = useState<string | number | any>(10)
   const dispatch = useDispatch<AppDispatch>()
   const validationSchema = yup.object().shape({
     permissionName: yup.string().required('Permission Name is required')
@@ -226,8 +226,6 @@ const PermissionsTable = () => {
               disableColumnMenu
               disableColumnFilter
               disableColumnSelector
-              disableRowSelectionOnClick
-              hideFooterRowCount
               hideFooterSelectedRowCount
               hideFooterPagination
             />

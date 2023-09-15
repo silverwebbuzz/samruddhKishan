@@ -300,8 +300,6 @@ const addServices = () => {
                   <TextField
                     label='Min Order Quantity'
                     autoComplete='off'
-                    // rows={4}
-                    // multiline
                     value={values?.minOrderQuantity}
                     type='number'
                     helperText={errors?.minOrderQuantity && touched?.minOrderQuantity ? errors?.minOrderQuantity : ''}
@@ -433,9 +431,7 @@ const addServices = () => {
                             type='file'
                             hidden
                             onChange={e => {
-                              // setFilePreviewForproductImage(e?.target?.files[0])
                               setFieldValue('serviceBannerImage', e.target?.files[0])
-                              // setBrandLogoUpdated(true)
                             }}
                           />
                         </Button>

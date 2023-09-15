@@ -126,7 +126,6 @@ const settings = () => {
     createSeoData
   } = useSelector((state: any) => state?.rootReducer?.settingsReducer)
   const generalData = singleSetting?.[0]
-  // console.log(generalData, 'generalData')
 
   const isValidJSON = value => {
     if (JSON.parse(value)) {
@@ -136,15 +135,9 @@ const settings = () => {
     }
   }
 
-  // console.log(generalID?.[0]?.id, 'generalID')
-  // useEffect(() => {
-  //   localStorage.setItem('updateGeneral', JSON.stringify(generalData))
-  // }, [updateGeneral])
-
   const dispatch = useDispatch<AppDispatch>()
 
   const handleChange = (event: SyntheticEvent, value: string) => {
-    // setIsLoading(true)
     setActiveTab(value)
   }
 
@@ -153,10 +146,7 @@ const settings = () => {
     : null
   const getGeneralID = generalID?.[0]?.id
 
-  // console.log(generalID?.data?>, 'getGeneralID')
-
   useEffect(() => {
-    // dispatch(getGeneralSetting(payload))
     dispatch(getGeneralAPI())
     dispatch(getLogoAPI())
   }, [updateGeneral, updateEmial, createSocialData, createGoogleSetting, createSeoData])
@@ -167,12 +157,6 @@ const settings = () => {
 
   const handleGeneral = (values: any, { resetForm }: any, submitType) => {
     let formdata = new FormData()
-    // {
-    //   generalData?.id && formdata.append('id', getGeneralID)
-    // }
-    // {
-    //   formdata.append('id', 1) ? formdata.append('id', getGeneralID) : null
-    // }
     formdata.append('applicationName', values?.applicationName ? values?.applicationName : '')
     formdata.append('applicationTitle', values?.applicationTitle ? values?.applicationTitle : '')
     formdata.append('adminEmail', values?.adminEmail ? values?.adminEmail : '')

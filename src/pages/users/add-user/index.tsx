@@ -4,13 +4,11 @@ import {
   Button,
   Card,
   Chip,
-  Dialog,
   Divider,
   FormControl,
   Grid,
   InputLabel,
   MenuItem,
-  Pagination,
   Select,
   TextField,
   Tooltip
@@ -21,8 +19,7 @@ import {
   getAllDistrict,
   getAllState,
   getAllUsers,
-  getRoleAndPermissions,
-  updateUser1
+  getRoleAndPermissions
 } from 'src/slice/farmers'
 import { AppDispatch } from 'src/store/store'
 import { Ref, forwardRef, ReactElement } from 'react'
@@ -34,7 +31,6 @@ import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import styled from '@emotion/styled'
 import { getAllCategories } from 'src/slice/categoriesSlice'
-import DemoSelect from 'src/views/demo/demoSelect'
 import CentersForm from 'src/views/components/UsersFormComponents/CentersForm'
 import ApmcForm from 'src/views/components/UsersFormComponents/ApmcForm'
 import VendorForm from 'src/views/components/UsersFormComponents/VendorForm'
@@ -52,39 +48,23 @@ const Transition = forwardRef(function Transition(
   return <Fade ref={ref} {...props} />
 })
 const index = () => {
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
-  const {
-    getUsers,
-    getRoles,
-    getAddressByPinCodeData,
-    allDistrict,
-    allState,
-    deleteUser,
-    updateUsers12,
-    createUser12
-  } = useSelector((state: any) => state?.rootReducer?.farmerReducer)
+  const { getRoles, getAddressByPinCodeData, allDistrict, allState, deleteUser, updateUsers12, createUser12 } =
+    useSelector((state: any) => state?.rootReducer?.farmerReducer)
   const { categories } = useSelector((state: any) => state?.rootReducer?.categoriesReducer)
 
-  const [search, setSearch] = useState<string>('')
   const router = useRouter()
   const [pincode, setPincode] = useState('')
   const [STATE, setSTATE] = useState('')
   const [district, setDistrict] = useState('')
-  const [village, setVillage] = useState('')
   const [rolePrefill, setRolePrefill] = useState('')
-  const [roleID, setRoleID] = useState('')
   const [categoryIdPrefill, setCategoryIdPrefill] = useState(0)
-
   const [taluka, setTaluka] = useState('')
-
   const [page, setPage] = useState<number>(1)
   const [pageCount, setPageCount] = useState<number>(1)
   const [pageLimit, setPageLimit] = useState<number>(10)
-  const [editPrefillData, setEditPrefillData] = useState('')
-  const [errorMsg, setErrorMsg] = useState('')
 
   const dispatch = useDispatch<AppDispatch>()
-  const handlePincode = e => {
+  const handlePincode = (e: any) => {
     setPincode(e)
     let payload = {
       pincode: e ? e : ''
@@ -254,7 +234,8 @@ const index = () => {
       { categoryId: categoryIdPrefill }
     ]
     let formData = new FormData()
-    payload.forEach(entry => {
+    payload.forEach((entry: any) => {
+      //@ts-ignore
       const key = Object.keys(entry)[0] // Extracting the key from the object
       const value = entry[key] // Extracting the value from the object
       formData.append(key, value) // Appending the key-value pair to the formData
@@ -266,7 +247,7 @@ const index = () => {
     })
   }
 
-  const ProfilePicture = styled('img')(({ theme }) => ({
+  const ProfilePicture = styled('img')(({ theme }: any) => ({
     width: 108,
     height: 108,
     borderRadius: theme.shape.borderRadius,
@@ -322,7 +303,7 @@ const index = () => {
           handleSubmit(values)
         }}
       >
-        {({ values, handleChange, handleBlur, errors, touched, setFieldValue, resetForm }) => (
+        {({ values, handleChange, handleBlur, errors, touched, setFieldValue, resetForm }: any) => (
           <>
             <Box
               sx={{
@@ -391,7 +372,6 @@ const index = () => {
                   </Grid>
                   {values?.role == 13 ? (
                     <CentersForm
-                      // POR={(values, handleChange, handleBlur, errors, touched, setFieldValue, resetForm)}
                       values={values}
                       allState={allState}
                       STATE={STATE}
@@ -539,7 +519,7 @@ const index = () => {
                               setSTATE(e?.target?.value)
                             }}
                           >
-                            {allState?.data?.map(name => (
+                            {allState?.data?.map((name: any) => (
                               <MenuItem key={name?.name} value={name?.name}>
                                 {name?.name}
                               </MenuItem>
@@ -600,25 +580,8 @@ const index = () => {
                               value={values?.taluka && values?.taluka}
                               label='Taluka'
                               onChange={handleChange}
-                              // sx={{
-                              //   '& .MuiSelect-root': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important' // Set the desired color for the select
-                              //   },
-                              //   '& .MuiOutlinedInput-notchedOutline': {
-                              //     borderColor: 'black !important' // Set the desired border color for the select
-                              //   },
-
-                              //   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important'
-                              //   },
-                              //   '&.Mui-error': {
-                              //     color: 'red' // Set the label color when the Select is in an error state
-                              //   }
-                              // }}
                             >
-                              {getAddressByPinCodeData?.taluka?.map(name => (
+                              {getAddressByPinCodeData?.taluka?.map((name: any) => (
                                 <MenuItem key={name} value={name}>
                                   {name}
                                 </MenuItem>
@@ -627,19 +590,7 @@ const index = () => {
                           </FormControl>
                         </Tooltip>
                       </Grid>
-                      {/* <Grid item sm={6} xs={12}>
-                      <TextField
-                        value={values?.villageName}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        name='villageName'
-                        error={Boolean(errors.villageName && touched.villageName)}
-                        fullWidth
-                        label='Village Name'
-                        placeholder='Village Name'
-                      />
-                      <ErrorMessage name='villageName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
-                    </Grid> */}
+
                       <Grid item sm={6} xs={12}>
                         <Tooltip
                           title='Please enter pincode first'
@@ -648,17 +599,7 @@ const index = () => {
                           disableTouchListener={!(pincode.length <= 0)}
                         >
                           <FormControl fullWidth>
-                            <InputLabel
-                              // sx={{
-                              //   color: 'black',
-                              //   '&.Mui-focused': {
-                              //     color: 'black' // Set the label color when focused
-                              //   }
-                              // }}
-                              id='demo-simple-select-label'
-                            >
-                              Village Name
-                            </InputLabel>
+                            <InputLabel id='demo-simple-select-label'>Village Name</InputLabel>
                             <Select
                               labelId='demo-simple-select-label'
                               id='demo-simple-select'
@@ -667,22 +608,6 @@ const index = () => {
                               value={values?.villageName && values?.villageName}
                               label='Village Name'
                               onChange={handleChange}
-                              // sx={{
-                              //   '&.Mui-error fieldset': {
-                              //     borderColor: 'red !important'
-                              //   },
-                              //   '& fieldset': {
-                              //     borderWidth: '1px !important',
-                              //     borderColor: '#8d8686 !important'
-                              //   },
-                              //   '&.Mui-focused fieldset': {
-                              //     borderColor: '#7da370 !important',
-                              //     borderWidth: '2px !important'
-                              //   },
-                              //   '& label.MuiInputLabel-root': {
-                              //     color: 'black' // Set the label font color to blue
-                              //   }
-                              // }}
                             >
                               {getAddressByPinCodeData?.village?.map((name: any) => (
                                 <MenuItem key={name} value={name}>

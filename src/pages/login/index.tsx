@@ -90,7 +90,7 @@ const LoginPage = () => {
   useEffect(() => {
     dispatch(getLogoAPI())
   }, [dispatch])
-  const { login } = auth
+  const { login }: any = auth
   const validationSchema = yup.object().shape({
     email: yup.string().required('Email or phone number is required'),
     password: yup
@@ -102,13 +102,11 @@ const LoginPage = () => {
         'Must contain 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special case character'
       )
   })
-  const handleErrCallback = (err: any) => {
-    console.log(err)
-  }
+
   const handleLogin = (values: any) => {
     let email = values.email
     let password = values.password
-    let UserType = 'User'
+    let UserType: any = 'User'
     login({ email, password, UserType })
   }
 
@@ -236,13 +234,6 @@ const LoginPage = () => {
                   >
                     Login
                   </Button>
-                  {/* <Box>
-                    <Box sx={{ padding: '0.5rem 2rem' }}>
-                      <Typography gutterBottom sx={{ padding: '0 1rem' }} align='center' variant='body2'>
-                        Don't have an accout?<LinkStyled href='/register'> Join Now</LinkStyled>
-                      </Typography>
-                    </Box>
-                  </Box> */}
                 </Form>
               )}
             </Formik>

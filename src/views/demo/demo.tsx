@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import {
   Badge,
   Box,
@@ -33,6 +33,7 @@ import { alpha } from '@mui/system'
 interface Category {
   id: number
   categoryName: string
+  categoryStatus?: string | number
   children?: Category[]
 }
 
@@ -40,7 +41,7 @@ interface Props {
   data: Category[]
 }
 
-const CollapsibleTable: React.FC<Props> = ({ data }) => {
+const CollapsibleTable = ({ data, pageLimit, setPageLimit, page, setPage, setPageCount, pageCount }: any) => {
   const [expandedRows, setExpandedRows] = useState<number[]>([])
   const [selectedRows, setSelectedRows] = useState<number[]>([])
   const [DeleteID, setDeleteID] = useState<number | undefined>()
@@ -52,12 +53,8 @@ const CollapsibleTable: React.FC<Props> = ({ data }) => {
   const [editID, setEditID] = useState<number | string>('')
   const [editField, setEditField] = useState<Category | number>()
   const [anchorEl, setAnchorEl] = useState(null)
-  const [menuRow, setMenuRow] = useState(null)
-  const [categoryStatus, setCategoryStatus] = useState(0)
-  const [page, setPage] = useState(1) // Current page number
-  const [pageLimit, setPageLimit] = useState(10) // Rows per page
-  const pageCount = Math.ceil(data?.length / pageLimit)
-
+  const [menuRow, setMenuRow] = useState<any>(null)
+  const [categoryStatus, setCategoryStatus] = useState<string | number>(0)
   const dispatch = useDispatch<AppDispatch>()
   const handleClickOpenDelete = () => setOpenDelete(true)
   const handleDeleteClose = () => setOpenDelete(false)
@@ -69,8 +66,9 @@ const CollapsibleTable: React.FC<Props> = ({ data }) => {
   const handleMultiUpdateClickClose = () => {
     setMultiFieldUpdateOpen(false)
   }
-  const handleChange = (event, newPage) => {
-    setPage(newPage)
+  const handleChange = (event: ChangeEvent<unknown>, value: number) => {
+    setPage(value)
+    setSelectedRows([])
   }
   const handleMultiDeleteClickClose = () => {
     setMultiFieldDeleteOpen(false)
@@ -169,133 +167,261 @@ const CollapsibleTable: React.FC<Props> = ({ data }) => {
   ) => {
     const startIndex = (page - 1) * pageLimit
     const endIndex = startIndex + pageLimit
-
-    return categories?.slice(startIndex, endIndex).map(category => (
-      <React.Fragment key={category.id}>
-        <TableRow>
-          <TableCell
-            style={{
-              padding: '8px',
-              borderRight: 'none',
-              marginLeft: `${level + 20}px` // Adjust the margin as needed
-            }}
-          >
-            <Checkbox
-              checked={selectedRows.includes(category.id)}
-              onChange={e => {
-                e.stopPropagation()
-                handleCheckboxClick(category.id)
-              }}
-            />{' '}
-          </TableCell>
-          <TableCell
-            style={{
-              padding: '8px',
-              borderLeft: 'none',
-              borderTop: 'none',
-              marginLeft: `${level + 20}px` // Adjust the margin as needed
-            }}
-          >
-            <Button onClick={() => toggleRow(category.id)}>{expandedRows.includes(category.id) ? '▼' : '►'}</Button>
-            {category.categoryName}
-          </TableCell>
-          <TableCell
-            style={{
-              padding: '8px',
-              borderLeft: 'none',
-              borderTop: 'none',
-              marginLeft: `${level + 20}px` // Adjust the margin as needed
-            }}
-          >
-            {category?.categoryStatus === 1 ? (
-              <Badge color='primary' overlap='circular' badgeContent='Active' />
-            ) : (
-              <Badge color='error' overlap='circular' badgeContent='InActive' />
-            )}
-          </TableCell>
-          <TableCell
-            style={{
-              padding: '8px',
-              borderLeft: 'none',
-              marginLeft: `${level + 20}px` // Adjust the margin as needed
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <IconButton
-                size='small'
-                aria-controls={`menu-${category.id}`} // Unique ID for each row's menu
-                aria-haspopup='true'
-                sx={{ color: 'text.secondary' }}
-                onClick={event => {
-                  // @ts-ignore
-                  setAnchorEl(event.currentTarget)
-                  setMenuRow(category)
-                }}
-              >
-                <Icon icon='tabler:menu' />
-              </IconButton>
-              <Menu
-                id={`menu-${category.id}`} // Unique ID for each row's menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl) && category.id === menuRow?.id}
-                onClose={() => setAnchorEl(null)}
-              >
-                <MenuItem
-                  onClick={() => {
-                    handleClickOpenDelete()
-                    setDeleteID(category.id)
-                    setDelelteField(category.categoryName)
-                    setAnchorEl(null)
-                  }}
-                >
-                  <Icon icon='tabler:trash' />
-                  Delete
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    handleShow('category')
-                    setEdit(true)
-                    setEditID(category.id)
-                    setEditField(category)
-                    setAnchorEl(null)
-                  }}
-                >
-                  <Icon icon='tabler:edit' /> Edit
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    let payload = {
-                      id: category?.id,
-                      categoryStatus: category?.categoryStatus === 1 ? 0 : 1
-                    }
-                    dispatch(updateCategory(payload)).then(() => {
-                      dispatch(getAllCategories({ page: 1, pageSize: 10 }))
-                    })
-                    setAnchorEl(null)
-                  }}
-                >
-                  {category?.categoryStatus === 0 ? 'Set Active' : 'Set Inactive'}
-                </MenuItem>
-              </Menu>
-            </Box>
-          </TableCell>
-        </TableRow>
-        {expandedRows.includes(category.id) && category.children && (
+    if (1 < page) {
+      return categories?.map(category => (
+        <React.Fragment key={category.id}>
           <TableRow>
-            <TableCell colSpan={4} style={{ padding: '0', borderBottom: 'none' }}>
-              <div style={{ paddingLeft: '20px' }}>
-                <Table>
-                  <TableBody>
-                    {' '}
-                    {renderRows(category.children, category?.categoryName, category?.id, level + 1)}
-                  </TableBody>
-                </Table>
-              </div>
+            <TableCell
+              style={{
+                padding: '8px',
+                borderRight: 'none',
+                marginLeft: `${level + 20}px` // Adjust the margin as needed
+              }}
+            >
+              <Checkbox
+                checked={selectedRows.includes(category.id)}
+                onChange={e => {
+                  e.stopPropagation()
+                  handleCheckboxClick(category.id)
+                }}
+              />{' '}
+            </TableCell>
+            <TableCell
+              style={{
+                padding: '8px',
+                borderLeft: 'none',
+                borderTop: 'none',
+                marginLeft: `${level + 20}px` // Adjust the margin as needed
+              }}
+            >
+              <Button onClick={() => toggleRow(category.id)}>{expandedRows.includes(category.id) ? '▼' : '►'}</Button>
+              {category?.categoryName}
+            </TableCell>
+            <TableCell
+              style={{
+                padding: '8px',
+                borderLeft: 'none',
+                borderTop: 'none',
+                marginLeft: `${level + 20}px` // Adjust the margin as needed
+              }}
+            >
+              {category?.categoryStatus === 1 ? (
+                <Badge color='primary' overlap='circular' badgeContent='Active' />
+              ) : (
+                <Badge color='error' overlap='circular' badgeContent='InActive' />
+              )}
+            </TableCell>
+            <TableCell
+              style={{
+                padding: '8px',
+                borderLeft: 'none',
+                marginLeft: `${level + 20}px` // Adjust the margin as needed
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <IconButton
+                  size='small'
+                  aria-controls={`menu-${category.id}`} // Unique ID for each row's menu
+                  aria-haspopup='true'
+                  sx={{ color: 'text.secondary' }}
+                  onClick={event => {
+                    // @ts-ignore
+                    setAnchorEl(event.currentTarget)
+                    setMenuRow(category)
+                  }}
+                >
+                  <Icon icon='tabler:menu' />
+                </IconButton>
+                <Menu
+                  id={`menu-${category.id}`} // Unique ID for each row's menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl) && category.id === menuRow?.id}
+                  onClose={() => setAnchorEl(null)}
+                >
+                  <MenuItem
+                    onClick={() => {
+                      handleClickOpenDelete()
+                      setDeleteID(category.id)
+                      setDelelteField(category.categoryName)
+                      setAnchorEl(null)
+                    }}
+                  >
+                    <Icon icon='tabler:trash' />
+                    Delete
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      handleShow('category')
+                      setEdit(true)
+                      setEditID(category.id)
+                      setEditField(category)
+                      setAnchorEl(null)
+                    }}
+                  >
+                    <Icon icon='tabler:edit' /> Edit
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      let payload = {
+                        id: category?.id,
+                        categoryStatus: category?.categoryStatus === 1 ? 0 : 1
+                      }
+                      dispatch(updateCategory(payload)).then(() => {
+                        dispatch(getAllCategories({ page: 1, pageSize: 10 }))
+                      })
+                      setAnchorEl(null)
+                    }}
+                  >
+                    {category?.categoryStatus === 0 ? 'Set Active' : 'Set Inactive'}
+                  </MenuItem>
+                </Menu>
+              </Box>
             </TableCell>
           </TableRow>
-        )}
-      </React.Fragment>
-    ))
+          {expandedRows.includes(category.id) && category.children && (
+            <TableRow>
+              <TableCell colSpan={4} style={{ padding: '0', borderBottom: 'none' }}>
+                <div style={{ paddingLeft: '20px' }}>
+                  <Table>
+                    <TableBody>
+                      {' '}
+                      {renderRows(category.children, category?.categoryName, category?.id, level + 1)}
+                    </TableBody>
+                  </Table>
+                </div>
+              </TableCell>
+            </TableRow>
+          )}
+        </React.Fragment>
+      ))
+    } else {
+      return categories?.slice(startIndex, endIndex).map(category => (
+        <React.Fragment key={category.id}>
+          <TableRow>
+            <TableCell
+              style={{
+                padding: '8px',
+                borderRight: 'none',
+                marginLeft: `${level + 20}px` // Adjust the margin as needed
+              }}
+            >
+              <Checkbox
+                checked={selectedRows.includes(category.id)}
+                onChange={e => {
+                  e.stopPropagation()
+                  handleCheckboxClick(category.id)
+                }}
+              />{' '}
+            </TableCell>
+            <TableCell
+              style={{
+                padding: '8px',
+                borderLeft: 'none',
+                borderTop: 'none',
+                marginLeft: `${level + 20}px` // Adjust the margin as needed
+              }}
+            >
+              <Button onClick={() => toggleRow(category.id)}>{expandedRows.includes(category.id) ? '▼' : '►'}</Button>
+              {category.categoryName}
+            </TableCell>
+            <TableCell
+              style={{
+                padding: '8px',
+                borderLeft: 'none',
+                borderTop: 'none',
+                marginLeft: `${level + 20}px` // Adjust the margin as needed
+              }}
+            >
+              {category?.categoryStatus === 1 ? (
+                <Badge color='primary' overlap='circular' badgeContent='Active' />
+              ) : (
+                <Badge color='error' overlap='circular' badgeContent='InActive' />
+              )}
+            </TableCell>
+            <TableCell
+              style={{
+                padding: '8px',
+                borderLeft: 'none',
+                marginLeft: `${level + 20}px` // Adjust the margin as needed
+              }}
+            >
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <IconButton
+                  size='small'
+                  aria-controls={`menu-${category.id}`} // Unique ID for each row's menu
+                  aria-haspopup='true'
+                  sx={{ color: 'text.secondary' }}
+                  onClick={event => {
+                    // @ts-ignore
+                    setAnchorEl(event.currentTarget)
+                    setMenuRow(category)
+                  }}
+                >
+                  <Icon icon='tabler:menu' />
+                </IconButton>
+                <Menu
+                  id={`menu-${category.id}`} // Unique ID for each row's menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl) && category.id === menuRow?.id}
+                  onClose={() => setAnchorEl(null)}
+                >
+                  <MenuItem
+                    onClick={() => {
+                      handleClickOpenDelete()
+                      setDeleteID(category.id)
+                      setDelelteField(category.categoryName)
+                      setAnchorEl(null)
+                    }}
+                  >
+                    <Icon icon='tabler:trash' />
+                    Delete
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      handleShow('category')
+                      setEdit(true)
+                      setEditID(category.id)
+                      setEditField(category)
+                      setAnchorEl(null)
+                    }}
+                  >
+                    <Icon icon='tabler:edit' /> Edit
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      let payload = {
+                        id: category?.id,
+                        categoryStatus: category?.categoryStatus === 1 ? 0 : 1
+                      }
+                      dispatch(updateCategory(payload)).then(() => {
+                        dispatch(getAllCategories({ page: 1, pageSize: 10 }))
+                      })
+                      setAnchorEl(null)
+                    }}
+                  >
+                    {category?.categoryStatus === 0 ? 'Set Active' : 'Set Inactive'}
+                  </MenuItem>
+                </Menu>
+              </Box>
+            </TableCell>
+          </TableRow>
+          {expandedRows.includes(category.id) && category.children && (
+            <TableRow>
+              <TableCell colSpan={4} style={{ padding: '0', borderBottom: 'none' }}>
+                <div style={{ paddingLeft: '20px' }}>
+                  <Table>
+                    <TableBody>
+                      {' '}
+                      {renderRows(category.children, category?.categoryName, category?.id, level + 1)}
+                    </TableBody>
+                  </Table>
+                </div>
+              </TableCell>
+            </TableRow>
+          )}
+        </React.Fragment>
+      ))
+    }
   }
 
   return (
@@ -353,7 +479,6 @@ const CollapsibleTable: React.FC<Props> = ({ data }) => {
                   }}
                 >
                   <Typography
-                    variant={'body'}
                     sx={{
                       minWidth: '126px'
                     }}

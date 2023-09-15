@@ -135,12 +135,12 @@ const navigation = (): VerticalNavItemsType => {
         subject: 'inquiry',
         icon: 'wpf:ask-question'
       },
+
+      { title: 'Settings', path: '/settings', action: 'read', subject: 'settings', icon: 'uil:setting' },
       {
-        title: 'Settings',
-        path: '/settings',
-        action: 'read',
-        subject: 'settings',
-        icon: 'uil:setting'
+        title: 'Landing Page Content',
+        path: '/landing-page-content',
+        icon: 'fluent:content-view-32-regular'
       },
       {
         title: 'Roles & Permissions',

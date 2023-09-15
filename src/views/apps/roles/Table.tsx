@@ -152,11 +152,13 @@ const UserList = () => {
   const [value, setValue] = useState<string>('')
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
   const dispatch = useDispatch<AppDispatch>()
-  const { createURole, getUsers, updateRole } = useSelector((state: any) => state?.rootReducer?.farmerReducer)
+  const { createURole, getUsers, getRoles, updateRole } = useSelector((state: any) => state?.rootReducer?.farmerReducer)
 
   const [page, setPage] = useState<number>(1)
   const [pageCount, setPageCount] = useState<number>(1)
   const [pageLimit, setPageLimit] = useState<number>(10)
+  const [ROLEID, setROLEID] = useState<string | number>(0)
+
   const handleChange = (event: ChangeEvent<unknown>, value: number) => {
     setPage(value)
   }
@@ -206,7 +208,8 @@ const UserList = () => {
     let payload = {
       // adminId: userData?.id,
       page: page,
-      pageSize: pageLimit
+      pageSize: pageLimit,
+      roleId: ROLEID
     }
     //@ts-ignore
     dispatch(getAllUsers(payload)).then(response => {
@@ -217,13 +220,13 @@ const UserList = () => {
     if (value?.length <= 0) {
       getUserRolesApiCall()
     }
-  }, [page, pageCount, pageLimit, createURole, updateRole, value])
+  }, [page, pageCount, pageLimit, createURole, updateRole, value, ROLEID])
 
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <TableHeader value={value} handleFilter={handleFilter} />
+          <TableHeader value={value} ROLEID={ROLEID} setROLEID={setROLEID} handleFilter={handleFilter} />
           <DataGrid
             sx={{
               '& .MuiDataGrid-row:hover': {

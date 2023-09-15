@@ -46,7 +46,6 @@ const ContentPage = () => {
     let payload = {
       header: values?.header,
       content: values?.content
-      // image1: file1
     }
     dispatch(createContentPage(payload))
   }
@@ -70,20 +69,7 @@ const ContentPage = () => {
       return <Icon icon='tabler:file-description' />
     }
   }
-  // const FileUploadField = ({ name, index }) => {
-  //   const { setFieldValue } = useFormikContext()
 
-  //   const handleFileDrop = (file: any) => {
-  //     setFieldValue(`files.${index}`, file[0])
-  //   }
-
-  //   return (
-  //     <Button variant='contained' component='label' startIcon={<Icon icon='icon-park-outline:upload-two' />}>
-  //       Upload
-  //       <input type='file' hidden onChange={e => handleFileDrop(e)} />
-  //     </Button>
-  //   )
-  // }
   const FileUploadField = ({ name, index }: any) => {
     const { setFieldValue } = useFormikContext()
 
@@ -131,19 +117,12 @@ const ContentPage = () => {
               objectFit: 'cover'
             }}
             width={100}
-            // height={100}
             alt={file.name}
             src={URL.createObjectURL(file)}
           />
           <Typography variant='body1'>{file.name}</Typography>
 
           <Box>
-            {/* <IconButton color='error' onClick={onRemove}>
-                <Icon icon='tabler:trash' />
-              </IconButton> */}
-            {/* <Fab  variant='outlined' aria-label='edit'>
-                <Icon icon='tabler:trash' />
-              </Fab> */}
             <Button
               variant='contained'
               color='error'

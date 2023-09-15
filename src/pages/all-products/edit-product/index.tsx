@@ -93,9 +93,7 @@ const editProduct = () => {
     formdata.append('status', values?.status)
     newSelectedFiles.forEach((file, index) => {
       formdata.append(`productGallaryImage`, file)
-      // formdata.append('productGallaryImage', JSON.stringify(selectedFiles))
     })
-
     let payload = formdata
     let payloadForDeleteImages = {
       ids: removeFiles
@@ -168,7 +166,6 @@ const editProduct = () => {
 
   const handleFileChange = event => {
     const file = event.target.files[0] // Only allow selecting one file at a time
-
     setSelectedFiles(prevSelectedFiles => [...prevSelectedFiles, file])
     setNewSelectedFiles(prevNewSelectedFiles => [...prevNewSelectedFiles, file])
   }
@@ -188,10 +185,7 @@ const editProduct = () => {
       setVendorId(singleProductsData?.vendorId || '')
       setContryPrefill(singleProductsData?.country || '')
       setProductUnits(singleProductsData?.productUnits || '')
-
       const productGallaryImage = singleProductsData?.productGallaryImage
-
-      // Check if singleProductsData.productGallaryImage is truthy and has a length property
       if (productGallaryImage && productGallaryImage.length !== undefined) {
         setSelectedFiles([...productGallaryImage])
       }
@@ -257,7 +251,6 @@ const editProduct = () => {
               aria-label='delete'
               color='error'
               onClick={() => {
-                // dlajks
                 handleRemoveFile(index)
               }}
             >
@@ -387,8 +380,6 @@ const editProduct = () => {
                   <TextField
                     label='Product Name'
                     autoComplete='off'
-                    // rows={4}
-                    // multiline
                     value={values?.productName}
                     type='text'
                     helperText={errors?.productName && touched?.productName ? errors?.productName : ''}
@@ -407,8 +398,6 @@ const editProduct = () => {
                   <TextField
                     label='Product Code(SKU)'
                     autoComplete='off'
-                    // rows={4}
-                    // multiline
                     value={values?.productCode}
                     type='text'
                     helperText={errors?.productCode && touched?.productCode ? errors?.productCode : ''}
@@ -730,12 +719,7 @@ const editProduct = () => {
                       <div>
                         <input id='file-input' type='file' onChange={handleFileChange} style={{ display: 'none' }} />
                         <label htmlFor='file-input'>
-                          <Button
-                            //   variant='contained'
-                            component='span'
-                          >
-                            Select File
-                          </Button>
+                          <Button component='span'>Select File</Button>
                         </label>
                       </div>
                     </div>
