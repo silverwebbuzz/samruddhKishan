@@ -11,7 +11,6 @@ const GetToKnow = ({ DATA, JSONHandler }: any) => {
   const [viewPortEntered, setViewPortEntered] = useState(false)
   const handleChange = (panel: string) => (event: SyntheticEvent, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false)
-    console.log('@@@@', isExpanded, panel, isExpanded ? panel : false)
   }
   return (
     <>

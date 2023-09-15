@@ -37,7 +37,8 @@ const SmallProductCard = ({ show, handleCancel, edit, setEdit, editField }: any)
           onSubmit={(values, { resetForm }) => {
             console.log(values)
             let cardFormData = new FormData()
-            cardFormData.append('id', '156')
+            let ID = localStorage.getItem('AllContentDataId')
+            cardFormData.append('id', ID)
             if (cardImage) {
               cardFormData.append('smallProductContentCardImage', values?.smallProductContentCardImage)
             }

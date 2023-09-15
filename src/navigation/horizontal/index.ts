@@ -142,7 +142,7 @@ const navigation = (): HorizontalNavItemsType => {
         icon: 'uil:setting'
       },
       {
-        title: 'Landing Page Content',
+        title: 'CMS',
         path: '/landing-page-content',
         icon: 'fluent:content-view-32-regular'
       },

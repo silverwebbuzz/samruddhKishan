@@ -18,7 +18,7 @@ import Icon from 'src/@core/components/icon'
 // ** Third Party Imports
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
-import { Button, CardContent, Stack } from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, Button, CardContent, Chip, Divider, Stack } from '@mui/material'
 
 import { AppDispatch } from 'src/store/store'
 import { FieldArray, Form, Formik } from 'formik'
@@ -38,6 +38,7 @@ import CardContentDialog from 'src/views/components/dialogBox/CardContentDialog'
 import ProductContentCard from 'src/views/components/dialogBox/ProductContentCard'
 import SmallProductCard from 'src/views/components/dialogBox/SmallProductCard'
 import { getAllSmallProduct, updateSmallProductContent } from 'src/slice/smallProductSlice'
+import { SyntheticEvent } from 'react-draft-wysiwyg'
 
 export type Payload = {
   id?: number
@@ -70,6 +71,8 @@ const ContentPage = () => {
   const [dialogName, setDialogName] = useState<string>('')
   const [edit, setEdit] = useState<boolean>(false)
   const [editField, setEditField] = useState<string | number>('')
+  const [expanded, setExpanded] = useState<string | false>(false)
+
   const JSONHandler = (data: any) => {
     try {
       JSON.parse(data)
@@ -234,55 +237,89 @@ const ContentPage = () => {
   const smallCardData = smallCardArray
     ? JSON.parse(smallCardArray)
     : [{ smallProductContentCardImage: '', productContentName: '' }]
-
+  const handleChange = (panel: string) => (event: SyntheticEvent, isExpanded: boolean) => {
+    setExpanded(isExpanded ? panel : false)
+  }
   return (
     <Grid container spacing={6}>
+      {/* <CardHeader title='Home Page' /> */}
+      <Grid item xs={12}>
+        <Box sx={{ mb: 8, textAlign: 'center' }}>
+          <Divider>
+            <Chip
+              sx={{
+                fontSize: '22px',
+                padding: '15px',
+                fontWeight: 'bold',
+                textAlign: 'left',
+                backgroundColor: '#f6f5f8'
+              }}
+              label='Home Page'
+            />
+          </Divider>
+        </Box>
+      </Grid>
       {/* SECTION  =   1 */}
       <Grid item xs={12}>
-        <Card>
-          <CardHeader title='Section 1' sx={{ pb: 2 }} />
-          <Box textAlign='end' sx={{ p: theme => theme.spacing(0, 5, 4, 5) }}>
-            <Button
-              variant='contained'
+        <Accordion expanded={expanded === 'section1'} onChange={handleChange('section1')}>
+          <AccordionSummary
+            id='controlled-panel-header-1'
+            aria-controls='controlled-panel-content-1'
+            expandIcon={<Icon fontSize='1.25rem' icon='tabler:chevron-down' />}
+          >
+            <h2>Section 1</h2>
+          </AccordionSummary>
+          <AccordionDetails>
+            {/* <Card> */}
+            <Box textAlign='end' sx={{ p: theme => theme.spacing(0, 5, 4, 5) }}>
+              <Button
+                variant='contained'
+                sx={{
+                  '&:hover': {
+                    backgroundColor: '#5E7954'
+                  }
+                }}
+                onClick={() => {
+                  handleShow('slider')
+                }}
+              >
+                Add Slide
+              </Button>
+            </Box>
+
+            <DataGrid
               sx={{
-                '&:hover': {
-                  backgroundColor: '#5E7954'
+                '& .MuiDataGrid-row:hover': {
+                  backgroundColor: '#a4be9b'
+                  // color: "red"
                 }
               }}
-              onClick={() => {
-                handleShow('slider')
-              }}
-            >
-              Add Slide
-            </Button>
-          </Box>
-
-          <DataGrid
-            sx={{
-              '& .MuiDataGrid-row:hover': {
-                backgroundColor: '#a4be9b'
-                // color: "red"
-              }
-            }}
-            autoHeight
-            rows={allSliderData?.data && allSliderData?.data ? allSliderData?.data : []}
-            columns={columns}
-            //@ts-ignore
-            hideFooterRowCount
-            hideFooterSelectedRowCount
-            hideFooterPagination
-            disableColumnMenu
-            disableColumnFilter
-            disableColumnSelector
-          />
-        </Card>
+              autoHeight
+              rows={allSliderData?.data && allSliderData?.data ? allSliderData?.data : []}
+              columns={columns}
+              //@ts-ignore
+              hideFooterRowCount
+              hideFooterSelectedRowCount
+              hideFooterPagination
+              disableColumnMenu
+              disableColumnFilter
+              disableColumnSelector
+            />
+            {/* </Card> */}
+          </AccordionDetails>
+        </Accordion>
       </Grid>
 
       <Grid item xs={12}>
-        {/* SECTION  =   2 */}
-        <Card>
-          <CardHeader title='Section 2' />
-          <CardContent>
+        <Accordion expanded={expanded === 'section2'} onChange={handleChange('section2')}>
+          <AccordionSummary
+            id='controlled-panel-header-1'
+            aria-controls='controlled-panel-content-1'
+            expandIcon={<Icon fontSize='1.25rem' icon='tabler:chevron-down' />}
+          >
+            <h2>Section 2</h2>
+          </AccordionSummary>
+          <AccordionDetails>
             <Formik
               enableReinitialize
               initialValues={{
@@ -325,6 +362,9 @@ const ContentPage = () => {
                       </Grid>
                       <Grid item xs={6}>
                         <TextField
+                          multiline
+                          minRows={2}
+                          maxRows={4}
                           label='Content Text'
                           autoComplete='off'
                           value={values?.contentText}
@@ -470,14 +510,27 @@ const ContentPage = () => {
                 )}
               </Grid>
             </Box>
+          </AccordionDetails>
+        </Accordion>
+        {/* SECTION  =   2 */}
+        {/* <Card>
+          <CardHeader title='Section 2' />
+          <CardContent>
+         
           </CardContent>
-        </Card>
+        </Card> */}
       </Grid>
 
       <Grid item xs={12}>
-        <Card>
-          <CardHeader title='Section 3' />
-          <CardContent>
+        <Accordion expanded={expanded === 'section3'} onChange={handleChange('section3')}>
+          <AccordionSummary
+            id='controlled-panel-header-1'
+            aria-controls='controlled-panel-content-1'
+            expandIcon={<Icon fontSize='1.25rem' icon='tabler:chevron-down' />}
+          >
+            <h2>Section 3</h2>
+          </AccordionSummary>
+          <AccordionDetails>
             <Formik
               initialValues={{
                 productContentMainHeading: allProductSectionData[0]?.productContentMainHeading || '',
@@ -502,7 +555,7 @@ const ContentPage = () => {
                     <Grid item sm={6} xs={12}>
                       <TextField
                         fullWidth
-                        label='Product Main Heading'
+                        label='Section Main Heading'
                         name='productContentMainHeading'
                         onChange={handleChange}
                         value={values.productContentMainHeading}
@@ -511,7 +564,7 @@ const ContentPage = () => {
                     <Grid item sm={6} xs={12}>
                       <TextField
                         fullWidth
-                        label='Product Sub Heading'
+                        label='Section Sub Heading'
                         name='productContentSubHeading'
                         onChange={handleChange}
                         value={values.productContentSubHeading}
@@ -523,7 +576,7 @@ const ContentPage = () => {
                         multiline
                         minRows={2}
                         maxRows={4}
-                        label='Product Text'
+                        label='Section Text'
                         name='productContentText'
                         onChange={handleChange}
                         value={values.productContentText}
@@ -558,7 +611,7 @@ const ContentPage = () => {
                           disabled
                           fullWidth
                           size='small'
-                          label='Card Main Heading'
+                          label='Section Card Main Heading'
                           placeholder='Card Main Heading'
                           value={value?.bigProductContentSubHeading}
                           name='bigProductContentSubHeading'
@@ -568,7 +621,7 @@ const ContentPage = () => {
                         <TextField
                           disabled
                           fullWidth
-                          label='Card Sub Heading'
+                          label='Section Card Sub Heading'
                           placeholder='Card Sub Heading'
                           size='small'
                           value={value?.bigProductContentText}
@@ -607,15 +660,26 @@ const ContentPage = () => {
                 ADD CARD
               </Button>
             </Box>
+          </AccordionDetails>
+        </Accordion>
+        {/* <Card>
+          <CardHeader title='Section 3' />
+          <CardContent>
+            
           </CardContent>
-        </Card>
+        </Card> */}
       </Grid>
 
       <Grid item xs={12}>
-        {/* SECTION  =   4 */}
-        <Card>
-          <CardHeader title='Section 4' />
-          <CardContent>
+        <Accordion expanded={expanded === 'section4'} onChange={handleChange('section4')}>
+          <AccordionSummary
+            id='controlled-panel-header-1'
+            aria-controls='controlled-panel-content-1'
+            expandIcon={<Icon fontSize='1.25rem' icon='tabler:chevron-down' />}
+          >
+            <h2>Section 4</h2>
+          </AccordionSummary>
+          <AccordionDetails>
             <Formik
               initialValues={{
                 smallProductContentMainHeading: getAllSmallProductData[0]?.smallProductContentMainHeading || ''
@@ -702,8 +766,16 @@ const ContentPage = () => {
                 ADD CARD
               </Button>
             </Box>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* SECTION  =   4 */}
+        {/* <Card>
+          <CardHeader title='Section 4' />
+          <CardContent>
+            
           </CardContent>
-        </Card>
+        </Card> */}
       </Grid>
 
       {/* SECTION  =   5 */}

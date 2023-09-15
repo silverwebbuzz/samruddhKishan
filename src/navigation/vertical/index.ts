@@ -138,10 +138,16 @@ const navigation = (): VerticalNavItemsType => {
 
       { title: 'Settings', path: '/settings', action: 'read', subject: 'settings', icon: 'uil:setting' },
       {
-        title: 'Landing Page Content',
-        path: '/landing-page-content',
-        icon: 'fluent:content-view-32-regular'
+        title: 'CMS',
+        icon: 'fluent:content-view-32-regular',
+        children: [
+          {
+            title: 'Home Page',
+            path: '/landing-page-content'
+          }
+        ]
       },
+
       {
         title: 'Roles & Permissions',
         icon: 'grommet-icons:user-admin',

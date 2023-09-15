@@ -10,8 +10,9 @@
 }
 .banner-area .mySwiper,
 .banner-area .swiper-slide {
-  height: calc(100vh - 102px);
-  min-height: 700px;
+  /* height: calc(100vh - 102px); */
+  height: 900px;
+  min-height: 900px;
   align-items: center;
   display: flex !important;
 }
