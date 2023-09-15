@@ -3,7 +3,7 @@ import { Box, Button, Dialog, DialogContent, DialogTitle, Grid, IconButton, Text
 import { Form, Formik } from 'formik'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { FilePreview } from 'src/pages/landing-page-content/FilePreview'
+import { FilePreview } from 'src/views/components/filePreviewer/FilePreview'
 import { updateProductCardSection } from 'src/slice/productSectionSlice'
 import { updateSmallProductCard } from 'src/slice/smallProductSlice'
 

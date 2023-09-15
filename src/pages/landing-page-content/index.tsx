@@ -32,7 +32,7 @@ import SliderContentDialog from 'src/views/components/dialogBox/SliderContentDia
 import { getAllSlides } from 'src/slice/sliderSlice'
 import { getAllContent, updateContent } from 'src/slice/contentSectionSlice'
 
-import { FilePreview } from './FilePreview'
+import { FilePreview } from '../../views/components/filePreviewer/FilePreview'
 import { getAllProductSection, updateProductContentSection } from 'src/slice/productSectionSlice'
 import CardContentDialog from 'src/views/components/dialogBox/CardContentDialog'
 import ProductContentCard from 'src/views/components/dialogBox/ProductContentCard'
@@ -722,6 +722,8 @@ const ContentPage = () => {
               enableReinitialize
               onSubmit={values => {
                 //API
+                console.log('HERE')
+                // https://devapi.hivecareer.com/samruddhKishan/contentPage/uploads/qaUpdateContent
               }}
             >
               {({ values, setFieldValue, handleChange }) => (
@@ -784,6 +786,9 @@ const ContentPage = () => {
                         name='qaContentCounter'
                         label='QA Content Counter'
                         fullWidth
+                        InputLabelProps={{
+                          shrink: true
+                        }}
                         value={values.qaContentCounter}
                         onChange={handleChange}
                       />
@@ -793,6 +798,9 @@ const ContentPage = () => {
                         name='qaContentCounterText'
                         label='QA Content Counter Text'
                         fullWidth
+                        InputLabelProps={{
+                          shrink: true
+                        }}
                         value={values.qaContentCounterText}
                         onChange={handleChange}
                       />
@@ -802,6 +810,9 @@ const ContentPage = () => {
                         name='qaContentMainHeader'
                         label='QA Content Main Header'
                         fullWidth
+                        InputLabelProps={{
+                          shrink: true
+                        }}
                         value={values.qaContentMainHeader}
                         onChange={handleChange}
                       />
@@ -811,6 +822,9 @@ const ContentPage = () => {
                         name='qaContentSubHeader'
                         label='QA Content Sub Header'
                         fullWidth
+                        InputLabelProps={{
+                          shrink: true
+                        }}
                         value={values.qaContentSubHeader}
                         onChange={handleChange}
                       />

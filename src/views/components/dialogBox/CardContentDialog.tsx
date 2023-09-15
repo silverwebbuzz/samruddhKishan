@@ -4,7 +4,7 @@ import { Form, Formik } from 'formik'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { updateCardContent } from 'src/slice/contentSectionSlice'
-import { FilePreview } from 'src/pages/landing-page-content/FilePreview'
+import { FilePreview } from 'src/views/components/filePreviewer/FilePreview'
 
 const CardContentDialog = ({ show, handleCancel, edit, setEdit, editField }: any) => {
   const [cardImage, setCardImage] = useState(false)
