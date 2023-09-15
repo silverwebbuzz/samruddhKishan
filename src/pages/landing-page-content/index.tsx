@@ -293,7 +293,8 @@ const ContentPage = () => {
               }}
               onSubmit={values => {
                 let contentFormData = new FormData()
-                contentFormData.append('id', '156')
+                let ID = localStorage.getItem('AllContentDataId')
+                contentFormData.append('id', ID)
                 contentFormData.append('contentHeader', values?.contentHeader)
                 contentFormData.append('contentText', values?.contentText)
                 contentFormData.append('contentMainImg', values?.contentMainImg)
@@ -705,8 +706,8 @@ const ContentPage = () => {
         </Card>
       </Grid>
 
-      <Grid item xs={12}>
-        {/* SECTION  =   5 */}
+      {/* SECTION  =   5 */}
+      {/* <Grid item xs={12}>
         <Card>
           <CardHeader title='Section 5' />
           <CardContent>
@@ -840,7 +841,7 @@ const ContentPage = () => {
             </Formik>
           </CardContent>
         </Card>
-      </Grid>
+      </Grid> */}
 
       <DeleteDialog
         open={openDelete}
@@ -856,6 +857,7 @@ const ContentPage = () => {
       {dialogName === 'cardContents' && <CardContentDialog {...props} />}
       {dialogName === 'productContentCard' && <ProductContentCard {...props} />}
       {dialogName === 'smallProductContentCard' && <SmallProductCard {...props} />}
+      {/* {dialogName === 'largeProductContentCard' && <LargeProductCard {...props}/> */}
     </Grid>
   )
 }

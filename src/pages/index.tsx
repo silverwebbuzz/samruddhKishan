@@ -128,14 +128,11 @@ const HomePage = () => {
                     <div className='row align-center'>
                       <div className='col-xl-7'>
                         <div className='content'>
-                          <h4 className='slider_top_desc'>Original &amp; Natural</h4>
+                          <h4 className='slider_top_desc'>{Item?.sliderSubHeader}</h4>
                           <h2 className='slider_top_heading'>
-                            <strong>Organic Agriculture</strong> <span>Farming Products</span>
+                            <strong>{Item?.sliderMainHeaderWithColor}</strong> <span>{Item?.sliderSubHeader2}</span>
                           </h2>
-                          <p className='slider_content_para'>
-                            Dissuade ecstatic and properly saw entirely sir why laughter endeavor. In on my jointure
-                            horrible margaret suitable he followed.
-                          </p>
+                          <p className='slider_content_para'>{Item?.sliderDescription}</p>
                           <div className='button slider_content_btn'>
                             <a className='btn btn-theme secondary btn-md radius animation' href='#'>
                               Discover More

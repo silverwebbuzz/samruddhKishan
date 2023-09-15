@@ -16,6 +16,7 @@ import { deleteCategory } from 'src/slice/categoriesSlice'
 import { deleteProduct } from 'src/slice/productSlice'
 import { deleteService, getAllServices } from 'src/slice/servicesSlice'
 import { deleteBrands, getAllBrands } from 'src/slice/brandsSlice'
+import { deleteSlide } from 'src/slice/sliderSlice'
 
 const Transition = forwardRef(function Transition(
   props: SlideProps & { children?: ReactElement<any, any> },
@@ -63,7 +64,13 @@ const DeleteDialog = ({ open, type, id, handleClose, delelteField }: any) => {
             dispatch(getAllBrands())
           }
         })
-
+      case 'deleteSlide':
+        dispatch(deleteSlide(payload)).then(res => {
+          if (res) {
+            //@ts-ignore
+            dispatch(getAllServices())
+          }
+        })
       default:
         console.log('Does not exist DELETE ID!')
         break
