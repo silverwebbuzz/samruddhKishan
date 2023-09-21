@@ -58,7 +58,7 @@ import 'src/iconify-bundle/icons-bundle-react'
 import '../../styles/globals.css'
 import '../../styles/slider.css'
 import '../../styles/about.css'
-
+import '../../styles/sidebar.css'
 import { Provider } from 'react-redux'
 import store from 'src/store/store'
 import axios from 'axios'

@@ -2,6 +2,7 @@ import { FormControl, Grid, InputLabel, MenuItem, Select, TextField, Tooltip } f
 import { ErrorMessage } from 'formik'
 
 const ApmcForm = ({
+  size,
   values,
   setSTATE,
   STATE,
@@ -25,6 +26,7 @@ const ApmcForm = ({
     <>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.firstName}
           onChange={handleChange}
           onBlur={handleBlur}
@@ -41,6 +43,7 @@ const ApmcForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.apmcAddress}
           onChange={handleChange}
           onBlur={handleBlur}
@@ -54,6 +57,7 @@ const ApmcForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.apmcName}
           onChange={handleChange}
           onBlur={handleBlur}
@@ -69,7 +73,7 @@ const ApmcForm = ({
         <ErrorMessage name='apmcName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
       </Grid>
       <Grid item sm={6} xs={12}>
-        <FormControl fullWidth>
+        <FormControl fullWidth size={size ? size : 'medium'}>
           <InputLabel id='demo-simple-select-label'>State</InputLabel>
           <Select
             labelId='demo-simple-select-label'
@@ -93,7 +97,7 @@ const ApmcForm = ({
 
       <Grid item sm={6} xs={12}>
         <Tooltip title='Please select state first'>
-          <FormControl fullWidth>
+          <FormControl fullWidth size={size ? size : 'medium'}>
             <InputLabel id='demo-simple-select-label'>District</InputLabel>
             <Select
               labelId='demo-simple-select-label'
@@ -118,6 +122,7 @@ const ApmcForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={pincode}
           name='pinCode'
           onChange={e => {
@@ -140,7 +145,7 @@ const ApmcForm = ({
           disableHoverListener={!(pincode.length <= 0)}
           disableTouchListener={!(pincode.length <= 0)}
         >
-          <FormControl fullWidth>
+          <FormControl fullWidth size={size ? size : 'medium'}>
             <InputLabel id='demo-simple-select-label'>taluka</InputLabel>
             <Select
               labelId='demo-simple-select-label'
@@ -166,6 +171,7 @@ const ApmcForm = ({
 
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.apmcPersonName}
           onChange={handleChange}
           onBlur={handleBlur}
@@ -179,6 +185,7 @@ const ApmcForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.phone}
           onChange={handleChange}
           onBlur={handleBlur}
@@ -193,6 +200,7 @@ const ApmcForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.email}
           onChange={handleChange}
           onBlur={handleBlur}
@@ -206,6 +214,7 @@ const ApmcForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.password}
           onChange={handleChange}
           onBlur={handleBlur}
@@ -219,6 +228,7 @@ const ApmcForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.apmcConnectedFarmers}
           onChange={handleChange}
           onBlur={handleBlur}
@@ -233,6 +243,7 @@ const ApmcForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.apmcMajorCropsSelling}
           onChange={handleChange}
           onBlur={handleBlur}
@@ -246,6 +257,7 @@ const ApmcForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.districtFarmerComingSellProduct}
           onChange={handleChange}
           onBlur={handleBlur}

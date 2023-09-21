@@ -32,7 +32,7 @@ import SliderContentDialog from 'src/views/components/dialogBox/SliderContentDia
 import { getAllSlides } from 'src/slice/sliderSlice'
 import { getAllContent, updateContent } from 'src/slice/contentSectionSlice'
 
-import { FilePreview } from '../../views/components/filePreviewer/FilePreview'
+import { FilePreview } from '../../../views/components/filePreviewer/FilePreview'
 import { getAllProductSection, updateProductContentSection } from 'src/slice/productSectionSlice'
 import CardContentDialog from 'src/views/components/dialogBox/CardContentDialog'
 import ProductContentCard from 'src/views/components/dialogBox/ProductContentCard'
@@ -331,6 +331,7 @@ const ContentPage = () => {
               onSubmit={values => {
                 let contentFormData = new FormData()
                 let ID = localStorage.getItem('AllContentDataId')
+                //@ts-ignore
                 contentFormData.append('id', ID)
                 contentFormData.append('contentHeader', values?.contentHeader)
                 contentFormData.append('contentText', values?.contentText)
@@ -512,13 +513,6 @@ const ContentPage = () => {
             </Box>
           </AccordionDetails>
         </Accordion>
-        {/* SECTION  =   2 */}
-        {/* <Card>
-          <CardHeader title='Section 2' />
-          <CardContent>
-         
-          </CardContent>
-        </Card> */}
       </Grid>
 
       <Grid item xs={12}>
@@ -778,143 +772,6 @@ const ContentPage = () => {
         </Card> */}
       </Grid>
 
-      {/* SECTION  =   5 */}
-      {/* <Grid item xs={12}>
-        <Card>
-          <CardHeader title='Section 5' />
-          <CardContent>
-            <Formik
-              initialValues={{
-                qaContentMainImg: allContentData?.qaContentMainImg,
-                qaContentlogo: allContentData?.qaContentlogo,
-                qaContentCounter: allContentData?.qaContentCounter,
-                qaContentCounterText: allContentData?.qaContentCounterText,
-                qaContentMainHeader: allContentData?.qaContentMainHeader,
-                qaContentSubHeader: allContentData?.qaContentSubHeader
-              }}
-              enableReinitialize
-              onSubmit={values => {
-                //API
-                console.log('HERE')
-                // https://devapi.hivecareer.com/samruddhKishan/contentPage/uploads/qaUpdateContent
-              }}
-            >
-              {({ values, setFieldValue, handleChange }) => (
-                <Form>
-                  <Grid container spacing={5}>
-                    <Grid item sm={6} xs={12}>
-                      <Typography>Select QA Content Image</Typography>
-                      <Box display='flex' alignItems='center'>
-                        <Box
-                          sx={{
-                            border: '4px solid #d7cdcd',
-                            width: 200,
-                            height: 108,
-                            borderRadius: 1,
-                            mr: 3
-                          }}
-                        >
-                          <FilePreview file={values?.qaContentMainImg} />
-                        </Box>
-                        <IconButton size='large' color='primary' component='label'>
-                          <Icon icon='material-symbols:upload' />
-                          <input
-                            hidden
-                            type='file'
-                            onChange={(e: any) => {
-                              setFieldValue('qaContentMainImg', e.target?.files[0])
-                            }}
-                          />
-                        </IconButton>
-                      </Box>
-                    </Grid>
-                    <Grid item sm={6} xs={12}>
-                      <Typography>Select QA Content Logo</Typography>
-                      <Box display='flex' alignItems='center'>
-                        <Box
-                          sx={{
-                            border: '4px solid #d7cdcd',
-                            width: 200,
-                            height: 108,
-                            borderRadius: 1,
-                            mr: 3
-                          }}
-                        >
-                          <FilePreview file={values.qaContentlogo} />
-                        </Box>
-                        <IconButton size='large' color='primary' component='label'>
-                          <Icon icon='material-symbols:upload' />
-                          <input
-                            hidden
-                            type='file'
-                            onChange={(e: any) => {
-                              setFieldValue('qaContentlogo', e.target?.files[0])
-                            }}
-                          />
-                        </IconButton>
-                      </Box>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        name='qaContentCounter'
-                        label='QA Content Counter'
-                        fullWidth
-                        InputLabelProps={{
-                          shrink: true
-                        }}
-                        value={values.qaContentCounter}
-                        onChange={handleChange}
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        name='qaContentCounterText'
-                        label='QA Content Counter Text'
-                        fullWidth
-                        InputLabelProps={{
-                          shrink: true
-                        }}
-                        value={values.qaContentCounterText}
-                        onChange={handleChange}
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        name='qaContentMainHeader'
-                        label='QA Content Main Header'
-                        fullWidth
-                        InputLabelProps={{
-                          shrink: true
-                        }}
-                        value={values.qaContentMainHeader}
-                        onChange={handleChange}
-                      />
-                    </Grid>
-                    <Grid item xs={6}>
-                      <TextField
-                        name='qaContentSubHeader'
-                        label='QA Content Sub Header'
-                        fullWidth
-                        InputLabelProps={{
-                          shrink: true
-                        }}
-                        value={values.qaContentSubHeader}
-                        onChange={handleChange}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Button variant='contained' type='submit'>
-                        Submit
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Form>
-              )}
-            </Formik>
-          </CardContent>
-        </Card>
-      </Grid> */}
-
       <DeleteDialog
         open={openDelete}
         setOpen={setOpenDelete}
@@ -929,7 +786,6 @@ const ContentPage = () => {
       {dialogName === 'cardContents' && <CardContentDialog {...props} />}
       {dialogName === 'productContentCard' && <ProductContentCard {...props} />}
       {dialogName === 'smallProductContentCard' && <SmallProductCard {...props} />}
-      {/* {dialogName === 'largeProductContentCard' && <LargeProductCard {...props}/> */}
     </Grid>
   )
 }

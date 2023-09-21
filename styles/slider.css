@@ -3,6 +3,9 @@
   width: 100%;
   position: relative;
 }
+.banner-area .swiper-slide-active {
+  z-index: 99;
+}
 @media (max-width: 1023px) {
   .banner-area {
     height: auto;

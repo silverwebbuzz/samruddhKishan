@@ -9,10 +9,13 @@ import { useTheme } from '@mui/material/styles'
 
 import { Button } from '@mui/material'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
-export default function Navbar({ LOGO }) {
+export default function Navbar({ DATA, LOGO }: any) {
   const [visibleMenu, setVisibleMenu] = useState<boolean>(false)
   const { breakpoints } = useTheme()
+  const router = useRouter()
+
   const md = 1024 // Define md variable with value 1024
   const matchMobileView = useMediaQuery(`(max-width: ${md}px)`)
   useEffect(() => {
@@ -96,7 +99,14 @@ export default function Navbar({ LOGO }) {
               </ul>
             </div>
             <Box className='menu_right_btn' sx={{ display: 'flex', marginLeft: '30px' }}>
-              <Button className='login-btn'>Register</Button>
+              <Button
+                className='login-btn'
+                onClick={() => {
+                  router.push('/register')
+                }}
+              >
+                Register
+              </Button>
             </Box>
             {visibleMenu && matchMobileView && (
               <IconButton

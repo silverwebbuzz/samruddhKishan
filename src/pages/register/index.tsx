@@ -1,5 +1,5 @@
 // ** React Imports
-import { ReactNode, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 
 // ** Next Import
 
@@ -24,12 +24,18 @@ import { useSettings } from 'src/@core/hooks/useSettings'
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 import {
   Button,
+  Card,
   Checkbox,
+  Chip,
   Divider,
   FormControlLabel,
   FormControlLabelProps,
+  Grid,
   IconButton,
   Link,
+  MenuItem,
+  Select,
+  Tooltip,
   Typography,
   useMediaQuery
 } from '@mui/material'
@@ -40,6 +46,17 @@ import axios from 'axios'
 import { toast } from 'react-hot-toast'
 import { useRouter } from 'next/router'
 import * as yup from 'yup'
+import PageBanner from 'src/views/components/landdingPage/pageBanner/PageBanner'
+import CentersForm from 'src/views/components/UsersFormComponents/CentersForm'
+import ApmcForm from 'src/views/components/UsersFormComponents/ApmcForm'
+import VendorForm from 'src/views/components/UsersFormComponents/VendorForm'
+import { createUser1, getAdressByPincode, getAllDistrict, getAllState, getRoleAndPermissions } from 'src/slice/farmers'
+import { getAllCategories } from 'src/slice/categoriesSlice'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from 'src/store/store'
+import Navbar from 'src/views/components/landdingPage/navBar/Navbar'
+import { getLogoAPI } from 'src/slice/settingSlice'
 // ** Styled Components
 const RegisterIllustration = styled('img')(({ theme }) => ({
   zIndex: 2,
@@ -78,18 +95,50 @@ const LoginIllustration = styled('img')(({ theme }) => ({
 }))
 
 const Register = () => {
-  // ** States
-  const [showPassword, setShowPassword] = useState<boolean>(false)
-  const router = useRouter()
-  // ** Hooks
-  const theme: any = useTheme()
-  const { settings } = useSettings()
-  const hidden = useMediaQuery(theme.breakpoints.down('md'))
+  const { getRoles, getAddressByPinCodeData, allDistrict, allState, deleteUser, updateUsers12, createUser12 } =
+    useSelector((state: any) => state?.rootReducer?.farmerReducer)
+  const { categories } = useSelector((state: any) => state?.rootReducer?.categoriesReducer)
+  const { getLogo } = useSelector((state: any) => state?.rootReducer?.settingsReducer)
 
-  // ** Vars
-  const { skin } = settings
+  const router = useRouter()
+  const [pincode, setPincode] = useState('')
+  const [STATE, setSTATE] = useState('')
+  const [district, setDistrict] = useState('')
+  const [rolePrefill, setRolePrefill] = useState('')
+  const [categoryIdPrefill, setCategoryIdPrefill] = useState(0)
+  const [taluka, setTaluka] = useState('')
+  const [page, setPage] = useState<number>(1)
+  const [pageCount, setPageCount] = useState<number>(1)
+  const [pageLimit, setPageLimit] = useState<number>(10)
+
+  const dispatch = useDispatch<AppDispatch>()
+  const handlePincode = (e: any) => {
+    setPincode(e)
+    let payload = {
+      pincode: e ? e : ''
+    }
+    dispatch(getAdressByPincode(payload))
+  }
   const validationSchema = yup.object().shape({
-    email: yup.string().email('Invalid email').required('Email id is required'),
+    role: yup.string().required('Role is required'),
+    firstName: yup.string().when('role', {
+      is: (role: any) => role !== '10' && role !== '13',
+      then: yup => yup.required('First Name is required for this role'),
+      otherwise: yup => yup.optional()
+    }),
+    lastName: yup.string().when('role', {
+      is: (role: any) => role !== '10' && role !== '13',
+      then: yup => yup.required('Last Name is required for this role'),
+      otherwise: yup => yup.optional()
+    }),
+    pinCode: yup.string().matches(/^\d{6}$/, 'Invalid PIN code'),
+    email: yup.string().email('Invalid email address').required('Email is required'),
+    phone: yup
+      .string()
+      .required('Phone number is required')
+      .max(10, 'Mobile number must be 10 digit')
+      .max(10, 'Mobile number must be 10 digit')
+      .matches(/^(\+91|0)?[6789]\d{9}$/, 'Invalid mobile number'),
     password: yup
       .string()
       .required('Password is required')
@@ -99,165 +148,566 @@ const Register = () => {
         'Must contain 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special case character'
       )
   })
-  const imageSource = skin === 'bordered' ? 'image_2023_07_11T06_56_56_991Z (1)' : 'image_2023_07_11T06_56_56_991Z (1)'
-  const handleSubmit = (values: any) => {
-    const payload = {
-      email: values?.email,
-      password: values?.password,
-      phone: values?.phone,
-      name: values?.name
+
+  const initialValues = {
+    //normal User
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    phone: '',
+    state: '',
+    district: '',
+    pinCode: '',
+    taluka: '',
+    villageName: '',
+    role: '',
+    roleId: '',
+    //centers
+    centerName: '',
+    centerRegisterUnderCompanyDate: '',
+    centerKeyPerson: '',
+    centerHandlingPersonName: '',
+    centerTaluka: '',
+    centerDistrict: '',
+    centerTurnover: 0,
+    centerMemberFarmer: 0,
+    centerPerDayMilkCollection: 0,
+    centerMilkStorageCapacity: 0,
+    centerSellingMilkFor: '',
+    centerOtherCompetitors: '',
+    centerPaymentCycle: '',
+    centerOtherFacltyByMilkAgency: '',
+    centerFarmarPaymentProcess: '',
+    centerMembersOnBoard: '',
+    centerCurrentHurdeles: '',
+    centerNeededFacultys: '',
+    centerAllFinancialAudits: '',
+    // apmc traders
+    apmcFirmName: '',
+    apmcAddress: '',
+    apmcName: '',
+    apmcTaluka: '',
+    apmcDistrict: '',
+    apmcPersonName: '',
+    apmcConnectedFarmers: 0,
+    apmcMajorCropsSelling: '',
+    districtFarmerComingSellProduct: '',
+    vendorImage: ''
+  }
+  const pincodeAutoCall = () => {
+    let payload = {
+      pincode: pincode ? pincode : ''
     }
-    axios
-      .post(`${process.env.NEXT_PUBLIC_BASE_URL}/admin/register`, payload, {
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(async response => {
-        if (response?.data?.status === 200) {
-          router.push('/login')
-          toast.success('User Created successfully')
-        } else if (response?.data?.status === 401) {
-          toast.error(response.data.message)
-        } else {
-          toast.error(response.data.message ? response.data.message : 'somthing went wrong')
-        }
-      })
-      .catch(err => {
-        console.log('ERROR: ', err)
-      })
+    getAdressByPincode(payload)
+  }
+  useEffect(() => {
+    if (pincode) {
+      pincodeAutoCall()
+    }
+  }, [pincode])
+
+  useEffect(() => {
+    dispatch(getAllCategories({ page: 1, pageSize: 10 }))
+  }, [])
+  useEffect(() => {
+    dispatch(getAllState())
+    dispatch(getLogoAPI())
+    dispatch(getRoleAndPermissions())
+  }, [])
+  useEffect(() => {
+    dispatch(getAllDistrict({ state: STATE }))
+  }, [STATE])
+
+  const handleSubmit = (values: any) => {
+    let payload = [
+      //other
+      { firstName: values?.firstName },
+      { lastName: values?.lastName },
+      { email: values?.email },
+      { password: values?.password },
+      { phone: values?.phone },
+      { state: values?.state },
+      { city: district },
+      { taluka: taluka },
+      { village: values?.villageName },
+      { pinCode: pincode },
+      { roleId: values?.role },
+      //center
+      { centerName: values?.centerName },
+      { centerRegisterUnderCompanyDate: values?.centerRegisterUnderCompanyDate },
+      { centerKeyPerson: values?.centerKeyPerson },
+      { centerHandlingPersonName: values?.centerHandlingPersonName },
+      { centerTaluka: values?.centerTaluka },
+      { centerDistrict: values?.centerDistrict },
+      { centerTurnover: values?.centerTurnover },
+      { centerMemberFarmer: values?.centerMemberFarmer },
+      { centerPerDayMilkCollection: values?.centerPerDayMilkCollection },
+      { centerMilkStorageCapacity: values?.centerMilkStorageCapacity },
+      { centerSellingMilkFor: values?.centerSellingMilkFor },
+      { centerOtherCompetitors: values?.centerOtherCompetitors },
+      { centerPaymentCycle: values?.centerPaymentCycle },
+      { centerOtherFacltyByMilkAgency: values?.centerOtherFacltyByMilkAgency },
+      { centerFarmarPaymentProcess: values?.centerFarmarPaymentProcess },
+      { centerMembersOnBoard: values?.centerMembersOnBoard },
+      { centerCurrentHurdeles: values?.centerCurrentHurdeles },
+      { centerNeededFacultys: values?.centerNeededFacultys },
+      { centerAllFinancialAudits: values?.centerAllFinancialAudits },
+      //apmc
+      { apmcFirmName: values?.apmcFirmName },
+      { apmcAddress: values?.apmcAddress },
+      { apmcName: values?.apmcName },
+      { apmcTaluka: values?.apmcTaluka },
+      { apmcDistrict: values?.apmcDistrict },
+      { apmcPersonName: values?.apmcPersonName },
+      { apmcConnectedFarmers: values?.apmcConnectedFarmers },
+      { apmcMajorCropsSelling: values?.apmcMajorCropsSelling },
+      { districtFarmerComingSellProduct: values?.districtFarmerComingSellProduct },
+      { vendorImage: values?.vendorImage },
+      { categoryId: categoryIdPrefill }
+    ]
+    let formData = new FormData()
+    payload.forEach((entry: any) => {
+      //@ts-ignore
+      const key = Object.keys(entry)[0] // Extracting the key from the object
+      const value = entry[key] // Extracting the value from the object
+      formData.append(key, value) // Appending the key-value pair to the formData
+    })
+    dispatch(createUser1(formData)).then((res: any) => {
+      if (res?.payload?.status === 200) {
+        router.push('/users')
+      }
+    })
+  }
+
+  const ProfilePicture = styled('img')(({ theme }: any) => ({
+    width: 108,
+    height: 108,
+    borderRadius: theme.shape.borderRadius,
+    border: `4px solid ${theme.palette.common.white}`,
+    [theme.breakpoints.down('md')]: {
+      marginBottom: theme.spacing(4)
+    }
+  }))
+  const isValidUrl = (urlString: any) => {
+    try {
+      return Boolean(new URL(urlString))
+    } catch (e) {
+      return false
+    }
+  }
+  const JSONHandler = (data: any) => {
+    try {
+      JSON.parse(data)
+    } catch (e) {
+      return []
+    }
+    return JSON.parse(data)
+  }
+  const FilePreview = ({ file, onRemove }: any) => {
+    if (isValidUrl(file)) {
+      return (
+        <Box>
+          <ProfilePicture src={file} alt='profile-picture' />
+        </Box>
+      )
+    } else {
+      if (file?.type?.startsWith('image')) {
+        return (
+          <Box>
+            <ProfilePicture src={URL.createObjectURL(file)} alt='profile-picture' />
+          </Box>
+        )
+      } else {
+        return (
+          <Box>
+            <ProfilePicture
+              src={'/images/logo/pngtree-gray-network-placeholder-png-image_3416659.jpg'}
+              alt='profile-picture'
+            />
+          </Box>
+        )
+      }
+    }
   }
   return (
-    <Box className='content-right' sx={{ backgroundColor: 'background.paper' }}>
-      {!hidden ? (
-        <Box
-          sx={{
-            flex: 1,
-            display: 'flex',
-            position: 'relative',
-            alignItems: 'center',
-            borderRadius: '20px',
-            justifyContent: 'center',
-            backgroundColor: 'customColors.bodyBg'
+    <>
+      <Navbar LOGO={getLogo?.logo} JSONHandler={JSONHandler} />
+      <div
+        style={{
+          padding: '5%'
+        }}
+      >
+        <Formik
+          enableReinitialize
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={values => {
+            handleSubmit(values)
           }}
         >
-          <RegisterIllustration alt='register-illustration' src={`/images/pages/${imageSource}.png`} />
-          <FooterIllustrationsV2 />
-        </Box>
-      ) : null}
-
-      <RightWrapper>
-        <Box
-          sx={{
-            p: [6, 12],
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          <Box sx={{ width: '100%', maxWidth: 400 }}>
-            <Box sx={{ my: 6, textAlign: 'center' }}>
-              <img
-                src='/images/pages/logo1234.png'
-                style={{
-                  height: 'auto',
-                  width: '209px'
+          {({ values, handleChange, handleBlur, errors, touched, setFieldValue, resetForm }: any) => (
+            <>
+              <Box
+                sx={{
+                  margin: 10
                 }}
-              />
-            </Box>
-            <Formik
-              validationSchema={validationSchema}
-              initialValues={{
-                email: '',
-                phone: '',
-                name: '',
-                password: ''
-              }}
-              onSubmit={values => handleSubmit(values)}
-            >
-              {({ values, errors, touched, handleChange, handleBlur }: any) => (
+              >
                 <Form>
-                  <TextField
-                    autoFocus
-                    fullWidth
-                    sx={{ mb: 4 }}
-                    label='Name'
-                    name='name'
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values?.name}
-                  />
-                  <TextField
-                    fullWidth
-                    label='Email'
-                    sx={{ mb: 4 }}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values?.email}
-                    name='email'
-                    error={Boolean(errors.email && touched.email)}
-                  />{' '}
-                  <TextField
-                    fullWidth
-                    type='tel'
-                    label='Phone Number'
-                    sx={{ mb: 4 }}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values?.phone}
-                    name='phone'
-                  />
-                  <FormControl fullWidth>
-                    <InputLabel htmlFor='auth-login-v2-password'>Password</InputLabel>
-                    <OutlinedInput
-                      label='Password'
-                      //@ts-ignore
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values?.password}
-                      name='password'
-                      type={showPassword ? 'text' : 'password'}
-                      sx={{ mb: 4 }}
-                      endAdornment={
-                        <InputAdornment position='end'>
-                          <IconButton edge='end' onClick={() => setShowPassword(!showPassword)}>
-                            <Icon icon={showPassword ? 'tabler:eye' : 'tabler:eye-off'} fontSize={20} />
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                    />
-                  </FormControl>
-                  <Button
-                    fullWidth
-                    size='large'
-                    type='submit'
-                    variant='contained'
+                  <Box sx={{ mb: 8, textAlign: 'center' }}>
+                    <Divider>
+                      <Chip
+                        sx={{
+                          fontSize: '22px',
+                          padding: '15px',
+                          fontWeight: 'bold',
+                          textAlign: 'left',
+                          backgroundColor: '#f6f5f8'
+                        }}
+                        label='User Details'
+                      />
+                    </Divider>
+                  </Box>
+
+                  <Grid
+                    container
+                    spacing={6}
                     sx={{
-                      mb: 4,
-                      '&:hover': {
-                        backgroundColor: '#5E7954'
-                      }
+                      padding: '10px'
                     }}
                   >
-                    Sign up
-                  </Button>
-                  <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
-                    <Typography sx={{ color: 'text.secondary', mr: 2 }}>Already have an account?</Typography>
-                    <Typography variant='body2'>
-                      <LinkStyled href='/super-admin/login' sx={{ fontSize: '1rem' }}>
-                        Sign in instead
-                      </LinkStyled>
-                    </Typography>
+                    <Grid item sm={12} xs={12}>
+                      <FormControl fullWidth size='small'>
+                        <InputLabel id='demo-simple-select-label'>Role</InputLabel>
+                        <Select
+                          labelId='demo-simple-select-label'
+                          id='demo-simple-select'
+                          name='role'
+                          value={rolePrefill}
+                          error={Boolean(errors.role && touched.role)}
+                          label='Role'
+                          onChange={e => {
+                            setFieldValue('role', e.target?.value)
+                            setFieldValue('email', '')
+                            setFieldValue('phone', '')
+                            setFieldValue('password', '')
+                            setDistrict('')
+                            setFieldValue('taluka', '')
+                            setFieldValue('village', '')
+                            setFieldValue('apmcDistrict', '')
+                            setFieldValue('centerDistrict', '')
+                            setFieldValue('firstName', '')
+                            setFieldValue('lastName', '')
+                            setFieldValue('apmcName', '')
+                            setFieldValue('centerName', '')
+                            setSTATE('')
+                            setRolePrefill(e.target?.value)
+                          }}
+                        >
+                          {getRoles?.map((Item: any) => (
+                            <MenuItem key={Item?.roleType} value={Item?.id}>
+                              {Item?.roleType}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        <ErrorMessage name='role' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                      </FormControl>
+                    </Grid>
+                    {values?.role == 13 ? (
+                      <CentersForm
+                        size='small'
+                        values={values}
+                        allState={allState}
+                        STATE={STATE}
+                        setSTATE={setSTATE}
+                        setDistrict={setDistrict}
+                        district={district}
+                        handleChange={handleChange}
+                        handleBlur={handleBlur}
+                        errors={errors}
+                        touched={touched}
+                        setFieldValue={setFieldValue}
+                        allDistrict={allDistrict}
+                        handlePincode={handlePincode}
+                        pincode={pincode}
+                        setTaluka={setTaluka}
+                        taluka={taluka}
+                        getAddressByPinCodeData={getAddressByPinCodeData}
+                        resetForm={resetForm}
+                      />
+                    ) : values?.role == 10 ? (
+                      <ApmcForm
+                        size='small'
+                        values={values}
+                        allState={allState}
+                        STATE={STATE}
+                        setSTATE={setSTATE}
+                        setDistrict={setDistrict}
+                        district={district}
+                        handleChange={handleChange}
+                        handleBlur={handleBlur}
+                        errors={errors}
+                        touched={touched}
+                        setFieldValue={setFieldValue}
+                        allDistrict={allDistrict}
+                        handlePincode={handlePincode}
+                        pincode={pincode}
+                        setTaluka={setTaluka}
+                        taluka={taluka}
+                        getAddressByPinCodeData={getAddressByPinCodeData}
+                        resetForm={resetForm}
+                      />
+                    ) : values?.role == 17 ? (
+                      <VendorForm
+                        size='small'
+                        values={values}
+                        allState={allState}
+                        STATE={STATE}
+                        setSTATE={setSTATE}
+                        setDistrict={setDistrict}
+                        district={district}
+                        handleChange={handleChange}
+                        handleBlur={handleBlur}
+                        errors={errors}
+                        touched={touched}
+                        setFieldValue={setFieldValue}
+                        allDistrict={allDistrict}
+                        handlePincode={handlePincode}
+                        pincode={pincode}
+                        setTaluka={setTaluka}
+                        taluka={taluka}
+                        getAddressByPinCodeData={getAddressByPinCodeData}
+                        resetForm={resetForm}
+                        categories={categories}
+                        setCategoryIdPrefill={setCategoryIdPrefill}
+                        categoryIdPrefill={categoryIdPrefill}
+                        FilePreview={FilePreview}
+                      />
+                    ) : (
+                      <>
+                        <Grid item sm={6} xs={12}>
+                          <TextField
+                            size='small'
+                            value={values?.firstName}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            name='firstName'
+                            error={Boolean(errors.firstName && touched.firstName)}
+                            fullWidth
+                            label='First Name'
+                            placeholder='First Name'
+                          />
+                          <ErrorMessage name='firstName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                        </Grid>
+                        <Grid item sm={6} xs={12}>
+                          <TextField
+                            size='small'
+                            value={values?.lastName}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            name='lastName'
+                            error={Boolean(errors.lastName && touched.lastName)}
+                            fullWidth
+                            label='Last Name'
+                            placeholder='Last Name'
+                          />
+                          <ErrorMessage name='lastName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                        </Grid>
+                        <Grid item sm={6} xs={12}>
+                          <TextField
+                            size='small'
+                            value={values?.email}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            name='email'
+                            error={Boolean(errors.email && touched.email)}
+                            fullWidth
+                            label='Email'
+                            placeholder='Email'
+                          />
+                          <ErrorMessage name='email' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                        </Grid>
+                        <Grid item sm={6} xs={12}>
+                          <TextField
+                            size='small'
+                            value={values?.password}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            name='password'
+                            error={Boolean(errors.password && touched.password)}
+                            fullWidth
+                            label='Password'
+                            placeholder='Password'
+                          />
+                          <ErrorMessage name='password' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                        </Grid>
+                        <Grid item sm={6} xs={12}>
+                          <TextField
+                            size='small'
+                            value={values?.phone}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            name='phone'
+                            error={Boolean(errors.phone && touched.phone)}
+                            fullWidth
+                            type='number'
+                            label='Phone'
+                            placeholder='Phone'
+                          />
+                          <ErrorMessage name='phone' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                        </Grid>
+                        <Grid item sm={6} xs={12}>
+                          <FormControl fullWidth size='small'>
+                            <InputLabel id='demo-simple-select-label'>State</InputLabel>
+                            <Select
+                              labelId='demo-simple-select-label'
+                              id='demo-simple-select'
+                              name='state'
+                              value={values?.state}
+                              label='State'
+                              onChange={(e: any) => {
+                                setFieldValue('state', e?.target?.value)
+                                setSTATE(e?.target?.value)
+                              }}
+                            >
+                              {allState?.data?.map((name: any) => (
+                                <MenuItem key={name?.name} value={name?.name}>
+                                  {name?.name}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                        <Grid item sm={6} xs={12}>
+                          <Tooltip title='Please select state first'>
+                            <FormControl fullWidth size='small'>
+                              <InputLabel>District</InputLabel>
+                              <Select
+                                name='district'
+                                disabled={STATE.length <= 0}
+                                value={district}
+                                label='District'
+                                onChange={e => {
+                                  setFieldValue('district', e?.target?.value)
+                                  setDistrict(e?.target?.value)
+                                }}
+                              >
+                                {allDistrict?.map((name: any) => (
+                                  <MenuItem key={name?.name} value={name?.name}>
+                                    {name?.name}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            </FormControl>
+                          </Tooltip>
+                        </Grid>
+                        <Grid item sm={6} xs={12}>
+                          <TextField
+                            size='small'
+                            value={pincode}
+                            name='pinCode'
+                            onChange={e => {
+                              handlePincode(e.target.value)
+                            }}
+                            fullWidth
+                            label='Pin Code'
+                            placeholder='Pin Code'
+                          />
+                        </Grid>
+
+                        <Grid item sm={6} xs={12}>
+                          <Tooltip
+                            title='Please enter pincode first'
+                            disableFocusListener={!(pincode?.length <= 0)}
+                            disableHoverListener={!(pincode?.length <= 0)}
+                            disableTouchListener={!(pincode?.length <= 0)}
+                          >
+                            <FormControl fullWidth size='small'>
+                              <InputLabel id='demo-simple-select-label'>Taluka</InputLabel>
+                              <Select
+                                labelId='demo-simple-select-label'
+                                id='demo-simple-select'
+                                name='taluka'
+                                disabled={pincode?.length <= 0}
+                                value={values?.taluka && values?.taluka}
+                                label='Taluka'
+                                onChange={handleChange}
+                              >
+                                {getAddressByPinCodeData?.taluka?.map((name: any) => (
+                                  <MenuItem key={name} value={name}>
+                                    {name}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            </FormControl>
+                          </Tooltip>
+                        </Grid>
+
+                        <Grid item sm={6} xs={12}>
+                          <Tooltip
+                            title='Please enter pincode first'
+                            disableFocusListener={!(pincode.length <= 0)}
+                            disableHoverListener={!(pincode.length <= 0)}
+                            disableTouchListener={!(pincode.length <= 0)}
+                          >
+                            <FormControl fullWidth size='small'>
+                              <InputLabel id='demo-simple-select-label'>Village Name</InputLabel>
+                              <Select
+                                labelId='demo-simple-select-label'
+                                id='demo-simple-select'
+                                name='villageName'
+                                disabled={pincode.length <= 0}
+                                value={values?.villageName && values?.villageName}
+                                label='Village Name'
+                                onChange={handleChange}
+                              >
+                                {getAddressByPinCodeData?.village?.map((name: any) => (
+                                  <MenuItem key={name} value={name}>
+                                    {name}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            </FormControl>
+                          </Tooltip>
+                        </Grid>
+                      </>
+                    )}
+                  </Grid>
+                  <Box
+                    sx={{
+                      padding: 5
+                    }}
+                  >
+                    <Button
+                      variant='contained'
+                      type='submit'
+                      sx={{
+                        mr: 1,
+                        '&:hover': {
+                          backgroundColor: '#5E7954'
+                        }
+                      }}
+                    >
+                      Submit
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        router.back()
+                      }}
+                      variant='outlined'
+                      type='button'
+                      color='secondary'
+                    >
+                      Cancel
+                    </Button>
                   </Box>
                 </Form>
-              )}
-            </Formik>
-          </Box>
-        </Box>
-      </RightWrapper>
-    </Box>
+              </Box>
+            </>
+          )}
+        </Formik>
+      </div>
+    </>
   )
 }
 

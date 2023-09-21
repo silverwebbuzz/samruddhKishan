@@ -30,12 +30,14 @@ const CentersForm = ({
   getAddressByPinCodeData,
   setTaluka,
   taluka,
-  resetForm
+  resetForm,
+  size
 }: any) => {
   return (
     <>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.centerName}
           onChange={handleChange}
           onBlur={handleBlur}
@@ -52,7 +54,7 @@ const CentersForm = ({
       </Grid>
 
       <Grid item sm={6} xs={12}>
-        <FormControl fullWidth>
+        <FormControl fullWidth size={size ? size : 'medium'}>
           <InputLabel id='demo-simple-select-label'>Center registration under company registration date</InputLabel>
           <Select
             labelId='demo-simple-select-label'
@@ -74,6 +76,7 @@ const CentersForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.firstName}
           onChange={handleChange}
           InputLabelProps={{
@@ -90,6 +93,7 @@ const CentersForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.phone}
           onChange={handleChange}
           InputLabelProps={{
@@ -107,6 +111,7 @@ const CentersForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.email}
           onChange={handleChange}
           InputLabelProps={{
@@ -124,6 +129,7 @@ const CentersForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.password}
           onChange={handleChange}
           InputLabelProps={{
@@ -140,6 +146,7 @@ const CentersForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.centerHandlingPersonName}
           onChange={handleChange}
           InputLabelProps={{
@@ -155,7 +162,7 @@ const CentersForm = ({
         <ErrorMessage name='centerHandlingPersonName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
       </Grid>
       <Grid item sm={6} xs={12}>
-        <FormControl fullWidth>
+        <FormControl size={size ? size : 'medium'} fullWidth>
           <InputLabel id='demo-simple-select-label'>State</InputLabel>
           <Select
             labelId='demo-simple-select-label'
@@ -178,7 +185,7 @@ const CentersForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <Tooltip title='Please select state first'>
-          <FormControl fullWidth>
+          <FormControl fullWidth size={size ? size : 'medium'}>
             <InputLabel id='demo-simple-select-label'>District</InputLabel>
             <Select
               labelId='demo-simple-select-label'
@@ -203,6 +210,7 @@ const CentersForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={pincode}
           name='pinCode'
           onChange={e => {
@@ -225,7 +233,7 @@ const CentersForm = ({
           disableHoverListener={!(pincode?.length <= 0)}
           disableTouchListener={!(pincode?.length <= 0)}
         >
-          <FormControl fullWidth>
+          <FormControl fullWidth size={size ? size : 'medium'}>
             <InputLabel id='demo-simple-select-label'>Taluka</InputLabel>
             <Select
               labelId='demo-simple-select-label'
@@ -250,6 +258,7 @@ const CentersForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         {/* <TextField
+size = {size ? size : "medium"}
           value={values?.centerTurnover}
           onChange={handleChange}
           InputLabelProps={{
@@ -264,7 +273,7 @@ const CentersForm = ({
           placeholder='Turnover of center'
         />
         <ErrorMessage name='centerTurnover' render={msg => <div style={{ color: 'red' }}>{msg}</div>} /> */}
-        <FormControl fullWidth>
+        <FormControl fullWidth size={size ? size : 'medium'}>
           <InputLabel shrink htmlFor='auth-login-v2-password'>
             Turnover of center
           </InputLabel>
@@ -286,6 +295,7 @@ const CentersForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.centerMemberFarmer}
           onChange={handleChange}
           InputLabelProps={{
@@ -303,6 +313,7 @@ const CentersForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         {/* <TextField
+size = {size ? size : "medium"}
           value={values?.centerPerDayMilkCollection}
           onChange={handleChange}
           InputLabelProps={{
@@ -317,7 +328,7 @@ const CentersForm = ({
           placeholder='Total  milk collection per day'
         />
         <ErrorMessage name='centerPerDayMilkCollection' render={msg => <div style={{ color: 'red' }}>{msg}</div>} /> */}
-        <FormControl fullWidth>
+        <FormControl fullWidth size={size ? size : 'medium'}>
           <InputLabel shrink htmlFor='auth-login-v2-password'>
             Total milk collection per day{' '}
           </InputLabel>
@@ -339,6 +350,7 @@ const CentersForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         {/* <TextField
+size = {size ? size : "medium"}
           value={values?.centerMilkStorageCapacity}
           onChange={handleChange}
           InputLabelProps={{
@@ -353,7 +365,7 @@ const CentersForm = ({
           placeholder='Milk collection storage capacity'
         />
         <ErrorMessage name='centerPerDayMilkCollection' render={msg => <div style={{ color: 'red' }}>{msg}</div>} /> */}
-        <FormControl fullWidth>
+        <FormControl fullWidth size={size ? size : 'medium'}>
           <InputLabel
             sx={{
               color: 'black',
@@ -384,6 +396,7 @@ const CentersForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.centerSellingMilkFor}
           onChange={handleChange}
           InputLabelProps={{
@@ -400,6 +413,7 @@ const CentersForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.centerOtherCompetitors}
           onChange={handleChange}
           InputLabelProps={{
@@ -416,6 +430,7 @@ const CentersForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.centerPaymentCycle}
           onChange={handleChange}
           InputLabelProps={{
@@ -432,6 +447,7 @@ const CentersForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.centerOtherFacltyByMilkAgency}
           onChange={handleChange}
           InputLabelProps={{
@@ -448,6 +464,7 @@ const CentersForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.centerFarmarPaymentProcess}
           onChange={handleChange}
           InputLabelProps={{
@@ -464,6 +481,7 @@ const CentersForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.centerMembersOnBoard}
           onChange={handleChange}
           InputLabelProps={{
@@ -480,6 +498,7 @@ const CentersForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.centerCurrentHurdeles}
           onChange={handleChange}
           InputLabelProps={{
@@ -496,6 +515,7 @@ const CentersForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.centerNeededFacultys}
           onChange={handleChange}
           InputLabelProps={{
@@ -512,6 +532,7 @@ const CentersForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.centerAllFinancialAudits}
           onChange={handleChange}
           InputLabelProps={{

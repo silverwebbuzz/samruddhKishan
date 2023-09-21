@@ -45,6 +45,13 @@ const navigation = (): VerticalNavItemsType => {
         icon: 'game-icons:farmer'
       },
       {
+        title: 'Users',
+        path: '/users',
+        action: 'read',
+        subject: 'users',
+        icon: 'ci:users'
+      },
+      {
         title: 'Brands',
         path: '/brands',
         action: 'read',
@@ -69,6 +76,41 @@ const navigation = (): VerticalNavItemsType => {
         action: 'read',
         subject: 'all-services',
         icon: 'carbon:ibm-cloud-hyper-protect-crypto-services'
+      },
+      {
+        title: 'CMS',
+        icon: 'fluent:content-view-32-regular',
+        children: [
+          {
+            title: 'Home Page',
+            path: '/cms/home'
+          },
+          {
+            title: 'FAQ',
+            path: '/cms/faq'
+          },
+          {
+            title: 'Testimonials',
+            path: '/cms/testimonials'
+          },
+          {
+            title: 'Footer',
+            path: '/cms/footer'
+          }
+        ]
+      },
+
+      {
+        title: 'Roles & Permissions',
+        icon: 'grommet-icons:user-admin',
+
+        children: [
+          {
+            title: 'Permissions',
+            path: '/permissions'
+          },
+          { title: 'Role', path: '/roles' }
+        ]
       }
     ]
     const FinalRoute = []
@@ -143,7 +185,19 @@ const navigation = (): VerticalNavItemsType => {
         children: [
           {
             title: 'Home Page',
-            path: '/landing-page-content'
+            path: '/cms/home'
+          },
+          {
+            title: 'FAQ',
+            path: '/cms/faq'
+          },
+          {
+            title: 'Testimonials',
+            path: '/cms/testimonials'
+          },
+          {
+            title: 'Footer',
+            path: '/cms/footer'
           }
         ]
       },
@@ -151,7 +205,14 @@ const navigation = (): VerticalNavItemsType => {
       {
         title: 'Roles & Permissions',
         icon: 'grommet-icons:user-admin',
-        path: '/roles'
+
+        children: [
+          {
+            title: 'Permissions',
+            path: '/permissions'
+          },
+          { title: 'role', path: '/roles' }
+        ]
       }
     ]
   }

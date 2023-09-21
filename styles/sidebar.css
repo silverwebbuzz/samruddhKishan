@@ -1,0 +1,60 @@
+/* Sidebar Styles */
+
+.sidebar {
+  width: 350px; /* Adjust the width as needed */
+  background-color: #ffffff; /* Change this color to your desired background color */
+  color: #fff; /* Text color */
+  padding: 20px; /* Padding inside the sidebar */
+  box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+}
+
+.sidebar h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+/* Category Dropdown Styles */
+.category-dropdown {
+  margin-bottom: 20px;
+}
+
+.category-dropdown label {
+  display: block;
+  font-weight: bold;
+  color: #fff; /* Text color for the label */
+  margin-bottom: 5px; /* Add some spacing below the label */
+}
+
+.category-dropdown select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #1f4e3d; /* Dark green border color */
+  background-color: #fff; /* White background color */
+  color: #1f4e3d; /* Dark green text color for the dropdown options */
+  border-radius: 4px;
+  appearance: none; /* Remove the default dropdown arrow */
+  cursor: pointer; /* Add a pointer cursor */
+}
+
+.category-dropdown select:focus {
+  outline: none; /* Remove the focus outline */
+  box-shadow: 0 0 3px 0px #fff; /* Add a subtle focus effect */
+}
+
+/* Style the dropdown options */
+.category-dropdown select option {
+  background-color: #fff;
+  color: #000;
+}
+.custom-select .select-arrow {
+  position: absolute;
+  top: 50%;
+  right: 10px; /* Adjust the position as needed */
+  transform: translateY(-50%);
+  font-size: 14px; /* Adjust the font size as needed */
+}
+
+/* Hide the default scrollbar */
+.custom-scroll-container::-webkit-scrollbar {
+  display: none;
+}

@@ -45,6 +45,7 @@ export const getAllContent = createAsyncThunk('user/getAllContent', async (_, { 
     const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/contentPage/getAllContent`, {
       headers
     })
+
     return res?.data?.data
   } catch (err: any) {
     return rejectWithValue(err?.response?.data)

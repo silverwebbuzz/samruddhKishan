@@ -91,6 +91,7 @@ const editProduct = () => {
     formdata.append('productUnits', productUnits)
     formdata.append('country', values?.country)
     formdata.append('status', values?.status)
+    formdata.append('addToHome', values?.addToHome ? 1 : 0)
     newSelectedFiles.forEach((file, index) => {
       formdata.append(`productGallaryImage`, file)
     })
@@ -295,7 +296,8 @@ const editProduct = () => {
           maxPrice: singleProductsData?.maxPrice,
           productUnits: singleProductsData?.productUnits,
           country: singleProductsData?.country,
-          status: singleProductsData?.status
+          status: singleProductsData?.status,
+          addToHome: singleProductsData?.addToHome === 1 ? true : false
         }}
         validationSchema={validationSchema}
         onSubmit={(values: any, { resetForm }) => {
@@ -724,6 +726,21 @@ const editProduct = () => {
                       </div>
                     </div>
                   </div>
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={values?.addToHome}
+                        onChange={e => setFieldValue('addToHome', e.target?.checked)}
+                      />
+                    }
+                    name='addToHome'
+                    label='Add To Home Page'
+                    sx={{
+                      marginLeft: 4
+                    }}
+                  />
                 </Grid>
                 <Grid item xs={12}>
                   <Box sx={{ marginTop: '25px' }}>

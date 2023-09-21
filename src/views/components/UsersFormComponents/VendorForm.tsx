@@ -3,6 +3,7 @@ import { ErrorMessage } from 'formik'
 import DemoSelect from 'src/views/demo/demoSelect'
 
 const VendorForm = ({
+  size,
   values,
   setSTATE,
   STATE,
@@ -27,6 +28,7 @@ const VendorForm = ({
     <>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.firstName}
           onChange={handleChange}
           onBlur={handleBlur}
@@ -40,6 +42,7 @@ const VendorForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.lastName}
           onChange={handleChange}
           onBlur={handleBlur}
@@ -53,6 +56,7 @@ const VendorForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.email}
           onChange={handleChange}
           onBlur={handleBlur}
@@ -66,6 +70,7 @@ const VendorForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.password}
           onChange={handleChange}
           onBlur={handleBlur}
@@ -79,6 +84,7 @@ const VendorForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={values?.phone}
           onChange={handleChange}
           onBlur={handleBlur}
@@ -92,7 +98,7 @@ const VendorForm = ({
         <ErrorMessage name='phone' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
       </Grid>
       <Grid item sm={6} xs={12}>
-        <FormControl fullWidth>
+        <FormControl fullWidth size={size ? size : 'medium'}>
           <InputLabel id='demo-simple-select-label'>State</InputLabel>
           <Select
             labelId='demo-simple-select-label'
@@ -115,7 +121,7 @@ const VendorForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <Tooltip title='Please select state first'>
-          <FormControl fullWidth>
+          <FormControl fullWidth size={size ? size : 'medium'}>
             <InputLabel id='demo-simple-select-label'>District</InputLabel>
             <Select
               labelId='demo-simple-select-label'
@@ -140,6 +146,7 @@ const VendorForm = ({
       </Grid>
       <Grid item sm={6} xs={12}>
         <TextField
+          size={size ? size : 'medium'}
           value={pincode}
           name='pinCode'
           onChange={e => {
@@ -161,7 +168,7 @@ const VendorForm = ({
           disableHoverListener={!(pincode?.length <= 0)}
           disableTouchListener={!(pincode?.length <= 0)}
         >
-          <FormControl fullWidth>
+          <FormControl fullWidth size={size ? size : 'medium'}>
             <InputLabel id='demo-simple-select-label'>Taluka</InputLabel>
             <Select
               labelId='demo-simple-select-label'
@@ -189,7 +196,7 @@ const VendorForm = ({
           disableHoverListener={!(pincode.length <= 0)}
           disableTouchListener={!(pincode.length <= 0)}
         >
-          <FormControl fullWidth>
+          <FormControl fullWidth size={size ? size : 'medium'}>
             <InputLabel id='demo-simple-select-label'>Village Name</InputLabel>
             <Select
               labelId='demo-simple-select-label'
@@ -214,7 +221,7 @@ const VendorForm = ({
         <DemoSelect
           data={categories?.data}
           //@ts-ignore
-          size={'medium'}
+          size={'small'}
           selectedCategory={categoryIdPrefill}
           //@ts-ignore
           setSelectedCategory={setCategoryIdPrefill}

@@ -81,6 +81,7 @@ const addProduct = () => {
     formdata.append('productUnits', productUnits)
     formdata.append('country', contryPrefill)
     formdata.append('status', values?.status)
+    formdata.append('addToHome', values?.addToHome ? 1 : 0)
     selectedFiles.forEach((file, index) => {
       formdata.append(`productGallaryImage`, file)
       // formdata.append('productGallaryImage', JSON.stringify(selectedFiles))
@@ -246,7 +247,8 @@ const addProduct = () => {
           productCode: '',
           productUnits: '',
           country: '',
-          status: ''
+          status: '',
+          addToHome: false
         }}
         validationSchema={validationSchema}
         onSubmit={(values: any, { resetForm }) => {
@@ -618,7 +620,6 @@ const addProduct = () => {
                     />
                   </Box>
                 </Grid>
-
                 <Grid
                   item
                   xs={12}
@@ -649,7 +650,6 @@ const addProduct = () => {
                     </Field>
                   </Grid>
                 </Grid>
-
                 <Grid xs={12}>
                   <div styele={{ border: '1px solid #e9e9ea', padding: '10px', borderRadius: '6px' }}>
                     <div
@@ -687,6 +687,21 @@ const addProduct = () => {
                       </div>
                     </div>
                   </div>
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={values?.addToHome}
+                        onChange={e => setFieldValue('addToHome', e.target?.checked)}
+                      />
+                    }
+                    name='addToHome'
+                    label='Add To Home Page'
+                    sx={{
+                      marginLeft: 4
+                    }}
+                  />
                 </Grid>
                 <Grid item xs={12}>
                   <Box sx={{ marginTop: '25px' }}>

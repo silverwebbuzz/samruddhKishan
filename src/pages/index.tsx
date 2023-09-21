@@ -26,11 +26,13 @@ import { getLogoAPI } from 'src/slice/settingSlice'
 import { useSelector } from 'react-redux'
 import Topbar from 'src/views/components/topbar'
 import { getAllContent, getAllSliderImages, getFooter } from 'src/slice/landingPageSlice'
+import { getAllProducts } from 'src/slice/productSlice'
 
 const HomePage = () => {
   const [expanded, setExpanded] = useState<string | false>(false)
   const [viewPortEntered, setViewPortEntered] = useState(false)
   const [showMore, setShowMore] = useState(false)
+  const { allProductsData } = useSelector((state: any) => state?.rootReducer?.productReducer)
   const handleChange = (panel: string) => (event: SyntheticEvent, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false)
   }
@@ -49,6 +51,7 @@ const HomePage = () => {
   useEffect(() => {
     dispatch(getLogoAPI())
     dispatch(getAllSliderImages())
+    dispatch(getAllProducts())
     dispatch(getAllContent())
     dispatch(getFooter())
   }, [])
@@ -61,6 +64,7 @@ const HomePage = () => {
     }
     return JSON.parse(data)
   }
+
   function TruncateText({ text, maxLength = 60 }) {
     const [isTruncated, setIsTruncated] = useState(true)
 
@@ -97,6 +101,11 @@ const HomePage = () => {
         )}
       </div>
     )
+  }
+  const filterProductGalleryImage = DATA => {
+    let ProductData = DATA ? DATA : []
+    const uniq = ProductData.filter(Item => Item.addToHome === 1)
+    return uniq
   }
   return (
     <>
@@ -251,7 +260,7 @@ const HomePage = () => {
         {/* Get to know section end */}
 
         {/* Testimonial section start */}
-        <TestimonialSection DATA={getContentData} JSONHandler={JSONHandler} />
+        {/* <TestimonialSection DATA={getContentData} JSONHandler={JSONHandler} /> */}
         {/* Testimonial section end */}
 
         <section className='product_gallery_section'>
@@ -285,14 +294,14 @@ const HomePage = () => {
                     }
                   }}
                 >
-                  {JSONHandler(getContentData?.ImageGalleryCard)?.map(Item => {
+                  {filterProductGalleryImage(allProductsData?.data)?.map(Item => {
                     return (
                       <SwiperSlide className='slider_item'>
-                        <img src={Item?.galleryImage} alt='slider6' />
+                        <img src={Item?.productImage} alt='slider6' />
                         <div class='overlay'>
-                          <span>{Item?.imgText}</span>
+                          <span>{Item?.categoryName}</span>
                           <h4>
-                            <a href='#'>{Item?.imgSubText}</a>
+                            <a href='#'>{Item?.productName}</a>
                           </h4>
                         </div>
                       </SwiperSlide>

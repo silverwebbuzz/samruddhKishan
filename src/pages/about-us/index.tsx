@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
+import { getAllContent } from 'src/slice/contentSectionSlice'
 import { getLogoAPI } from 'src/slice/settingSlice'
 import { AppDispatch } from 'src/store/store'
 import AboutSection from 'src/views/components/landdingPage/aboutSection/AboutSection'
@@ -15,6 +16,7 @@ import TestimonialSection from 'src/views/components/landdingPage/testimonialSec
 
 const AboutPage = () => {
   const { getLogo } = useSelector((state: any) => state?.rootReducer?.settingsReducer)
+  const { getContentData } = useSelector((state: any) => state?.rootReducer?.landingPageReducer)
   const dispatch = useDispatch<AppDispatch>()
   const JSONHandler = (data: any) => {
     try {
@@ -32,6 +34,7 @@ const AboutPage = () => {
   }, [])
   useEffect(() => {
     dispatch(getLogoAPI())
+    dispatch(getAllContent())
   }, [])
   return (
     <>
@@ -43,17 +46,17 @@ const AboutPage = () => {
           bannerContent='Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry'
         />
         {/* About section start */}
-        <AboutSection JSONHandler={JSONHandler} />
+        <AboutSection DATA={getContentData} JSONHandler={JSONHandler} />
         {/* About section end */}
         {/* Testimonial section start */}
-        <TestimonialSection JSONHandler={JSONHandler} />
+        {/* <TestimonialSection DATA={getContentData} JSONHandler={JSONHandler} /> */}
         {/* Testimonial section end */}
         {/* About section start */}
-        <GetToKnow JSONHandler={JSONHandler} />
+        <GetToKnow DATA={getContentData} JSONHandler={JSONHandler} />
         {/* About section end */}
       </div>
       {/* Footer section start */}
-      <FooterSection LOGO={getLogo?.logo} JSONHandler={JSONHandler} />
+      <FooterSection DATA={getContentData} LOGO={getLogo?.logo} JSONHandler={JSONHandler} />
       {/* Footer section end */}
     </>
   )

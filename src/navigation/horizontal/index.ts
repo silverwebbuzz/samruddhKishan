@@ -1,5 +1,6 @@
 // ** Type import
 import { HorizontalNavItemsType } from 'src/@core/layouts/types'
+
 const navigation = (): HorizontalNavItemsType => {
   //@ts-ignore
   const UserData = JSON.parse(localStorage.getItem('userData'))
@@ -8,8 +9,10 @@ const navigation = (): HorizontalNavItemsType => {
   //@ts-ignore
   let FilterPermissions = JSON?.parse(permissions ? permissions : null)
   //@ts-ignore
+
   let FilterRoles = JSON?.parse(roles ? roles : null)
-  let ARRR: any[]
+  let ARRR = []
+
   const uniqueRoutes = (ARR: any) => {
     const uniqueArray = ARR.filter((value, index) => {
       // Check if the current object is the first occurrence in the array
@@ -27,7 +30,7 @@ const navigation = (): HorizontalNavItemsType => {
       if (UserData?.role === ROLENAME) {
         ROLEID?.map((rID: any) => {
           if (rID == permission?.id) {
-            ARRR?.push(permission)
+            ARRR.push(permission)
           }
         })
       }
@@ -39,6 +42,13 @@ const navigation = (): HorizontalNavItemsType => {
         title: 'Farmers',
         path: '/farmers',
         icon: 'game-icons:farmer'
+      },
+      {
+        title: 'Users',
+        path: '/users',
+        action: 'read',
+        subject: 'users',
+        icon: 'ci:users'
       },
       {
         title: 'Brands',
@@ -65,6 +75,41 @@ const navigation = (): HorizontalNavItemsType => {
         action: 'read',
         subject: 'all-services',
         icon: 'carbon:ibm-cloud-hyper-protect-crypto-services'
+      },
+      {
+        title: 'CMS',
+        icon: 'fluent:content-view-32-regular',
+        children: [
+          {
+            title: 'Home Page',
+            path: '/cms/home'
+          },
+          {
+            title: 'FAQ',
+            path: '/cms/faq'
+          },
+          {
+            title: 'Testimonials',
+            path: '/cms/testimonials'
+          },
+          {
+            title: 'Footer',
+            path: '/cms/footer'
+          }
+        ]
+      },
+
+      {
+        title: 'Roles & Permissions',
+        icon: 'grommet-icons:user-admin',
+
+        children: [
+          {
+            title: 'Permissions',
+            path: '/permissions'
+          },
+          { title: 'Role', path: '/roles' }
+        ]
       }
     ]
     const FinalRoute = []
@@ -75,6 +120,7 @@ const navigation = (): HorizontalNavItemsType => {
         }
       })
     })
+
     return uniqueRoutes(FinalRoute)
   } else {
     return [
@@ -112,12 +158,9 @@ const navigation = (): HorizontalNavItemsType => {
       {
         title: 'Products',
         path: '/all-products',
+        action: 'read',
+        subject: 'all-products',
         icon: 'fluent-mdl2:b-i-dashboard'
-      },
-      {
-        title: 'Services',
-        path: '/all-services',
-        icon: 'carbon:ibm-cloud-hyper-protect-crypto-services'
       },
       {
         title: 'Services',
@@ -126,7 +169,6 @@ const navigation = (): HorizontalNavItemsType => {
         subject: 'all-services',
         icon: 'carbon:ibm-cloud-hyper-protect-crypto-services'
       },
-
       {
         title: 'Inquiry',
         path: '/inquiry',
@@ -134,22 +176,42 @@ const navigation = (): HorizontalNavItemsType => {
         subject: 'inquiry',
         icon: 'wpf:ask-question'
       },
-      {
-        title: 'Settings',
-        path: '/settings',
-        action: 'read',
-        subject: 'settings',
-        icon: 'uil:setting'
-      },
+
+      { title: 'Settings', path: '/settings', action: 'read', subject: 'settings', icon: 'uil:setting' },
       {
         title: 'CMS',
-        path: '/landing-page-content',
-        icon: 'fluent:content-view-32-regular'
+        icon: 'fluent:content-view-32-regular',
+        children: [
+          {
+            title: 'Home Page',
+            path: '/cms/home'
+          },
+          {
+            title: 'FAQ',
+            path: '/cms/faq'
+          },
+          {
+            title: 'Testimonials',
+            path: '/cms/testimonials'
+          },
+          {
+            title: 'Footer',
+            path: '/cms/footer'
+          }
+        ]
       },
+
       {
         title: 'Roles & Permissions',
-        icon: 'tabler:settings',
-        path: '/roles'
+        icon: 'grommet-icons:user-admin',
+
+        children: [
+          {
+            title: 'Permissions',
+            path: '/permissions'
+          },
+          { title: 'role', path: '/roles' }
+        ]
       }
     ]
   }

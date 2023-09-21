@@ -17,6 +17,8 @@ import { deleteProduct } from 'src/slice/productSlice'
 import { deleteService, getAllServices } from 'src/slice/servicesSlice'
 import { deleteBrands, getAllBrands } from 'src/slice/brandsSlice'
 import { deleteSlide } from 'src/slice/sliderSlice'
+import { getAllContent } from 'src/slice/contentSectionSlice'
+import { deleteTestimonials } from 'src/slice/testimonialsSlice'
 
 const Transition = forwardRef(function Transition(
   props: SlideProps & { children?: ReactElement<any, any> },
@@ -25,14 +27,18 @@ const Transition = forwardRef(function Transition(
   return <Slide direction='up' ref={ref} {...props} />
 })
 
-const DeleteDialog = ({ open, type, id, handleClose, delelteField }: any) => {
+const DeleteDialog = ({ open, type, id, positionId, handleClose, delelteField }: any) => {
   const dispatch = useDispatch<AppDispatch>()
 
   const handleDelete = () => {
+    let ID = localStorage.getItem('AllContentDataId')
     const payload: any = {
       id: id
     }
-
+    const payloadForPositionId = {
+      id: ID,
+      positionId: id
+    }
     switch (type) {
       case 'farmer':
         dispatch(deleteFarmer(payload))
@@ -71,6 +77,14 @@ const DeleteDialog = ({ open, type, id, handleClose, delelteField }: any) => {
             dispatch(getAllServices())
           }
         })
+      case 'testimonials':
+        dispatch(deleteTestimonials(payloadForPositionId)).then(res => {
+          if (res) {
+            //@ts-ignore
+            dispatch(getAllContent())
+          }
+        })
+
       default:
         console.log('Does not exist DELETE ID!')
         break

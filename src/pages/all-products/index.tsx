@@ -66,7 +66,6 @@ const Transition = forwardRef(function Transition(
   return <Fade ref={ref} {...props} />
 })
 const ContentPage = () => {
-  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 10 })
   const { allProductsData, deleteProductData, createProductData } = useSelector(
     (state: any) => state?.rootReducer?.productReducer
   )
