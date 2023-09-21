@@ -130,7 +130,7 @@ const VendorForm = ({
               disabled={STATE.length <= 0}
               value={district}
               label='District'
-              onChange={e => {
+              onChange={(e: any) => {
                 setFieldValue('district', e?.targe?.value)
                 setDistrict(e?.target?.value)
               }}
@@ -258,7 +258,7 @@ const VendorForm = ({
               <input
                 type='file'
                 hidden
-                onChange={e => {
+                onChange={(e: any) => {
                   setFieldValue('vendorImage', e.target?.files[0])
                 }}
               />

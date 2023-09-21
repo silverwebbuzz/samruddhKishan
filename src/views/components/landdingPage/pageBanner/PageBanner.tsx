@@ -2,9 +2,18 @@ import React from 'react'
 import { Container } from '@mui/material'
 
 const PageBanner = (props: any) => {
-  const { bannerName, bannerContent, BGImg } = props
+  const { bannerName, bannerContent, BGImg, height } = props
   return (
-    <div className='page-banner'>
+    <div
+      className='page-banner'
+      style={
+        height
+          ? {
+              height: height
+            }
+          : {}
+      }
+    >
       <img className='page-img' src={BGImg} alt='banner image' />
       <Container className='banner-container'>
         <div className='page-banner-content'>

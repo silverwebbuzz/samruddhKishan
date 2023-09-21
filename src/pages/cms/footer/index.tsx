@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Button, Card, CardContent, CardHeader, Grid, TextField, Typography } from '@mui/material'
+import { Box, Button, Card, CardContent, CardHeader, Grid, TextField, Typography } from '@mui/material'
 import { Form, Formik } from 'formik'
 import { useEffect } from 'react'
 import toast from 'react-hot-toast'
@@ -21,11 +21,10 @@ const Footer = () => {
       }
     })
   }
-
+  const cardContentData = []
   useEffect(() => {
     dispatch(getAllContent())
   }, [])
-  console.log('allContentData', allContentData)
   return (
     <div>
       <Card>
@@ -188,61 +187,60 @@ const Footer = () => {
               </Form>
             )}
           </Formik>
-          <Box mt={8}>
+          {/* <Box mt={8}>
             <Typography fontWeight={500} fontSize={20} mb={2}>
               Add Card
             </Typography>
             <Grid container rowSpacing={3}>
-              {cardContentData &&
-                cardContentData.map((value: any, index: number) => (
-                  <Grid item container key={index} spacing={3} alignItems={'center'}>
-                    <Grid item sm={2} xs={12}>
-                      <Box width={100} height={60} display={'flex'} alignItems={'center'}>
-                        <FilePreview file={value.contentCardImage} />
-                      </Box>
-                    </Grid>
-
-                    <Grid item sm={3} xs={12}>
-                      <TextField
-                        disabled
-                        fullWidth
-                        size='small'
-                        placeholder='Card Heading'
-                        value={value?.contentCardHeading}
-                        name='contentCardHeading'
-                      />
-                    </Grid>
-
-                    <Grid item sm={3} xs={12}>
-                      <TextField
-                        disabled
-                        fullWidth
-                        placeholder='Card Text'
-                        size='small'
-                        value={value?.contentCardText}
-                        name='contentCardText'
-                      />
-                    </Grid>
-                    {value?.positionId ? (
-                      <Grid item sm={3} xs={12}>
-                        <Tooltip title='Edit'>
-                          <IconButton
-                            size='small'
-                            sx={{ color: 'text.secondary' }}
-                            onClick={() => {
-                              handleShow('cardContents')
-                              setEdit(true)
-                              setEditField(value)
-                            }}
-                          >
-                            <Icon icon='tabler:edit' />
-                          </IconButton>
-                        </Tooltip>
-                      </Grid>
-                    ) : null}
+              {cardContentData?.map((value: any, index: number) => (
+                <Grid item container key={index} spacing={3} alignItems={'center'}>
+                  <Grid item sm={2} xs={12}>
+                    <Box width={100} height={60} display={'flex'} alignItems={'center'}>
+                      <FilePreview file={value.contentCardImage} />
+                    </Box>
                   </Grid>
-                ))}
-              {cardContentData && cardContentData.length <= 1 ? (
+
+                  <Grid item sm={3} xs={12}>
+                    <TextField
+                      disabled
+                      fullWidth
+                      size='small'
+                      placeholder='Card Heading'
+                      value={value?.contentCardHeading}
+                      name='contentCardHeading'
+                    />
+                  </Grid>
+
+                  <Grid item sm={3} xs={12}>
+                    <TextField
+                      disabled
+                      fullWidth
+                      placeholder='Card Text'
+                      size='small'
+                      value={value?.contentCardText}
+                      name='contentCardText'
+                    />
+                  </Grid>
+                  {value?.positionId ? (
+                    <Grid item sm={3} xs={12}>
+                      <Tooltip title='Edit'>
+                        <IconButton
+                          size='small'
+                          sx={{ color: 'text.secondary' }}
+                          onClick={() => {
+                            handleShow('cardContents')
+                            setEdit(true)
+                            setEditField(value)
+                          }}
+                        >
+                          <Icon icon='tabler:edit' />
+                        </IconButton>
+                      </Tooltip>
+                    </Grid>
+                  ) : null}
+                </Grid>
+              ))}
+              {cardContentData?.length <= 1 ? (
                 <Button
                   sx={{ my: 5 }}
                   variant='contained'
@@ -256,9 +254,9 @@ const Footer = () => {
                 ''
               )}
             </Grid>
-          </Box>
+          </Box> */}
         </CardContent>
-        {dialogName === 'cardContents' && <CardContentDialog {...props} />}
+        {/* {'dialogName' === 'cardContents' && <CardContentDialog {...props} />} */}
       </Card>
     </div>
   )

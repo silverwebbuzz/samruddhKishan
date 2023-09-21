@@ -78,6 +78,13 @@ const navigation = (): VerticalNavItemsType => {
         icon: 'carbon:ibm-cloud-hyper-protect-crypto-services'
       },
       {
+        title: 'Inquiry',
+        path: '/inquiry',
+        action: 'read',
+        subject: 'inquiry',
+        icon: 'wpf:ask-question'
+      },
+      {
         title: 'CMS',
         icon: 'fluent:content-view-32-regular',
         children: [
