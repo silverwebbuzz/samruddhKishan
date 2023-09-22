@@ -173,7 +173,8 @@ const HomePage = () => {
             <Grid sm={12} md={6}>
               <Box className='what-do-right'>
                 <p className='what-right-text'>{getContentData?.productContentText}</p>
-                <Button className='about-btn'>More about</Button>
+
+                <Button className='login-btn'>More about</Button>
               </Box>
             </Grid>
           </Grid>

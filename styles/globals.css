@@ -119,6 +119,7 @@ code[class*='language-'] {
   width: 100%;
   height: auto;
   aspect-ratio: 1;
+  object-fit: cover;
 }
 .about-sec {
   display: flex;
@@ -1270,7 +1271,8 @@ code[class*='language-'] {
 }
 .about-card .card1,
 .about-card .card2 {
-  min-width: 240px;
+  width: 100%;
+  margin-bottom: 30px;
 }
 .about-content .about-card .about-card-text {
   margin-bottom: 0;
@@ -1855,6 +1857,9 @@ footer .contact_details_menu .contact-name p a:hover {
   .about-card {
     padding-left: 0 !important;
     margin-top: 20px;
+  }
+  .about-card {
+    justify-content: center;
   }
   .sub-about-img {
     bottom: -10px;

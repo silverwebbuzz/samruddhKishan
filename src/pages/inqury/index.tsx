@@ -1,9 +1,12 @@
-import { Box, Button, Card, Grid, TextField } from '@mui/material'
+import { Box, Button, Card, Chip, Divider, Grid, TextField } from '@mui/material'
 import { Form, Formik, FormikProps } from 'formik'
+import { useRouter } from 'next/router'
 import { ReactNode, useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
+import { createInquiry } from 'src/slice/inquirySlice'
 import { getLogoAPI } from 'src/slice/settingSlice'
 import { AppDispatch } from 'src/store/store'
 import Navbar from 'src/views/components/landdingPage/navBar/Navbar'
@@ -13,13 +16,34 @@ const inqury = () => {
   const { getLogo } = useSelector((state: any) => state?.rootReducer?.settingsReducer)
   const dispatch = useDispatch<AppDispatch>()
   const [InquryName, setInquryName] = useState('')
+  const router = useRouter()
+  const isValid = (inquryName: any) => {
+    try {
+      return JSON.parse(inquryName)
+    } catch (e) {
+      console.log('Error parsing')
+    }
+  }
   useEffect(() => {
     const inquryName = localStorage.getItem('inquryName')
-    setInquryName(inquryName)
+    const NAME = isValid(inquryName)
+    setInquryName(NAME)
     dispatch(getLogoAPI())
   }, [])
   const handleSubmit = (values: any) => {
     console.log('values', values)
+    localStorage.getItem('inquryName')
+    let payload = {
+      ...values
+    }
+    payload.IId = InquryName.id
+    dispatch(createInquiry(payload)).then(res => {
+      if (res?.payload?.status == 200) {
+        toast.success('Inquiry created successfully')
+      }
+      localStorage.removeItem('inquiryName')
+      router.push('/')
+    })
   }
   return (
     <>
@@ -44,38 +68,54 @@ const inqury = () => {
             marginRight: '20%'
           }}
         >
-          <Card
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 5
+          <Formik
+            enableReinitialize
+            initialValues={{
+              IName: InquryName?.productName,
+              status: '',
+              fullName: '',
+              mobileNumber: '',
+              email: '',
+              quantity: 0,
+              description: '',
+              flag: ''
+            }}
+            onSubmit={(values: any, { resetForm }) => {
+              handleSubmit(values, { resetForm })
             }}
           >
-            <Formik
-              enableReinitialize
-              initialValues={{
-                IName: InquryName,
-                status: '',
-                mobileNumber: '',
-                email: '',
-                fullName: '',
-                quantity: '',
-                description: '',
-                flag: ''
-              }}
-              onSubmit={(values: any, { resetForm }) => {
-                handleSubmit(values, { resetForm })
-              }}
-            >
-              {(props: FormikProps<any>) => {
-                const { values, touched, errors, handleBlur, handleChange, handleSubmit, setFieldValue } = props
-                return (
+            {(props: FormikProps<any>) => {
+              const { values, touched, errors, handleBlur, handleChange, handleSubmit, setFieldValue } = props
+              return (
+                <Card
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: 5
+                  }}
+                >
                   <Form onSubmit={handleSubmit}>
                     <Grid container gap={3}>
-                      <Grid xs={6}>
+                      <Grid xs={12}>
+                        <Box sx={{ mb: 8, textAlign: 'center' }}>
+                          <Divider>
+                            <Chip
+                              sx={{
+                                fontSize: '22px',
+                                padding: '15px',
+                                fontWeight: 'bold',
+                                textAlign: 'left',
+                                backgroundColor: '#f6f5f8'
+                              }}
+                              label='Inqury Details'
+                            />
+                          </Divider>
+                        </Box>
+                      </Grid>
+                      <Grid xs={12}>
                         <TextField
-                          label='Inqury'
+                          label='Inqury about'
                           autoComplete='off'
                           value={values?.IName}
                           disabled
@@ -89,22 +129,69 @@ const inqury = () => {
                           }}
                         />
                       </Grid>
-                      <Grid xs={6}>
+
+                      <Grid xs={12}>
                         <TextField
-                          label='Inqury'
+                          label='Full Name'
                           autoComplete='off'
-                          value={values?.IName}
+                          value={values?.fullName}
                           type='text'
                           onBlur={handleBlur}
                           onChange={handleChange}
                           fullWidth
-                          name='IName'
+                          name='fullName'
                           InputLabelProps={{
                             shrink: true
                           }}
                         />
                       </Grid>
-
+                      <Grid xs={12}>
+                        <TextField
+                          label='Mobile Number'
+                          autoComplete='off'
+                          value={values?.mobileNumber}
+                          type='text'
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          fullWidth
+                          name='mobileNumber'
+                          InputLabelProps={{
+                            shrink: true
+                          }}
+                        />
+                      </Grid>
+                      <Grid xs={12}>
+                        <TextField
+                          label='Quantity'
+                          autoComplete='off'
+                          value={values?.quantity}
+                          type='number'
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          fullWidth
+                          name='quantity'
+                          InputLabelProps={{
+                            shrink: true
+                          }}
+                        />
+                      </Grid>
+                      <Grid xs={12}>
+                        <TextField
+                          label='Description'
+                          autoComplete='off'
+                          value={values?.description}
+                          multiline
+                          rows={4}
+                          type='text'
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          fullWidth
+                          name='description'
+                          InputLabelProps={{
+                            shrink: true
+                          }}
+                        />
+                      </Grid>
                       <Grid xs={12}>
                         <Box sx={{ marginTop: '25px' }}>
                           <Button type='submit' variant='contained' size='medium'>
@@ -127,10 +214,10 @@ const inqury = () => {
                       </Grid>
                     </Grid>
                   </Form>
-                )
-              }}
-            </Formik>
-          </Card>
+                </Card>
+              )
+            }}
+          </Formik>
         </Box>
       </section>
     </>

@@ -9,6 +9,7 @@ const headers = {
 }
 interface RootState {
   allInquiries: Array<any>
+  createInqData: Array<any>
   deleteInq: Array<any>
   updateInq: Array<any>
   multiDelteInq: Array<any>
@@ -17,6 +18,7 @@ interface RootState {
 }
 const initialState: RootState = {
   allInquiry: [],
+  createInqData: [],
   deleteInq: [],
   updateInq: [],
   multiDelteInq: [],
@@ -44,7 +46,16 @@ export const getAllInquiry = createAsyncThunk(
     }
   }
 )
-
+export const createInquiry = createAsyncThunk('user/createInquiry', async (payload: any, { rejectWithValue }) => {
+  try {
+    const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/enquiry/createEnquiry`, payload, {
+      headers
+    })
+    return res?.data
+  } catch (err: any) {
+    return rejectWithValue(err?.response?.data)
+  }
+})
 export const updateInquiry = createAsyncThunk('user/updateInquiry', async (payload: any, { rejectWithValue }) => {
   try {
     const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/enquiry/updateEnquiry`, payload, {
@@ -112,6 +123,19 @@ export const inquirySlice = createSlice({
     builder.addCase(getAllInquiry.rejected, state => {
       state.isLoading = false
     })
+
+    // createInquiry
+    builder.addCase(createInquiry.pending, state => {
+      state.isLoading = true
+    })
+    builder.addCase(createInquiry.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.createInqData = action.payload
+    })
+    builder.addCase(createInquiry.rejected, state => {
+      state.isLoading = false
+    })
+
     builder.addCase(updateInquiry.pending, state => {
       state.isLoading = true
     })

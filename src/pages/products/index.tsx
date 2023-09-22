@@ -202,10 +202,10 @@ const ProductsPage = () => {
                           <IconButton
                             size='small'
                             sx={{ color: 'text.secondary', fontSize: '50px' }}
-                            // onClick={() => {
-                            //   localStorage.setItem('inquryName', item?.productName)
-                            //   router.push('/inqury')
-                            // }}
+                            onClick={() => {
+                              localStorage.setItem('inquryName', JSON.stringify(item))
+                              router.push('/inqury')
+                            }}
                           >
                             <Icon icon='ph:question-bold' color='white' fontSize={24} />
                           </IconButton>
