@@ -77,6 +77,13 @@ const navigation = (): HorizontalNavItemsType => {
         icon: 'carbon:ibm-cloud-hyper-protect-crypto-services'
       },
       {
+        title: 'Inquiry',
+        path: '/all-inquiry',
+        action: 'read',
+        subject: 'inquiry',
+        icon: 'wpf:ask-question'
+      },
+      {
         title: 'CMS',
         icon: 'fluent:content-view-32-regular',
         children: [
@@ -171,7 +178,7 @@ const navigation = (): HorizontalNavItemsType => {
       },
       {
         title: 'Inquiry',
-        path: '/inquiry',
+        path: '/all-inquiry',
         action: 'read',
         subject: 'inquiry',
         icon: 'wpf:ask-question'

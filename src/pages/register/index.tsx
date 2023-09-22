@@ -52,7 +52,15 @@ import PageBanner from 'src/views/components/landdingPage/pageBanner/PageBanner'
 import CentersForm from 'src/views/components/UsersFormComponents/CentersForm'
 import ApmcForm from 'src/views/components/UsersFormComponents/ApmcForm'
 import VendorForm from 'src/views/components/UsersFormComponents/VendorForm'
-import { createUser1, getAdressByPincode, getAllDistrict, getAllState, getRoleAndPermissions } from 'src/slice/farmers'
+import {
+  createFarmer,
+  createUser1,
+  getAdressByPincode,
+  getAllDistrict,
+  getAllState,
+  getRoleAndPermissions,
+  uploadImage
+} from 'src/slice/farmers'
 import { getAllCategories } from 'src/slice/categoriesSlice'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
@@ -60,6 +68,7 @@ import { AppDispatch } from 'src/store/store'
 import Navbar from 'src/views/components/landdingPage/navBar/Navbar'
 import { getLogoAPI } from 'src/slice/settingSlice'
 import FooterSection from 'src/views/components/landdingPage/footerSection'
+import moment from 'moment'
 
 // ** Styled Components
 const RegisterIllustration = styled('img')(({ theme }) => ({
@@ -108,7 +117,7 @@ const Register = () => {
   const [pincode, setPincode] = useState('')
   const [STATE, setSTATE] = useState('')
   const [district, setDistrict] = useState('')
-  const [rolePrefill, setRolePrefill] = useState('')
+  const [rolePrefill, setRolePrefill] = useState('f1')
   const [categoryIdPrefill, setCategoryIdPrefill] = useState(0)
   const [taluka, setTaluka] = useState('')
   const [page, setPage] = useState<number>(1)
@@ -125,6 +134,33 @@ const Register = () => {
     }
     dispatch(getAdressByPincode(payload))
   }
+
+  const handleFile = e => {
+    const file = e
+    setFileForView(e)
+
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = () => {
+        //@ts-ignore
+        const base64 = reader.result.split(',')[1]
+        setFile(base64)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  // const handleFile = (e: any) => {
+  //   console.log('handle files --->', e)
+  //   const file = e
+  //   setFileForView(e)
+  //   const base64 = convertBase64(file)
+  //   console.log('base64 --->', base64)
+  //   if (base64) {
+  //     console.log('base64base64', base64)
+  //     setFile(base64)
+  //   }
+  // }
   const validationSchema = yup.object().shape({
     role: yup.string().required('Role is required'),
     firstName: yup.string().when('role', {
@@ -224,66 +260,120 @@ const Register = () => {
   useEffect(() => {
     dispatch(getAllDistrict({ state: STATE }))
   }, [STATE])
-
-  const handleSubmit = (values: any) => {
-    let payload = [
-      //other
-      { firstName: values?.firstName },
-      { lastName: values?.lastName },
-      { email: values?.email },
-      { password: values?.password },
-      { phone: values?.phone },
-      { state: values?.state },
-      { city: district },
-      { taluka: taluka },
-      { village: values?.villageName },
-      { pinCode: pincode },
-      { roleId: values?.role },
-      //center
-      { centerName: values?.centerName },
-      { centerRegisterUnderCompanyDate: values?.centerRegisterUnderCompanyDate },
-      { centerKeyPerson: values?.centerKeyPerson },
-      { centerHandlingPersonName: values?.centerHandlingPersonName },
-      { centerTaluka: values?.centerTaluka },
-      { centerDistrict: values?.centerDistrict },
-      { centerTurnover: values?.centerTurnover },
-      { centerMemberFarmer: values?.centerMemberFarmer },
-      { centerPerDayMilkCollection: values?.centerPerDayMilkCollection },
-      { centerMilkStorageCapacity: values?.centerMilkStorageCapacity },
-      { centerSellingMilkFor: values?.centerSellingMilkFor },
-      { centerOtherCompetitors: values?.centerOtherCompetitors },
-      { centerPaymentCycle: values?.centerPaymentCycle },
-      { centerOtherFacltyByMilkAgency: values?.centerOtherFacltyByMilkAgency },
-      { centerFarmarPaymentProcess: values?.centerFarmarPaymentProcess },
-      { centerMembersOnBoard: values?.centerMembersOnBoard },
-      { centerCurrentHurdeles: values?.centerCurrentHurdeles },
-      { centerNeededFacultys: values?.centerNeededFacultys },
-      { centerAllFinancialAudits: values?.centerAllFinancialAudits },
-      //apmc
-      { apmcFirmName: values?.apmcFirmName },
-      { apmcAddress: values?.apmcAddress },
-      { apmcName: values?.apmcName },
-      { apmcTaluka: values?.apmcTaluka },
-      { apmcDistrict: values?.apmcDistrict },
-      { apmcPersonName: values?.apmcPersonName },
-      { apmcConnectedFarmers: values?.apmcConnectedFarmers },
-      { apmcMajorCropsSelling: values?.apmcMajorCropsSelling },
-      { districtFarmerComingSellProduct: values?.districtFarmerComingSellProduct },
-      { vendorImage: values?.vendorImage },
-      { categoryId: categoryIdPrefill }
-    ]
-    let formData = new FormData()
-    payload.forEach((entry: any) => {
-      //@ts-ignore
-      const key = Object.keys(entry)[0] // Extracting the key from the object
-      const value = entry[key] // Extracting the value from the object
-      formData.append(key, value) // Appending the key-value pair to the formData
-    })
-    dispatch(createUser1(formData)).then((res: any) => {
-      if (res?.payload?.status === 200) {
-        router.push('/users')
+  const handleFarmerSubmit = (values: any) => {
+    const payload = {
+      adminId: 0,
+      firstName: values?.firstName,
+      middleName: values?.middleName,
+      lastName: values?.lastName,
+      // asPerAbove: values?.asPerAbove,
+      dateOfBirth: moment(values?.DOB).format(),
+      aadharNumber: values?.aadharNumber,
+      mobileNumber: values?.mobileNumber,
+      wpNumber: values?.wpNumber,
+      address: values?.address,
+      villageName: values?.villageName,
+      taluka: values?.taluka,
+      district: values?.district,
+      state: values?.state,
+      pinCode: pincode,
+      caste: values?.caste,
+      maritalStatus: values?.maritalStatus,
+      gender: values?.gender,
+      religion: values?.religion,
+      landDistrict: values?.landDistrict,
+      subDivision: values?.subDivision,
+      circle: values?.circle,
+      mouza: values?.mouza,
+      landVillage: values?.landVillage,
+      pattaType: values?.pattaType,
+      latNo: values?.latNo,
+      pattaNo: values?.pattaNo,
+      landArea: values?.landArea,
+      landType: values?.landType,
+      farmerLandOwnershipType: values?.farmerLandOwnershipType,
+      appliedForSoilTesting: 'yes' ? 1 : 0,
+      filename: fileForView?.name
+    }
+    dispatch(createFarmer(payload)).then(res => {
+      if (res?.payload?.id) {
+        let payload = {
+          id: res?.payload?.id,
+          file: file
+        }
+        dispatch(uploadImage(payload))
+        router.push('/')
       }
     })
+  }
+  const handleSubmit = (values: any) => {
+    if (rolePrefill !== 'f1') {
+      let payload = [
+        //other
+        { firstName: values?.firstName },
+        { lastName: values?.lastName },
+        { email: values?.email },
+        { password: values?.password },
+        { phone: values?.phone },
+        { state: values?.state },
+        { city: district },
+        { taluka: taluka },
+        { village: values?.villageName },
+        { pinCode: pincode },
+        { roleId: values?.role },
+        //center
+        { centerName: values?.centerName },
+        { centerRegisterUnderCompanyDate: values?.centerRegisterUnderCompanyDate },
+        { centerKeyPerson: values?.centerKeyPerson },
+        { centerHandlingPersonName: values?.centerHandlingPersonName },
+        { centerTaluka: values?.centerTaluka },
+        { centerDistrict: values?.centerDistrict },
+        { centerTurnover: values?.centerTurnover },
+        { centerMemberFarmer: values?.centerMemberFarmer },
+        { centerPerDayMilkCollection: values?.centerPerDayMilkCollection },
+        { centerMilkStorageCapacity: values?.centerMilkStorageCapacity },
+        { centerSellingMilkFor: values?.centerSellingMilkFor },
+        { centerOtherCompetitors: values?.centerOtherCompetitors },
+        { centerPaymentCycle: values?.centerPaymentCycle },
+        { centerOtherFacltyByMilkAgency: values?.centerOtherFacltyByMilkAgency },
+        { centerFarmarPaymentProcess: values?.centerFarmarPaymentProcess },
+        { centerMembersOnBoard: values?.centerMembersOnBoard },
+        { centerCurrentHurdeles: values?.centerCurrentHurdeles },
+        { centerNeededFacultys: values?.centerNeededFacultys },
+        { centerAllFinancialAudits: values?.centerAllFinancialAudits },
+        //apmc
+        { apmcFirmName: values?.apmcFirmName },
+        { apmcAddress: values?.apmcAddress },
+        { apmcName: values?.apmcName },
+        { apmcTaluka: values?.apmcTaluka },
+        { apmcDistrict: values?.apmcDistrict },
+        { apmcPersonName: values?.apmcPersonName },
+        { apmcConnectedFarmers: values?.apmcConnectedFarmers },
+        { apmcMajorCropsSelling: values?.apmcMajorCropsSelling },
+        { districtFarmerComingSellProduct: values?.districtFarmerComingSellProduct },
+        { vendorImage: values?.vendorImage },
+        { categoryId: categoryIdPrefill }
+      ]
+      let formData = new FormData()
+      payload.forEach((entry: any) => {
+        //@ts-ignore
+        const key = Object.keys(entry)[0] // Extracting the key from the object
+        const value = entry[key] // Extracting the value from the object
+        formData.append(key, value) // Appending the key-value pair to the formData
+      })
+      dispatch(createUser1(formData)).then((res: any) => {
+        if (res?.payload?.status === 200) {
+          router.push('/users')
+        }
+      })
+    } else {
+      if (values?.appliedForSoilTesting === 'yes' && file?.length > 0) {
+        handleFarmerSubmit(values)
+        console.log('User not found-->', values?.appliedForSoilTesting)
+      } else if (values?.appliedForSoilTesting === 'no') {
+        handleFarmerSubmit(values)
+      }
+    }
   }
 
   const ProfilePicture = styled('img')(({ theme }: any) => ({
@@ -340,13 +430,77 @@ const Register = () => {
     let uniq = roles.filter((ITM: any) => ITM.id == 10 || ITM.id == 13 || ITM.id == 17)
     return uniq
   }
+  const FarmerInitialValues = {
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    asPerAbove: '',
+    DOB: '',
+    aadharNumber: '',
+    mobileNumber: '',
+    wpNumber: '',
+    address: '',
+    villageName: '',
+    taluka: '',
+    district: '',
+    state: '',
+    pinCode: '',
+    caste: '',
+    maritalStatus: 'married',
+    gender: 'male',
+    religion: '',
+    landDistrict: '',
+    subDivision: '',
+    circle: '',
+    mouza: '',
+    landVillage: '',
+    pattaType: '',
+    latNo: '',
+    pattaNo: '',
+    landArea: '',
+    landType: '',
+    farmerLandOwnershipType: '',
+    appliedForSoilTesting: 'yes'
+  }
+  const farmerValidationSchema = yup.object().shape({
+    firstName: yup.string().required('First name  is required'),
+    middleName: yup.string().required('Middle name is required'),
+    lastName: yup.string().required('Last name is required'),
+    pinCode: yup.string().matches(/^\d{6}$/, 'Invalid PIN code'),
+    mobileNumber: yup
+      .string()
+      .required('Mobile number is required')
+      .max(10, 'Mobile number must be 10 digit')
+      // .matches(/^ *(?:0 *[23478](?: *\d){8}|[1-9](?: *\d)*|0 *[01569](?: *\d)*) *$/, 'Phone number is not valid'),
+      .matches(/^(\+91|0)?[6789]\d{9}$/, 'Invalid mobile number'),
+    wpNumber: yup
+      .string()
+      .required('Whatsapp number is required')
+      .max(10, 'Whatsapp number must be 10 digit')
+      .matches(/^(\+91|0)?[6789]\d{9}$/, 'Invalid mobile number'),
+    aadharNumber: yup
+      .string()
+      .required('Aadhar number is required')
+      .matches(
+        /^([0-9]{4}[0-9]{4}[0-9]{4}$)|([0-9]{4}\s[0-9]{4}\s[0-9]{4}$)|([0-9]{4}-[0-9]{4}-[0-9]{4}$)/,
+        'please enter a valid aadhar number'
+      ),
+
+    appliedForSoilTesting: yup.string().required('Periods of bond is required')
+  })
+  useEffect(() => {
+    document.body.classList.add('landingPage')
+    return () => {
+      document.body.classList.remove('landingPage')
+    }
+  }, [])
   return (
     <>
-      <Navbar LOGO={getLogo?.logo} JSONHandler={JSONHandler} />
+      <Navbar LOGO={getLogo?.logo} />
       <PageBanner
         height={200}
         BGImg={'/images/logo/slider6.jpg'}
-        bannerName='Contact Us'
+        bannerName='User Registration'
         bannerContent='Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry'
       />
       <section
@@ -365,9 +519,9 @@ const Register = () => {
           <Card>
             <Formik
               enableReinitialize
-              initialValues={initialValues}
-              validationSchema={validationSchema}
-              onSubmit={values => {
+              initialValues={rolePrefill !== 'f1' ? FarmerInitialValues : initialValues}
+              validationSchema={rolePrefill !== 'f1' ? validationSchema : farmerValidationSchema}
+              onSubmit={(values: any) => {
                 handleSubmit(values)
               }}
             >
@@ -1060,7 +1214,7 @@ const Register = () => {
                                         }}
                                       >
                                         Upload
-                                        <input type='file' hidden onChange={e => handleFile(e)} />
+                                        <input type='file' hidden onChange={e => handleFile(e?.target?.files[0])} />
                                       </Button>
                                     </Box>
                                     {values?.appliedForSoilTesting === 'yes' ? (
@@ -1111,7 +1265,7 @@ const Register = () => {
           </Card>
         </Box>
       </section>
-      {/* <FooterSection LOGO={getLogo?.logo} JSONHandler={JSONHandler} DATA={getFooterData?.data} /> */}
+      <FooterSection LOGO={getLogo?.logo} JSONHandler={JSONHandler} DATA={getFooterData?.data} />
     </>
   )
 }

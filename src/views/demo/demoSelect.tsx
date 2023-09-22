@@ -15,7 +15,7 @@ interface Props {
   shrink?: boolean
 }
 
-const DemoSelect: React.FC<Props> = ({ data, shrink, size, selectedCategory, setSelectedCategory }) => {
+const DemoSelect: React.FC<Props> = ({ showOnHomePage, data, shrink, size, selectedCategory, setSelectedCategory }) => {
   const [expandedCategories, setExpandedCategories] = useState<number[]>([])
 
   const toggleCategory = (event: React.MouseEvent, categoryId: number) => {
@@ -86,13 +86,49 @@ const DemoSelect: React.FC<Props> = ({ data, shrink, size, selectedCategory, set
 
   return (
     <div>
-      <FormControl size={size ? size : 'medium'} fullWidth>
-        <InputLabel shrink={true}>Categories</InputLabel>
-        {/* @ts-ignore */}
-        <Select notched value={selectedCategory} onChange={handleCategoryChange} label='Categories'>
-          {renderCategories(data)}
-        </Select>
-      </FormControl>
+      {showOnHomePage ? (
+        <FormControl size={size ? size : 'medium'} fullWidth>
+          <InputLabel
+            sx={{
+              color: '#000 !important' // Change label color to #1f4e3d
+            }}
+            shrink={true}
+          >
+            Categories
+          </InputLabel>
+          <Select
+            notched
+            value={selectedCategory}
+            onChange={handleCategoryChange}
+            label='Categories'
+            sx={{
+              '& .MuiSelect-root': {
+                borderWidth: '1px !important'
+              },
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#1f4e3d !important'
+              },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderWidth: '1px !important',
+                borderColor: '#1f4e3d !important'
+              },
+              '&.Mui-error': {
+                color: 'red' // Set the label color when the Select is in an error state
+              }
+            }}
+          >
+            {renderCategories(data)}
+          </Select>
+        </FormControl>
+      ) : (
+        <FormControl size={size ? size : 'medium'} fullWidth>
+          <InputLabel shrink={true}>Categories</InputLabel>
+
+          <Select notched value={selectedCategory} onChange={handleCategoryChange} label='Categories'>
+            {renderCategories(data)}
+          </Select>
+        </FormControl>
+      )}
     </div>
   )
 }

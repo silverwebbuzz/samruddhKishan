@@ -86,15 +86,17 @@ const FooterSection = ({ LOGO, DATA, JSONHandler }: any) => {
           </div>
         </div>
       </footer>
-      {/* <div className='footer_right_shape'>
+      <div className='footer_right_shape'>
         <img src='./images/pages/footer_right.png' alt='footer leaf' />
-      </div> */}
-      <div className='copyright sec_padding'>
-        <div className='copyright_left'>© Copyright 2023. All Rights Reserved by Silverwebbuzz</div>
-        <div className='copyright_right'>
-          <a href='#'>Terms</a>
-          <a href='#'>Privacy</a>
-          <a href='#'>Support</a>
+      </div>
+      <div className='copyright'>
+        <div className='footer_copyright_wrapper'>
+          <div className='copyright_left'>© Copyright 2023. All Rights Reserved by Silverwebbuzz</div>
+          <div className='copyright_right'>
+            <a href='#'>Terms</a>
+            <a href='#'>Privacy</a>
+            <a href='#'>Support</a>
+          </div>
         </div>
       </div>
     </>

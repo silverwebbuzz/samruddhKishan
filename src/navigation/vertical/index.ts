@@ -79,7 +79,7 @@ const navigation = (): VerticalNavItemsType => {
       },
       {
         title: 'Inquiry',
-        path: '/inquiry',
+        path: '/all-inquiry',
         action: 'read',
         subject: 'inquiry',
         icon: 'wpf:ask-question'
@@ -179,7 +179,7 @@ const navigation = (): VerticalNavItemsType => {
       },
       {
         title: 'Inquiry',
-        path: '/inquiry',
+        path: '/all-inquiry',
         action: 'read',
         subject: 'inquiry',
         icon: 'wpf:ask-question'

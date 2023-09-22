@@ -9,15 +9,14 @@ import { useTheme } from '@mui/material/styles'
 
 import { Button } from '@mui/material'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
+import { Router, useRouter } from 'next/router'
 
-export default function Navbar({ DATA, LOGO }: any) {
+export default function Navbar({ LOGO }) {
   const [visibleMenu, setVisibleMenu] = useState<boolean>(false)
   const { breakpoints } = useTheme()
-  const router = useRouter()
-
   const md = 1024 // Define md variable with value 1024
   const matchMobileView = useMediaQuery(`(max-width: ${md}px)`)
+  const router = useRouter()
   useEffect(() => {
     // This function will be called when the component unmounts
     return () => {
@@ -42,7 +41,6 @@ export default function Navbar({ DATA, LOGO }: any) {
               justifyContent: { xs: 'space-between', [md]: 'none' }
             }}
           >
-            <img className='logo-img' src={LOGO} alt='logo' />
             <IconButton
               onClick={() => {
                 setVisibleMenu(!visibleMenu)
@@ -51,6 +49,10 @@ export default function Navbar({ DATA, LOGO }: any) {
             >
               <Icon fontSize={35} icon='material-symbols:menu' />
             </IconButton>
+            <img className='logo-img' src={LOGO} alt='logo' />
+            <Box className='menu_right_btn' sx={{ display: 'flex', marginLeft: '30px' }}>
+              <Button className='login-btn'>Register</Button>
+            </Box>
           </Box>
 
           <Box
@@ -110,6 +112,7 @@ export default function Navbar({ DATA, LOGO }: any) {
             </Box>
             {visibleMenu && matchMobileView && (
               <IconButton
+                className='nav_close_btn'
                 sx={{
                   position: 'absolute',
                   top: 20,

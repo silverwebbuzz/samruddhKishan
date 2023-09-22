@@ -1,7 +1,8 @@
 import React from 'react'
 import { Box, Typography, Select, MenuItem } from '@mui/material'
+import DemoSelect from 'src/views/demo/demoSelect'
 
-const Sidebar = ({ selectedCategory, setSelectedCategory }: any) => {
+const Sidebar = ({ DATA, selectedCategory, setSelectedCategory }: any) => {
   const categories = ['All', 'Category 1', 'Category 2', 'Category 3'] // Replace with your actual categories
 
   const handleCategoryChange = (event: any) => {
@@ -11,7 +12,7 @@ const Sidebar = ({ selectedCategory, setSelectedCategory }: any) => {
   return (
     <div className='sidebar'>
       <h2>Filter by Category</h2>
-      <div className='category-dropdown'>
+      {/* <div className='category-dropdown'>
         <label htmlFor='category'>Select Category:</label>
         <div className='custom-select'>
           <select id='category' value={selectedCategory} onChange={handleCategoryChange}>
@@ -23,7 +24,13 @@ const Sidebar = ({ selectedCategory, setSelectedCategory }: any) => {
           </select>
           <span className='select-arrow'>&#9660;</span>
         </div>
-      </div>
+      </div> */}
+      <DemoSelect
+        showOnHomePage={true}
+        data={DATA}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+      />
     </div>
   )
 }
