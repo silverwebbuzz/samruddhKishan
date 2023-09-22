@@ -55,12 +55,7 @@ const inqury = () => {
           bannerContent='Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry'
         />
       </div>
-      <section
-      // style={{
-      //   paddingLeft: '5%',
-      //   paddingRight: '5%'
-      // }}
-      >
+      <section>
         <Box
           style={{
             padding: '5%',
@@ -71,10 +66,15 @@ const inqury = () => {
           <Formik
             enableReinitialize
             initialValues={{
-              IName: InquryName?.productName,
+              IName: InquryName?.productName
+                ? InquryName?.productName
+                : InquryName?.serviceName
+                ? InquryName?.serviceName
+                : '',
               status: '',
               fullName: '',
               mobileNumber: '',
+
               email: '',
               quantity: 0,
               description: '',
@@ -162,19 +162,36 @@ const inqury = () => {
                       </Grid>
                       <Grid xs={12}>
                         <TextField
-                          label='Quantity'
+                          label='Email'
                           autoComplete='off'
-                          value={values?.quantity}
-                          type='number'
+                          value={values?.email}
+                          type='email'
                           onBlur={handleBlur}
                           onChange={handleChange}
                           fullWidth
-                          name='quantity'
+                          name='email'
                           InputLabelProps={{
                             shrink: true
                           }}
                         />
                       </Grid>
+                      {!InquryName?.serviceName ? (
+                        <Grid xs={12}>
+                          <TextField
+                            label='Quantity'
+                            autoComplete='off'
+                            value={values?.quantity}
+                            type='number'
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            fullWidth
+                            name='quantity'
+                            InputLabelProps={{
+                              shrink: true
+                            }}
+                          />
+                        </Grid>
+                      ) : null}
                       <Grid xs={12}>
                         <TextField
                           label='Description'

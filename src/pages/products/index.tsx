@@ -24,6 +24,7 @@ const ProductsPage = () => {
   useEffect(() => {
     dispatch(getLogoAPI())
     dispatch(getAllCategoriesForSelect())
+    localStorage.removeItem('inquryName')
   }, [])
   useEffect(() => {
     const payload = {
@@ -165,7 +166,7 @@ const ProductsPage = () => {
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
-                        height: '50px'
+                        height: '60px'
                       }}
                     >
                       <p

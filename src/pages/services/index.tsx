@@ -12,6 +12,7 @@ import Navbar from 'src/views/components/landdingPage/navBar/Navbar'
 import PageBanner from 'src/views/components/landdingPage/pageBanner/PageBanner'
 import Sidebar from 'src/views/components/sidebar'
 import Icon from 'src/@core/components/icon'
+import { useRouter } from 'next/router'
 const ServicesPage = () => {
   const { getLogo } = useSelector((state: any) => state?.rootReducer?.settingsReducer)
   const [selectedCategory, setSelectedCategory] = useState('')
@@ -19,10 +20,11 @@ const ServicesPage = () => {
   const { servicesData } = useSelector((state: any) => state?.rootReducer?.servicesReducer)
 
   const dispatch = useDispatch<AppDispatch>()
-
+  const router = useRouter()
   useEffect(() => {
     dispatch(getLogoAPI())
     dispatch(getAllCategoriesForSelect())
+    localStorage.removeItem('inquryName')
   }, [])
 
   useEffect(() => {
@@ -146,7 +148,13 @@ const ServicesPage = () => {
                         <Icon icon='carbon:view' color='white' fontSize={24} />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title='Inqury'>
+                    <Tooltip
+                      title='Inqury'
+                      onClick={() => {
+                        localStorage.setItem('inquryName', JSON.stringify(item))
+                        router.push('/inqury')
+                      }}
+                    >
                       <IconButton size='small' sx={{ color: 'text.secondary', fontSize: '50px' }}>
                         <Icon icon='ph:question-bold' color='white' fontSize={24} />
                       </IconButton>
