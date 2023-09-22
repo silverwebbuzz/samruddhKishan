@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Box, Typography, Select, MenuItem } from '@mui/material'
 import DemoSelect from 'src/views/demo/demoSelect'
 
@@ -8,7 +8,53 @@ const Sidebar = ({ DATA, selectedCategory, setSelectedCategory }: any) => {
   const handleCategoryChange = (event: any) => {
     setSelectedCategory(event.target.value)
   }
+  const [expandedCategories, setExpandedCategories] = useState<number[]>([])
+  const [isActive, setActive] = useState(false)
+  const [isCurrentlyActive, setIsCurrentlyActive] = useState([])
 
+  const renderCategories = (categories: Category[], level: number = 0) => {
+    const options: React.ReactNode[] = []
+    if (level === 0) {
+      options
+        .push
+        // <MenuItem key={0} value={0} style={{ marginLeft: `${level * 20}px` }}>
+        //   Main Category
+        // </MenuItem>
+        ()
+    }
+    categories?.forEach(category => {
+      const isSelected = selectedCategory === category.id
+      options.push(
+        // <MenuItem key={category.id} value={category.id}>
+        //   {/* <span
+        //     onClick={event => toggleCategory(event, category.id)}
+        //     style={{ marginLeft: `${level * 20}px`, cursor: 'pointer' }}
+        //   >
+        //     {expandedCategories.includes(category.id) ? '▼' : '►'}
+        //   </span>
+        //   {category.categoryName} */}
+        // </MenuItem>
+        <span
+          onClick={event => {
+            // if (isCurrentlyActive.includes(category.id)) {
+            //   setActive(true)
+            // } else {
+            //   setActive(false)
+            // }
+          }}
+          style={{ marginLeft: `${level * 20}px`, cursor: 'pointer' }}
+        >
+          <Typography variant='h6' color={isActive ? 'green' : 'black'}>
+            {category.categoryName + '►'}
+          </Typography>
+        </span>
+      )
+      if (category.children && (expandedCategories.includes(category.id) || !isSelected)) {
+        options.push(...renderCategories(category.children, level + 1))
+      }
+    })
+    return options
+  }
   return (
     <div className='sidebar'>
       <h2>Filter by Category</h2>
@@ -31,6 +77,7 @@ const Sidebar = ({ DATA, selectedCategory, setSelectedCategory }: any) => {
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
       />
+      {/* {renderCategories(DATA)} */}
     </div>
   )
 }
