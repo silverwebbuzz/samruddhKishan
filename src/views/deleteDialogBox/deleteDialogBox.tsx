@@ -84,6 +84,13 @@ const DeleteDialog = ({ open, type, id, positionId, handleClose, delelteField }:
             dispatch(getAllContent())
           }
         })
+      // case 'testimonials':
+      //   dispatch(deleteTestimonials(payloadForPositionId)).then(res => {
+      //     if (res) {
+      //       //@ts-ignore
+      //       dispatch(getAllContent())
+      //     }
+      //   })
 
       default:
         console.log('Does not exist DELETE ID!')

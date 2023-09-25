@@ -110,14 +110,15 @@ const navigation = (): VerticalNavItemsType => {
       {
         title: 'Roles & Permissions',
         icon: 'grommet-icons:user-admin',
-
-        children: [
-          {
-            title: 'Permissions',
-            path: '/permissions'
-          },
-          { title: 'Role', path: '/roles' }
-        ]
+        title: 'Roles & Permissions',
+        path: '/roles'
+        // children: [
+        //   {
+        //     title: 'Permissions',
+        //     path: '/permissions'
+        //   },
+        //   { title: 'Role', path: '/roles' }
+        // ]
       }
     ]
     const FinalRoute = []
@@ -212,14 +213,15 @@ const navigation = (): VerticalNavItemsType => {
       {
         title: 'Roles & Permissions',
         icon: 'grommet-icons:user-admin',
-
-        children: [
-          {
-            title: 'Permissions',
-            path: '/permissions'
-          },
-          { title: 'role', path: '/roles' }
-        ]
+        // title: 'role',
+        path: '/roles'
+        // children: [
+        //   {
+        //     title: 'Permissions',
+        //     path: '/permissions'
+        //   },
+        //   { title: 'role', path: '/roles' }
+        // ]
       }
     ]
   }

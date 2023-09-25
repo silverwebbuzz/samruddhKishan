@@ -22,7 +22,12 @@ const AboutSection = ({ DATA, JSONHandler, ourCenter }: any) => {
                   Our Centers are <br />
                   located across the Country
                 </Typography>
-                <div className='our_center_list'>
+                <div
+                  className='our_center_list'
+                  style={{
+                    marginTop: '5px'
+                  }}
+                >
                   {getUsers?.data?.map((Itm: any) => {
                     if (Itm?.roleId == '13')
                       return (

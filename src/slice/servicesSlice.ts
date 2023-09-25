@@ -26,7 +26,7 @@ const initialState: RootState = {
 
 export const getAllServices = createAsyncThunk(
   'user/GetAllServices',
-  async (payload: { page: string | number; pageSize: string | number }, { rejectWithValue }) => {
+  async (payload: { page: string | number; pageSize: string | number } | any, { rejectWithValue }) => {
     try {
       if (payload) {
         const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/service/GetAllServices`, payload, {

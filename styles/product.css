@@ -1,0 +1,4 @@
+.custom-hover-for-select .select option:hover {
+  background-color: green !important;
+  color: white !important; /* Change the text color to improve visibility */
+}

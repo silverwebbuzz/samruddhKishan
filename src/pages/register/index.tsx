@@ -135,7 +135,7 @@ const Register = () => {
     dispatch(getAdressByPincode(payload))
   }
 
-  const handleFile = e => {
+  const handleFile = (e: any) => {
     const file = e
     setFileForView(e)
 
@@ -369,7 +369,6 @@ const Register = () => {
     } else {
       if (values?.appliedForSoilTesting === 'yes' && file?.length > 0) {
         handleFarmerSubmit(values)
-        console.log('User not found-->', values?.appliedForSoilTesting)
       } else if (values?.appliedForSoilTesting === 'no') {
         handleFarmerSubmit(values)
       }
@@ -833,7 +832,7 @@ const Register = () => {
                                       setSTATE(e?.target?.value)
                                     }}
                                   >
-                                    {allState?.data?.map(name => (
+                                    {allState?.data?.map((name: any) => (
                                       <MenuItem key={name?.name} value={name?.name}>
                                         {name?.name}
                                       </MenuItem>
@@ -854,7 +853,7 @@ const Register = () => {
                                       label='District'
                                       onChange={handleChange}
                                     >
-                                      {allDistrict?.map(name => (
+                                      {allDistrict?.map((name: any) => (
                                         <MenuItem key={name?.name} value={name?.name}>
                                           {name?.name}
                                         </MenuItem>
@@ -1214,7 +1213,11 @@ const Register = () => {
                                         }}
                                       >
                                         Upload
-                                        <input type='file' hidden onChange={e => handleFile(e?.target?.files[0])} />
+                                        <input
+                                          type='file'
+                                          hidden
+                                          onChange={(e: any) => handleFile(e?.target?.files[0])}
+                                        />
                                       </Button>
                                     </Box>
                                     {values?.appliedForSoilTesting === 'yes' ? (

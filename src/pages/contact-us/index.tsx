@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
+import { getFooter } from 'src/slice/landingPageSlice'
 import { getLogoAPI } from 'src/slice/settingSlice'
 import { AppDispatch } from 'src/store/store'
 import ContactSection from 'src/views/components/landdingPage/contactSection'
@@ -13,6 +14,8 @@ import PageBanner from 'src/views/components/landdingPage/pageBanner/PageBanner'
 
 const ContactPage = () => {
   const { getLogo } = useSelector((state: any) => state?.rootReducer?.settingsReducer)
+  const { getFooterData } = useSelector((state: any) => state?.rootReducer?.landingPageReducer)
+
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
     document.body.classList.add('landingPage')
@@ -30,6 +33,7 @@ const ContactPage = () => {
   }
   useEffect(() => {
     dispatch(getLogoAPI())
+    dispatch(getFooter())
   }, [])
   return (
     <>
@@ -45,7 +49,7 @@ const ContactPage = () => {
         {/* Contact section end */}
       </div>
       {/* Footer section start */}
-      <FooterSection LOGO={getLogo?.logo} JSONHandler={JSONHandler} />
+      <FooterSection DATA={getFooterData?.data} LOGO={getLogo?.logo} JSONHandler={JSONHandler} />
       {/* Footer section end */}
     </>
   )

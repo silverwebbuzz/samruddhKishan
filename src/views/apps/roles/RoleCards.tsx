@@ -50,16 +50,6 @@ interface CardDataType {
   avatars: string[]
   totalUsers: number
 }
-interface createRole {
-  roleType: string
-}
-const cardData: CardDataType[] = [
-  { totalUsers: 4, title: 'Administrator', avatars: ['1.png', '2.png', '3.png', '4.png'] },
-  { totalUsers: 7, title: 'Manager', avatars: ['5.png', '6.png', '7.png', '8.png', '1.png', '2.png', '3.png'] },
-  { totalUsers: 5, title: 'Users', avatars: ['4.png', '5.png', '6.png', '7.png', '8.png'] },
-  { totalUsers: 3, title: 'Support', avatars: ['1.png', '2.png', '3.png'] },
-  { totalUsers: 2, title: 'Restricted User', avatars: ['4.png', '5.png'] }
-]
 
 const RolesCards = () => {
   // ** States
@@ -95,7 +85,6 @@ const RolesCards = () => {
       setSelectedCheckbox([...arr])
     } else {
       setSelectedCheckbox(prev => [...prev, id])
-      // selectedCheckbox.push(id)
     }
   }
   const handleClickOpenDelete = () => setOpenDelete(true)
@@ -110,9 +99,7 @@ const RolesCards = () => {
   const removeDuplicates = (arr: any) => {
     return arr.filter((item: any, index: any) => arr.indexOf(item) === index)
   }
-  // useEffect(() => {
-  //   setSelectedCheckbox([])
-  // }, [])
+
   const onSubmitClick = (values: any) => {
     if (dialogTitle === 'Edit') {
       let payload = {
@@ -174,6 +161,7 @@ const RolesCards = () => {
       setSelectedCheckbox([])
     }
   }, [open, dialogTitle])
+
   useEffect(() => {
     if (!isDialogOpen) {
       setSelectedCheckbox([])
@@ -220,6 +208,98 @@ const RolesCards = () => {
         </Card>
       </Grid>
     ))
+
+  const routesArray = [
+    {
+      title: 'Dashboard',
+      path: '/dashboard',
+      icon: 'fluent-mdl2:b-i-dashboard'
+    },
+    {
+      title: 'Farmers',
+      path: '/farmers',
+      action: 'read',
+      subject: 'farmers',
+      icon: 'game-icons:farmer'
+    },
+    {
+      title: 'Users',
+      path: '/users',
+      action: 'read',
+      subject: 'users',
+      icon: 'ci:users'
+    },
+    {
+      title: 'Brands',
+      path: '/brands',
+      action: 'read',
+      subject: 'brands',
+      icon: 'fluent:production-checkmark-24-regular'
+    },
+    {
+      title: 'Categories',
+      path: '/categories',
+      icon: 'tabler:category'
+    },
+    {
+      title: 'Products',
+      path: '/all-products',
+      action: 'read',
+      subject: 'all-products',
+      icon: 'fluent-mdl2:b-i-dashboard'
+    },
+    {
+      title: 'Services',
+      path: '/all-services',
+      action: 'read',
+      subject: 'all-services',
+      icon: 'carbon:ibm-cloud-hyper-protect-crypto-services'
+    },
+    {
+      title: 'Inquiry',
+      path: '/all-inquiry',
+      action: 'read',
+      subject: 'inquiry',
+      icon: 'wpf:ask-question'
+    },
+
+    { title: 'Settings', path: '/settings', action: 'read', subject: 'settings', icon: 'uil:setting' },
+    {
+      title: 'CMS',
+      icon: 'fluent:content-view-32-regular',
+      children: [
+        {
+          title: 'Home Page',
+          path: '/cms/home'
+        },
+        {
+          title: 'FAQ',
+          path: '/cms/faq'
+        },
+        {
+          title: 'Testimonials',
+          path: '/cms/testimonials'
+        },
+        {
+          title: 'Footer',
+          path: '/cms/footer'
+        }
+      ]
+    },
+
+    {
+      title: 'Roles & Permissions',
+      icon: 'grommet-icons:user-admin',
+
+      children: [
+        {
+          title: 'Permissions',
+          path: '/permissions'
+        },
+        { title: 'role', path: '/roles' }
+      ]
+    }
+  ]
   return (
     <Grid container spacing={6} className='match-height'>
       {renderCards()}
@@ -362,7 +442,7 @@ const RolesCards = () => {
                     </TableHead>
                     {dialogTitle === 'Add' ? (
                       <TableBody>
-                        {getPermission?.map((i: any, index: number) => {
+                        {routesArray?.map((i: any, index: number) => {
                           const id = i?.id
 
                           return (

@@ -1,8 +1,7 @@
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Icon from 'src/@core/components/icon'
 const FooterSection = ({ LOGO, DATA, JSONHandler }: any) => {
-  console.log('DATA', DATA)
   return (
     <>
       <footer className='sec_padding'>
@@ -22,13 +21,24 @@ const FooterSection = ({ LOGO, DATA, JSONHandler }: any) => {
         <div className='footer_sec_col explore_menu'>
           <h3>Explore</h3>
           <ul>
-            {JSONHandler(DATA?.explore)?.map((Item: any) => {
-              return (
-                <li>
-                  <a href={Item?.link}>{Item?.name}</a>
-                </li>
-              )
-            })}
+            <li>
+              <a href='/'>Home</a>
+            </li>
+            <li>
+              <a href='/about-us'>About Us</a>
+            </li>
+            <li>
+              <a href='/our-centers'>Our Centers</a>
+            </li>
+            <li>
+              <a href='/products'>Product</a>
+            </li>
+            <li>
+              <a href='/services'>Services</a>
+            </li>
+            <li>
+              <a href='/contact-us'>Contact Us</a>
+            </li>
           </ul>
         </div>
         <div className='footer_third_col recent_post_menu'>

@@ -128,7 +128,7 @@ const allInquiry = () => {
       flex: 0.25,
       field: 'fullName',
       sortable: false,
-      minWidth: 320,
+      minWidth: 220,
       headerName: 'Name',
       renderCell: ({ row }: any) => {
         const { fullName } = row
@@ -137,6 +137,26 @@ const allInquiry = () => {
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
                 {fullName}
+              </Typography>
+            </Box>
+          </Box>
+        )
+      }
+    },
+
+    {
+      flex: 0.2,
+      minWidth: 200,
+      field: 'flag',
+      sortable: false,
+      headerName: 'Inquiry Type',
+      renderCell: ({ row }: any) => {
+        const { flag } = row
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
+                {flag == 'product' ? 'Product' : flag == 'service' ? 'Service' : ''}
               </Typography>
             </Box>
           </Box>
@@ -220,7 +240,7 @@ const allInquiry = () => {
             open={Boolean(anchorEl) && row.id === menuRow?.id}
             onClose={() => setAnchorEl(null)}
           >
-            <MenuItem
+            {/* <MenuItem
               onClick={() => {
                 handleClickOpenDelete()
                 setDeleteID(row?.id)
@@ -229,7 +249,7 @@ const allInquiry = () => {
             >
               <Icon icon='tabler:trash' />
               Delete
-            </MenuItem>
+            </MenuItem> */}
             <MenuItem
               onClick={() => {
                 let editPayload: any = {

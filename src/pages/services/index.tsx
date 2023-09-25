@@ -32,23 +32,83 @@ import FooterSection from 'src/views/components/landdingPage/footerSection'
 import { Form, Formik, FormikProps } from 'formik'
 import toast from 'react-hot-toast'
 import { createInquiry } from 'src/slice/inquirySlice'
+import { getFooter } from 'src/slice/landingPageSlice'
 const ServicesPage = () => {
   const { getLogo } = useSelector((state: any) => state?.rootReducer?.settingsReducer)
   const [selectedCategory, setSelectedCategory] = useState('')
+  const { getFooterData } = useSelector((state: any) => state?.rootReducer?.landingPageReducer)
+
   const { getCategoriesForSelect } = useSelector((state: any) => state?.rootReducer?.categoriesReducer)
   const { servicesData } = useSelector((state: any) => state?.rootReducer?.servicesReducer)
   const [open, setOpen] = useState<boolean>(false)
   const [singleProduct, setProduct] = useState(null)
-
+  const [orderBy, setOrderBy] = useState<string>('')
+  const [sortBy, setSortBy] = useState<string>('')
   const dispatch = useDispatch<AppDispatch>()
   const handleClickOpen = () => setOpen(true)
 
   const handleClose = () => setOpen(false)
+  const handleOrderByChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setOrderBy(event.target.value)
+  }
 
+  const handleSortByChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortBy(event.target.value)
+  }
+
+  function TruncateText({ text, maxLength = 25 }: any) {
+    const [isTruncated, setIsTruncated] = useState(true)
+
+    const toggleTruncate = () => {
+      setIsTruncated(!isTruncated)
+    }
+    return (
+      <div>
+        {isTruncated ? (
+          <div>
+            <p>
+              {text?.slice(0, maxLength)}{' '}
+              {text?.length > 25 ? (
+                <span
+                  style={{ color: '#1f4e3d', fontWeight: 'bold', padding: 0, cursor: 'pointer' }}
+                  onClick={toggleTruncate}
+                >
+                  ...
+                </span>
+              ) : (
+                ''
+              )}
+            </p>
+          </div>
+        ) : (
+          <div>
+            <p>
+              {text}{' '}
+              <span style={{ color: '#1f4e3d', fontWeight: 'bold' }} onClick={toggleTruncate}>
+                {' '}
+                Show Less
+              </span>
+            </p>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  function removeTags(str) {
+    if (str === null || str === '') return false
+    else str = str.toString()
+
+    // Regular expression to identify HTML tags in
+    // the input string. Replacing the identified
+    // HTML tag with a null string.
+    return str.replace(/(<([^>]+)>)/gi, '')
+  }
   const router = useRouter()
   useEffect(() => {
     dispatch(getLogoAPI())
     dispatch(getAllCategoriesForSelect())
+    dispatch(getFooter())
     localStorage.removeItem('inquryName')
   }, [])
   const handleSubmit = (values: any) => {
@@ -69,10 +129,12 @@ const ServicesPage = () => {
   }
   useEffect(() => {
     const payload = {
-      categoryId: selectedCategory
+      categoryId: selectedCategory,
+      order: sortBy,
+      sortBy: orderBy
     }
     dispatch(getAllServices(payload))
-  }, [selectedCategory])
+  }, [selectedCategory, sortBy, orderBy])
   useEffect(() => {
     dispatch(getLogoAPI())
   }, [])
@@ -101,6 +163,14 @@ const ServicesPage = () => {
         />
       </div>
       <section
+        // style={{
+        //   display: 'flex',
+        //   backgroundColor: '#ffffff',
+        //   paddingLeft: '5%',
+        //   paddingRight: '5%',
+        //   marginTop: '20px',
+        //   marginBottom: '20px'
+        // }}
         style={{
           display: 'flex',
           backgroundColor: '#ffffff',
@@ -118,119 +188,159 @@ const ServicesPage = () => {
         <div
           style={{
             overflowY: 'auto',
-            backgroundColor: '#ffffff',
             height: '100vh',
             flexWrap: 'wrap',
             marginLeft: '20px',
-            width: 'calc(100% - 350px)',
-            display: 'flex'
+            width: 'calc(100% - 350px)'
+            // display: 'flex'
           }}
           className='custom-scroll-container'
         >
-          {servicesData?.data?.map((item, index) => (
-            <Grid item xs={12} sm={6} md={4} key={item.id}>
-              <Card
-                sx={{
-                  border: '1px solid',
-                  backgroundColor: '#ffffff',
-                  height: '400px',
-                  display: 'flex',
-                  marginLeft: '20px',
-                  flexDirection: 'column',
-                  width: '300px', // Adjust the width as per your requirements
-                  marginBottom: '20px' // Add margin between cards
-                }}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              alignItems: 'center',
+              padding: '20px'
+            }}
+          >
+            <div style={{ marginTop: '20px' }}>
+              <label htmlFor='orderBy'>Order By:</label>
+              <select
+                id='orderBy'
+                className='custom-hover-for-select'
+                value={orderBy}
+                onChange={handleOrderByChange}
+                style={{ marginLeft: '10px', border: 'none', outline: 'none' }}
               >
-                <CardContent
-                  style={{
-                    flex: 1,
+                <option value='asc'>ASC</option>
+                <option value='desc'>DESC</option>
+              </select>
+            </div>
+            {/* Sort By Dropdown */}
+            <div style={{ marginTop: '20px' }}>
+              <label htmlFor='sortBy'>Sort By:</label>
+              <select
+                id='sortBy'
+                className='custom-hover-for-select'
+                value={sortBy}
+                onChange={handleSortByChange}
+                style={{ marginLeft: '10px', border: 'none', outline: 'none' }}
+              >
+                <option value='asc'>A-Z</option>
+                <option value='desc'>Z-A</option>
+              </select>
+            </div>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              gap: '20px',
+              marginBottom: '20px',
+              flexWrap: 'wrap'
+            }}
+          >
+            {servicesData?.data?.map((item, index) => (
+              <Grid item xs={12} sm={6} md={4} key={item.id}>
+                <Card
+                  sx={{
+                    border: '1px solid',
+                    backgroundColor: '#ffffff',
+                    // height: '400px',
                     display: 'flex',
                     flexDirection: 'column',
-                    justifyContent: 'space-beteen',
-                    alignItems: 'center',
-                    padding: '40px'
+                    width: '300px', // Adjust the width as per your requirements
+                    marginBottom: '20px' // Add margin between cards
                   }}
                 >
-                  <img
-                    src={item?.serviceBannerImage}
+                  <CardContent
                     style={{
-                      borderRadius: '50%',
-                      aspectRatio: 1,
-                      objectFit: 'cover'
-                    }}
-                    height={150}
-                    width={150}
-                    alt={item?.productName}
-                  />
-                  <Typography variant='h6' className='single_service_card_title' fontWeight={600}>
-                    {item?.serviceName}
-                  </Typography>
-                  <div
-                    className='single_service_card_desc'
-                    dangerouslySetInnerHTML={{ __html: item?.serviceDetails }}
-                  ></div>
-                </CardContent>
-                <Box
-                  sx={{
-                    backgroundColor: '#1f4e3d',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    // padding: '10px 0',
-                    height: '60px'
-                  }}
-                >
-                  {/* <p
-                    style={{
-                      color: '#fff',
-                      margin: '0',
-                      // textAlign: 'center',
-                      paddingLeft: '10px'
+                      // flex: 1,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      // justifyContent: 'space-beteen',
+                      alignItems: 'center',
+                      // padding: '40px'
+                      paddingBottom: '0px'
+                      // paddingTop: '0px'
                     }}
                   >
-                    {item?.serviceName}
-                  </p> */}
+                    <img
+                      src={item?.serviceBannerImage}
+                      style={{
+                        objectFit: 'cover',
+                        borderRadius: ' 10px 10px 10px 10px',
+                        height: '170px',
+                        width: '187px'
+                      }}
+                      height={150}
+                      width={150}
+                      alt={item?.productName}
+                    />
+                    <Typography
+                      sx={{
+                        padding: '20px'
+                      }}
+                      variant='h6'
+                      // className='single_service_card_title'
+                      // textOverflow={'hidden'}
+                      fontWeight={600}
+                      style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '100%' }}
+                    >
+                      {item?.serviceName}
+                    </Typography>
+                    <TruncateText text={removeTags(item?.serviceDetails)} />
+                  </CardContent>
                   <Box
-                    className='single_product_btm'
                     sx={{
+                      backgroundColor: '#1f4e3d',
                       display: 'flex',
                       justifyContent: 'space-between',
-                      flexDirection: 'row',
-                      alignItems: 'start'
+                      alignItems: 'center',
+                      height: '60px'
                     }}
                   >
-                    <Tooltip title='View'>
-                      <IconButton
-                        size='small'
-                        sx={{ color: 'text.secondary' }}
-                        onClick={() => {
-                          localStorage.setItem('inquryName', JSON.stringify(item))
-                          router.push('/inqury')
-                        }}
-                      >
-                        {/* <Icon icon={} />
-                         */}
-                        <Icon icon='carbon:view' color='white' fontSize={24} />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip
-                      title='Inqury'
-                      onClick={() => {
-                        setProduct(item), setOpen(true)
+                    <Box
+                      className='single_product_btm'
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        flexDirection: 'row',
+                        alignItems: 'start'
                       }}
                     >
-                      <IconButton size='small' sx={{ color: 'text.secondary', fontSize: '50px' }}>
-                        <Icon icon='ph:question-bold' color='white' fontSize={24} />
-                      </IconButton>
-                    </Tooltip>
+                      <Tooltip title='View'>
+                        <IconButton
+                          size='small'
+                          sx={{ color: 'text.secondary' }}
+                          onClick={() => {
+                            localStorage.setItem('inquryName', JSON.stringify(item))
+                            router.push('/inqury')
+                          }}
+                        >
+                          <Icon icon='carbon:view' color='white' fontSize={24} />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip
+                        title='Inqury'
+                        onClick={() => {
+                          setProduct(item), setOpen(true)
+                        }}
+                      >
+                        <IconButton size='small' sx={{ color: 'text.secondary', fontSize: '50px' }}>
+                          <Icon icon='ph:question-bold' color='white' fontSize={24} />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
                   </Box>
-                </Box>
-              </Card>
-            </Grid>
-          ))}
+                </Card>
+              </Grid>
+            ))}
+          </div>
         </div>
       </section>
-      <FooterSection LOGO={getLogo?.logo} JSONHandler={JSONHandler} />
+      <FooterSection DATA={getFooterData?.data} LOGO={getLogo?.logo} JSONHandler={JSONHandler} />
       <Dialog maxWidth='sm' onClose={handleClose} aria-labelledby='full-screen-dialog-title' open={open}>
         <DialogTitle id='full-screen-dialog-title'>
           {/* <Typography variant='h6' component='span'>

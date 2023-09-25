@@ -1,11 +1,11 @@
 /* Sidebar Styles */
 
 .sidebar {
-  width: 350px; /* Adjust the width as needed */
+  width: 400px; /* Adjust the width as needed */
   background-color: #ffffff; /* Change this color to your desired background color */
   color: #fff; /* Text color */
   padding: 20px; /* Padding inside the sidebar */
-  box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+  box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.2);
 }
 
 .sidebar h2 {
@@ -13,6 +13,10 @@
   font-size: 24px;
 }
 
+.hoveredCategory:hover {
+  background-color: #a4be9b;
+  cursor: pointer; /* Optional: Change cursor on hover */
+}
 /* Category Dropdown Styles */
 .category-dropdown {
   margin-bottom: 20px;
@@ -53,7 +57,11 @@
   transform: translateY(-50%);
   font-size: 14px; /* Adjust the font size as needed */
 }
-
+.sidebar-scrollable {
+  overflow-y: scroll;
+  height: 700px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Adjust the shadow properties as needed */
+}
 /* Hide the default scrollbar */
 .custom-scroll-container::-webkit-scrollbar {
   display: none;
