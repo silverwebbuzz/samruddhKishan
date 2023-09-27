@@ -1,10 +1,8 @@
-/* Sidebar Styles */
-
 .sidebar {
-  width: 400px; /* Adjust the width as needed */
-  background-color: #ffffff; /* Change this color to your desired background color */
-  color: #fff; /* Text color */
-  padding: 20px; /* Padding inside the sidebar */
+  width: 400px;
+  background-color: #ffffff;
+  color: #fff;
+  padding: 20px;
   box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.2);
 }
 
@@ -15,9 +13,9 @@
 
 .hoveredCategory:hover {
   background-color: #a4be9b;
-  cursor: pointer; /* Optional: Change cursor on hover */
+  cursor: pointer;
 }
-/* Category Dropdown Styles */
+
 .category-dropdown {
   margin-bottom: 20px;
 }
@@ -25,27 +23,25 @@
 .category-dropdown label {
   display: block;
   font-weight: bold;
-  color: #fff; /* Text color for the label */
-  margin-bottom: 5px; /* Add some spacing below the label */
+  color: #fff;
+  margin-bottom: 5px;
 }
 
 .category-dropdown select {
   width: 100%;
   padding: 10px;
-  border: 1px solid #1f4e3d; /* Dark green border color */
-  background-color: #fff; /* White background color */
-  color: #1f4e3d; /* Dark green text color for the dropdown options */
+  border: 1px solid #1f4e3d;
+  background-color: #fff;
+  color: #1f4e3d;
   border-radius: 4px;
-  appearance: none; /* Remove the default dropdown arrow */
-  cursor: pointer; /* Add a pointer cursor */
+  appearance: none;
+  cursor: pointer;
 }
-
 .category-dropdown select:focus {
-  outline: none; /* Remove the focus outline */
-  box-shadow: 0 0 3px 0px #fff; /* Add a subtle focus effect */
+  outline: none;
+  box-shadow: 0 0 3px 0px #fff;
 }
 
-/* Style the dropdown options */
 .category-dropdown select option {
   background-color: #fff;
   color: #000;
@@ -53,16 +49,98 @@
 .custom-select .select-arrow {
   position: absolute;
   top: 50%;
-  right: 10px; /* Adjust the position as needed */
+  right: 10px;
   transform: translateY(-50%);
-  font-size: 14px; /* Adjust the font size as needed */
+  font-size: 14px;
 }
 .sidebar-scrollable {
   overflow-y: scroll;
   height: 700px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Adjust the shadow properties as needed */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
-/* Hide the default scrollbar */
+
 .custom-scroll-container::-webkit-scrollbar {
   display: none;
+}
+.home-contact .css-1cjvj4b-MuiGrid-root,
+.home-contact .css-t4ibk5-MuiGrid-root {
+  padding-left: 24px !important;
+}
+
+/* .main_card_product{
+  display: 'flex';
+              gap: '20px';
+              mar: '20px';
+              flexWrap: 'wrap';
+              justifyContent: 'space-between'
+} */
+@media (max-width: 1491px) {
+  .product_card {
+    width: 280px !important;
+  }
+}
+@media (max-width: 1418px) {
+  .product_card {
+    width: 250px !important;
+  }
+}
+@media (max-width: 1418px) {
+  .product_card {
+    width: 250px !important;
+  }
+}
+@media (max-width: 1277px) {
+  .product_card {
+    width: 300px !important;
+  }
+}
+@media (max-width: 777px) {
+  .sidebar-scrollable {
+    width: 45% !important;
+  }
+}
+@media (max-width: 753px) {
+  .all_produc_section {
+    display: inherit !important;
+    height: 20% !important;
+  }
+  .sidebar-scrollable {
+    width: 100% !important;
+    height: 20%;
+  }
+  .custom-scroll-container {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+}
+@media (max-width: 1182px) {
+  .main_form {
+    margin-left: 10% !important;
+    margin-right: 10% !important;
+  }
+}
+@media (max-width: 792px) {
+  .register_form_banner {
+  }
+  .main_form {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 5% !important;
+    margin-right: 5% !important;
+  }
+}
+@media (max-width: 600px) {
+  .css-1cjvj4b-MuiGrid-root > .MuiGrid-item,
+  .css-t4ibk5-MuiGrid-root > .MuiGrid-item,
+  .css-hi54jv-MuiGrid-root > .MuiGrid-item {
+    padding-left: 0 !important;
+  }
+  .css-1cjvj4b-MuiGrid-root {
+    padding-left: 0 !important;
+    padding-top: 0 !important;
+  }
+  .home-contact .css-1cjvj4b-MuiGrid-root,
+  .home-contact .css-t4ibk5-MuiGrid-root {
+    padding-left: 0 !important;
+  }
 }

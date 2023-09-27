@@ -235,6 +235,9 @@ const ApmcForm = ({
           name='apmcConnectedFarmers'
           error={Boolean(errors.apmcConnectedFarmers && touched.apmcConnectedFarmers)}
           fullWidth
+          InputLabelProps={{
+            shrink: true
+          }}
           type='number'
           label='How many farmers are connected with you'
           placeholder='How many farmers are connected with you'

@@ -165,14 +165,46 @@ const Register = () => {
     role: yup.string().required('Role is required'),
     firstName: yup.string().when('role', {
       is: (role: any) => role !== '10' && role !== '13',
-      then: yup => yup.required('First Name is required for this role'),
+      then: yup => yup.required('First Name is required'),
       otherwise: yup => yup.optional()
     }),
     lastName: yup.string().when('role', {
       is: (role: any) => role !== '10' && role !== '13',
-      then: yup => yup.required('Last Name is required for this role'),
+      then: yup => yup.required('Last Name is required'),
       otherwise: yup => yup.optional()
     }),
+
+    mobileNumber: yup.string().when('role', {
+      is: (role: any) => rolePrefill == 'f1',
+      then: yup =>
+        yup
+          .required('Mobile Number is required')
+          .max(10, 'Mobile number must be 10 digit')
+          .matches(/^(\+91|0)?[6789]\d{9}$/, 'Invalid mobile number'),
+      otherwise: yup => yup.optional()
+    }),
+
+    wpNumber: yup.string().when('role', {
+      is: (role: any) => rolePrefill == 'f1',
+      then: yup =>
+        yup
+          .required('Whatsapp Number is required')
+          .max(10, 'Whatsapp Number must be 10 digit')
+          .matches(/^(\+91|0)?[6789]\d{9}$/, 'Invalid whatsapp number '),
+      otherwise: yup => yup.optional()
+    }),
+    aadharNumber: yup.string().when('role', {
+      is: (role: any) => rolePrefill == 'f1',
+      then: yup =>
+        yup
+          .required('Aadhar number is required')
+          .matches(
+            /^([0-9]{4}[0-9]{4}[0-9]{4}$)|([0-9]{4}\s[0-9]{4}\s[0-9]{4}$)|([0-9]{4}-[0-9]{4}-[0-9]{4}$)/,
+            'please enter a valid aadhar number'
+          ),
+      otherwise: yup => yup.optional()
+    }),
+
     pinCode: yup.string().matches(/^\d{6}$/, 'Invalid PIN code'),
     email: yup.string().email('Invalid email address').required('Email is required'),
     phone: yup
@@ -261,6 +293,7 @@ const Register = () => {
     dispatch(getAllDistrict({ state: STATE }))
   }, [STATE])
   const handleFarmerSubmit = (values: any) => {
+    console.log('values', values)
     const payload = {
       adminId: 0,
       firstName: values?.firstName,
@@ -308,64 +341,122 @@ const Register = () => {
   }
   const handleSubmit = (values: any) => {
     if (rolePrefill !== 'f1') {
-      let payload = [
-        //other
-        { firstName: values?.firstName },
-        { lastName: values?.lastName },
-        { email: values?.email },
-        { password: values?.password },
-        { phone: values?.phone },
-        { state: values?.state },
-        { city: district },
-        { taluka: taluka },
-        { village: values?.villageName },
-        { pinCode: pincode },
-        { roleId: values?.role },
-        //center
-        { centerName: values?.centerName },
-        { centerRegisterUnderCompanyDate: values?.centerRegisterUnderCompanyDate },
-        { centerKeyPerson: values?.centerKeyPerson },
-        { centerHandlingPersonName: values?.centerHandlingPersonName },
-        { centerTaluka: values?.centerTaluka },
-        { centerDistrict: values?.centerDistrict },
-        { centerTurnover: values?.centerTurnover },
-        { centerMemberFarmer: values?.centerMemberFarmer },
-        { centerPerDayMilkCollection: values?.centerPerDayMilkCollection },
-        { centerMilkStorageCapacity: values?.centerMilkStorageCapacity },
-        { centerSellingMilkFor: values?.centerSellingMilkFor },
-        { centerOtherCompetitors: values?.centerOtherCompetitors },
-        { centerPaymentCycle: values?.centerPaymentCycle },
-        { centerOtherFacltyByMilkAgency: values?.centerOtherFacltyByMilkAgency },
-        { centerFarmarPaymentProcess: values?.centerFarmarPaymentProcess },
-        { centerMembersOnBoard: values?.centerMembersOnBoard },
-        { centerCurrentHurdeles: values?.centerCurrentHurdeles },
-        { centerNeededFacultys: values?.centerNeededFacultys },
-        { centerAllFinancialAudits: values?.centerAllFinancialAudits },
-        //apmc
-        { apmcFirmName: values?.apmcFirmName },
-        { apmcAddress: values?.apmcAddress },
-        { apmcName: values?.apmcName },
-        { apmcTaluka: values?.apmcTaluka },
-        { apmcDistrict: values?.apmcDistrict },
-        { apmcPersonName: values?.apmcPersonName },
-        { apmcConnectedFarmers: values?.apmcConnectedFarmers },
-        { apmcMajorCropsSelling: values?.apmcMajorCropsSelling },
-        { districtFarmerComingSellProduct: values?.districtFarmerComingSellProduct },
-        { vendorImage: values?.vendorImage },
-        { categoryId: categoryIdPrefill }
+      let Vendorspayload = [
+        { firstName: values?.firstName || '' },
+        { lastName: values?.lastName || '' },
+        { email: values?.email || '' },
+        { password: values?.password || '' },
+        { phone: values?.phone || '' },
+        { state: values?.state || '' },
+        { city: district || '' },
+        { taluka: taluka || '' },
+        { pinCode: pincode || '' },
+        { village: values?.villageName || '' },
+        { roleId: rolePrefill || '' },
+        { vendorImage: values?.vendorImage || '' },
+        { categoryId: categoryIdPrefill || '' }
       ]
-      let formData = new FormData()
-      payload.forEach((entry: any) => {
-        //@ts-ignore
-        const key = Object.keys(entry)[0] // Extracting the key from the object
-        const value = entry[key] // Extracting the value from the object
-        formData.append(key, value) // Appending the key-value pair to the formData
-      })
-      dispatch(createUser1(formData)).then((res: any) => {
-        if (res?.payload?.status === 200) {
-          router.push('/users')
-        }
-      })
+      let centersPayload = [
+        { roleId: rolePrefill || '' },
+        { state: values?.state || '' },
+        { city: district || '' },
+        { taluka: taluka || '' },
+        { pinCode: pincode || '' },
+        { email: values?.email || '' },
+        { password: values?.password || '' },
+        { phone: values?.phone || '' },
+        { firstName: values?.firstName || '' },
+        { lastName: values?.lastName || '' },
+        { centerName: values?.centerName || '' },
+        { centerRegisterUnderCompanyDate: values?.centerRegisterUnderCompanyDate || '' },
+        { centerKeyPerson: values?.centerKeyPerson || '' },
+        { centerHandlingPersonName: values?.centerHandlingPersonName || '' },
+        { centerTaluka: values?.centerTaluka || '' },
+        { centerDistrict: values?.centerDistrict || '' },
+        { centerTurnover: values?.centerTurnover || 0 },
+        { centerMemberFarmer: values?.centerMemberFarmer || 0 },
+        { centerPerDayMilkCollection: values?.centerPerDayMilkCollection || 0 },
+        { centerMilkStorageCapacity: values?.centerMilkStorageCapacity || 0 },
+        { centerSellingMilkFor: values?.centerSellingMilkFor || '' },
+        { centerOtherCompetitors: values?.centerOtherCompetitors || '' },
+        { centerPaymentCycle: values?.centerPaymentCycle || '' },
+        { centerOtherFacltyByMilkAgency: values?.centerOtherFacltyByMilkAgency || '' },
+        { centerFarmarPaymentProcess: values?.centerFarmarPaymentProcess || '' },
+        { centerMembersOnBoard: values?.centerMembersOnBoard || '' },
+        { centerCurrentHurdeles: values?.centerCurrentHurdeles || '' },
+        { centerNeededFacultys: values?.centerNeededFacultys || '' },
+        { centerAllFinancialAudits: values?.centerAllFinancialAudits || '' }
+      ]
+      let apmcpayload = [
+        { roleId: rolePrefill || '' },
+        { state: values?.state || '' },
+        { city: district || '' },
+        { taluka: taluka || '' },
+        { pinCode: pincode || '' },
+        { email: values?.email || '' },
+        { password: values?.password || '' },
+        { phone: values?.phone || '' },
+        { apmcFirmName: values?.apmcFirmName || '' },
+        { apmcAddress: values?.apmcAddress || '' },
+        { apmcName: values?.apmcName || '' },
+        { apmcTaluka: values?.apmcTaluka || '' },
+        { apmcDistrict: values?.apmcDistrict || '' },
+        { apmcPersonName: values?.apmcPersonName || '' },
+        { apmcConnectedFarmers: values?.apmcConnectedFarmers || 0 },
+        { firstName: values?.firstName || '' },
+        { lastName: values?.lastName || '' },
+        { apmcMajorCropsSelling: values?.apmcMajorCropsSelling || '' },
+        { districtFarmerComingSellProduct: values?.districtFarmerComingSellProduct || '' }
+      ]
+      if (rolePrefill == '17') {
+        let payload = Vendorspayload
+
+        let formData = new FormData()
+        payload.forEach((entry: any) => {
+          //@ts-ignore
+          const key = Object.keys(entry)[0] // Extracting the key from the object
+          const value = entry[key] // Extracting the value from the object
+          formData.append(key, value) // Appending the key-value pair to the formData
+        })
+
+        dispatch(createUser1(formData)).then((res: any) => {
+          if (res?.payload?.status === 200) {
+            router.push('/users')
+          }
+        })
+      } else if (rolePrefill == '13') {
+        let payload = centersPayload
+
+        let formData = new FormData()
+        payload.forEach((entry: any) => {
+          //@ts-ignore
+          const key = Object.keys(entry)[0] // Extracting the key from the object
+          const value = entry[key] // Extracting the value from the object
+          formData.append(key, value) // Appending the key-value pair to the formData
+        })
+
+        dispatch(createUser1(formData)).then((res: any) => {
+          if (res?.payload?.status === 200) {
+            router.push('/users')
+          }
+        })
+      } else if (rolePrefill == '10') {
+        let payload = apmcpayload
+
+        let formData = new FormData()
+        payload.forEach((entry: any) => {
+          //@ts-ignore
+          const key = Object.keys(entry)[0] // Extracting the key from the object
+          const value = entry[key] // Extracting the value from the object
+          formData.append(key, value) // Appending the key-value pair to the formData
+        })
+
+        dispatch(createUser1(formData)).then((res: any) => {
+          if (res?.payload?.status === 200) {
+            router.push('/users')
+          }
+        })
+      }
     } else {
       if (values?.appliedForSoilTesting === 'yes' && file?.length > 0) {
         handleFarmerSubmit(values)
@@ -430,6 +521,7 @@ const Register = () => {
     return uniq
   }
   const FarmerInitialValues = {
+    role: '',
     firstName: '',
     middleName: '',
     lastName: '',
@@ -461,32 +553,7 @@ const Register = () => {
     farmerLandOwnershipType: '',
     appliedForSoilTesting: 'yes'
   }
-  const farmerValidationSchema = yup.object().shape({
-    firstName: yup.string().required('First name  is required'),
-    middleName: yup.string().required('Middle name is required'),
-    lastName: yup.string().required('Last name is required'),
-    pinCode: yup.string().matches(/^\d{6}$/, 'Invalid PIN code'),
-    mobileNumber: yup
-      .string()
-      .required('Mobile number is required')
-      .max(10, 'Mobile number must be 10 digit')
-      // .matches(/^ *(?:0 *[23478](?: *\d){8}|[1-9](?: *\d)*|0 *[01569](?: *\d)*) *$/, 'Phone number is not valid'),
-      .matches(/^(\+91|0)?[6789]\d{9}$/, 'Invalid mobile number'),
-    wpNumber: yup
-      .string()
-      .required('Whatsapp number is required')
-      .max(10, 'Whatsapp number must be 10 digit')
-      .matches(/^(\+91|0)?[6789]\d{9}$/, 'Invalid mobile number'),
-    aadharNumber: yup
-      .string()
-      .required('Aadhar number is required')
-      .matches(
-        /^([0-9]{4}[0-9]{4}[0-9]{4}$)|([0-9]{4}\s[0-9]{4}\s[0-9]{4}$)|([0-9]{4}-[0-9]{4}-[0-9]{4}$)/,
-        'please enter a valid aadhar number'
-      ),
 
-    appliedForSoilTesting: yup.string().required('Periods of bond is required')
-  })
   useEffect(() => {
     document.body.classList.add('landingPage')
     return () => {
@@ -519,9 +586,10 @@ const Register = () => {
             <Formik
               enableReinitialize
               initialValues={rolePrefill !== 'f1' ? FarmerInitialValues : initialValues}
-              validationSchema={rolePrefill !== 'f1' ? validationSchema : farmerValidationSchema}
+              validationSchema={validationSchema}
               onSubmit={(values: any) => {
                 handleSubmit(values)
+                console.log('Values --->', values)
               }}
             >
               {({ values, handleChange, handleBlur, errors, touched, setFieldValue, resetForm }: any) => (
@@ -594,7 +662,7 @@ const Register = () => {
                             <ErrorMessage name='role' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                           </FormControl>
                         </Grid>
-                        {values?.role == 13 ? (
+                        {rolePrefill == 13 ? (
                           <CentersForm
                             size='small'
                             values={values}
@@ -616,7 +684,7 @@ const Register = () => {
                             getAddressByPinCodeData={getAddressByPinCodeData}
                             resetForm={resetForm}
                           />
-                        ) : values?.role == 10 ? (
+                        ) : rolePrefill == 10 ? (
                           <ApmcForm
                             size='small'
                             values={values}
@@ -638,7 +706,7 @@ const Register = () => {
                             getAddressByPinCodeData={getAddressByPinCodeData}
                             resetForm={resetForm}
                           />
-                        ) : values?.role == 17 ? (
+                        ) : rolePrefill == 17 ? (
                           <VendorForm
                             size='small'
                             values={values}

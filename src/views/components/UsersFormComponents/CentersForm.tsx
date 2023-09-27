@@ -62,9 +62,7 @@ const CentersForm = ({
             name='centerRegisterUnderCompanyDate'
             value={values?.centerRegisterUnderCompanyDate}
             label='Center registration under company registration date'
-            onChange={(e: any) => {
-              setFieldValue('centerRegisterUnderCompanyDate', e?.target?.value)
-            }}
+            onChange={handleChange}
           >
             <MenuItem value={'PVT LTD '}>PVT LTD </MenuItem>
             <MenuItem value={'CO-OP'}>CO-OP</MenuItem>
@@ -257,22 +255,6 @@ const CentersForm = ({
         </Tooltip>
       </Grid>
       <Grid item sm={6} xs={12}>
-        {/* <TextField
-size = {size ? size : "medium"}
-          value={values?.centerTurnover}
-          onChange={handleChange}
-          InputLabelProps={{
-            shrink: true
-          }}
-          onBlur={handleBlur}
-          name='centerTurnover'
-          error={Boolean(errors.centerTurnover && touched.centerTurnover)}
-          fullWidth
-          type='number'
-          label='Turnover of center'
-          placeholder='Turnover of center'
-        />
-        <ErrorMessage name='centerTurnover' render={msg => <div style={{ color: 'red' }}>{msg}</div>} /> */}
         <FormControl fullWidth size={size ? size : 'medium'}>
           <InputLabel shrink htmlFor='auth-login-v2-password'>
             Turnover of center
@@ -312,22 +294,6 @@ size = {size ? size : "medium"}
         <ErrorMessage name='centerMemberFarmer' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
       </Grid>
       <Grid item sm={6} xs={12}>
-        {/* <TextField
-size = {size ? size : "medium"}
-          value={values?.centerPerDayMilkCollection}
-          onChange={handleChange}
-          InputLabelProps={{
-            shrink: true
-          }}
-          type='number'
-          onBlur={handleBlur}
-          name='centerPerDayMilkCollection'
-          error={Boolean(errors.centerPerDayMilkCollection && touched.centerPerDayMilkCollection)}
-          fullWidth
-          label='Total  milk collection per day'
-          placeholder='Total  milk collection per day'
-        />
-        <ErrorMessage name='centerPerDayMilkCollection' render={msg => <div style={{ color: 'red' }}>{msg}</div>} /> */}
         <FormControl fullWidth size={size ? size : 'medium'}>
           <InputLabel shrink htmlFor='auth-login-v2-password'>
             Total milk collection per day{' '}
@@ -349,22 +315,6 @@ size = {size ? size : "medium"}
         </FormControl>
       </Grid>
       <Grid item sm={6} xs={12}>
-        {/* <TextField
-size = {size ? size : "medium"}
-          value={values?.centerMilkStorageCapacity}
-          onChange={handleChange}
-          InputLabelProps={{
-            shrink: true
-          }}
-          onBlur={handleBlur}
-          name='centerMilkStorageCapacity'
-          type='number'
-          error={Boolean(errors.centerMilkStorageCapacity && touched.centerMilkStorageCapacity)}
-          fullWidth
-          label='Milk collection storage capacity'
-          placeholder='Milk collection storage capacity'
-        />
-        <ErrorMessage name='centerPerDayMilkCollection' render={msg => <div style={{ color: 'red' }}>{msg}</div>} /> */}
         <FormControl fullWidth size={size ? size : 'medium'}>
           <InputLabel
             sx={{

@@ -81,7 +81,8 @@ const Sidebar = ({ DATA, selectedCategory, setSelectedCategory }: any) => {
         </Typography>
         <Button
           sx={{
-            padding: 0
+            padding: 0,
+            color: '#4b7163'
           }}
           onClick={() => {
             setSelectedCategory(0)

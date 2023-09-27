@@ -163,14 +163,7 @@ const ServicesPage = () => {
         />
       </div>
       <section
-        // style={{
-        //   display: 'flex',
-        //   backgroundColor: '#ffffff',
-        //   paddingLeft: '5%',
-        //   paddingRight: '5%',
-        //   marginTop: '20px',
-        //   marginBottom: '20px'
-        // }}
+        className='all_produc_section'
         style={{
           display: 'flex',
           backgroundColor: '#ffffff',
@@ -218,7 +211,6 @@ const ServicesPage = () => {
                 <option value='desc'>DESC</option>
               </select>
             </div>
-            {/* Sort By Dropdown */}
             <div style={{ marginTop: '20px' }}>
               <label htmlFor='sortBy'>Sort By:</label>
               <select
@@ -233,109 +225,110 @@ const ServicesPage = () => {
               </select>
             </div>
           </div>
+
           <div
+            className='main_card_product'
             style={{
               display: 'flex',
               gap: '20px',
               marginBottom: '20px',
-              flexWrap: 'wrap'
+              flexWrap: 'wrap',
+              justifyContent: 'center'
             }}
           >
             {servicesData?.data?.map((item, index) => (
-              <Grid item xs={12} sm={6} md={4} key={item.id}>
-                <Card
-                  sx={{
-                    border: '1px solid',
-                    backgroundColor: '#ffffff',
-                    // height: '400px',
+              <Card
+                sx={{
+                  border: '1px solid',
+                  backgroundColor: '#ffffff',
+                  // height: '400px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  width: '300px', // Adjust the width as per your requirements
+                  marginBottom: '20px' // Add margin between cards
+                }}
+              >
+                <CardContent
+                  style={{
+                    // flex: 1,
                     display: 'flex',
                     flexDirection: 'column',
-                    width: '300px', // Adjust the width as per your requirements
-                    marginBottom: '20px' // Add margin between cards
+                    // justifyContent: 'space-beteen',
+                    alignItems: 'center',
+                    // padding: '40px'
+                    paddingBottom: '0px'
+                    // paddingTop: '0px'
                   }}
                 >
-                  <CardContent
+                  <img
+                    src={item?.serviceBannerImage}
                     style={{
-                      // flex: 1,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      // justifyContent: 'space-beteen',
-                      alignItems: 'center',
-                      // padding: '40px'
-                      paddingBottom: '0px'
-                      // paddingTop: '0px'
+                      objectFit: 'cover',
+                      borderRadius: ' 10px 10px 10px 10px',
+                      height: '170px',
+                      width: '187px'
                     }}
-                  >
-                    <img
-                      src={item?.serviceBannerImage}
-                      style={{
-                        objectFit: 'cover',
-                        borderRadius: ' 10px 10px 10px 10px',
-                        height: '170px',
-                        width: '187px'
-                      }}
-                      height={150}
-                      width={150}
-                      alt={item?.productName}
-                    />
-                    <Typography
-                      sx={{
-                        padding: '20px'
-                      }}
-                      variant='h6'
-                      // className='single_service_card_title'
-                      // textOverflow={'hidden'}
-                      fontWeight={600}
-                      style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '100%' }}
-                    >
-                      {item?.serviceName}
-                    </Typography>
-                    <TruncateText text={removeTags(item?.serviceDetails)} />
-                  </CardContent>
-                  <Box
+                    height={150}
+                    width={150}
+                    alt={item?.productName}
+                  />
+                  <Typography
                     sx={{
-                      backgroundColor: '#1f4e3d',
+                      padding: '20px'
+                    }}
+                    variant='h6'
+                    // className='single_service_card_title'
+                    // textOverflow={'hidden'}
+                    fontWeight={600}
+                    style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '100%' }}
+                  >
+                    {item?.serviceName}
+                  </Typography>
+                  <TruncateText text={removeTags(item?.serviceDetails)} />
+                </CardContent>
+                <Box
+                  sx={{
+                    backgroundColor: '#1f4e3d',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    height: '60px'
+                  }}
+                >
+                  <Box
+                    className='single_product_btm'
+                    sx={{
                       display: 'flex',
                       justifyContent: 'space-between',
-                      alignItems: 'center',
-                      height: '60px'
+                      flexDirection: 'row',
+                      alignItems: 'start'
                     }}
                   >
-                    <Box
-                      className='single_product_btm'
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        flexDirection: 'row',
-                        alignItems: 'start'
-                      }}
-                    >
-                      <Tooltip title='View'>
-                        <IconButton
-                          size='small'
-                          sx={{ color: 'text.secondary' }}
-                          onClick={() => {
-                            localStorage.setItem('inquryName', JSON.stringify(item))
-                            router.push('/inqury')
-                          }}
-                        >
-                          <Icon icon='carbon:view' color='white' fontSize={24} />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip
-                        title='Inqury'
+                    <Tooltip title='View'>
+                      <IconButton
+                        size='small'
+                        sx={{ color: 'text.secondary' }}
                         onClick={() => {
-                          setProduct(item), setOpen(true)
+                          localStorage.setItem('inquryName', JSON.stringify(item))
+                          router.push('/inqury')
                         }}
                       >
-                        <IconButton size='small' sx={{ color: 'text.secondary', fontSize: '50px' }}>
-                          <Icon icon='ph:question-bold' color='white' fontSize={24} />
-                        </IconButton>
-                      </Tooltip>
-                    </Box>
+                        <Icon icon='carbon:view' color='white' fontSize={24} />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip
+                      title='Inqury'
+                      onClick={() => {
+                        setProduct(item), setOpen(true)
+                      }}
+                    >
+                      <IconButton size='small' sx={{ color: 'text.secondary', fontSize: '50px' }}>
+                        <Icon icon='ph:question-bold' color='white' fontSize={24} />
+                      </IconButton>
+                    </Tooltip>
                   </Box>
-                </Card>
-              </Grid>
+                </Box>
+              </Card>
             ))}
           </div>
         </div>
@@ -514,7 +507,6 @@ const ServicesPage = () => {
               )
             }}
           </Formik>
-          {/* </Box> */}
         </DialogContent>
         {/* <DialogActions className='dialog-actions-dense'>
           <Button onClick={handleClose}>Cancel</Button>

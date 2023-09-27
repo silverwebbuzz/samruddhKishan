@@ -174,12 +174,13 @@ const ProductsPage = () => {
           bannerContent='Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry'
         />
       </div>
+
       <section
+        className='all_produc_section'
         style={{
           display: 'flex',
           backgroundColor: '#ffffff',
-          paddingLeft: '5%',
-          paddingRight: '5%',
+          padding: '0 5%',
           marginTop: '20px',
           marginBottom: '20px'
         }}
@@ -221,7 +222,6 @@ const ProductsPage = () => {
                 <option value='desc'>DESC</option>
               </select>
             </div>
-            {/* Sort By Dropdown */}
             <div style={{ marginTop: '20px' }}>
               <label htmlFor='sortBy'>Sort By:</label>
               <select
@@ -236,116 +236,137 @@ const ProductsPage = () => {
               </select>
             </div>
           </div>
-          {chunkedProducts?.map((chunk, index) => (
-            <div
-              key={index}
-              style={{
-                display: 'flex',
-                gap: '20px',
-                marginBottom: '20px'
-              }}
-            >
-              {chunk.map((item: any) => (
-                <Grid item xs={12} sm={6} md={4} key={item.id}>
-                  <Card
-                    sx={{
-                      border: '1px solid',
-                      backgroundColor: '#ffffff',
-                      // height: '400px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      width: '300px',
-                      marginBottom: '20px' // Add margin between cards
-                    }}
-                  >
-                    <CardContent
-                      style={{
-                        // flex: 1,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        // justifyContent: 'center',
-                        alignItems: 'center',
-                        paddingBottom: '0px',
-                        marginBottom: '0px'
+          <div
+            className='main_card_product'
+            style={{
+              display: 'flex',
+              gap: '20px',
+              marginBottom: '20px',
+              flexWrap: 'wrap',
+              justifyContent: 'center'
+            }}
+          >
+            {allProductsData?.data?.map((item: any) => (
+              <Card
+                className='product_card'
+                sx={{
+                  border: '1px solid',
+                  backgroundColor: '#ffffff',
+                  // height: '400px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  width: '300px',
+                  marginBottom: '20px' // Add margin between cards
+                }}
+              >
+                <CardContent
+                  style={{
+                    // flex: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    // justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingBottom: '0px',
+                    marginBottom: '0px'
 
-                        // padding: '40px'
-                      }}
-                    >
-                      <img
-                        src={item?.productImage}
-                        style={{
-                          objectFit: 'cover',
-                          borderRadius: ' 10px 10px 10px 10px',
-                          height: '170px',
-                          width: '187px'
-                        }}
-                        height={150}
-                        width={150}
-                        alt={item?.productName}
-                      />
-                      {/* <Typography variant='h6' fontWeight={600} marginTop={2}>
+                    // padding: '40px'
+                  }}
+                >
+                  <img
+                    src={item?.productImage}
+                    style={{
+                      objectFit: 'cover',
+                      borderRadius: ' 10px 10px 10px 10px',
+                      height: '170px',
+                      width: '187px'
+                    }}
+                    height={150}
+                    width={150}
+                    alt={item?.productName}
+                  />
+                  {/* <Typography variant='h6' fontWeight={600} marginTop={2}>
                         {' '}
                         {item?.productName}
                       </Typography> */}
-                      <Typography
-                        variant='h6'
-                        fontWeight={600}
-                        marginTop={2}
-                        style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '100%' }}
-                      >
-                        {item?.productName}
-                      </Typography>
-                      <TruncateText text={item?.productShort} />
-                    </CardContent>
-                    <Box
-                      sx={{
-                        backgroundColor: '#1f4e3d',
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        height: '50px'
-                      }}
-                    >
-                      <Box
-                        className='single_product_btm'
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          flexDirection: 'row',
-                          alignItems: 'start'
+                  <Typography
+                    variant='h6'
+                    fontWeight={600}
+                    marginTop={2}
+                    style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '100%' }}
+                  >
+                    {item?.productName}
+                  </Typography>
+                  <TruncateText text={item?.productShort} />
+                </CardContent>
+                <Box
+                  sx={{
+                    backgroundColor: '#1f4e3d',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    height: '50px'
+                  }}
+                >
+                  <Box
+                    className='single_product_btm'
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      flexDirection: 'row',
+                      alignItems: 'start'
+                    }}
+                  >
+                    <Tooltip title='View'>
+                      <IconButton
+                        size='small'
+                        sx={{ color: 'text.secondary' }}
+                        onClick={() => {
+                          localStorage.setItem('inquryName', JSON.stringify(item))
+                          router.push('/inqury')
                         }}
                       >
-                        <Tooltip title='View'>
-                          <IconButton
-                            size='small'
-                            sx={{ color: 'text.secondary' }}
-                            onClick={() => {
-                              localStorage.setItem('inquryName', JSON.stringify(item))
-                              router.push('/inqury')
-                            }}
-                          >
-                            <Icon icon='carbon:view' color='white' fontSize={24} />
-                          </IconButton>
-                        </Tooltip>
+                        <Icon icon='carbon:view' color='white' fontSize={24} />
+                      </IconButton>
+                    </Tooltip>
 
-                        <Tooltip title='Inqury'>
-                          <IconButton
-                            size='small'
-                            sx={{ color: 'text.secondary', fontSize: '50px' }}
-                            onClick={() => {
-                              setProduct(item), setOpen(true)
-                            }}
-                          >
-                            <Icon icon='fluent:person-feedback-48-regular' color='white' fontSize={24} />
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
-                    </Box>
-                  </Card>
-                </Grid>
-              ))}
-            </div>
-          ))}
+                    <Tooltip title='Inqury'>
+                      <IconButton
+                        size='small'
+                        sx={{ color: 'text.secondary', fontSize: '50px' }}
+                        onClick={() => {
+                          setProduct(item), setOpen(true)
+                        }}
+                      >
+                        <Icon icon='fluent:person-feedback-48-regular' color='white' fontSize={24} />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                </Box>
+              </Card>
+
+              //   <div
+              // className='main_card_product'
+              // key={index}
+              // style={{
+              //   display: 'flex',
+              //   gap: '20px',
+              //   marginBottom: '20px',
+              //   flexWrap: 'wrap',
+              //   justifyContent: 'space-between'
+              // }}>
+
+              // <
+              //   style={{
+              //     display: 'flex',
+              //     gap: '20px',
+              //     marginBottom: '20px',
+              //     flexWrap: 'wrap',
+              //     justifyContent: 'space-between'
+              //   }}
+              //   key={item.id}
+              // >
+            ))}
+          </div>
         </div>
       </section>
 
