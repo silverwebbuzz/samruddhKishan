@@ -169,6 +169,7 @@ const ProductsPage = () => {
       <Navbar LOGO={getLogo?.logo} />
       <div className='products-page'>
         <PageBanner
+          height={200}
           BGImg='/images/logo/slider2.jpg'
           bannerName='Products'
           bannerContent='Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry'
@@ -180,7 +181,7 @@ const ProductsPage = () => {
         style={{
           display: 'flex',
           backgroundColor: '#ffffff',
-          padding: '0 5%',
+          padding: '2% 5%',
           marginTop: '20px',
           marginBottom: '20px'
         }}
@@ -317,28 +318,28 @@ const ProductsPage = () => {
                     }}
                   >
                     <Tooltip title='View'>
-                      <IconButton
+                      <Button
                         size='small'
-                        sx={{ color: 'text.secondary' }}
+                        sx={{ color: 'white', textTransform: 'capitalize' }}
                         onClick={() => {
                           localStorage.setItem('inquryName', JSON.stringify(item))
-                          router.push('/inqury')
+                          router.push('/products/details')
                         }}
                       >
-                        <Icon icon='carbon:view' color='white' fontSize={24} />
-                      </IconButton>
+                        View
+                      </Button>
                     </Tooltip>
 
                     <Tooltip title='Inqury'>
-                      <IconButton
+                      <Button
                         size='small'
-                        sx={{ color: 'text.secondary', fontSize: '50px' }}
+                        sx={{ color: 'white', textTransform: 'capitalize' }}
                         onClick={() => {
                           setProduct(item), setOpen(true)
                         }}
                       >
-                        <Icon icon='fluent:person-feedback-48-regular' color='white' fontSize={24} />
-                      </IconButton>
+                        Inqury Now
+                      </Button>
                     </Tooltip>
                   </Box>
                 </Box>

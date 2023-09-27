@@ -2,7 +2,7 @@
 import React from 'react'
 import { withScriptjs, withGoogleMap } from 'react-google-maps'
 import Map from '../MapContainer/index'
-const MapWrapper = () => {
+const MapWrapper = (DATA: any) => {
   const containerElementStyle = {
     height: '500px'
   }
@@ -13,8 +13,8 @@ const MapWrapper = () => {
 
   const loadingElement = <div style={{ height: '100%' }}>Loading...</div>
 
-  const WrappedMapComponent = withScriptjs(withGoogleMap(() => <Map />))
-
+  const WrappedMapComponent = withScriptjs(withGoogleMap(() => <Map DATA={DATA?.DATA} />))
+  console.log('DATADATADATA', DATA)
   return (
     <div style={containerElementStyle}>
       <WrappedMapComponent

@@ -37,6 +37,7 @@
   appearance: none;
   cursor: pointer;
 }
+
 .category-dropdown select:focus {
   outline: none;
   box-shadow: 0 0 3px 0px #fff;
@@ -53,12 +54,17 @@
   transform: translateY(-50%);
   font-size: 14px;
 }
+
 .sidebar-scrollable {
+  border-radius: 10px;
   overflow-y: scroll;
   height: 700px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
-
+.css-1ix3erv-MuiPaper-root-MuiCard-root {
+  flex-direction: column !important;
+  justify-content: space-between !important;
+}
 .custom-scroll-container::-webkit-scrollbar {
   display: none;
 }
@@ -67,13 +73,30 @@
   padding-left: 24px !important;
 }
 
-/* .main_card_product{
-  display: 'flex';
-              gap: '20px';
-              mar: '20px';
-              flexWrap: 'wrap';
-              justifyContent: 'space-between'
-} */
+.main_product_slider {
+  margin: 0 5% !important;
+}
+.main_product_slider .swiper-button-next,
+.main_product_slider .swiper-button-prev {
+  color: #fff;
+}
+.main_product_slider .swiper-button-next:after,
+.swiper-rtl .swiper-button-prev:after,
+.main_product_slider .swiper-button-prev:after,
+.swiper-rtl .swiper-button-next:after {
+  font-size: 32px;
+}
+.product_image_slider {
+  border-radius: 10px !important;
+  object-fit: cover;
+  width: 100%;
+  height: 300px !important;
+}
+.product_details_description p {
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
 @media (max-width: 1491px) {
   .product_card {
     width: 280px !important;
@@ -84,16 +107,27 @@
     width: 250px !important;
   }
 }
-@media (max-width: 1418px) {
-  .product_card {
-    width: 250px !important;
+@media (max-width: 1322px) {
+  .sidebar {
+    width: 300px;
   }
 }
 @media (max-width: 1277px) {
   .product_card {
-    width: 300px !important;
+    width: 235px !important;
   }
 }
+@media (max-width: 1216px) {
+  .product_card {
+    width: 200px !important;
+  }
+}
+@media (max-width: 1200px) {
+  .product_card {
+    width: 220px !important;
+  }
+}
+
 @media (max-width: 777px) {
   .sidebar-scrollable {
     width: 45% !important;
@@ -120,8 +154,6 @@
   }
 }
 @media (max-width: 792px) {
-  .register_form_banner {
-  }
   .main_form {
     padding-left: 0 !important;
     padding-right: 0 !important;
@@ -142,5 +174,10 @@
   .home-contact .css-1cjvj4b-MuiGrid-root,
   .home-contact .css-t4ibk5-MuiGrid-root {
     padding-left: 0 !important;
+  }
+}
+@media (max-width: 900px) {
+  .main_product_slider {
+    margin: 0 !important;
   }
 }

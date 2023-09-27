@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Box, Typography, Select, MenuItem, Divider, Button } from '@mui/material'
+
 interface Category {
   id: number
   categoryName: string
@@ -13,6 +14,13 @@ const Sidebar = ({ DATA, selectedCategory, setSelectedCategory }: any) => {
 
   const [expandedCategories, setExpandedCategories] = useState<number[]>([])
 
+  useEffect(() => {
+    // When DATA changes, set the first category as expanded on page load
+    if (DATA?.length > 0 && expandedCategories.length === 0) {
+      setExpandedCategories([DATA[0].id])
+    }
+  }, [DATA])
+
   const renderCategories = (categories: Category[], level: number = 0) => {
     const options: React.ReactNode[] = []
 
@@ -25,8 +33,7 @@ const Sidebar = ({ DATA, selectedCategory, setSelectedCategory }: any) => {
       const categoryStyle = {
         paddingLeft: paddingLeft,
         cursor: 'pointer',
-        color: isSelected ? 'White' : '#000',
-        backgroundColor: isSelected ? '#4b7163' : 'transparent'
+        color: isSelected ? '#a4be9b' : '#000'
       }
       options.push(
         <div
@@ -38,7 +45,6 @@ const Sidebar = ({ DATA, selectedCategory, setSelectedCategory }: any) => {
           }}
         >
           <span
-            // className={isSelected ? 'hoveredCategory' : ''}
             onClick={() => {
               if (isExpanded) {
                 setExpandedCategories(expandedCategories.filter(id => id !== category.id))
@@ -48,8 +54,6 @@ const Sidebar = ({ DATA, selectedCategory, setSelectedCategory }: any) => {
             }}
           >
             <Typography
-              // variant='h6'
-              color={isSelected ? '#4b7163' : 'black'} // Apply green color if selected
               onClick={() => {
                 setSelectedCategory(category.id)
               }}

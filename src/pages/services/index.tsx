@@ -157,6 +157,7 @@ const ServicesPage = () => {
       <Navbar LOGO={getLogo?.logo} />
       <div className='services-page'>
         <PageBanner
+          height={200}
           BGImg={'/images/logo/slider3.jpg'}
           bannerName='Services'
           bannerContent='Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry'
@@ -167,8 +168,8 @@ const ServicesPage = () => {
         style={{
           display: 'flex',
           backgroundColor: '#ffffff',
-          paddingLeft: '5%',
-          paddingRight: '5%',
+          padding: '2% 5%',
+
           marginTop: '20px',
           marginBottom: '20px'
         }}
@@ -305,16 +306,16 @@ const ServicesPage = () => {
                     }}
                   >
                     <Tooltip title='View'>
-                      <IconButton
+                      <Button
                         size='small'
-                        sx={{ color: 'text.secondary' }}
+                        sx={{ color: 'white', textTransform: 'capitalize' }}
                         onClick={() => {
                           localStorage.setItem('inquryName', JSON.stringify(item))
-                          router.push('/inqury')
+                          router.push('/services/details')
                         }}
                       >
-                        <Icon icon='carbon:view' color='white' fontSize={24} />
-                      </IconButton>
+                        View
+                      </Button>
                     </Tooltip>
                     <Tooltip
                       title='Inqury'
@@ -322,9 +323,9 @@ const ServicesPage = () => {
                         setProduct(item), setOpen(true)
                       }}
                     >
-                      <IconButton size='small' sx={{ color: 'text.secondary', fontSize: '50px' }}>
-                        <Icon icon='ph:question-bold' color='white' fontSize={24} />
-                      </IconButton>
+                      <Button size='small' sx={{ color: 'white', textTransform: 'capitalize' }}>
+                        Inqury Now
+                      </Button>
                     </Tooltip>
                   </Box>
                 </Box>

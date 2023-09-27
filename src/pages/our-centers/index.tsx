@@ -47,6 +47,7 @@ const OurCentersPage = () => {
     <>
       <Navbar LOGO={getLogo?.logo} />
       <PageBanner
+        height={200}
         BGImg={'/images/logo/slider1.jpg'}
         bannerName='Our Centers'
         bannerContent='Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry'
@@ -93,7 +94,7 @@ const OurCentersPage = () => {
               </div>
             </Grid>
             <Grid item lg={7} md={7} sm={12} xs={12}>
-              <MapWrapper />
+              <MapWrapper DATA={getUsers?.data} />
             </Grid>
           </Grid>
         </div>
