@@ -859,7 +859,7 @@ const ServicesPage = () => {
           </div>
         </div>
       </section>
-      <FooterSection DATA={getFooterData?.data} LOGO={getLogo?.logo} JSONHandler={JSONHandler} />
+      <FooterSection DATA={getContentData} LOGO={getLogo?.logo} JSONHandler={JSONHandler} />
       <Dialog maxWidth='sm' onClose={handleClose} aria-labelledby='full-screen-dialog-title' open={open}>
         <DialogTitle id='full-screen-dialog-title'>
           {/* <Typography variant='h6' component='span'>

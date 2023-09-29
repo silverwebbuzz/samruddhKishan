@@ -28,7 +28,7 @@ const Details = () => {
   const dispatch = useDispatch<AppDispatch>()
   const [InquryName, setInquryName] = useState('')
   const [value, setValue] = useState('1')
-  const { getFooterData } = useSelector((state: any) => state?.rootReducer?.landingPageReducer)
+  const { getContentData } = useSelector((state: any) => state?.rootReducer?.landingPageReducer)
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
@@ -315,7 +315,7 @@ const Details = () => {
           </Grid>
         ) : null}
       </section>
-      <FooterSection DATA={getFooterData?.data} LOGO={getLogo?.logo} JSONHandler={JSONHandler} />
+      <FooterSection DATA={getContentData} LOGO={getLogo?.logo} JSONHandler={JSONHandler} />
     </>
   )
 }

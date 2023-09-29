@@ -79,7 +79,7 @@ const OurCentersPage = () => {
         <div className='about-content our_center_about_sec'>
           <Grid container>
             <Grid container xs={12}>
-              <h1>asjdkllasjkljdlajdlkas</h1>
+              <h1>Our Centers are located across the Country</h1>
             </Grid>
             <Grid
               container

@@ -15,7 +15,7 @@ import Topbar from 'src/views/components/topbar'
 
 const ContactPage = () => {
   const { getLogo } = useSelector((state: any) => state?.rootReducer?.settingsReducer)
-  const { getFooterData, getContentData } = useSelector((state: any) => state?.rootReducer?.landingPageReducer)
+  const { getContentData } = useSelector((state: any) => state?.rootReducer?.landingPageReducer)
 
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
@@ -53,7 +53,7 @@ const ContactPage = () => {
         {/* Contact section end */}
       </div>
       {/* Footer section start */}
-      <FooterSection DATA={getFooterData?.data} LOGO={getLogo?.logo} JSONHandler={JSONHandler} />
+      <FooterSection DATA={getContentData} LOGO={getLogo?.logo} JSONHandler={JSONHandler} />
       {/* Footer section end */}
     </>
   )

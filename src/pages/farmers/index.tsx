@@ -62,6 +62,7 @@ const allFarmers = () => {
   const [pageCount, setPageCount] = useState<number>(1)
   const [pageLimit, setPageLimit] = useState<number>(10)
   const [taluka, setTaluka] = useState('')
+  const [farmerID, setFarmerID] = useState('')
   const [STATE, setSTATE] = useState('Gujarat')
   const [district, setDistrict] = useState('')
   const userData: any = JSON.parse(localStorage.getItem('userData'))
@@ -135,7 +136,7 @@ const allFarmers = () => {
         personName.indexOf(name) === -1 ? theme.typography.fontWeightRegular : theme.typography.fontWeightMedium
     }
   }
-
+  // console.log(farmerID, 'farmerID')
   const handleSelectionChange = (selection: any) => {
     setSelectedRows(selection)
   }
@@ -147,6 +148,7 @@ const allFarmers = () => {
       state: STATE ? STATE : '',
       district: district ? district : '',
       taluka: taluka ? taluka : '',
+      uniqId: farmerID ? farmerID : '',
       referralId: roleValue?.map(role => role?.id),
       referralName: roleValue === '' ? '' : referalNames ? referalNames : '',
       farmerName: farmerName ? farmerName : ''
@@ -169,7 +171,7 @@ const allFarmers = () => {
       })
     }
     localStorage.removeItem('FarmerData')
-  }, [createFarmer, deleteFarmer, page, pageCount, pageLimit, STATE, district, taluka, roleValue, farmerName])
+  }, [createFarmer, deleteFarmer, page, pageCount, pageLimit, STATE, district, taluka, roleValue, farmerName, farmerID])
 
   const userApiCall = async () => {
     let headers = {
@@ -206,7 +208,7 @@ const allFarmers = () => {
       sortable: false,
       filter: false,
 
-      minWidth: 80,
+      minWidth: 60,
       headerName: 'ID'
     },
     {
@@ -214,7 +216,7 @@ const allFarmers = () => {
       field: 'uniqId',
       sortable: false,
       filter: false,
-      minWidth: 150,
+      minWidth: 190,
       headerName: 'Farmer ID'
     },
     {
@@ -308,7 +310,7 @@ const allFarmers = () => {
           <Grid xs={12} sm={12}>
             <Box
               sx={{
-                gap: 2,
+                gap: 1,
                 display: 'flex',
                 flexWrap: 'wrap',
                 alignItems: 'center',
@@ -318,6 +320,26 @@ const allFarmers = () => {
             >
               {userData?.role === 'admin' ? (
                 <>
+                  <Grid item sm={2} xs={12}>
+                    <TextField
+                      size='small'
+                      value={farmerID}
+                      onChange={e => {
+                        setFarmerID(e?.target?.value)
+                      }}
+                      label='Farmer ID'
+                      placeholder='Farmer ID'
+                      sx={{
+                        width: {
+                          xs: 1,
+                          sm: 'auto'
+                        },
+                        '& .MuiInputBase-root > svg': {
+                          mr: 2
+                        }
+                      }}
+                    />
+                  </Grid>
                   <Grid item sm={2} xs={12}>
                     <FormControl fullWidth size='small'>
                       <InputLabel id='demo-multiple-chip-label'>User</InputLabel>

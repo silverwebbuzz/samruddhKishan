@@ -17,7 +17,6 @@ import AlertTitle from '@mui/material/AlertTitle'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import FormControlLabel from '@mui/material/FormControlLabel'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'

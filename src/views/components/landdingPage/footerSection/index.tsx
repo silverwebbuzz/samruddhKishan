@@ -4,7 +4,7 @@ import React from 'react'
 import Icon from 'src/@core/components/icon'
 const FooterSection = ({ LOGO, DATA }: any) => {
   // const product =
-  console.log(DATA, 'DATA')
+  // console.log(DATA, 'DATA')
   const JSONHandler = (data: any) => {
     try {
       JSON.parse(data)
@@ -60,7 +60,8 @@ const FooterSection = ({ LOGO, DATA }: any) => {
             <div className='fotter_post_item_content'>
               <p>{moment(DATA?.featuresProduct?.[0]?.createdAt).format('MMM D yyyy')}</p>
               {/*April 14, 2023  */}
-              <h4>{DATA?.featuresProduct?.[0]?.productDescription}</h4>
+              <div className='' dangerouslySetInnerHTML={{ __html: DATA?.featuresProduct?.[0]?.productDescription }} />
+              {/* <h4>{DATA?.featuresProduct?.[0]?.productDescription}</h4> */}
             </div>
           </div>
           <div className='fotter_post_item'>
@@ -70,7 +71,8 @@ const FooterSection = ({ LOGO, DATA }: any) => {
             <div className='fotter_post_item_content'>
               <p>{moment(DATA?.featuresProduct?.[1]?.createdAt).format('MMM D yyyy')}</p>
               {/*April 14, 2023  */}
-              <h4>{DATA?.featuresProduct?.[1]?.productDescription}</h4>
+              <div className='' dangerouslySetInnerHTML={{ __html: DATA?.featuresProduct?.[1]?.productDescription }} />
+              {/* <h4>{DATA?.featuresProduct?.[1]?.productDescription}</h4> */}
             </div>
           </div>
         </div>
