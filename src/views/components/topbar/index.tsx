@@ -1,17 +1,18 @@
 //@ts-nocheck
 import { Icon } from '@iconify/react'
+import Link from 'next/link'
 
-export default function Topbar() {
+export default function Topbar({ data }) {
   return (
     <div class='top_bar'>
       <div class='top_bar_left'>
-        <p>That's right, we only sell 100% organic</p>
+        <p>Health for the Public, Wealth for the Farmers!</p>
         <ul>
           <li>
-            <Icon icon='ion:location-outline' /> Ahmedabad, India
+            <Icon icon='ion:location-outline' /> {data?.adminAddress}
           </li>
           <li>
-            <Icon icon='iconoir:phone' /> +91 85558 41988
+            <Icon icon='iconoir:phone' /> {data?.adminPhone}
           </li>
         </ul>
       </div>
@@ -19,22 +20,22 @@ export default function Topbar() {
         <div class='top_bar_right_social social'>
           <ul>
             <li>
-              <a href='#'>
+              <a href={data?.facebook || '#'}>
                 <Icon icon='ri:facebook-fill' />
               </a>
             </li>
             <li>
-              <a href='#'>
+              <a href={data?.twitter}>
                 <Icon icon='mdi:twitter' />
               </a>
             </li>
             <li>
-              <a href='#'>
+              <a href={data?.instagram}>
                 <Icon icon='mdi:youtube' />
               </a>
             </li>
             <li>
-              <a href='#'>
+              <a href={data?.linkedin}>
                 <Icon icon='ri:linkedin-fill' />
               </a>
             </li>

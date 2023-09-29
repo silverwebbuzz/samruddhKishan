@@ -101,18 +101,14 @@ const AboutSection = ({ DATA, JSONHandler, ourCenter }: any) => {
             </p> */}
                   <div className='about_content_list'>
                     <ul className='check_solid_list mt-20'>
-                      <li>
-                        <Icon icon='material-symbols:check' />
-                        Organic food contains more vitamins
-                      </li>
-                      <li>
-                        <Icon icon='material-symbols:check' />
-                        Eat organic because supply meets demand
-                      </li>
-                      <li>
-                        <Icon icon='material-symbols:check' />
-                        Organic food is never irradiated
-                      </li>
+                      {JSONHandler(DATA?.contentPointDetail)?.map((ITM: any) => {
+                        return (
+                          <li>
+                            <Icon icon='material-symbols:check' />
+                            {ITM?.contentPointDetail}
+                          </li>
+                        )
+                      })}
                     </ul>
                   </div>
                 </div>

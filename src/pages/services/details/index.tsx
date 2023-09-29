@@ -21,11 +21,14 @@ import { Autoplay, Pagination, Navigation, EffectFade, FreeMode } from 'swiper/m
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
+import FooterSection from 'src/views/components/landdingPage/footerSection'
+import { getFooter } from 'src/slice/landingPageSlice'
 const Details = () => {
   const { getLogo } = useSelector((state: any) => state?.rootReducer?.settingsReducer)
   const dispatch = useDispatch<AppDispatch>()
   const [InquryName, setInquryName] = useState('')
   const [value, setValue] = useState('1')
+  const { getFooterData } = useSelector((state: any) => state?.rootReducer?.landingPageReducer)
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
@@ -51,6 +54,13 @@ const Details = () => {
     const NAME = isValid(inquryName)
     setInquryName(NAME)
     dispatch(getLogoAPI())
+    dispatch(getFooter())
+  }, [])
+  useEffect(() => {
+    document.body.classList.add('landingPage')
+    return () => {
+      document.body.classList.remove('landingPage')
+    }
   }, [])
   return (
     <>
@@ -230,52 +240,15 @@ const Details = () => {
               <CardContent>
                 <Grid container>
                   <Grid md={6} xs={12}>
-                    <Swiper
-                      modules={[Autoplay, Navigation]}
-                      pagination={{
-                        clickable: true
-                      }}
-                      navigation={true}
-                      className='mySwiper main_product_slider'
-                      autoplay={{
-                        delay: 2500,
-                        disableOnInteraction: false
-                      }}
-                      slidesPerView={1}
-                    >
-                      <SwiperSlide className='product_body_slider'>
-                        <img
-                          className='product_image_slider'
-                          src={
-                            'https://images.unsplash.com/photo-1682695795255-b236b1f1267d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80'
-                          }
-                        />
-                      </SwiperSlide>
-                      <SwiperSlide className='product_body_slider'>
-                        <img
-                          className='product_image_slider'
-                          src={
-                            'https://plus.unsplash.com/premium_photo-1675813861705-ad5679e4f2d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80'
-                          }
-                        />
-                      </SwiperSlide>
-                      <SwiperSlide className='product_body_slider'>
-                        <img
-                          className='product_image_slider'
-                          src={
-                            'https://images.unsplash.com/photo-1682687220566-5599dbbebf11?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1675&q=80'
-                          }
-                        />
-                      </SwiperSlide>
-                      <SwiperSlide className='product_body_slider'>
-                        <img
-                          className='product_image_slider'
-                          src={
-                            'https://images.unsplash.com/photo-1682687220945-922198770e60?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80'
-                          }
-                        />
-                      </SwiperSlide>
-                    </Swiper>
+                    <Box sx={{ mr: { md: 4, xs: 0, sm: 2 } }}>
+                      <img
+                        style={{ borderRadius: '10px', objectFit: 'cover', height: '100%' }}
+                        className='service_image'
+                        width={'100%'}
+                        src={InquryName?.serviceBannerImage}
+                        alt=''
+                      />
+                    </Box>
                   </Grid>
                   <Grid md={6} xs={12}>
                     <Box sx={{ display: 'flex' }}>
@@ -328,18 +301,13 @@ const Details = () => {
                   </Grid>
                 </Grid>
                 <Grid>
-                  <Box sx={{ display: 'flex', mt: 2, ml: { xs: 0, md: 5, sx: 0 } }}>
-                    <Grid container>
-                      <Grid md={2}>
-                        <Typography sx={{ fontWeight: 'bold' }}>Service Description :</Typography>
-                      </Grid>
-                      <Grid md={10}>
-                        <div
-                          className='product_details_description'
-                          dangerouslySetInnerHTML={{ __html: InquryName?.serviceDetails }}
-                        />
-                      </Grid>
-                    </Grid>
+                  <Divider sx={{ my: 3 }} />
+                  <Box>
+                    <Typography sx={{ fontWeight: 'bold' }}>Service Description :</Typography>
+                    <div
+                      className='product_details_description'
+                      dangerouslySetInnerHTML={{ __html: InquryName?.serviceDetails }}
+                    />
                   </Box>
                 </Grid>
               </CardContent>
@@ -347,6 +315,7 @@ const Details = () => {
           </Grid>
         ) : null}
       </section>
+      <FooterSection DATA={getFooterData?.data} LOGO={getLogo?.logo} JSONHandler={JSONHandler} />
     </>
   )
 }

@@ -14,6 +14,7 @@ import {
 } from '@mui/material'
 import { Form, Formik } from 'formik'
 import { SyntheticEvent, useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { getAllContent } from 'src/slice/contentSectionSlice'
@@ -101,7 +102,9 @@ const index = () => {
                   formdata.append('qaContentSubHeader', values?.qaContentSubHeader)
                   formdata.append('id', allContentData?.id)
                   const payload = formdata
-                  dispatch(qaSectionUpdate(payload))
+                  dispatch(qaSectionUpdate(payload)).then(res => {
+                    if (res?.payload?.status === 'success') toast.success('Faq Content updated successfully')
+                  })
                 }}
               >
                 {({ values, setFieldValue, handleChange }) => (

@@ -69,6 +69,7 @@ import Navbar from 'src/views/components/landdingPage/navBar/Navbar'
 import { getLogoAPI } from 'src/slice/settingSlice'
 import FooterSection from 'src/views/components/landdingPage/footerSection'
 import moment from 'moment'
+import Topbar from 'src/views/components/topbar'
 
 // ** Styled Components
 const RegisterIllustration = styled('img')(({ theme }) => ({
@@ -112,7 +113,7 @@ const Register = () => {
     useSelector((state: any) => state?.rootReducer?.farmerReducer)
   const { categories } = useSelector((state: any) => state?.rootReducer?.categoriesReducer)
   const { getLogo } = useSelector((state: any) => state?.rootReducer?.settingsReducer)
-  const { getFooterData } = useSelector((state: any) => state?.rootReducer?.landingPageReducer)
+  const { getFooterData, getContentData } = useSelector((state: any) => state?.rootReducer?.landingPageReducer)
   const router = useRouter()
   const [pincode, setPincode] = useState('')
   const [STATE, setSTATE] = useState('')
@@ -562,6 +563,8 @@ const Register = () => {
   }, [])
   return (
     <>
+      <Topbar data={getContentData} />
+
       <Navbar LOGO={getLogo?.logo} />
       <PageBanner
         height={200}

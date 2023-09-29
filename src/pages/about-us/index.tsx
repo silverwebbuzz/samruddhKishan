@@ -13,6 +13,7 @@ import GetToKnow from 'src/views/components/landdingPage/getKnow/GetKnown'
 import Navbar from 'src/views/components/landdingPage/navBar/Navbar'
 import PageBanner from 'src/views/components/landdingPage/pageBanner/PageBanner'
 import TestimonialSection from 'src/views/components/landdingPage/testimonialSection/TestimonialSection'
+import Topbar from 'src/views/components/topbar'
 
 const AboutPage = () => {
   const { getLogo } = useSelector((state: any) => state?.rootReducer?.settingsReducer)
@@ -38,9 +39,11 @@ const AboutPage = () => {
   }, [])
   return (
     <>
+      <Topbar data={getContentData} />
       <Navbar LOGO={getLogo?.logo} />
       <div className='about-page'>
         <PageBanner
+          height={200}
           BGImg={'/images/logo/slider1.jpg'}
           bannerName='About Us'
           bannerContent='Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry'

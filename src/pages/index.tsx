@@ -109,7 +109,7 @@ const HomePage = () => {
   }
   return (
     <>
-      <Topbar />
+      <Topbar data={getContentData} />
       <Navbar LOGO={getLogo?.logo} JSONHandler={JSONHandler} />
       <div className='hero'>
         <section className='hero banner-area navigation-circle text-light banner-style-one zoom-effect overflow-hidden'>
@@ -159,6 +159,118 @@ const HomePage = () => {
         {/* About section start */}
         <AboutSection DATA={getContentData} JSONHandler={JSONHandler} />
         {/* About section end */}
+
+        <section className='what-we-do sec_padding'>
+          <div className='section-bg-img'>
+            <img src='/images/logo/18.png' alt='banner image' />
+          </div>
+          <Grid container>
+            <Grid sm={12} md={6}>
+              <Box className='what-do-left'>
+                <p className='what-do-heading'>Services</p>
+              </Box>
+            </Grid>
+          </Grid>
+          <div className='card-section'>
+            <Swiper
+              slidesPerView={
+                JSONHandler(getContentData?.bigProductContentCard).length === 4
+                  ? 4
+                  : JSONHandler(getContentData?.bigProductContentCard).length === 3
+                  ? 3
+                  : JSONHandler(getContentData?.bigProductContentCard).length === 2
+                  ? 2
+                  : JSONHandler(getContentData?.bigProductContentCard).length === 1
+                  ? 1
+                  : 4
+              }
+              spaceBetween={30}
+              autoplay={{
+                delay: 2500,
+                disableOnInteraction: false
+              }}
+              modules={[Autoplay]}
+              breakpoints={{
+                320: {
+                  slidesPerView: 1,
+                  spaceBetween: 0
+                },
+                576: {
+                  slidesPerView: 2,
+                  spaceBetween: 15
+                },
+                768: {
+                  slidesPerView: 3,
+                  spaceBetween: 20
+                },
+                1024: {
+                  slidesPerView: 4,
+                  spaceBetween: 30
+                }
+              }}
+              className='mySwiper slider-main-card'
+            >
+              <SwiperSlide className='main-card-banner'>
+                <div className='main-card'>
+                  <div className='card-img'>
+                    <img className='card-image' src={'./images/logo/27.png'} alt='card' width={'140px'} />
+                  </div>
+                  <div className='card-content'>
+                    <h5 className='card-heading'>{'ADD CONTENT'}</h5>
+                    <div className='card-text'>
+                      <TruncateText text={'ADD CONTENT'} maxLength={60} />
+                    </div>
+                  </div>
+                </div>
+              </SwiperSlide>
+              <SwiperSlide className='main-card-banner'>
+                <div className='main-card'>
+                  <div className='card-img'>
+                    <img className='card-image' src={'./images/logo/28.png'} alt='card' width={'140px'} />
+                  </div>
+                  <div className='card-content'>
+                    <h5 className='card-heading'>ADD CONTENT</h5>
+                    <div className='card-text'>
+                      <TruncateText text={'ADD CONTENT'} maxLength={60} />
+                    </div>
+                  </div>
+                </div>
+              </SwiperSlide>
+              <SwiperSlide className='main-card-banner'>
+                <div className='main-card'>
+                  <div className='card-img'>
+                    <img className='card-image' src={'./images/logo/27.png'} alt='card' width={'140px'} />
+                  </div>
+                  <div className='card-content'>
+                    <h5 className='card-heading'>ADD CONTENT</h5>
+                    <div className='card-text'>
+                      <TruncateText text={'ADD CONTENT'} maxLength={60} />
+                    </div>
+                  </div>
+                </div>
+              </SwiperSlide>
+              <SwiperSlide className='main-card-banner'>
+                <div className='main-card'>
+                  <div className='card-img'>
+                    <img className='card-image' src={'./images/logo/28.png'} alt='card' width={'140px'} />
+                  </div>
+                  <div className='card-content'>
+                    <h5 className='card-heading'>{'ADD CONTENT'}</h5>
+                    <div className='card-text'>
+                      <TruncateText text={'ADD CONTENT'} maxLength={60} />
+                    </div>
+                  </div>
+                </div>
+              </SwiperSlide>
+            </Swiper>
+          </div>
+        </section>
+        <section className='fresh_product_sec sec_padding'>
+          <div className='fresh_product_cards'>
+            <img className='freshproductman_img' src='/images/logo/freshproductman.png' alt='freshproductman' />
+          </div>
+        </section>
+
         <section className='what-we-do sec_padding'>
           <div className='section-bg-img'>
             <img src='/images/logo/18.png' alt='banner image' />
@@ -173,7 +285,6 @@ const HomePage = () => {
             <Grid sm={12} md={6}>
               <Box className='what-do-right'>
                 <p className='what-right-text'>{getContentData?.productContentText}</p>
-
                 <Button className='login-btn'>More about</Button>
               </Box>
             </Grid>
@@ -256,6 +367,7 @@ const HomePage = () => {
             })}
           </div>
         </section>
+
         {/* Get to know section start */}
         <GetToKnow DATA={getContentData} JSONHandler={JSONHandler} />
         {/* Get to know section end */}
@@ -315,12 +427,12 @@ const HomePage = () => {
           <div className='product_gallery_btm_counter sec_padding'>
             <div className='product_gallery_btm_counter_left'>
               <h5 className='sec_sub_title'>ACHIVEMENTS</h5>
-              <h2 className='sec_title'>Delivering value since 1956</h2>
+              <h2 className='sec_title'>{getContentData?.achivementHeading}</h2>
             </div>
             <div className='product_gallery_btm_counter_right'>
               <div className='harvest_counter counter'>
                 <div className='timer'>
-                  <CountUp end={250} duration={2} suffix='M'>
+                  <CountUp end={getContentData?.totalGrowth} duration={2} suffix='M'>
                     {({ countUpRef, start }) => (
                       <VisibilitySensor active={!viewPortEntered} onChange={start} delayedCall>
                         <span ref={countUpRef} />
@@ -332,7 +444,7 @@ const HomePage = () => {
               </div>
               <div className='clients_counter counter'>
                 <div className='timer'>
-                  <CountUp end={98} duration={2} suffix='%'>
+                  <CountUp end={getContentData?.totalHappyClients} duration={2} suffix='%'>
                     {({ countUpRef, start }) => (
                       <VisibilitySensor active={!viewPortEntered} onChange={start} delayedCall>
                         <span ref={countUpRef} />
@@ -344,7 +456,7 @@ const HomePage = () => {
               </div>
               <div className='products_counter counter'>
                 <div className='timer'>
-                  <CountUp end={688} duration={2} suffix='K'>
+                  <CountUp end={getContentData?.totalSales} duration={2} suffix='K'>
                     {({ countUpRef, start }) => (
                       <VisibilitySensor active={!viewPortEntered} onChange={start} delayedCall>
                         <span ref={countUpRef} />
@@ -360,7 +472,7 @@ const HomePage = () => {
         {/* Contact form start */}
         <ContactSection JSONHandler={JSONHandler} />
         {/* Contact form end */}
-        <section className='home_latest_blogs sec_padding'>
+        {/* <section className='home_latest_blogs sec_padding'>
           <div className='latest_blog_lg'>
             <div className='card_img'>
               <Link href='#' passHref>
@@ -442,10 +554,10 @@ const HomePage = () => {
               </h3>
             </div>
           </div>
-        </section>
+        </section> */}
       </div>
       {/* Main footer start */}
-      <FooterSection LOGO={getLogo?.logo} DATA={getFooterData?.data} JSONHandler={JSONHandler} />
+      <FooterSection LOGO={getLogo?.logo} DATA={getContentData} JSONHandler={JSONHandler} />
       {/* Main footer end */}
     </>
   )

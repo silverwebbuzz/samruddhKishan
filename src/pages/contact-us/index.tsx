@@ -11,10 +11,11 @@ import ContactSection from 'src/views/components/landdingPage/contactSection'
 import FooterSection from 'src/views/components/landdingPage/footerSection'
 import Navbar from 'src/views/components/landdingPage/navBar/Navbar'
 import PageBanner from 'src/views/components/landdingPage/pageBanner/PageBanner'
+import Topbar from 'src/views/components/topbar'
 
 const ContactPage = () => {
   const { getLogo } = useSelector((state: any) => state?.rootReducer?.settingsReducer)
-  const { getFooterData } = useSelector((state: any) => state?.rootReducer?.landingPageReducer)
+  const { getFooterData, getContentData } = useSelector((state: any) => state?.rootReducer?.landingPageReducer)
 
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
@@ -37,9 +38,12 @@ const ContactPage = () => {
   }, [])
   return (
     <>
+      <Topbar data={getContentData} />
+
       <Navbar LOGO={getLogo?.logo} />
       <div className='contact-page'>
         <PageBanner
+          height={200}
           BGImg={'/images/logo/slider6.jpg'}
           bannerName='Contact Us'
           bannerContent='Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry'

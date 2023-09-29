@@ -206,8 +206,16 @@ const allFarmers = () => {
       sortable: false,
       filter: false,
 
-      minWidth: 100,
+      minWidth: 80,
       headerName: 'ID'
+    },
+    {
+      flex: 0.2,
+      field: 'uniqId',
+      sortable: false,
+      filter: false,
+      minWidth: 150,
+      headerName: 'Farmer ID'
     },
     {
       flex: 0.25,

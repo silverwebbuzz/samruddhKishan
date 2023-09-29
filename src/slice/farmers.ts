@@ -258,6 +258,7 @@ export const getAllUsers = createAsyncThunk(
     }
   }
 )
+
 export const createPermissions = createAsyncThunk(
   'farmers/createPermission',
   async (payload: any, { rejectWithValue }) => {

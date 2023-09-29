@@ -2,7 +2,7 @@
 import React from 'react'
 import { withScriptjs, withGoogleMap } from 'react-google-maps'
 import Map from '../MapContainer/index'
-const MapWrapper = (DATA: any) => {
+const MapWrapper = ({ DATA, setSelectedCenter, selectedCenter }: any) => {
   const containerElementStyle = {
     height: '500px'
   }
@@ -13,7 +13,9 @@ const MapWrapper = (DATA: any) => {
 
   const loadingElement = <div style={{ height: '100%' }}>Loading...</div>
 
-  const WrappedMapComponent = withScriptjs(withGoogleMap(() => <Map DATA={DATA?.DATA} />))
+  const WrappedMapComponent = withScriptjs(
+    withGoogleMap(() => <Map DATA={DATA} setSelectedCenter={setSelectedCenter} selectedCenter={selectedCenter} />)
+  )
   console.log('DATADATADATA', DATA)
   return (
     <div style={containerElementStyle}>

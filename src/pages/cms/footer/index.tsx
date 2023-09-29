@@ -6,12 +6,14 @@ import toast from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { getAllContent } from 'src/slice/contentSectionSlice'
-import { footerUpdate } from 'src/slice/footerSlice'
+import { footerUpdate, getFooter } from 'src/slice/footerSlice'
 import CardContentDialog from 'src/views/components/dialogBox/CardContentDialog'
 
 const Footer = () => {
   const dispatch = useDispatch()
   const { allContentData } = useSelector((state: any) => state?.rootReducer?.contentSectionReducer)
+  const { getAllFooter } = useSelector((state: any) => state?.rootReducer?.footerReducer)
+  console.log(getAllFooter, 'getAllFoot')
   //   footerReducer
 
   const handleSubmit = (values: any) => {
@@ -21,9 +23,9 @@ const Footer = () => {
       }
     })
   }
-  const cardContentData = []
+
   useEffect(() => {
-    dispatch(getAllContent())
+    dispatch(getFooter())
   }, [])
   return (
     <div>
@@ -32,18 +34,18 @@ const Footer = () => {
         <CardContent>
           <Formik
             initialValues={{
-              footerContent: allContentData?.footerContent,
-              contactAddress: allContentData?.contactAddress,
-              contactEmail: allContentData?.contactEmail,
-              contactPhone: allContentData?.contactPhone,
-              waterMark: allContentData?.waterMark,
-              termsLink: allContentData?.termsLink,
-              privacyLink: allContentData?.privacyLink,
-              supportLink: allContentData?.supportLink
+              footerContent: getAllFooter?.footerContent,
+              contactAddress: getAllFooter?.contactAddress,
+              contactEmail: getAllFooter?.contactEmail,
+              contactPhone: getAllFooter?.contactPhone,
+              waterMark: getAllFooter?.waterMark,
+              termsLink: getAllFooter?.termsLink,
+              privacyLink: getAllFooter?.privacyLink,
+              supportLink: getAllFooter?.supportLink
             }}
             enableReinitialize
             onSubmit={values => {
-              let ID = localStorage.getItem('AllContentDataId')
+              let ID = getAllFooter?.id
               values.id = ID
               handleSubmit(values)
             }}

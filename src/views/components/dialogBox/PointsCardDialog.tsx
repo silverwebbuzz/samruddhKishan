@@ -3,13 +3,10 @@ import { Box, Button, Dialog, DialogContent, DialogTitle, Grid, IconButton, Text
 import { Form, Formik } from 'formik'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { contentPointDetail, getAllContent, updateCardContent } from 'src/slice/contentSectionSlice'
 import { FilePreview } from 'src/views/components/filePreviewer/FilePreview'
-import { updateProductCardSection } from 'src/slice/productSectionSlice'
-import { updateFaq } from 'src/slice/faqSlice'
-import toast from 'react-hot-toast'
 
-const FaqDialog = ({ show, handleCancel, edit, setEdit, editField }: any) => {
-  const [cardImage, setCardImage] = useState(false)
+const PointCardDialog = ({ show, handleCancel, edit, setEdit, editField }: any) => {
   const dispatch = useDispatch()
 
   return (
@@ -23,33 +20,32 @@ const FaqDialog = ({ show, handleCancel, edit, setEdit, editField }: any) => {
       }}
       aria-labelledby='form-dialog-title'
     >
-      <DialogTitle>{edit ? 'Update Questions & Feedbacks' : 'Add Questions & Feedbacks'}</DialogTitle>
+      <DialogTitle>{edit ? 'Update Point' : 'Add Point'}</DialogTitle>
       <DialogContent>
         <Formik
           enableReinitialize
           initialValues={
             edit
               ? {
-                  userQuestion: editField?.userQuestion,
-                  userAnswer: editField?.userAnswer
+                  contentPointDetail: editField?.contentPointDetail
                 }
-              : { userQuestion: '', userAnswer: '' }
+              : {
+                  contentPointDetail: ''
+                }
           }
           onSubmit={(values, { resetForm }) => {
+            console.log(values)
             let ID = localStorage.getItem('AllContentDataId')
-            const payload = {
+            let payload = {
               id: ID,
-              userQuestion: values?.userQuestion,
-              userAnswer: values?.userAnswer
+              contentPointDetail: values?.contentPointDetail
             }
             if (edit) {
-              //@ts-ignore
               payload.positionId = editField?.positionId
             }
-
-            //@ts-ignore
-            dispatch(updateFaq(payload)).then(res => {
-              if (res?.payload?.status === 'success') toast.success('Questions and feedback updated successfully')
+            // @ts-ignore
+            dispatch(contentPointDetail(payload)).then(() => {
+              dispatch(getAllContent())
             })
             setEdit(false)
             handleCancel()
@@ -62,24 +58,13 @@ const FaqDialog = ({ show, handleCancel, edit, setEdit, editField }: any) => {
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
-                    label='Question'
-                    name='userQuestion'
+                    label='Point'
+                    name='contentPointDetail'
                     onChange={handleChange}
-                    value={values.userQuestion}
+                    value={values.contentPointDetail}
                   />
                 </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    multiline
-                    minRows={2}
-                    maxRows={4}
-                    label='Answer'
-                    name='userAnswer'
-                    onChange={handleChange}
-                    value={values.userAnswer}
-                  />
-                </Grid>
+
                 <Grid item xs={12}>
                   <Button sx={{ mr: 2 }} type='submit' variant='contained'>
                     Submit
@@ -104,4 +89,4 @@ const FaqDialog = ({ show, handleCancel, edit, setEdit, editField }: any) => {
   )
 }
 
-export default FaqDialog
+export default PointCardDialog

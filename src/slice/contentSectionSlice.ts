@@ -10,12 +10,16 @@ const headers = {
 interface RootState {
   isLoading: boolean
   allContentData: Array<any>
+  contentPointDetailData: Array<Any>
+  achivementData: Array<any>
   updateContentData: {}
   updateCardContentData: {}
 }
 const initialState: RootState = {
   isLoading: false,
+  achivementData: [],
   allContentData: [],
+  contentPointDetailData: [],
   updateContentData: {},
   updateCardContentData: {}
 }
@@ -57,7 +61,33 @@ export const updateCardContent = createAsyncThunk('user/updateCardContent', asyn
     return rejectWithValue(err?.response?.data)
   }
 })
+// contentPointDetail
 
+export const contentPointDetail = createAsyncThunk('user/contentPointDetail', async (payload, { rejectWithValue }) => {
+  try {
+    const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/contentPage/contentPointDetail`, payload, {
+      headers
+    })
+    toast.success('Card Created Successfully')
+
+    return res?.data?.contentCards
+  } catch (err: any) {
+    return rejectWithValue(err?.response?.data)
+  }
+})
+
+export const achivementDetails = createAsyncThunk('user/achivementDetails', async (payload, { rejectWithValue }) => {
+  try {
+    const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/contentPage/updateAchivements`, payload, {
+      headers
+    })
+    toast.success('Achivement Updated Successfully')
+
+    return res
+  } catch (err: any) {
+    return rejectWithValue(err?.response?.data)
+  }
+})
 // product slice
 export const contentSectionSlice = createSlice({
   name: 'contentSectionSlice',
@@ -94,6 +124,28 @@ export const contentSectionSlice = createSlice({
     builder.addCase(updateCardContent.rejected, state => {
       state.isLoading = false
     })
+    builder.addCase(contentPointDetail.pending, state => {
+      state.isLoading = true
+    })
+    builder.addCase(contentPointDetail.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.contentPointDetailData = action.payload
+    })
+    builder.addCase(contentPointDetail.rejected, state => {
+      state.isLoading = false
+    })
+
+    builder.addCase(achivementDetails.pending, state => {
+      state.isLoading = true
+    })
+    builder.addCase(achivementDetails.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.achivementData = action.payload
+    })
+    builder.addCase(achivementDetails.rejected, state => {
+      state.isLoading = false
+    })
+    // achivementDetails
   }
 })
 export default contentSectionSlice.reducer

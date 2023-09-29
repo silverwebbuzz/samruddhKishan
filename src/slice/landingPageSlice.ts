@@ -40,6 +40,7 @@ export const getFooter = createAsyncThunk('user/getAllFooterExploerCard', async 
     return rejectWithValue(err?.response?.data)
   }
 })
+
 export const getAllContent = createAsyncThunk('user/getAllContent', async (_, { rejectWithValue }) => {
   try {
     const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/contentPage/getAllContent`, {

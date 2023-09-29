@@ -156,7 +156,7 @@ const allInquiry = () => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography noWrap sx={{ color: 'text.secondary', fontWeight: 500 }}>
-                {flag == 'product' ? 'Product' : flag == 'service' ? 'Service' : ''}
+                {flag == 'product' ? 'Product' : flag == 'service' ? 'Service' : 'General'}
               </Typography>
             </Box>
           </Box>

@@ -1,8 +1,41 @@
 import React from 'react'
 import { Box, Grid } from '@mui/material'
 import Icon from 'src/@core/components/icon'
-import { Form, Formik, FormikProps } from 'formik'
+import { ErrorMessage, Form, Formik, FormikProps } from 'formik'
+import { createInquiry } from 'src/slice/inquirySlice'
+import { AppDispatch } from 'src/store/store'
+import { useDispatch } from 'react-redux'
+import toast from 'react-hot-toast'
+import * as yup from 'yup'
 const ContactSection = () => {
+  const dispatch = useDispatch<AppDispatch>()
+
+  const validationSchema = yup.object().shape({
+    fullName: yup.string().required('Name is required'),
+    email: yup.string().email().required('Email is required')
+    // mobileNumber: yup
+    //   .string()
+    //   .required('Mobile number is required')
+    //   .matches(/^(\+91|0)?[6789]\d{9}$/, 'Invalid mobile number')
+  })
+
+  const handleForm = (values: any, { resetForm }: any) => {
+    let payload = {
+      fullName: values?.fullName ? values?.fullName : '',
+      email: values?.email ? values?.email : '',
+      mobileNumber: values?.mobileNumber ? values?.mobileNumber : '',
+      description: values?.description ? values?.description : '',
+      flag: 'General'
+    }
+    console.log(payload)
+    // payload.flag = singleProduct?.productName ? 'General' : singleProduct?.serviceName ? 'General' : ''
+    dispatch(createInquiry(payload)).then(res => {
+      if (res?.payload?.status == 200) {
+        toast.success('Form submited successfully')
+      }
+    })
+    resetForm()
+  }
   return (
     <section className='home-contact sec_padding'>
       <Grid container style={{ alignItems: 'center' }}>
@@ -12,15 +45,15 @@ const ContactSection = () => {
               <h5 className='sec_sub_title'>HAVE QUESTIONS?</h5>
               <h2 className='sec_title'>Send us a Massage</h2>
               <Formik
+                validationSchema={validationSchema}
                 initialValues={{
                   fullName: '',
                   email: '',
                   mobileNumber: '',
-                  productName: ''
+                  description: ''
                 }}
                 onSubmit={(values, { resetForm }) => {
-                  console.log(values)
-                  resetForm('')
+                  handleForm(values, { resetForm })
                 }}
               >
                 {(props: FormikProps<any>) => {
@@ -36,6 +69,7 @@ const ContactSection = () => {
                           value={values?.fullName}
                           onChange={e => setFieldValue('fullName', e?.target?.value)}
                         />
+                        <ErrorMessage name='fullName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                       </div>
                       <div className='email_phone_row'>
                         <div className='email_row'>
@@ -46,6 +80,7 @@ const ContactSection = () => {
                             value={values?.email}
                             onChange={e => setFieldValue('email', e?.target?.value)}
                           />
+                          <ErrorMessage name='email' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
                         </div>
                         <div className='phone_row'>
                           <input
@@ -62,11 +97,11 @@ const ContactSection = () => {
                           id=''
                           cols={30}
                           rows={10}
-                          placeholder='Tell Us About Project*'
-                          name='productName'
-                          value={values?.productName}
-                          onChange={e => setFieldValue('productName', e?.target?.value)}
-                        ></textarea>
+                          placeholder='Tell Us About Produts..'
+                          name='description'
+                          value={values?.description}
+                          onChange={e => setFieldValue('description', e?.target?.value)}
+                        />
                       </div>
                       <div>
                         <button type='submit' className='submit_btn yellowbtn'>

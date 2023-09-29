@@ -10,10 +10,12 @@ const headers = {
 }
 interface RootState {
   footerUpdateData: Array<any>
+  getAllFooter: Array<any>
   isLoading: boolean
 }
 const initialState: RootState = {
   footerUpdateData: [],
+  getAllFooter: [],
   isLoading: false
 }
 
@@ -23,6 +25,17 @@ export const footerUpdate = createAsyncThunk('footer/footerUpdate', async (paylo
       headers
     })
     return res?.data
+  } catch (err: any) {
+    return rejectWithValue(err?.response?.data)
+  }
+})
+
+export const getFooter = createAsyncThunk('footer/getFooter', async (_, { rejectWithValue }) => {
+  try {
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/contentPage/getAllFooterExploerCard`, {
+      headers
+    })
+    return res?.data?.data
   } catch (err: any) {
     return rejectWithValue(err?.response?.data)
   }
@@ -41,6 +54,16 @@ export const footerSlice = createSlice({
       state.footerUpdateData = action.payload
     })
     builder.addCase(footerUpdate.rejected, state => {
+      state.isLoading = false
+    })
+    builder.addCase(getFooter.pending, state => {
+      state.isLoading = true
+    })
+    builder.addCase(getFooter.fulfilled, (state, action) => {
+      state.isLoading = false
+      state.getAllFooter = action.payload
+    })
+    builder.addCase(getFooter.rejected, state => {
       state.isLoading = false
     })
   }

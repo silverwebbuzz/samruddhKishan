@@ -30,7 +30,7 @@ import { ThemeColor } from 'src/@core/layouts/types'
 
 import SliderContentDialog from 'src/views/components/dialogBox/SliderContentDialog'
 import { getAllSlides } from 'src/slice/sliderSlice'
-import { getAllContent, updateContent } from 'src/slice/contentSectionSlice'
+import { achivementDetails, getAllContent, updateContent } from 'src/slice/contentSectionSlice'
 
 import { FilePreview } from '../../../views/components/filePreviewer/FilePreview'
 import { getAllProductSection, updateProductContentSection } from 'src/slice/productSectionSlice'
@@ -39,6 +39,7 @@ import ProductContentCard from 'src/views/components/dialogBox/ProductContentCar
 import SmallProductCard from 'src/views/components/dialogBox/SmallProductCard'
 import { getAllSmallProduct, updateSmallProductContent } from 'src/slice/smallProductSlice'
 import { SyntheticEvent } from 'react-draft-wysiwyg'
+import PointCardDialog from 'src/views/components/dialogBox/PointsCardDialog'
 
 export type Payload = {
   id?: number
@@ -98,7 +99,6 @@ const ContentPage = () => {
   }, [updateSmallProductContentData, updateSmallProductCardData])
   useEffect(() => {
     if (allContentData) {
-      console.log(allContentData)
       localStorage.setItem('AllContentDataId', allContentData?.id)
     }
   }, [allContentData])
@@ -217,6 +217,7 @@ const ContentPage = () => {
       )
     }
   ]
+  //contentPointDetail
 
   // SECTION 2
   const cardData = allContentData && allContentData ? allContentData?.contentCards : ''
@@ -444,7 +445,7 @@ const ContentPage = () => {
 
             <Box mt={8}>
               <Typography fontWeight={500} fontSize={20} mb={2}>
-                Add Card
+                Content Card
               </Typography>
               <Grid container rowSpacing={3}>
                 {cardContentData &&
@@ -452,7 +453,7 @@ const ContentPage = () => {
                     <Grid item container key={index} spacing={3} alignItems={'center'}>
                       <Grid item sm={2} xs={12}>
                         <Box width={100} height={60} display={'flex'} alignItems={'center'}>
-                          <FilePreview file={value.contentCardImage} />
+                          <FilePreview file={value?.contentCardImage} />
                         </Box>
                       </Grid>
 
@@ -510,6 +511,59 @@ const ContentPage = () => {
                   ''
                 )}
               </Grid>
+              {/* second card */}
+              <Box
+                sx={{
+                  paddingTop: 10
+                }}
+              >
+                <Typography fontWeight={500} fontSize={20} mb={2}>
+                  Highlighted Points for Content Text
+                </Typography>
+                <Grid container rowSpacing={3}>
+                  {JSONHandler(allContentData?.contentPointDetail)?.map((value: any, index: number) => (
+                    <Grid item container key={index} spacing={3} alignItems={'center'}>
+                      <Grid item sm={6} xs={12}>
+                        <TextField
+                          disabled
+                          fullWidth
+                          size='small'
+                          placeholder='Point'
+                          value={value?.contentPointDetail}
+                          name='Point'
+                        />
+                      </Grid>
+
+                      {value?.positionId ? (
+                        <Grid item sm={3} xs={12}>
+                          <Tooltip title='Edit'>
+                            <IconButton
+                              size='small'
+                              sx={{ color: 'text.secondary' }}
+                              onClick={() => {
+                                handleShow('PointCardDialog')
+                                setEdit(true)
+                                setEditField(value)
+                              }}
+                            >
+                              <Icon icon='tabler:edit' />
+                            </IconButton>
+                          </Tooltip>
+                        </Grid>
+                      ) : null}
+                    </Grid>
+                  ))}
+                  <Button
+                    sx={{ my: 5 }}
+                    variant='contained'
+                    color='inherit'
+                    type='button'
+                    onClick={() => handleShow('PointCardDialog')}
+                  >
+                    Add Points
+                  </Button>
+                </Grid>
+              </Box>
             </Box>
           </AccordionDetails>
         </Accordion>
@@ -683,7 +737,9 @@ const ContentPage = () => {
                 let ID = localStorage.getItem('AllContentDataId')
                 const payload = { id: ID, smallProductContentMainHeading: values?.smallProductContentMainHeading }
                 // @ts-ignore
-                dispatch(updateSmallProductContent(payload))
+                dispatch(updateSmallProductContent(payload)).then(() => {
+                  dispatch(getAllContent())
+                })
               }}
             >
               {({ values, handleChange }) => (
@@ -771,7 +827,98 @@ const ContentPage = () => {
           </CardContent>
         </Card> */}
       </Grid>
+      <Grid item xs={12}>
+        <Accordion expanded={expanded === 'section5'} onChange={handleChange('section5')}>
+          <AccordionSummary
+            id='controlled-panel-header-1'
+            aria-controls='controlled-panel-content-1'
+            expandIcon={<Icon fontSize='1.25rem' icon='tabler:chevron-down' />}
+          >
+            <h2>Section 5</h2>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Formik
+              initialValues={{
+                achivementHeading: allContentData?.achivementHeading || '',
+                totalGrowth: allContentData?.totalGrowth || '',
+                totalHappyClients: allContentData?.totalHappyClients || '',
+                totalSales: allContentData?.totalSales || ''
+              }}
+              enableReinitialize
+              onSubmit={values => {
+                let ID = localStorage.getItem('AllContentDataId')
+                const payload = {
+                  id: ID,
+                  achivementHeading: values?.achivementHeading,
+                  totalGrowth: values?.totalGrowth || '',
+                  totalHappyClients: values?.totalHappyClients || '',
+                  totalSales: values?.totalSales || ''
+                }
+                // @ts-ignore
+                dispatch(achivementDetails(payload)).then(() => {
+                  dispatch(getAllContent())
+                })
+              }}
+            >
+              {({ values, handleChange }) => (
+                <Form>
+                  <Stack spacing={3}>
+                    <Typography variant='h6'>ACHIVEMENTS</Typography>
+                    <TextField
+                      fullWidth
+                      label='Achivement Heading Text'
+                      name='achivementHeading'
+                      onChange={handleChange}
+                      value={values.achivementHeading}
+                    />
+                    <TextField
+                      fullWidth
+                      label='Total growth count'
+                      name='totalGrowth'
+                      type='number'
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                      onChange={handleChange}
+                      value={values.totalGrowth}
+                    />
+                    <TextField
+                      fullWidth
+                      type='number'
+                      label='Total happy clients count'
+                      name='totalHappyClients'
+                      onChange={handleChange}
+                      value={values?.totalHappyClients}
+                    />
+                    <TextField
+                      fullWidth
+                      label='Total sales count'
+                      name='totalSales'
+                      type='number'
+                      onChange={handleChange}
+                      value={values?.totalSales}
+                    />
 
+                    <Box>
+                      <Button variant='contained' type='submit'>
+                        Submit
+                      </Button>
+                    </Box>
+                  </Stack>
+                </Form>
+              )}
+            </Formik>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* SECTION  =   4 */}
+        {/* <Card>
+          <CardHeader title='Section 4' />
+          <CardContent>
+            
+          </CardContent>
+        </Card> */}
+      </Grid>
       <DeleteDialog
         open={openDelete}
         setOpen={setOpenDelete}
@@ -786,6 +933,8 @@ const ContentPage = () => {
       {dialogName === 'cardContents' && <CardContentDialog {...props} />}
       {dialogName === 'productContentCard' && <ProductContentCard {...props} />}
       {dialogName === 'smallProductContentCard' && <SmallProductCard {...props} />}
+
+      {dialogName === 'PointCardDialog' && <PointCardDialog {...props} />}
     </Grid>
   )
 }
