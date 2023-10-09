@@ -1,9 +1,9 @@
 //@ts-nocheck
-import React, { useEffect, useState } from 'react'
-import InputLabel from '@mui/material/InputLabel'
-import FormControl from '@mui/material/FormControl'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Select from '@mui/material/Select'
+import React, { useEffect, useState } from "react";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Select from "@mui/material/Select";
 import {
   Avatar,
   Button,
@@ -17,16 +17,16 @@ import {
   OutlinedInput,
   Radio,
   RadioGroup,
-  Tooltip
-} from '@mui/material'
+  Tooltip,
+} from "@mui/material";
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid'
-import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 // ** Icon Imports
-import { ErrorMessage, Form, Formik } from 'formik'
-import Chip from 'src/@core/components/mui/chip'
+import { ErrorMessage, Form, Formik } from "formik";
+import Chip from "src/@core/components/mui/chip";
 import {
   createFarmer,
   getAdressByPincode,
@@ -34,160 +34,164 @@ import {
   getAllState,
   getSingleFarmer,
   updateFarmer,
-  uploadImage
-} from 'src/slice/farmers'
-import { useSelector } from 'react-redux'
-import { useDispatch } from 'react-redux'
-import { useRouter } from 'next/router'
-import * as yup from 'yup'
-import 'react-datepicker/dist/react-datepicker.css'
-import 'react-datepicker/dist/react-datepicker-cssmodules.min.css'
-import { DateType } from 'src/types/forms/reactDatepickerTypes'
-import moment from 'moment'
-import styled from '@emotion/styled'
+  uploadImage,
+} from "src/slice/farmers";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/router";
+import * as yup from "yup";
+import "react-datepicker/dist/react-datepicker.css";
+import "react-datepicker/dist/react-datepicker-cssmodules.min.css";
+import { DateType } from "src/types/forms/reactDatepickerTypes";
+import moment from "moment";
+import styled from "@emotion/styled";
 
-const ProfilePicture = styled('img')(({ theme }) => ({
+const ProfilePicture = styled("img")(({ theme }) => ({
   width: 108,
   height: 108,
   borderRadius: theme.shape.borderRadius,
   border: `4px solid ${theme.palette.common.white}`,
-  [theme.breakpoints.down('md')]: {
-    marginBottom: theme.spacing(4)
-  }
-}))
+  [theme.breakpoints.down("md")]: {
+    marginBottom: theme.spacing(4),
+  },
+}));
 
 const FarmerDetails = () => {
-  const { allDistrict, allState, getFarmer, getAddressByPinCodeData } = useSelector(
-    (state: any) => state?.rootReducer?.farmerReducer
-  )
-  const farmerData = JSON.parse(localStorage.getItem('FarmerData'))
-  const [STATE, setSTATE] = useState('')
-  const [file, setFile] = useState('')
-  const [pincode, setPincode] = useState('')
-  const [date, setDate] = useState<DateType>(new Date())
-  const [fileForView, setFileForView] = useState('')
-  const dispatch = useDispatch()
-  const router = useRouter()
+  const { allDistrict, allState, getFarmer, getAddressByPinCodeData } =
+    useSelector((state: any) => state?.rootReducer?.farmerReducer);
+  const farmerData = JSON.parse(localStorage.getItem("FarmerData"));
+  const [STATE, setSTATE] = useState("");
+  const [file, setFile] = useState("");
+  const [pincode, setPincode] = useState("");
+  const [date, setDate] = useState<DateType>(new Date());
+  const [fileForView, setFileForView] = useState("");
+  const dispatch = useDispatch();
+  const router = useRouter();
 
   const initialValues = {
-    firstName: '',
-    middleName: '',
-    lastName: '',
-    asPerAbove: '',
-    DOB: '',
-    aadharNumber: '',
-    mobileNumber: '',
-    wpNumber: '',
-    address: '',
-    villageName: '',
-    taluka: '',
-    district: '',
-    state: '',
-    pinCode: '',
-    caste: '',
-    maritalStatus: 'married',
-    gender: 'male',
-    religion: '',
-    landDistrict: '',
-    subDivision: '',
-    circle: '',
-    mouza: '',
-    landVillage: '',
-    pattaType: '',
-    latNo: '',
-    pattaNo: '',
-    landArea: '',
-    landType: '',
-    farmerLandOwnershipType: '',
-    appliedForSoilTesting: 'yes'
-  }
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    asPerAbove: "",
+    DOB: "",
+    aadharNumber: "",
+    mobileNumber: "",
+    wpNumber: "",
+    address: "",
+    villageName: "",
+    taluka: "",
+    district: "",
+    state: "",
+    pinCode: "",
+    caste: "",
+    maritalStatus: "married",
+    gender: "male",
+    religion: "",
+    landDistrict: "",
+    subDivision: "",
+    circle: "",
+    mouza: "",
+    landVillage: "",
+    pattaType: "",
+    latNo: "",
+    pattaNo: "",
+    landArea: "",
+    landType: "",
+    farmerLandOwnershipType: "",
+    appliedForSoilTesting: "yes",
+  };
 
-  const convertBase64 = file => {
+  const convertBase64 = (file) => {
     return new Promise((resolve, reject) => {
-      const fileReader = new FileReader()
-      fileReader.readAsDataURL(file)
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
 
       fileReader.onload = () => {
-        resolve(fileReader.result)
-      }
+        resolve(fileReader.result);
+      };
 
-      fileReader.onerror = error => {
-        reject(error)
-      }
-    })
-  }
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
 
   const handleFile = async (e, param) => {
-    const file = e.target.files[0]
-    setFileForView(e.target.files[0])
-    const base64 = await convertBase64(file)
+    const file = e.target.files[0];
+    setFileForView(e.target.files[0]);
+    const base64 = await convertBase64(file);
     if (base64) {
-      setFile(base64)
+      setFile(base64);
     }
-  }
+  };
 
   const isValidUrl = (urlString: any) => {
     try {
-      return Boolean(new URL(urlString))
+      return Boolean(new URL(urlString));
     } catch (e) {
-      return false
+      return false;
     }
-  }
+  };
   const FilePreview = ({ file, onRemove }: any) => {
     if (isValidUrl(file)) {
       return (
         <Box>
-          <ProfilePicture src={file} alt='profile-picture' />
+          <ProfilePicture src={file} alt="profile-picture" />
         </Box>
-      )
+      );
     } else {
-      if (file?.type?.startsWith('image')) {
+      if (file?.type?.startsWith("image")) {
         return (
           <Box>
-            <ProfilePicture src={URL.createObjectURL(file)} alt='profile-picture' />
+            <ProfilePicture
+              src={URL.createObjectURL(file)}
+              alt="profile-picture"
+            />
           </Box>
-        )
+        );
       } else {
         return (
           <Box>
             <ProfilePicture
-              src={'/images/logo/pngtree-gray-network-placeholder-png-image_3416659.jpg'}
-              alt='profile-picture'
+              src={
+                "/images/logo/pngtree-gray-network-placeholder-png-image_3416659.jpg"
+              }
+              alt="profile-picture"
             />
           </Box>
-        )
+        );
       }
     }
-  }
+  };
 
   const validationSchema = yup.object().shape({
-    firstName: yup.string().required('First name  is required'),
-    middleName: yup.string().required('Middle name is required'),
-    lastName: yup.string().required('Last name is required'),
-    pinCode: yup.string().matches(/^\d{6}$/, 'Invalid PIN code'),
+    firstName: yup.string().required("First name  is required"),
+    middleName: yup.string().required("Middle name is required"),
+    lastName: yup.string().required("Last name is required"),
+    pinCode: yup.string().matches(/^\d{6}$/, "Invalid PIN code"),
     mobileNumber: yup
       .string()
-      .required('Mobile number is required')
-      .max(10, 'Mobile number must be 10 digit')
+      .required("Mobile number is required")
+      .max(10, "Mobile number must be 10 digit")
       // .matches(/^ *(?:0 *[23478](?: *\d){8}|[1-9](?: *\d)*|0 *[01569](?: *\d)*) *$/, 'Phone number is not valid'),
-      .matches(/^(\+91|0)?[6789]\d{9}$/, 'Invalid mobile number'),
+      .matches(/^(\+91|0)?[6789]\d{9}$/, "Invalid mobile number"),
     wpNumber: yup
       .string()
-      .required('Whatsapp number is required')
-      .max(10, 'Whatsapp number must be 10 digit')
-      .matches(/^(\+91|0)?[6789]\d{9}$/, 'Invalid mobile number'),
+      .required("Whatsapp number is required")
+      .max(10, "Whatsapp number must be 10 digit")
+      .matches(/^(\+91|0)?[6789]\d{9}$/, "Invalid mobile number"),
     aadharNumber: yup
       .string()
-      .required('Aadhar number is required')
+      .required("Aadhar number is required")
       .matches(
         /^([0-9]{4}[0-9]{4}[0-9]{4}$)|([0-9]{4}\s[0-9]{4}\s[0-9]{4}$)|([0-9]{4}-[0-9]{4}-[0-9]{4}$)/,
-        'please enter a valid aadhar number'
+        "please enter a valid aadhar number"
       ),
 
-    appliedForSoilTesting: yup.string().required('Periods of bond is required')
-  })
+    appliedForSoilTesting: yup.string().required("Periods of bond is required"),
+  });
   const handleSubmit = (values: any) => {
-    const userData: any = JSON.parse(localStorage.getItem('userData'))
+    const userData: any = JSON.parse(localStorage.getItem("userData"));
     const payload = {
       firstName: values?.firstName,
       middleName: values?.middleName,
@@ -218,96 +222,103 @@ const FarmerDetails = () => {
       landArea: values?.landArea,
       landType: values?.landType,
       farmerLandOwnershipType: values?.farmerLandOwnershipType,
-      appliedForSoilTesting: 'yes' ? 1 : 0,
-      filename: fileForView?.name
-    }
+      appliedForSoilTesting: "yes" ? 1 : 0,
+      filename: fileForView?.name,
+    };
 
-    if (userData?.role === 'admin') {
-      payload.adminId = userData?.id
+    if (userData?.role === "admin") {
+      payload.adminId = userData?.id;
       if (!farmerData) {
-        dispatch(createFarmer(payload)).then(res => {
+        dispatch(createFarmer(payload)).then((res) => {
           if (res?.payload?.id) {
             let payload = {
               id: res?.payload?.id,
-              file: file
-            }
-            dispatch(uploadImage(payload))
-            router.push('/farmers')
+              file: file,
+            };
+            dispatch(uploadImage(payload));
+            router.push("/farmers");
           }
-        })
+        });
       }
     } else {
-      payload.referralId = userData?.id
-      payload.referralName = userData?.role
+      payload.referralId = userData?.id;
+      payload.referralName = userData?.role;
 
       if (!farmerData) {
-        dispatch(createFarmer(payload)).then(res => {
+        dispatch(createFarmer(payload)).then((res) => {
           if (res?.payload?.id) {
             let payload = {
               id: res?.payload?.id,
-              file: file
-            }
-            dispatch(uploadImage(payload))
-            router.push('/farmers')
+              file: file,
+            };
+            dispatch(uploadImage(payload));
+            router.push("/farmers");
           }
-        })
+        });
       }
     }
-  }
+  };
 
   const handlePincode = (e: any) => {
-    setPincode(e)
+    setPincode(e);
     let payload = {
-      pincode: e
-    }
-    dispatch(getAdressByPincode(payload))
-  }
+      pincode: e,
+    };
+    dispatch(getAdressByPincode(payload));
+  };
 
   useEffect(() => {
     let payload = {
-      id: farmerData
-    }
-    dispatch(getAllState())
-    dispatch(getSingleFarmer(payload))
-  }, [])
+      id: farmerData,
+    };
+    dispatch(getAllState());
+    dispatch(getSingleFarmer(payload));
+  }, []);
 
   useEffect(() => {
-    dispatch(getAllDistrict({ state: STATE }))
-  }, [STATE])
+    dispatch(getAllDistrict({ state: STATE }));
+  }, [STATE]);
 
   return (
     <>
       <Card
         sx={{
-          padding: 10
+          padding: 10,
         }}
       >
         <Formik
           enableReinitialize
           initialValues={initialValues}
           validationSchema={validationSchema}
-          onSubmit={values => {
-            if (values?.appliedForSoilTesting === 'yes' && file?.length > 0) {
-              handleSubmit(values)
-            } else if (values?.appliedForSoilTesting === 'no') {
-              handleSubmit(values)
+          onSubmit={(values) => {
+            if (values?.appliedForSoilTesting === "yes" && file?.length > 0) {
+              handleSubmit(values);
+            } else if (values?.appliedForSoilTesting === "no") {
+              handleSubmit(values);
             }
           }}
         >
-          {({ values, handleChange, handleBlur, errors, touched, setFieldValue }) => (
+          {({
+            values,
+            handleChange,
+            handleBlur,
+            errors,
+            touched,
+            setFieldValue,
+          }) => (
             <>
               <Form>
-                <Box sx={{ mb: 8, textAlign: 'center' }}>
+                <Box sx={{ mb: 8, textAlign: "center" }}>
                   <Divider>
                     <Chip
                       sx={{
-                        fontSize: '22px',
-                        padding: '15px',
-                        fontWeight: 'bold',
-                        textAlign: 'left',
-                        backgroundColor: '#f6f5f8'
+                        fontSize: "22px",
+                        padding: "15px",
+                        fontWeight: "bold",
+                        textAlign: "left",
+                        backgroundColor: "#f6f5f8",
                       }}
-                      label='Farmer Details'
+                      label="Farmer Details"
                     />
                   </Divider>
                 </Box>
@@ -315,7 +326,7 @@ const FarmerDetails = () => {
                   container
                   spacing={6}
                   sx={{
-                    padding: '10px'
+                    padding: "10px",
                   }}
                 >
                   <Grid item sm={6} xs={12}>
@@ -323,240 +334,274 @@ const FarmerDetails = () => {
                       value={values?.firstName}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      name='firstName'
+                      name="firstName"
                       error={Boolean(errors.firstName && touched.firstName)}
                       fullWidth
-                      label='First Name *'
-                      placeholder='First Name'
+                      label="First Name *"
+                      placeholder="First Name"
                       sx={{
-                        '&.Mui-error fieldset': {
-                          borderColor: 'red !important'
+                        "&.Mui-error fieldset": {
+                          borderColor: "red !important",
                         },
-                        '& fieldset': {
-                          borderWidth: '1px !important',
-                          borderColor: '#8d8686 !important'
+                        "& fieldset": {
+                          borderWidth: "1px !important",
+                          borderColor: "#8d8686 !important",
                         },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#7da370 !important',
-                          borderWidth: '2px !important'
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#7da370 !important",
+                          borderWidth: "2px !important",
                         },
-                        '& label.MuiInputLabel-root': {
-                          color: 'black' // Set the label font color to blue
-                        }
+                        "& label.MuiInputLabel-root": {
+                          color: "black", // Set the label font color to blue
+                        },
                       }}
                     />
-                    <ErrorMessage name='firstName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                    <ErrorMessage
+                      name="firstName"
+                      render={(msg) => (
+                        <div style={{ color: "red" }}>{msg}</div>
+                      )}
+                    />
                   </Grid>
                   <Grid item sm={6} xs={12}>
                     <TextField
                       value={values?.middleName}
-                      name='middleName'
+                      name="middleName"
                       error={Boolean(errors.middleName && touched.middleName)}
                       onChange={handleChange}
                       onBlur={handleBlur}
                       fullWidth
-                      label='Middle Name'
-                      placeholder='Middle Name'
+                      label="Middle Name"
+                      placeholder="Middle Name"
                       sx={{
-                        '&.Mui-error fieldset': {
-                          borderColor: 'red !important'
+                        "&.Mui-error fieldset": {
+                          borderColor: "red !important",
                         },
-                        '& fieldset': {
-                          borderWidth: '1px !important',
-                          borderColor: '#8d8686 !important'
+                        "& fieldset": {
+                          borderWidth: "1px !important",
+                          borderColor: "#8d8686 !important",
                         },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#7da370 !important',
-                          borderWidth: '2px !important'
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#7da370 !important",
+                          borderWidth: "2px !important",
                         },
-                        '& label.MuiInputLabel-root': {
-                          color: 'black' // Set the label font color to blue
-                        }
+                        "& label.MuiInputLabel-root": {
+                          color: "black", // Set the label font color to blue
+                        },
                       }}
                     />
-                    <ErrorMessage name='middleName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                    <ErrorMessage
+                      name="middleName"
+                      render={(msg) => (
+                        <div style={{ color: "red" }}>{msg}</div>
+                      )}
+                    />
                   </Grid>
                   <Grid item sm={6} xs={12}>
                     <TextField
                       value={values?.lastName}
-                      name='lastName'
+                      name="lastName"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       error={Boolean(errors.lastName && touched.lastName)}
                       fullWidth
-                      label='Last Name *'
-                      placeholder='Last Name'
+                      label="Last Name *"
+                      placeholder="Last Name"
                       sx={{
-                        '&.Mui-error fieldset': {
-                          borderColor: 'red !important'
+                        "&.Mui-error fieldset": {
+                          borderColor: "red !important",
                         },
-                        '& fieldset': {
-                          borderWidth: '1px !important',
-                          borderColor: '#8d8686 !important'
+                        "& fieldset": {
+                          borderWidth: "1px !important",
+                          borderColor: "#8d8686 !important",
                         },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#7da370 !important',
-                          borderWidth: '2px !important'
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#7da370 !important",
+                          borderWidth: "2px !important",
                         },
-                        '& label.MuiInputLabel-root': {
-                          color: 'black' // Set the label font color to blue
-                        }
+                        "& label.MuiInputLabel-root": {
+                          color: "black", // Set the label font color to blue
+                        },
                       }}
                     />
-                    <ErrorMessage name='lastName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                    <ErrorMessage
+                      name="lastName"
+                      render={(msg) => (
+                        <div style={{ color: "red" }}>{msg}</div>
+                      )}
+                    />
                   </Grid>
                   <Grid item sm={6} xs={12}>
                     <TextField
                       value={values?.DOB}
-                      name='DOB'
+                      name="DOB"
                       onChange={handleChange}
                       fullWidth
-                      type='date'
-                      label='Date of birth *'
+                      type="date"
+                      label="Date of birth *"
                       InputLabelProps={{
-                        shrink: true
+                        shrink: true,
                       }}
                       inputProps={{
-                        max: new Date().toISOString().split('T')[0] // Set max to today's date
+                        max: new Date().toISOString().split("T")[0], // Set max to today's date
                       }}
                       sx={{
-                        '&.Mui-error fieldset': {
-                          borderColor: 'red !important'
+                        "&.Mui-error fieldset": {
+                          borderColor: "red !important",
                         },
-                        '& fieldset': {
-                          borderWidth: '1px !important',
-                          borderColor: '#8d8686 !important'
+                        "& fieldset": {
+                          borderWidth: "1px !important",
+                          borderColor: "#8d8686 !important",
                         },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#7da370 !important',
-                          borderWidth: '2px !important'
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#7da370 !important",
+                          borderWidth: "2px !important",
                         },
-                        '& label.MuiInputLabel-root': {
-                          color: 'black' // Set the label font color to blue
-                        }
+                        "& label.MuiInputLabel-root": {
+                          color: "black", // Set the label font color to blue
+                        },
                       }}
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>
                     <TextField
                       value={values?.aadharNumber}
-                      name='aadharNumber'
+                      name="aadharNumber"
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      error={Boolean(errors.aadharNumber && touched.aadharNumber)}
+                      error={Boolean(
+                        errors.aadharNumber && touched.aadharNumber
+                      )}
                       fullWidth
-                      type='number'
-                      label='Aadhar Number *'
-                      placeholder='Aadhar Number'
+                      type="number"
+                      label="Aadhar Number *"
+                      placeholder="Aadhar Number"
                       sx={{
-                        '&.Mui-error fieldset': {
-                          borderColor: 'red !important'
+                        "&.Mui-error fieldset": {
+                          borderColor: "red !important",
                         },
-                        '& fieldset': {
-                          borderWidth: '1px !important',
-                          borderColor: '#8d8686 !important'
+                        "& fieldset": {
+                          borderWidth: "1px !important",
+                          borderColor: "#8d8686 !important",
                         },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#7da370 !important',
-                          borderWidth: '2px !important'
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#7da370 !important",
+                          borderWidth: "2px !important",
                         },
-                        '& label.MuiInputLabel-root': {
-                          color: 'black' // Set the label font color to blue
-                        }
+                        "& label.MuiInputLabel-root": {
+                          color: "black", // Set the label font color to blue
+                        },
                       }}
                     />
-                    <ErrorMessage name='aadharNumber' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                    <ErrorMessage
+                      name="aadharNumber"
+                      render={(msg) => (
+                        <div style={{ color: "red" }}>{msg}</div>
+                      )}
+                    />
                   </Grid>
                   <Grid item sm={6} xs={12}>
                     <TextField
                       value={values?.mobileNumber}
-                      name='mobileNumber'
+                      name="mobileNumber"
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      type='number'
-                      error={Boolean(errors.mobileNumber && touched.mobileNumber)}
+                      type="number"
+                      error={Boolean(
+                        errors.mobileNumber && touched.mobileNumber
+                      )}
                       fullWidth
                       InputLabelProps={{
-                        shrink: true
+                        shrink: true,
                       }}
-                      label='Mobile Number *'
-                      placeholder='Mobile Number'
+                      label="Mobile Number *"
+                      placeholder="Mobile Number"
                       sx={{
-                        '&.Mui-error fieldset': {
-                          borderColor: 'red !important'
+                        "&.Mui-error fieldset": {
+                          borderColor: "red !important",
                         },
-                        '& fieldset': {
-                          borderWidth: '1px !important',
-                          borderColor: '#8d8686 !important'
+                        "& fieldset": {
+                          borderWidth: "1px !important",
+                          borderColor: "#8d8686 !important",
                         },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#7da370 !important',
-                          borderWidth: '2px !important'
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#7da370 !important",
+                          borderWidth: "2px !important",
                         },
-                        '& label.MuiInputLabel-root': {
-                          color: 'black' // Set the label font color to blue
-                        }
+                        "& label.MuiInputLabel-root": {
+                          color: "black", // Set the label font color to blue
+                        },
                       }}
                     />
-                    <ErrorMessage name='mobileNumber' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                    <ErrorMessage
+                      name="mobileNumber"
+                      render={(msg) => (
+                        <div style={{ color: "red" }}>{msg}</div>
+                      )}
+                    />
                   </Grid>
                   <Grid item sm={6} xs={12}>
                     <TextField
                       value={values?.wpNumber}
-                      name='wpNumber'
+                      name="wpNumber"
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      type='number'
+                      type="number"
                       error={Boolean(errors.wpNumber && touched.wpNumber)}
                       fullWidth
                       InputLabelProps={{
-                        shrink: true
+                        shrink: true,
                       }}
-                      label='Whatsapp Number *'
-                      placeholder='Whatsapp Number'
+                      label="Whatsapp Number *"
+                      placeholder="Whatsapp Number"
                       sx={{
-                        '&.Mui-error fieldset': {
-                          borderColor: 'red !important'
+                        "&.Mui-error fieldset": {
+                          borderColor: "red !important",
                         },
-                        '& fieldset': {
-                          borderWidth: '1px !important',
-                          borderColor: '#8d8686 !important'
+                        "& fieldset": {
+                          borderWidth: "1px !important",
+                          borderColor: "#8d8686 !important",
                         },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#7da370 !important',
-                          borderWidth: '2px !important'
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#7da370 !important",
+                          borderWidth: "2px !important",
                         },
-                        '& label.MuiInputLabel-root': {
-                          color: 'black' // Set the label font color to blue
-                        }
+                        "& label.MuiInputLabel-root": {
+                          color: "black", // Set the label font color to blue
+                        },
                       }}
                     />
-                    <ErrorMessage name='wpNumber' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                    <ErrorMessage
+                      name="wpNumber"
+                      render={(msg) => (
+                        <div style={{ color: "red" }}>{msg}</div>
+                      )}
+                    />
                   </Grid>
                   <Grid item sm={6} xs={12}>
                     <TextField
                       value={values?.address}
-                      name='address'
+                      name="address"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       fullWidth
-                      label='Address'
-                      placeholder='Address'
+                      label="Address"
+                      placeholder="Address"
                       sx={{
-                        '&.Mui-error fieldset': {
-                          borderColor: 'red !important'
+                        "&.Mui-error fieldset": {
+                          borderColor: "red !important",
                         },
-                        '& fieldset': {
-                          borderWidth: '1px !important',
-                          borderColor: '#8d8686 !important'
+                        "& fieldset": {
+                          borderWidth: "1px !important",
+                          borderColor: "#8d8686 !important",
                         },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#7da370 !important',
-                          borderWidth: '2px !important'
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#7da370 !important",
+                          borderWidth: "2px !important",
                         },
-                        '& label.MuiInputLabel-root': {
-                          color: 'black' // Set the label font color to blue
-                        }
+                        "& label.MuiInputLabel-root": {
+                          color: "black", // Set the label font color to blue
+                        },
                       }}
                     />
                   </Grid>
@@ -564,44 +609,44 @@ const FarmerDetails = () => {
                     <FormControl fullWidth>
                       <InputLabel
                         sx={{
-                          color: 'black',
-                          '&.Mui-focused': {
-                            color: 'black' // Set the label color when focused
-                          }
+                          color: "black",
+                          "&.Mui-focused": {
+                            color: "black", // Set the label color when focused
+                          },
                         }}
-                        id='demo-simple-select-label'
+                        id="demo-simple-select-label"
                       >
                         State
                       </InputLabel>
                       <Select
-                        labelId='demo-simple-select-label'
-                        id='demo-simple-select'
-                        name='state'
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        name="state"
                         value={values?.state}
-                        label='State'
+                        label="State"
                         onChange={(e: any) => {
-                          setFieldValue('state', e?.target?.value)
-                          setSTATE(e?.target?.value)
+                          setFieldValue("state", e?.target?.value);
+                          setSTATE(e?.target?.value);
                         }}
                         sx={{
-                          '& .MuiSelect-root': {
-                            borderWidth: '1px !important',
-                            borderColor: '#8d8686 !important' // Set the desired color for the select
+                          "& .MuiSelect-root": {
+                            borderWidth: "1px !important",
+                            borderColor: "#8d8686 !important", // Set the desired color for the select
                           },
-                          '& .MuiOutlinedInput-notchedOutline': {
-                            borderColor: 'black !important' // Set the desired border color for the select
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "black !important", // Set the desired border color for the select
                           },
 
-                          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                            borderWidth: '1px !important',
-                            borderColor: '#8d8686 !important'
+                          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                            borderWidth: "1px !important",
+                            borderColor: "#8d8686 !important",
                           },
-                          '&.Mui-error': {
-                            color: 'red' // Set the label color when the Select is in an error state
-                          }
+                          "&.Mui-error": {
+                            color: "red", // Set the label color when the Select is in an error state
+                          },
                         }}
                       >
-                        {allState?.data?.map(name => (
+                        {allState?.data?.map((name) => (
                           <MenuItem key={name?.name} value={name?.name}>
                             {name?.name}
                           </MenuItem>
@@ -610,46 +655,46 @@ const FarmerDetails = () => {
                     </FormControl>
                   </Grid>
                   <Grid item sm={6} xs={12}>
-                    <Tooltip title='Please select state first'>
+                    <Tooltip title="Please select state first">
                       <FormControl fullWidth>
                         <InputLabel
                           sx={{
-                            color: 'black',
-                            '&.Mui-focused': {
-                              color: 'black' // Set the label color when focused
-                            }
+                            color: "black",
+                            "&.Mui-focused": {
+                              color: "black", // Set the label color when focused
+                            },
                           }}
-                          id='demo-simple-select-label'
+                          id="demo-simple-select-label"
                         >
                           District
                         </InputLabel>
                         <Select
-                          labelId='demo-simple-select-label'
-                          id='demo-simple-select'
-                          name='district'
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          name="district"
                           disabled={STATE.length <= 0}
                           value={values?.district}
-                          label='District'
+                          label="District"
                           onChange={handleChange}
                           sx={{
-                            '& .MuiSelect-root': {
-                              borderWidth: '1px !important',
-                              borderColor: '#8d8686 !important' // Set the desired color for the select
+                            "& .MuiSelect-root": {
+                              borderWidth: "1px !important",
+                              borderColor: "#8d8686 !important", // Set the desired color for the select
                             },
-                            '& .MuiOutlinedInput-notchedOutline': {
-                              borderColor: 'black !important' // Set the desired border color for the select
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "black !important", // Set the desired border color for the select
                             },
 
-                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                              borderWidth: '1px !important',
-                              borderColor: '#8d8686 !important'
+                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                              borderWidth: "1px !important",
+                              borderColor: "#8d8686 !important",
                             },
-                            '&.Mui-error': {
-                              color: 'red' // Set the label color when the Select is in an error state
-                            }
+                            "&.Mui-error": {
+                              color: "red", // Set the label color when the Select is in an error state
+                            },
                           }}
                         >
-                          {allDistrict?.map(name => (
+                          {allDistrict?.map((name) => (
                             <MenuItem key={name?.name} value={name?.name}>
                               {name?.name}
                             </MenuItem>
@@ -661,39 +706,44 @@ const FarmerDetails = () => {
                   <Grid item sm={6} xs={12}>
                     <TextField
                       value={pincode}
-                      name='pinCode'
+                      name="pinCode"
                       error={Boolean(errors.pinCode && touched.pinCode)}
-                      onChange={e => {
-                        handlePincode(e.target.value)
-                        setFieldValue('pinCode', e.target.value)
+                      onChange={(e) => {
+                        handlePincode(e.target.value);
+                        setFieldValue("pinCode", e.target.value);
                       }}
                       fullWidth
-                      type='number'
-                      label='Pin Code'
-                      placeholder='Pin Code'
+                      type="number"
+                      label="Pin Code"
+                      placeholder="Pin Code"
                       sx={{
-                        '&.Mui-error fieldset': {
-                          borderColor: 'red !important'
+                        "&.Mui-error fieldset": {
+                          borderColor: "red !important",
                         },
-                        '& fieldset': {
-                          borderWidth: '1px !important',
-                          borderColor: '#8d8686 !important'
+                        "& fieldset": {
+                          borderWidth: "1px !important",
+                          borderColor: "#8d8686 !important",
                         },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#7da370 !important',
-                          borderWidth: '2px !important'
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#7da370 !important",
+                          borderWidth: "2px !important",
                         },
-                        '& label.MuiInputLabel-root': {
-                          color: 'black' // Set the label font color to blue
-                        }
+                        "& label.MuiInputLabel-root": {
+                          color: "black", // Set the label font color to blue
+                        },
                       }}
                     />
-                    <ErrorMessage name='pinCode' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                    <ErrorMessage
+                      name="pinCode"
+                      render={(msg) => (
+                        <div style={{ color: "red" }}>{msg}</div>
+                      )}
+                    />
                   </Grid>
 
                   <Grid item sm={6} xs={12}>
                     <Tooltip
-                      title='Please enter pincode first'
+                      title="Please enter pincode first"
                       disableFocusListener={!(pincode.length <= 0)}
                       disableHoverListener={!(pincode.length <= 0)}
                       disableTouchListener={!(pincode.length <= 0)}
@@ -701,44 +751,44 @@ const FarmerDetails = () => {
                       <FormControl fullWidth>
                         <InputLabel
                           sx={{
-                            color: 'black',
-                            '&.Mui-focused': {
-                              color: 'black' // Set the label color when focused
-                            }
+                            color: "black",
+                            "&.Mui-focused": {
+                              color: "black", // Set the label color when focused
+                            },
                           }}
-                          id='demo-simple-select-label'
+                          id="demo-simple-select-label"
                         >
                           Taluka
                         </InputLabel>
                         <Select
-                          labelId='demo-simple-select-label'
-                          id='demo-simple-select'
-                          name='taluka'
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          name="taluka"
                           disabled={pincode?.length <= 0}
                           value={values?.taluka && values?.taluka}
-                          label='Taluka'
+                          label="Taluka"
                           onChange={handleChange}
-                          noOptionsMessage={() => 'No taluka Found'}
+                          noOptionsMessage={() => "No taluka Found"}
                           sx={{
-                            '& .MuiSelect-root': {
-                              borderWidth: '1px !important',
-                              borderColor: '#8d8686 !important' // Set the desired color for the select
+                            "& .MuiSelect-root": {
+                              borderWidth: "1px !important",
+                              borderColor: "#8d8686 !important", // Set the desired color for the select
                             },
-                            '& .MuiOutlinedInput-notchedOutline': {
-                              borderColor: 'black !important' // Set the desired border color for the select
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "black !important", // Set the desired border color for the select
                             },
 
-                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                              borderWidth: '1px !important',
-                              borderColor: '#8d8686 !important'
+                            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                              borderWidth: "1px !important",
+                              borderColor: "#8d8686 !important",
                             },
-                            '&.Mui-error': {
-                              color: 'red' // Set the label color when the Select is in an error state
-                            }
+                            "&.Mui-error": {
+                              color: "red", // Set the label color when the Select is in an error state
+                            },
                           }}
                         >
                           {getAddressByPinCodeData?.taluka &&
-                            getAddressByPinCodeData?.taluka?.map(name => (
+                            getAddressByPinCodeData?.taluka?.map((name) => (
                               <MenuItem key={name} value={name}>
                                 {name}
                               </MenuItem>
@@ -749,7 +799,7 @@ const FarmerDetails = () => {
                   </Grid>
                   <Grid item sm={6} xs={12}>
                     <Tooltip
-                      title='Please enter pincode first'
+                      title="Please enter pincode first"
                       disableFocusListener={!(pincode.length <= 0)}
                       disableHoverListener={!(pincode.length <= 0)}
                       disableTouchListener={!(pincode.length <= 0)}
@@ -757,41 +807,41 @@ const FarmerDetails = () => {
                       <FormControl fullWidth>
                         <InputLabel
                           sx={{
-                            color: 'black',
-                            '&.Mui-focused': {
-                              color: 'black' // Set the label color when focused
-                            }
+                            color: "black",
+                            "&.Mui-focused": {
+                              color: "black", // Set the label color when focused
+                            },
                           }}
-                          id='demo-simple-select-label'
+                          id="demo-simple-select-label"
                         >
                           Village Name
                         </InputLabel>
                         <Select
-                          labelId='demo-simple-select-label'
-                          id='demo-simple-select'
-                          name='villageName'
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          name="villageName"
                           disabled={pincode.length <= 0}
                           value={values?.villageName && values?.villageName}
-                          label='villageName'
+                          label="villageName"
                           onChange={handleChange}
                           sx={{
-                            '&.Mui-error fieldset': {
-                              borderColor: 'red !important'
+                            "&.Mui-error fieldset": {
+                              borderColor: "red !important",
                             },
-                            '& fieldset': {
-                              borderWidth: '1px !important',
-                              borderColor: '#8d8686 !important'
+                            "& fieldset": {
+                              borderWidth: "1px !important",
+                              borderColor: "#8d8686 !important",
                             },
-                            '&.Mui-focused fieldset': {
-                              borderColor: '#7da370 !important',
-                              borderWidth: '2px !important'
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#7da370 !important",
+                              borderWidth: "2px !important",
                             },
-                            '& label.MuiInputLabel-root': {
-                              color: 'black' // Set the label font color to blue
-                            }
+                            "& label.MuiInputLabel-root": {
+                              color: "black", // Set the label font color to blue
+                            },
                           }}
                         >
-                          {getAddressByPinCodeData?.village?.map(name => (
+                          {getAddressByPinCodeData?.village?.map((name) => (
                             <MenuItem key={name} value={name}>
                               {name}
                             </MenuItem>
@@ -802,70 +852,97 @@ const FarmerDetails = () => {
                   </Grid>
 
                   <Grid item sm={6} xs={12}>
-                    {' '}
+                    {" "}
                     <TextField
                       value={values?.religion}
-                      name='religion'
+                      name="religion"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       fullWidth
-                      label='Religion'
-                      placeholder='Religion'
+                      label="Religion"
+                      placeholder="Religion"
                       sx={{
-                        '&.Mui-error fieldset': {
-                          borderColor: 'red !important'
+                        "&.Mui-error fieldset": {
+                          borderColor: "red !important",
                         },
-                        '& fieldset': {
-                          borderWidth: '1px !important',
-                          borderColor: '#8d8686 !important'
+                        "& fieldset": {
+                          borderWidth: "1px !important",
+                          borderColor: "#8d8686 !important",
                         },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#7da370 !important',
-                          borderWidth: '2px !important'
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#7da370 !important",
+                          borderWidth: "2px !important",
                         },
-                        '& label.MuiInputLabel-root': {
-                          color: 'black' // Set the label font color to blue
-                        }
+                        "& label.MuiInputLabel-root": {
+                          color: "black", // Set the label font color to blue
+                        },
                       }}
                     />
                   </Grid>
 
                   <Grid item sm={6} xs={12}>
-                    <Typography variant='body1' sx={{ fontWeight: 500, color: 'text.primary' }}>
-                      Gender{' '}
+                    <Typography
+                      variant="body1"
+                      sx={{ fontWeight: 500, color: "text.primary" }}
+                    >
+                      Gender{" "}
                     </Typography>
-                    <RadioGroup row value={values && values?.gender} name='gender' onChange={handleChange}>
-                      <FormControlLabel value='male' control={<Radio value='male' />} label='Male' />
-                      <FormControlLabel value='female' control={<Radio value='female' />} label='Female' />
+                    <RadioGroup
+                      row
+                      value={values && values?.gender}
+                      name="gender"
+                      onChange={handleChange}
+                    >
+                      <FormControlLabel
+                        value="male"
+                        control={<Radio value="male" />}
+                        label="Male"
+                      />
+                      <FormControlLabel
+                        value="female"
+                        control={<Radio value="female" />}
+                        label="Female"
+                      />
                     </RadioGroup>
                   </Grid>
                   <Grid item sm={6} xs={12}>
-                    <Typography variant='body1' sx={{ fontWeight: 500, color: 'text.primary' }}>
+                    <Typography
+                      variant="body1"
+                      sx={{ fontWeight: 500, color: "text.primary" }}
+                    >
                       Marital Status
                     </Typography>
                     <RadioGroup
                       row
-                      aria-label='controlled'
+                      aria-label="controlled"
                       value={values?.maritalStatus && values?.maritalStatus}
-                      name='maritalStatus'
+                      name="maritalStatus"
                       onChange={handleChange}
                     >
-                      <FormControlLabel value='single' control={<Radio />} label='Single' />
-                      <FormControlLabel value='married' control={<Radio />} label='Married' />
+                      <FormControlLabel
+                        value="single"
+                        control={<Radio />}
+                        label="Single"
+                      />
+                      <FormControlLabel
+                        value="married"
+                        control={<Radio />}
+                        label="Married"
+                      />
                     </RadioGroup>
                   </Grid>
                 </Grid>
-                <Box sx={{ mb: 8, textAlign: 'center' }}>
+                <Box sx={{ mb: 8, textAlign: "center" }}>
                   <Divider>
                     <Chip
                       sx={{
-                        fontSize: '22px',
-                        padding: '15px',
-                        fontWeight: 'bold',
-                        textAlign: 'left',
-                        backgroundColor: '#f6f5f8'
+                        fontSize: "22px",
+                        padding: "15px",
+                        fontWeight: "bold",
+                        textAlign: "left",
+                        backgroundColor: "#f6f5f8",
                       }}
-                      label='Land Details'
+                      label="Land Details"
                     />
                   </Divider>
                 </Box>
@@ -874,90 +951,92 @@ const FarmerDetails = () => {
                   container
                   spacing={6}
                   sx={{
-                    padding: '10px'
+                    padding: "10px",
                   }}
                 >
                   <Grid item sm={6} xs={12}>
                     <TextField
                       value={values?.landDistrict}
-                      name='landDistrict'
+                      name="landDistrict"
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      error={Boolean(errors.landDistrict && touched.landDistrict)}
+                      error={Boolean(
+                        errors.landDistrict && touched.landDistrict
+                      )}
                       fullWidth
-                      label='Land District'
-                      placeholder='Land Distric'
+                      label="Land District"
+                      placeholder="Land Distric"
                       sx={{
-                        '&.Mui-error fieldset': {
-                          borderColor: 'red !important'
+                        "&.Mui-error fieldset": {
+                          borderColor: "red !important",
                         },
-                        '& fieldset': {
-                          borderWidth: '1px !important',
-                          borderColor: '#8d8686 !important'
+                        "& fieldset": {
+                          borderWidth: "1px !important",
+                          borderColor: "#8d8686 !important",
                         },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#7da370 !important',
-                          borderWidth: '2px !important'
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#7da370 !important",
+                          borderWidth: "2px !important",
                         },
-                        '& label.MuiInputLabel-root': {
-                          color: 'black' // Set the label font color to blue
-                        }
+                        "& label.MuiInputLabel-root": {
+                          color: "black", // Set the label font color to blue
+                        },
                       }}
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>
-                    {' '}
+                    {" "}
                     <TextField
                       value={values?.subDivision}
-                      name='subDivision'
+                      name="subDivision"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       fullWidth
-                      label='SubDivision'
-                      placeholder='SubDivision'
+                      label="SubDivision"
+                      placeholder="SubDivision"
                       sx={{
-                        '&.Mui-error fieldset': {
-                          borderColor: 'red !important'
+                        "&.Mui-error fieldset": {
+                          borderColor: "red !important",
                         },
-                        '& fieldset': {
-                          borderWidth: '1px !important',
-                          borderColor: '#8d8686 !important'
+                        "& fieldset": {
+                          borderWidth: "1px !important",
+                          borderColor: "#8d8686 !important",
                         },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#7da370 !important',
-                          borderWidth: '2px !important'
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#7da370 !important",
+                          borderWidth: "2px !important",
                         },
-                        '& label.MuiInputLabel-root': {
-                          color: 'black' // Set the label font color to blue
-                        }
+                        "& label.MuiInputLabel-root": {
+                          color: "black", // Set the label font color to blue
+                        },
                       }}
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>
-                    {' '}
+                    {" "}
                     <TextField
                       value={values?.circle}
-                      name='circle'
+                      name="circle"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       fullWidth
-                      label='Circle'
-                      placeholder='Circle'
+                      label="Circle"
+                      placeholder="Circle"
                       sx={{
-                        '&.Mui-error fieldset': {
-                          borderColor: 'red !important'
+                        "&.Mui-error fieldset": {
+                          borderColor: "red !important",
                         },
-                        '& fieldset': {
-                          borderWidth: '1px !important',
-                          borderColor: '#8d8686 !important'
+                        "& fieldset": {
+                          borderWidth: "1px !important",
+                          borderColor: "#8d8686 !important",
                         },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#7da370 !important',
-                          borderWidth: '2px !important'
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#7da370 !important",
+                          borderWidth: "2px !important",
                         },
-                        '& label.MuiInputLabel-root': {
-                          color: 'black' // Set the label font color to blue
-                        }
+                        "& label.MuiInputLabel-root": {
+                          color: "black", // Set the label font color to blue
+                        },
                       }}
                     />
                   </Grid>
@@ -965,171 +1044,171 @@ const FarmerDetails = () => {
                   <Grid item sm={6} xs={12}>
                     <TextField
                       value={values?.landVillage}
-                      name='landVillage'
+                      name="landVillage"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       fullWidth
-                      label='Land Village'
-                      placeholder='landVillage'
+                      label="Land Village"
+                      placeholder="landVillage"
                       sx={{
-                        '&.Mui-error fieldset': {
-                          borderColor: 'red !important'
+                        "&.Mui-error fieldset": {
+                          borderColor: "red !important",
                         },
-                        '& fieldset': {
-                          borderWidth: '1px !important',
-                          borderColor: '#8d8686 !important'
+                        "& fieldset": {
+                          borderWidth: "1px !important",
+                          borderColor: "#8d8686 !important",
                         },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#7da370 !important',
-                          borderWidth: '2px !important'
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#7da370 !important",
+                          borderWidth: "2px !important",
                         },
-                        '& label.MuiInputLabel-root': {
-                          color: 'black' // Set the label font color to blue
-                        }
+                        "& label.MuiInputLabel-root": {
+                          color: "black", // Set the label font color to blue
+                        },
                       }}
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>
-                    {' '}
+                    {" "}
                     <TextField
                       value={values?.mouza}
-                      name='mouza'
+                      name="mouza"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       fullWidth
-                      label='Mouza'
-                      placeholder='mouza'
+                      label="Mouza"
+                      placeholder="mouza"
                       sx={{
-                        '&.Mui-error fieldset': {
-                          borderColor: 'red !important'
+                        "&.Mui-error fieldset": {
+                          borderColor: "red !important",
                         },
-                        '& fieldset': {
-                          borderWidth: '1px !important',
-                          borderColor: '#8d8686 !important'
+                        "& fieldset": {
+                          borderWidth: "1px !important",
+                          borderColor: "#8d8686 !important",
                         },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#7da370 !important',
-                          borderWidth: '2px !important'
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#7da370 !important",
+                          borderWidth: "2px !important",
                         },
-                        '& label.MuiInputLabel-root': {
-                          color: 'black' // Set the label font color to blue
-                        }
+                        "& label.MuiInputLabel-root": {
+                          color: "black", // Set the label font color to blue
+                        },
                       }}
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>
-                    {' '}
+                    {" "}
                     <TextField
                       value={values?.pattaType}
-                      name='pattaType'
+                      name="pattaType"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       fullWidth
-                      label='PattaType'
-                      placeholder='PattaType'
+                      label="PattaType"
+                      placeholder="PattaType"
                       sx={{
-                        '&.Mui-error fieldset': {
-                          borderColor: 'red !important'
+                        "&.Mui-error fieldset": {
+                          borderColor: "red !important",
                         },
-                        '& fieldset': {
-                          borderWidth: '1px !important',
-                          borderColor: '#8d8686 !important'
+                        "& fieldset": {
+                          borderWidth: "1px !important",
+                          borderColor: "#8d8686 !important",
                         },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#7da370 !important',
-                          borderWidth: '2px !important'
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#7da370 !important",
+                          borderWidth: "2px !important",
                         },
-                        '& label.MuiInputLabel-root': {
-                          color: 'black' // Set the label font color to blue
-                        }
+                        "& label.MuiInputLabel-root": {
+                          color: "black", // Set the label font color to blue
+                        },
                       }}
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>
-                    {' '}
+                    {" "}
                     <TextField
                       value={values?.latNo}
-                      name='latNo'
+                      name="latNo"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       fullWidth
-                      label='LatNo'
-                      placeholder='LatNo'
+                      label="LatNo"
+                      placeholder="LatNo"
                       sx={{
-                        '&.Mui-error fieldset': {
-                          borderColor: 'red !important'
+                        "&.Mui-error fieldset": {
+                          borderColor: "red !important",
                         },
-                        '& fieldset': {
-                          borderWidth: '1px !important',
-                          borderColor: '#8d8686 !important'
+                        "& fieldset": {
+                          borderWidth: "1px !important",
+                          borderColor: "#8d8686 !important",
                         },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#7da370 !important',
-                          borderWidth: '2px !important'
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#7da370 !important",
+                          borderWidth: "2px !important",
                         },
-                        '& label.MuiInputLabel-root': {
-                          color: 'black' // Set the label font color to blue
-                        }
+                        "& label.MuiInputLabel-root": {
+                          color: "black", // Set the label font color to blue
+                        },
                       }}
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>
-                    {' '}
+                    {" "}
                     <TextField
                       value={values?.pattaNo}
-                      name='pattaNo'
+                      name="pattaNo"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       fullWidth
-                      label='PattaNo'
-                      placeholder='PattaNo'
+                      label="PattaNo"
+                      placeholder="PattaNo"
                       sx={{
-                        '&.Mui-error fieldset': {
-                          borderColor: 'red !important'
+                        "&.Mui-error fieldset": {
+                          borderColor: "red !important",
                         },
-                        '& fieldset': {
-                          borderWidth: '1px !important',
-                          borderColor: '#8d8686 !important'
+                        "& fieldset": {
+                          borderWidth: "1px !important",
+                          borderColor: "#8d8686 !important",
                         },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#7da370 !important',
-                          borderWidth: '2px !important'
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#7da370 !important",
+                          borderWidth: "2px !important",
                         },
-                        '& label.MuiInputLabel-root': {
-                          color: 'black' // Set the label font color to blue
-                        }
+                        "& label.MuiInputLabel-root": {
+                          color: "black", // Set the label font color to blue
+                        },
                       }}
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>
-                    {' '}
+                    {" "}
                     <FormControl fullWidth>
                       <InputLabel
                         sx={{
-                          color: 'black',
-                          '&.Mui-focused': {
-                            color: 'black' // Set the label color when focused
-                          }
+                          color: "black",
+                          "&.Mui-focused": {
+                            color: "black", // Set the label color when focused
+                          },
                         }}
                         shrink
-                        htmlFor='auth-login-v2-password'
+                        htmlFor="auth-login-v2-password"
                       >
                         Land Area
                       </InputLabel>
                       <OutlinedInput
-                        label='landArea'
+                        label="landArea"
                         onChange={handleChange}
                         onBlur={handleBlur}
                         notched
                         value={values?.landArea}
-                        name='landArea'
-                        type={'number'}
+                        name="landArea"
+                        type={"number"}
                         endAdornment={
-                          <InputAdornment position='end'>
+                          <InputAdornment position="end">
                             <Box
-                              edge='end'
+                              edge="end"
                               sx={{
-                                color: 'black'
+                                color: "black",
                               }}
                             >
                               Sqft.
@@ -1137,124 +1216,148 @@ const FarmerDetails = () => {
                           </InputAdornment>
                         }
                         sx={{
-                          '& fieldset': {
-                            borderWidth: '1px !important',
-                            borderColor: '#8d8686 !important'
+                          "& fieldset": {
+                            borderWidth: "1px !important",
+                            borderColor: "#8d8686 !important",
                           },
 
-                          '&.Mui-focused fieldset': {
-                            borderColor: '#8d8686 !important',
-                            borderWidth: '1px !important'
+                          "&.Mui-focused fieldset": {
+                            borderColor: "#8d8686 !important",
+                            borderWidth: "1px !important",
                           },
-                          '& input': {
-                            color: 'black' // Set the desired text color for the input
+                          "& input": {
+                            color: "black", // Set the desired text color for the input
                           },
-                          '& label.MuiInputLabel-root': {
-                            color: 'black' // Set the label font color to blue
+                          "& label.MuiInputLabel-root": {
+                            color: "black", // Set the label font color to blue
                           },
-                          mb: 4
+                          mb: 4,
                         }}
                       />
                     </FormControl>
                   </Grid>
                   <Grid item sm={6} xs={12}>
-                    {' '}
+                    {" "}
                     <TextField
                       value={values?.landType}
-                      name='landType'
+                      name="landType"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       fullWidth
-                      label='Land Type'
+                      label="Land Type"
                       sx={{
-                        '&.Mui-error fieldset': {
-                          borderColor: 'red !important'
+                        "&.Mui-error fieldset": {
+                          borderColor: "red !important",
                         },
-                        '& fieldset': {
-                          borderWidth: '1px !important',
-                          borderColor: '#8d8686 !important'
+                        "& fieldset": {
+                          borderWidth: "1px !important",
+                          borderColor: "#8d8686 !important",
                         },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#7da370 !important',
-                          borderWidth: '2px !important'
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#7da370 !important",
+                          borderWidth: "2px !important",
                         },
-                        '& label.MuiInputLabel-root': {
-                          color: 'black' // Set the label font color to blue
-                        }
+                        "& label.MuiInputLabel-root": {
+                          color: "black", // Set the label font color to blue
+                        },
                       }}
-                      placeholder='Land Type'
+                      placeholder="Land Type"
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>
-                    {' '}
+                    {" "}
                     <TextField
                       value={values?.farmerLandOwnershipType}
-                      name='farmerLandOwnershipType'
+                      name="farmerLandOwnershipType"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       fullWidth
-                      label='Farmer LandOwner Ship Type'
-                      placeholder='Farmer LandOwner Ship Type'
+                      label="Farmer LandOwner Ship Type"
+                      placeholder="Farmer LandOwner Ship Type"
                       sx={{
-                        '&.Mui-error fieldset': {
-                          borderColor: 'red !important'
+                        "&.Mui-error fieldset": {
+                          borderColor: "red !important",
                         },
-                        '& fieldset': {
-                          borderWidth: '1px !important',
-                          borderColor: '#8d8686 !important'
+                        "& fieldset": {
+                          borderWidth: "1px !important",
+                          borderColor: "#8d8686 !important",
                         },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#7da370 !important',
-                          borderWidth: '2px !important'
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#7da370 !important",
+                          borderWidth: "2px !important",
                         },
-                        '& label.MuiInputLabel-root': {
-                          color: 'black' // Set the label font color to blue
-                        }
+                        "& label.MuiInputLabel-root": {
+                          color: "black", // Set the label font color to blue
+                        },
                       }}
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>
-                    <Typography variant='body1' sx={{ fontWeight: 500, color: 'text.primary' }}>
+                    <Typography
+                      variant="body1"
+                      sx={{ fontWeight: 500, color: "text.primary" }}
+                    >
                       Upload Land Document
                     </Typography>
                     <RadioGroup
                       row
-                      aria-label='controlled'
+                      aria-label="controlled"
                       value={values?.appliedForSoilTesting}
-                      name='appliedForSoilTesting'
+                      name="appliedForSoilTesting"
                       onChange={handleChange}
                     >
-                      <FormControlLabel value='yes' control={<Radio />} label='Yes' />
-                      <FormControlLabel value='no' control={<Radio />} label='No' />
+                      <FormControlLabel
+                        value="yes"
+                        control={<Radio />}
+                        label="Yes"
+                      />
+                      <FormControlLabel
+                        value="no"
+                        control={<Radio />}
+                        label="No"
+                      />
                     </RadioGroup>
                   </Grid>
 
-                  {values?.appliedForSoilTesting === 'yes' ? (
+                  {values?.appliedForSoilTesting === "yes" ? (
                     <>
                       <Grid item sm={6} xs={12}></Grid>
                       <Grid item sm={6} xs={12}>
-                        <Typography variant='body1' sx={{ fontWeight: 500, color: 'text.primary' }}>
+                        <Typography
+                          variant="body1"
+                          sx={{ fontWeight: 500, color: "text.primary" }}
+                        >
                           Upload Land Document
                         </Typography>
-                        <Box display='flex' flexDirection='column' alignItems='flex-start'>
+                        <Box
+                          display="flex"
+                          flexDirection="column"
+                          alignItems="flex-start"
+                        >
                           <FilePreview file={fileForView} />
 
                           <Button
-                            variant='contained'
-                            component='label'
+                            variant="contained"
+                            component="label"
                             sx={{
-                              '&:hover': {
-                                backgroundColor: '#5E7954'
-                              }
+                              "&:hover": {
+                                backgroundColor: "#5E7954",
+                              },
                             }}
                           >
                             Upload
-                            <input type='file' hidden onChange={e => handleFile(e)} />
+                            <input
+                              type="file"
+                              hidden
+                              onChange={(e) => handleFile(e)}
+                            />
                           </Button>
                         </Box>
-                        {values?.appliedForSoilTesting === 'yes' ? (
+                        {values?.appliedForSoilTesting === "yes" ? (
                           file?.length <= 0 ? (
-                            <div style={{ color: 'red' }}>{'Please select an image'}</div>
+                            <div style={{ color: "red" }}>
+                              {"Please select an image"}
+                            </div>
                           ) : null
                         ) : null}
                       </Grid>
@@ -1263,28 +1366,28 @@ const FarmerDetails = () => {
                 </Grid>
                 <Box
                   sx={{
-                    padding: 5
+                    padding: 5,
                   }}
                 >
                   <Button
-                    variant='contained'
-                    type='submit'
+                    variant="contained"
+                    type="submit"
                     sx={{
                       mr: 1,
-                      '&:hover': {
-                        backgroundColor: '#5E7954'
-                      }
+                      "&:hover": {
+                        backgroundColor: "#5E7954",
+                      },
                     }}
                   >
                     Submit
                   </Button>
                   <Button
                     onClick={() => {
-                      router.back()
+                      router.back();
                     }}
-                    variant='outlined'
-                    type='button'
-                    color='secondary'
+                    variant="outlined"
+                    type="button"
+                    color="secondary"
                   >
                     Cancel
                   </Button>
@@ -1295,7 +1398,7 @@ const FarmerDetails = () => {
         </Formik>
       </Card>
     </>
-  )
-}
+  );
+};
 
-export default FarmerDetails
+export default FarmerDetails;
