@@ -175,7 +175,28 @@ const allInquiry = () => {
         );
       },
     },
-
+    {
+      flex: 0.25,
+      field: "IName",
+      sortable: false,
+      minWidth: 220,
+      headerName: "Inqury Name",
+      renderCell: ({ row }: any) => {
+        const { IName } = row;
+        return (
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <Typography
+                noWrap
+                sx={{ color: "text.secondary", fontWeight: 500 }}
+              >
+                {IName}
+              </Typography>
+            </Box>
+          </Box>
+        );
+      },
+    },
     {
       flex: 0.2,
       minWidth: 200,
@@ -399,9 +420,9 @@ const allInquiry = () => {
                 <InputLabel>Service type</InputLabel>
                 <Select
                   id="demo-simple-select"
-                  name="state"
+                  name="Service type"
                   value={IServiceType}
-                  label="Status"
+                  label="Service type"
                   onChange={(e: any) => {
                     setIServiceType(e?.target?.value);
                   }}

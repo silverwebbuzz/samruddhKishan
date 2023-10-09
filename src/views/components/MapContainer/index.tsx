@@ -67,46 +67,54 @@
 
 // export default Map
 
-import React, { useEffect } from 'react'
-import { GoogleMap, InfoWindow } from 'react-google-maps'
-import { useDispatch } from 'react-redux'
-import { getCenterCount } from 'src/slice/centerSlice'
-import { AppDispatch } from 'src/store/store'
+import React, { useEffect } from "react";
+import { GoogleMap, InfoWindow } from "react-google-maps";
+import { useDispatch } from "react-redux";
+import { getCenterCount } from "src/slice/centerSlice";
+import { AppDispatch } from "src/store/store";
 
 const Map = ({ DATA, setSelectedCenter }: any) => {
   const infoWindowStyle = {
-    padding: '12px',
-    borderRadius: '5px',
-    fontSize: '14px',
-    margin: '0px',
-    display: 'flex',
-    background: '#f7c35f'
-  }
+    padding: "12px",
+    borderRadius: "5px",
+    fontSize: "14px",
+    margin: "0px",
+    display: "flex",
+    background: "#f7c35f",
+  };
   return (
-    <GoogleMap center={{ lat: Number(23.04536648340735), lng: Number(72.56671999989858) }} zoom={10}>
+    <GoogleMap
+      center={{
+        lat: Number(23.04536648340735),
+        lng: Number(72.56671999989858),
+      }}
+      zoom={10}
+    >
       {DATA?.map((center: any) => (
-        <InfoWindow position={{ lat: Number(center?.lat), lng: Number(center?.lng) }}>
+        <InfoWindow
+          position={{ lat: Number(center?.lat), lng: Number(center?.lng) }}
+        >
           <div
             style={{
-              display: 'flex',
-              alignItems: 'center'
+              display: "flex",
+              alignItems: "center",
             }}
-            onClick={e => {
-              e.stopPropagation() // Prevent the click event from bubbling up
-              setSelectedCenter(center?.city)
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent the click event from bubbling up
+              setSelectedCenter(center?.city);
             }}
           >
             <div style={infoWindowStyle}>
-              <h3 style={{ margin: '0 0' }}>{center?.count}</h3>
+              <h3 style={{ margin: "0 0" }}>{center?.count}</h3>
             </div>
-            <div style={{ marginLeft: '10px' }}>
+            <div style={{ marginLeft: "10px" }}>
               <h3>{center?.city}</h3>
             </div>
           </div>
         </InfoWindow>
       ))}
     </GoogleMap>
-  )
-}
+  );
+};
 
-export default Map
+export default Map;

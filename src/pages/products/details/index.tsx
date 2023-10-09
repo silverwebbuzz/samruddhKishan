@@ -116,6 +116,11 @@ const Details = () => {
       document.body.classList.remove("landingPage");
     };
   }, []);
+
+  console.log(
+    "SONHandler(InquryName?.productGallaryImage)",
+    InquryName?.productGallaryImages
+  );
   return (
     <>
       <Navbar LOGO={getLogo?.logo} />
@@ -169,16 +174,17 @@ const Details = () => {
                       }}
                       slidesPerView={1}
                     >
-                      {JSONHandler(InquryName?.productGallaryImage)?.map(
-                        (Item: any) => {
+                      {InquryName?.productGallaryImages?.map((Item: any) => {
+                        return (
                           <SwiperSlide className="product_body_slider">
                             <img
                               className="product_image_slider"
-                              src={Item?.file}
+                              src={Item}
+                              alt="Image not found"
                             />
-                          </SwiperSlide>;
-                        }
-                      )}
+                          </SwiperSlide>
+                        );
+                      })}
                     </Swiper>
                   </Grid>
                   <Grid md={6} xs={12}>
