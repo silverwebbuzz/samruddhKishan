@@ -155,16 +155,9 @@ const allFarmers = () => {
     }
     if (userData?.role === 'admin') {
       payload.adminId = userData?.id
-      if (farmerID) {
-        let farmerIDPayLoad = {
-          uniqId: farmerID ? farmerID : ''
-        }
-        dispatch(getAllFarmers(farmerIDPayLoad))
-      } else {
-        dispatch(getAllFarmers(payload)).then(response => {
-          setPageCount(Math.ceil(response?.payload?.totalFilterCount / pageLimit))
-        })
-      }
+      dispatch(getAllFarmers(payload)).then(response => {
+        setPageCount(Math.ceil(response?.payload?.totalFilterCount / pageLimit))
+      })
     } else {
       let payload = {
         page: page,
