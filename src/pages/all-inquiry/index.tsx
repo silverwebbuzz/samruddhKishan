@@ -39,6 +39,7 @@ import DeleteMultiFieldsDialog from "src/views/deleteDialogBox/deleteMultiFields
 import { alpha } from "@mui/system";
 import { getAllInquiry, updateInquiry } from "src/slice/inquirySlice";
 import UpdateMultiFieldsDialog from "src/views/deleteDialogBox/updateMultipleDialogBox";
+import ViewDialogBox from "src/views/deleteDialogBox/viewDialogBox";
 
 export type Payload = {
   id?: number;
@@ -67,12 +68,16 @@ const allInquiry = () => {
   const [multiFieldUpdateOpen, setMultiFieldUpdateOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [multiFieldDeleteOpen, setMultiFieldDeleteOpen] = useState(false);
+  const [viewData, setViewData] = useState([]);
   const handleMultiDeleteClickOpen = () => setMultiFieldDeleteOpen(true);
   const handleMultiDeleteClickClose = () => setMultiFieldDeleteOpen(false);
   const handleMultiUpdateClickOpen = () => setMultiFieldUpdateOpen(true);
   const handleMultiUpdateClickClose = () => {
     setMultiFieldUpdateOpen(false);
   };
+  const handleClickOpenView = () => setOpenView(true);
+  const handleCloseView = () => setOpenView(false);
+
   const handleClickOpenDelete = () => setOpenDelete(true);
   const handleDeleteClose = () => setOpenDelete(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -80,6 +85,7 @@ const allInquiry = () => {
   const [IStatus, setIstatus] = useState("");
   const [IServiceType, setIServiceType] = useState("");
   const [IName, setIName] = useState("");
+  const [openView, setOpenView] = useState(false);
   const handleChange = (event: any, value: number) => {
     setPage(value);
   };
@@ -149,7 +155,7 @@ const allInquiry = () => {
     {
       flex: 0.1,
       field: "id",
-      minWidth: 100,
+      minWidth: 50,
       sortable: false,
       headerName: "ID",
     },
@@ -199,7 +205,7 @@ const allInquiry = () => {
     },
     {
       flex: 0.2,
-      minWidth: 200,
+      minWidth: 150,
       field: "flag",
       sortable: false,
       headerName: "Inquiry Type",
@@ -294,7 +300,15 @@ const allInquiry = () => {
       headerName: "Actions",
       renderCell: ({ row }: any) => (
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Tooltip title="Delete">
+          <IconButton
+            onClick={() => {
+              setViewData(row);
+              setOpenView(true);
+            }}
+          >
+            <Icon icon="carbon:view" />
+          </IconButton>
+          <Tooltip title="Menue">
             <IconButton
               size="small"
               aria-controls={`menu-${row.id}`} // Unique ID for each row's menu
@@ -315,16 +329,6 @@ const allInquiry = () => {
             open={Boolean(anchorEl) && row.id === menuRow?.id}
             onClose={() => setAnchorEl(null)}
           >
-            {/* <MenuItem
-              onClick={() => {
-                handleClickOpenDelete()
-                setDeleteID(row?.id)
-                setDelelteField(row?.fullName)
-              }}
-            >
-              <Icon icon='tabler:trash' />
-              Delete
-            </MenuItem> */}
             <MenuItem
               onClick={() => {
                 let editPayload: any = {
@@ -393,8 +397,8 @@ const allInquiry = () => {
                 onChange={(e) => {
                   setIName(e?.target?.value);
                 }}
-                label="Name"
-                placeholder="Search by Name"
+                label="Inqury name"
+                placeholder="Search by Inqury Name"
               />
             </Grid>
             <Grid item sm={2} xs={12}>
@@ -612,6 +616,13 @@ const allInquiry = () => {
         type="inquiry"
         id={selectedRows}
         setSelectedRows={setSelectedRows}
+      />
+      <ViewDialogBox
+        open={openView}
+        setOpen={setOpenView}
+        handleClickOpen={handleClickOpenView}
+        handleClose={handleCloseView}
+        data={viewData}
       />
     </Grid>
   );

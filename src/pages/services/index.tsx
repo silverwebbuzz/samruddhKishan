@@ -54,7 +54,6 @@ const ServicesPage = () => {
   const [orderBy, setOrderBy] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("");
   const dispatch = useDispatch<AppDispatch>();
-  const handleClickOpen = () => setOpen(true);
 
   const handleClose = () => setOpen(false);
   const handleOrderByChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -67,7 +66,6 @@ const ServicesPage = () => {
 
   function TruncateText({ text, maxLength = 25 }: any) {
     const [isTruncated, setIsTruncated] = useState(true);
-
     const toggleTruncate = () => {
       setIsTruncated(!isTruncated);
     };
@@ -115,10 +113,6 @@ const ServicesPage = () => {
   function removeTags(str) {
     if (str === null || str === "") return false;
     else str = str.toString();
-
-    // Regular expression to identify HTML tags in
-    // the input string. Replacing the identified
-    // HTML tag with a null string.
     return str.replace(/(<([^>]+)>)/gi, "");
   }
   const router = useRouter();
@@ -127,7 +121,6 @@ const ServicesPage = () => {
     dispatch(getAllCategoriesForSelect());
     dispatch(getFooter());
     dispatch(getAllContent());
-
     localStorage.removeItem("inquryName");
   }, []);
   const handleSubmit = (values: any) => {
@@ -209,7 +202,6 @@ const ServicesPage = () => {
             flexWrap: "wrap",
             marginLeft: "20px",
             width: "calc(100% - 350px)",
-            // display: 'flex'
           }}
           className="custom-scroll-container"
         >
@@ -301,8 +293,6 @@ const ServicesPage = () => {
                     className="product_title"
                     marginTop={2}
                     variant="h6"
-                    // className='single_service_card_title'
-                    // textOverflow={'hidden'}
                     fontWeight={600}
                     style={{
                       overflow: "hidden",
@@ -380,8 +370,6 @@ const ServicesPage = () => {
         open={open}
       >
         <DialogTitle id="full-screen-dialog-title">
-          {/* <Typography variant='h6' component='span'>
-          </Typography> */}
           <IconButton
             aria-label="close"
             onClick={handleClose}
@@ -555,15 +543,10 @@ const ServicesPage = () => {
                     </Grid>
                   </Grid>
                 </Form>
-                // </Card>
               );
             }}
           </Formik>
-          {/* </Box> */}
         </DialogContent>
-        {/* <DialogActions className='dialog-actions-dense'>
-          <Button onClick={handleClose}>Cancel</Button>
-        </DialogActions> */}
       </Dialog>
     </>
   );
