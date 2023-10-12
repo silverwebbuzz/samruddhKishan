@@ -67,6 +67,7 @@ import { ErrorMessage, Form, Formik } from "formik";
 import * as yup from "yup";
 import CustomRadioImg from "src/@core/components/custom-radio/image";
 import { CustomRadioImgData } from "src/@core/components/custom-radio/types";
+import { getAllContent } from "src/slice/landingPageSlice";
 
 // ** Styled Components
 const RegisterIllustration = styled("img")(({ theme }) => ({
@@ -121,9 +122,11 @@ const Register = () => {
   const { getLogo } = useSelector(
     (state: any) => state?.rootReducer?.settingsReducer
   );
-  const { getFooterData } = useSelector(
+
+  const { getContentData } = useSelector(
     (state: any) => state?.rootReducer?.landingPageReducer
   );
+
   const router = useRouter();
   const [pincode, setPincode] = useState("");
   const [STATE, setSTATE] = useState("");
@@ -245,6 +248,8 @@ const Register = () => {
   useEffect(() => {
     dispatch(getAllState());
     dispatch(getLogoAPI());
+    dispatch(getAllContent());
+
     dispatch(getRoleAndPermissions());
   }, []);
   useEffect(() => {
@@ -1516,9 +1521,9 @@ const Register = () => {
         </Box>
       </section>
       <FooterSection
+        DATA={getContentData}
         LOGO={getLogo?.logo}
         JSONHandler={JSONHandler}
-        DATA={getFooterData?.data}
       />
     </>
   );
