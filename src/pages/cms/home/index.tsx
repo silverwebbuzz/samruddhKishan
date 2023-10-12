@@ -790,8 +790,11 @@ const ContentPage = () => {
                       alignItems={"center"}
                     >
                       <Grid item sm={2} xs={12}>
-                        <Box width={100} height={60}>
+                        <Box>
                           <FilePreview
+                            style={{
+                              height: "100px",
+                            }}
                             file={value?.ServiceContentMainCardImage}
                           />
                         </Box>
