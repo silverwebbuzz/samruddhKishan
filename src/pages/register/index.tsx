@@ -38,6 +38,7 @@ import {
   Select,
   Tooltip,
   Typography,
+  css,
 } from "@mui/material";
 
 import { useRouter } from "next/router";
@@ -249,7 +250,6 @@ const Register = () => {
     dispatch(getAllState());
     dispatch(getLogoAPI());
     dispatch(getAllContent());
-
     dispatch(getRoleAndPermissions());
   }, []);
   useEffect(() => {
@@ -561,18 +561,20 @@ const Register = () => {
           >
             <div
               style={{
-                border: rolePrefill == "f1" ? "4px solid green" : "1px solid",
+                border: "2px solid",
                 borderRadius: "10px",
                 display: "flex",
                 justifyContent: "center",
                 flexDirection: "column",
                 alignItems: "center",
                 margin: "10px",
-                width: "200px",
-                height: "200px",
+                width: "300px",
+                height: "300px",
               }}
+              className="HoverOnUser"
               onClick={() => {
                 setRolePrefill("f1");
+                router.push("register/farmer");
               }}
             >
               <img
@@ -584,23 +586,25 @@ const Register = () => {
                 src="/images/logo/1696851476202-farmer.png"
               />
               <Typography fontWeight={600} textAlign={"center"} mt={4}>
-                Farmers
+                Register As Farmers
               </Typography>
             </div>{" "}
             <div
+              className="HoverOnUser"
               style={{
-                border: rolePrefill == "13" ? "4px solid green" : "1px solid",
+                border: "2px solid",
                 borderRadius: "10px",
                 display: "flex",
                 justifyContent: "center",
                 flexDirection: "column",
                 alignItems: "center",
                 margin: "10px",
-                width: "200px",
-                height: "200px",
+                width: "300px",
+                height: "300px",
               }}
               onClick={() => {
                 setRolePrefill("13");
+                router.push("/register/center");
               }}
             >
               <img
@@ -612,23 +616,33 @@ const Register = () => {
                 src="/images/logo/information-point_5639292.png"
               />
               <Typography fontWeight={600} textAlign={"center"} mt={4}>
-                Centers
+                Register As Centers
               </Typography>
             </div>{" "}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
+          >
             <div
+              className="HoverOnUser"
               style={{
-                border: rolePrefill == "10" ? "4px solid green" : "1px solid",
+                border: "2px solid",
                 borderRadius: "10px",
                 display: "flex",
                 justifyContent: "center",
                 flexDirection: "column",
                 alignItems: "center",
                 margin: "10px",
-                width: "200px",
-                height: "200px",
+                width: "300px",
+                height: "300px",
               }}
               onClick={() => {
                 setRolePrefill("10");
+                router.push("/register/apmc-traders");
               }}
             >
               <img
@@ -640,23 +654,25 @@ const Register = () => {
                 src="/images/logo/consumer_5823547.png"
               />
               <Typography fontWeight={600} textAlign={"center"} mt={4}>
-                Apmc Traders
+                Register As Apmc Traders
               </Typography>
             </div>{" "}
             <div
+              className="HoverOnUser"
               style={{
-                border: rolePrefill == "17" ? "4px solid green" : "1px solid",
+                border: "2px solid",
                 borderRadius: "10px",
                 display: "flex",
                 justifyContent: "center",
                 flexDirection: "column",
                 alignItems: "center",
                 margin: "10px",
-                width: "200px",
-                height: "200px",
+                width: "300px",
+                height: "300px",
               }}
               onClick={() => {
                 setRolePrefill("17");
+                router.push("/register/vendor");
               }}
             >
               <img
@@ -668,856 +684,10 @@ const Register = () => {
                 src="/images/logo/buyer_1900085.png"
               />
               <Typography fontWeight={600} textAlign={"center"} mt={4}>
-                Vendors
+                Register As Vendors
               </Typography>
             </div>
           </div>
-          <Card>
-            <>
-              <Box
-                sx={{
-                  margin: 10,
-                }}
-              >
-                <Box sx={{ mb: 8, textAlign: "center" }}>
-                  <Divider>
-                    <Chip
-                      sx={{
-                        fontSize: "22px",
-                        padding: "15px",
-                        fontWeight: "bold",
-                        textAlign: "left",
-                        backgroundColor: "#f6f5f8",
-                      }}
-                      label="User Registration"
-                    />
-                  </Divider>
-                </Box>
-
-                <Grid
-                  container
-                  // spacing={6}
-                  sx={{
-                    padding: "10px",
-                  }}
-                >
-                  {/* <Grid item sm={12} xs={12}>
-                    <FormControl fullWidth size="small">
-                      <InputLabel id="demo-simple-select-label">
-                        User type
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        name="role"
-                        value={rolePrefill}
-                        // error={Boolean(errors.role && touched.role)}
-                        label="User type"
-                        onChange={(e) => {
-                          setRolePrefill(e.target?.value);
-                        }}
-                      >
-                        <MenuItem key={"farmer"} value={"f1"}>
-                          {"FARMER"}
-                        </MenuItem>
-                        {filterRoles(getRoles)?.map((Item: any) => (
-                          <MenuItem key={Item?.roleType} value={Item?.id}>
-                            {Item?.roleType}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid> */}
-
-                  {rolePrefill == 13 ? (
-                    <CentersForm
-                      size="small"
-                      allState={allState}
-                      STATE={STATE}
-                      setSTATE={setSTATE}
-                      setDistrict={setDistrict}
-                      district={district}
-                      allDistrict={allDistrict}
-                      rolePrefill={rolePrefill}
-                      handlePincode={handlePincode}
-                      pincode={pincode}
-                      setTaluka={setTaluka}
-                      taluka={taluka}
-                      getAddressByPinCodeData={getAddressByPinCodeData}
-                    />
-                  ) : rolePrefill == 10 ? (
-                    <ApmcForm
-                      size="small"
-                      allState={allState}
-                      STATE={STATE}
-                      setSTATE={setSTATE}
-                      setDistrict={setDistrict}
-                      district={district}
-                      allDistrict={allDistrict}
-                      rolePrefill={rolePrefill}
-                      handlePincode={handlePincode}
-                      pincode={pincode}
-                      setTaluka={setTaluka}
-                      taluka={taluka}
-                      getAddressByPinCodeData={getAddressByPinCodeData}
-                    />
-                  ) : rolePrefill == 17 ? (
-                    <VendorForm
-                      size="small"
-                      allState={allState}
-                      STATE={STATE}
-                      setSTATE={setSTATE}
-                      setDistrict={setDistrict}
-                      district={district}
-                      allDistrict={allDistrict}
-                      rolePrefill={rolePrefill}
-                      handlePincode={handlePincode}
-                      pincode={pincode}
-                      setTaluka={setTaluka}
-                      taluka={taluka}
-                      getAddressByPinCodeData={getAddressByPinCodeData}
-                      categories={categories}
-                    />
-                  ) : (
-                    <Formik
-                      enableReinitialize
-                      initialValues={initialValues}
-                      validationSchema={validationSchema}
-                      onSubmit={(values) => {
-                        if (
-                          values?.appliedForSoilTesting === "yes" &&
-                          file?.length > 0
-                        ) {
-                          handleSubmit(values);
-                        } else if (values?.appliedForSoilTesting === "no") {
-                          handleSubmit(values);
-                        }
-                      }}
-                    >
-                      {({
-                        values,
-                        handleChange,
-                        handleBlur,
-                        errors,
-                        touched,
-                        setFieldValue,
-                      }) => (
-                        <Form>
-                          <div
-                            style={{
-                              padding: "10px",
-                              marginLeft: "5px",
-                            }}
-                          >
-                            <Grid container xs={12} md={12} spacing={3}>
-                              <Grid item sm={6} xs={12}>
-                                <TextField
-                                  size="small"
-                                  value={values?.firstName}
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  name="firstName"
-                                  error={Boolean(
-                                    errors.firstName && touched.firstName
-                                  )}
-                                  fullWidth
-                                  label="First Name *"
-                                  placeholder="First Name"
-                                />
-                                <ErrorMessage
-                                  name="firstName"
-                                  render={(msg) => (
-                                    <div style={{ color: "red" }}>{msg}</div>
-                                  )}
-                                />
-                              </Grid>
-                              <Grid item sm={6} xs={12}>
-                                <TextField
-                                  size="small"
-                                  value={values?.middleName}
-                                  name="middleName"
-                                  error={Boolean(
-                                    errors.middleName && touched.middleName
-                                  )}
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  fullWidth
-                                  label="Middle Name"
-                                  placeholder="Middle Name"
-                                />
-                                <ErrorMessage
-                                  name="middleName"
-                                  render={(msg) => (
-                                    <div style={{ color: "red" }}>{msg}</div>
-                                  )}
-                                />
-                              </Grid>
-                              <Grid item sm={6} xs={12}>
-                                <TextField
-                                  size="small"
-                                  value={values?.lastName}
-                                  name="lastName"
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  error={Boolean(
-                                    errors.lastName && touched.lastName
-                                  )}
-                                  fullWidth
-                                  label="Last Name *"
-                                  placeholder="Last Name"
-                                />
-                                <ErrorMessage
-                                  name="lastName"
-                                  render={(msg) => (
-                                    <div style={{ color: "red" }}>{msg}</div>
-                                  )}
-                                />
-                              </Grid>
-                              <Grid item sm={6} xs={12}>
-                                <TextField
-                                  size="small"
-                                  value={values?.DOB}
-                                  name="DOB"
-                                  onChange={handleChange}
-                                  fullWidth
-                                  type="date"
-                                  label="Date of birth *"
-                                  InputLabelProps={{
-                                    shrink: true,
-                                  }}
-                                  inputProps={{
-                                    max: new Date().toISOString().split("T")[0], // Set max to today's date
-                                  }}
-                                />
-                              </Grid>
-                              <Grid item sm={6} xs={12}>
-                                <TextField
-                                  size="small"
-                                  value={values?.aadharNumber}
-                                  name="aadharNumber"
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  error={Boolean(
-                                    errors.aadharNumber && touched.aadharNumber
-                                  )}
-                                  fullWidth
-                                  type="number"
-                                  label="Aadhar Number *"
-                                  placeholder="Aadhar Number"
-                                />
-                                <ErrorMessage
-                                  name="aadharNumber"
-                                  render={(msg) => (
-                                    <div style={{ color: "red" }}>{msg}</div>
-                                  )}
-                                />
-                              </Grid>
-                              <Grid item sm={6} xs={12}>
-                                <TextField
-                                  size="small"
-                                  value={values?.mobileNumber}
-                                  name="mobileNumber"
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  type="number"
-                                  error={Boolean(
-                                    errors.mobileNumber && touched.mobileNumber
-                                  )}
-                                  fullWidth
-                                  InputLabelProps={{
-                                    shrink: true,
-                                  }}
-                                  label="Mobile Number *"
-                                  placeholder="Mobile Number"
-                                />
-                                <ErrorMessage
-                                  name="mobileNumber"
-                                  render={(msg) => (
-                                    <div style={{ color: "red" }}>{msg}</div>
-                                  )}
-                                />
-                              </Grid>
-                              <Grid item sm={6} xs={12}>
-                                <TextField
-                                  size="small"
-                                  value={values?.wpNumber}
-                                  name="wpNumber"
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  type="number"
-                                  error={Boolean(
-                                    errors.wpNumber && touched.wpNumber
-                                  )}
-                                  fullWidth
-                                  InputLabelProps={{
-                                    shrink: true,
-                                  }}
-                                  label="Whatsapp Number *"
-                                  placeholder="Whatsapp Number"
-                                />
-                                <ErrorMessage
-                                  name="wpNumber"
-                                  render={(msg) => (
-                                    <div style={{ color: "red" }}>{msg}</div>
-                                  )}
-                                />
-                              </Grid>
-                              <Grid item sm={6} xs={12}>
-                                <TextField
-                                  size="small"
-                                  value={values?.address}
-                                  name="address"
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  fullWidth
-                                  label="Address"
-                                  placeholder="Address"
-                                />
-                              </Grid>
-                              <Grid item sm={6} xs={12}>
-                                <FormControl fullWidth size="small">
-                                  <InputLabel id="demo-simple-select-label">
-                                    State
-                                  </InputLabel>
-                                  <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    name="state"
-                                    value={values?.state}
-                                    label="State"
-                                    onChange={(e: any) => {
-                                      setFieldValue("state", e?.target?.value);
-                                      setSTATE(e?.target?.value);
-                                    }}
-                                  >
-                                    {allState?.data?.map((name: any) => (
-                                      <MenuItem
-                                        key={name?.name}
-                                        value={name?.name}
-                                      >
-                                        {name?.name}
-                                      </MenuItem>
-                                    ))}
-                                  </Select>
-                                </FormControl>
-                              </Grid>
-                              <Grid item sm={6} xs={12}>
-                                <Tooltip title="Please select state first">
-                                  <FormControl fullWidth size="small">
-                                    <InputLabel id="demo-simple-select-label">
-                                      District
-                                    </InputLabel>
-                                    <Select
-                                      labelId="demo-simple-select-label"
-                                      id="demo-simple-select"
-                                      name="district"
-                                      disabled={STATE.length <= 0}
-                                      value={values?.district}
-                                      label="District"
-                                      onChange={handleChange}
-                                    >
-                                      {allDistrict?.map((name: any) => (
-                                        <MenuItem
-                                          key={name?.name}
-                                          value={name?.name}
-                                        >
-                                          {name?.name}
-                                        </MenuItem>
-                                      ))}
-                                    </Select>
-                                  </FormControl>
-                                </Tooltip>
-                              </Grid>
-                              <Grid item sm={6} xs={12}>
-                                <TextField
-                                  size="small"
-                                  value={pincode}
-                                  name="pinCode"
-                                  error={Boolean(
-                                    errors.pinCode && touched.pinCode
-                                  )}
-                                  onChange={(e) => {
-                                    handlePincode(e.target.value);
-                                    setFieldValue("pinCode", e.target.value);
-                                  }}
-                                  fullWidth
-                                  type="number"
-                                  label="Pin Code"
-                                  placeholder="Pin Code"
-                                />
-                                <ErrorMessage
-                                  name="pinCode"
-                                  render={(msg) => (
-                                    <div style={{ color: "red" }}>{msg}</div>
-                                  )}
-                                />
-                              </Grid>
-
-                              <Grid item sm={6} xs={12}>
-                                <Tooltip
-                                  title="Please enter pincode first"
-                                  disableFocusListener={!(pincode.length <= 0)}
-                                  disableHoverListener={!(pincode.length <= 0)}
-                                  disableTouchListener={!(pincode.length <= 0)}
-                                >
-                                  <FormControl fullWidth size="small">
-                                    <InputLabel id="demo-simple-select-label">
-                                      Taluka
-                                    </InputLabel>
-                                    <Select
-                                      labelId="demo-simple-select-label"
-                                      id="demo-simple-select"
-                                      name="taluka"
-                                      disabled={pincode?.length <= 0}
-                                      value={values?.taluka && values?.taluka}
-                                      label="Taluka"
-                                      onChange={handleChange}
-                                    >
-                                      {getAddressByPinCodeData?.taluka &&
-                                        getAddressByPinCodeData?.taluka?.map(
-                                          (name: any) => (
-                                            <MenuItem key={name} value={name}>
-                                              {name}
-                                            </MenuItem>
-                                          )
-                                        )}
-                                    </Select>
-                                  </FormControl>
-                                </Tooltip>
-                              </Grid>
-                              <Grid item sm={6} xs={12}>
-                                <Tooltip
-                                  title="Please enter pincode first"
-                                  disableFocusListener={!(pincode.length <= 0)}
-                                  disableHoverListener={!(pincode.length <= 0)}
-                                  disableTouchListener={!(pincode.length <= 0)}
-                                >
-                                  <FormControl fullWidth size="small">
-                                    <InputLabel id="demo-simple-select-label">
-                                      Village Name
-                                    </InputLabel>
-                                    <Select
-                                      labelId="demo-simple-select-label"
-                                      id="demo-simple-select"
-                                      name="villageName"
-                                      disabled={pincode.length <= 0}
-                                      value={
-                                        values?.villageName &&
-                                        values?.villageName
-                                      }
-                                      label="villageName"
-                                      onChange={handleChange}
-                                    >
-                                      {getAddressByPinCodeData?.village?.map(
-                                        (name: any) => (
-                                          <MenuItem key={name} value={name}>
-                                            {name}
-                                          </MenuItem>
-                                        )
-                                      )}
-                                    </Select>
-                                  </FormControl>
-                                </Tooltip>
-                              </Grid>
-
-                              <Grid item sm={6} xs={12}>
-                                {" "}
-                                <TextField
-                                  size="small"
-                                  value={values?.religion}
-                                  name="religion"
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  fullWidth
-                                  label="Religion"
-                                  placeholder="Religion"
-                                />
-                              </Grid>
-
-                              <Grid item sm={6} xs={12}>
-                                <Typography
-                                  variant="body1"
-                                  sx={{
-                                    fontWeight: 500,
-                                    color: "text.primary",
-                                  }}
-                                >
-                                  Gender{" "}
-                                </Typography>
-                                <RadioGroup
-                                  row
-                                  value={values && values?.gender}
-                                  name="gender"
-                                  onChange={handleChange}
-                                >
-                                  <FormControlLabel
-                                    value="male"
-                                    control={<Radio value="male" />}
-                                    label="Male"
-                                  />
-                                  <FormControlLabel
-                                    value="female"
-                                    control={<Radio value="female" />}
-                                    label="Female"
-                                  />
-                                </RadioGroup>
-                              </Grid>
-                              <Grid item sm={6} xs={12}>
-                                <Typography
-                                  variant="body1"
-                                  sx={{
-                                    fontWeight: 500,
-                                    color: "text.primary",
-                                  }}
-                                >
-                                  Marital Status
-                                </Typography>
-                                <RadioGroup
-                                  row
-                                  aria-label="controlled"
-                                  value={
-                                    values?.maritalStatus &&
-                                    values?.maritalStatus
-                                  }
-                                  name="maritalStatus"
-                                  onChange={handleChange}
-                                >
-                                  <FormControlLabel
-                                    value="single"
-                                    control={<Radio />}
-                                    label="Single"
-                                  />
-                                  <FormControlLabel
-                                    value="married"
-                                    control={<Radio />}
-                                    label="Married"
-                                  />
-                                </RadioGroup>
-                              </Grid>
-                            </Grid>
-                            <Box sx={{ mb: 8, textAlign: "center" }}>
-                              <Divider>
-                                <Chip
-                                  sx={{
-                                    fontSize: "22px",
-                                    padding: "15px",
-                                    fontWeight: "bold",
-                                    textAlign: "left",
-                                    backgroundColor: "#f6f5f8",
-                                  }}
-                                  label="Land Details"
-                                />
-                              </Divider>
-                            </Box>
-
-                            <Grid
-                              container
-                              spacing={6}
-                              sx={{
-                                padding: "10px",
-                              }}
-                            >
-                              <Grid item sm={6} xs={12}>
-                                <TextField
-                                  size="small"
-                                  value={values?.landDistrict}
-                                  name="landDistrict"
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  error={Boolean(
-                                    errors.landDistrict && touched.landDistrict
-                                  )}
-                                  fullWidth
-                                  label="Land District"
-                                  placeholder="Land Distric"
-                                />
-                              </Grid>
-                              <Grid item sm={6} xs={12}>
-                                {" "}
-                                <TextField
-                                  size="small"
-                                  value={values?.subDivision}
-                                  name="subDivision"
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  fullWidth
-                                  label="SubDivision"
-                                  placeholder="SubDivision"
-                                />
-                              </Grid>
-                              <Grid item sm={6} xs={12}>
-                                {" "}
-                                <TextField
-                                  size="small"
-                                  value={values?.circle}
-                                  name="circle"
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  fullWidth
-                                  label="Circle"
-                                  placeholder="Circle"
-                                />
-                              </Grid>
-
-                              <Grid item sm={6} xs={12}>
-                                <TextField
-                                  size="small"
-                                  value={values?.landVillage}
-                                  name="landVillage"
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  fullWidth
-                                  label="Land Village"
-                                  placeholder="landVillage"
-                                />
-                              </Grid>
-                              <Grid item sm={6} xs={12}>
-                                {" "}
-                                <TextField
-                                  size="small"
-                                  value={values?.mouza}
-                                  name="mouza"
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  fullWidth
-                                  label="Mouza"
-                                  placeholder="mouza"
-                                />
-                              </Grid>
-                              <Grid item sm={6} xs={12}>
-                                {" "}
-                                <TextField
-                                  size="small"
-                                  value={values?.pattaType}
-                                  name="pattaType"
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  fullWidth
-                                  label="PattaType"
-                                  placeholder="PattaType"
-                                />
-                              </Grid>
-                              <Grid item sm={6} xs={12}>
-                                {" "}
-                                <TextField
-                                  size="small"
-                                  value={values?.latNo}
-                                  name="latNo"
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  fullWidth
-                                  label="LatNo"
-                                  placeholder="LatNo"
-                                />
-                              </Grid>
-                              <Grid item sm={6} xs={12}>
-                                {" "}
-                                <TextField
-                                  size="small"
-                                  value={values?.pattaNo}
-                                  name="pattaNo"
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  fullWidth
-                                  label="PattaNo"
-                                  placeholder="PattaNo"
-                                />
-                              </Grid>
-                              <Grid item sm={6} xs={12}>
-                                {" "}
-                                <FormControl fullWidth size="small">
-                                  <InputLabel
-                                    shrink
-                                    htmlFor="auth-login-v2-password"
-                                  >
-                                    Land Area
-                                  </InputLabel>
-                                  <OutlinedInput
-                                    label="landArea"
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    notched
-                                    value={values?.landArea}
-                                    name="landArea"
-                                    type={"number"}
-                                    endAdornment={
-                                      <InputAdornment position="end">
-                                        <Box
-                                          edge="end"
-                                          sx={{
-                                            color: "black",
-                                          }}
-                                        >
-                                          Sqft.
-                                        </Box>
-                                      </InputAdornment>
-                                    }
-                                    sx={{
-                                      "& fieldset": {
-                                        borderWidth: "1px !important",
-                                        borderColor: "#8d8686 !important",
-                                      },
-
-                                      "&.Mui-focused fieldset": {
-                                        borderColor: "#8d8686 !important",
-                                        borderWidth: "1px !important",
-                                      },
-                                      "& input": {
-                                        color: "black", // Set the desired text color for the input
-                                      },
-                                      "& label.MuiInputLabel-root": {
-                                        color: "black", // Set the label font color to blue
-                                      },
-                                      mb: 4,
-                                    }}
-                                  />
-                                </FormControl>
-                              </Grid>
-                              <Grid item sm={6} xs={12}>
-                                {" "}
-                                <TextField
-                                  size="small"
-                                  value={values?.landType}
-                                  name="landType"
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  fullWidth
-                                  label="Land Type"
-                                  placeholder="Land Type"
-                                />
-                              </Grid>
-                              <Grid item sm={6} xs={12}>
-                                {" "}
-                                <TextField
-                                  size="small"
-                                  value={values?.farmerLandOwnershipType}
-                                  name="farmerLandOwnershipType"
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  fullWidth
-                                  label="Farmer LandOwner Ship Type"
-                                  placeholder="Farmer LandOwner Ship Type"
-                                />
-                              </Grid>
-                              <Grid item sm={6} xs={12}>
-                                <Typography
-                                  variant="body1"
-                                  sx={{
-                                    fontWeight: 500,
-                                    color: "text.primary",
-                                  }}
-                                >
-                                  Upload Land Document
-                                </Typography>
-                                <RadioGroup
-                                  row
-                                  aria-label="controlled"
-                                  value={values?.appliedForSoilTesting}
-                                  name="appliedForSoilTesting"
-                                  onChange={handleChange}
-                                >
-                                  <FormControlLabel
-                                    value="yes"
-                                    control={<Radio />}
-                                    label="Yes"
-                                  />
-                                  <FormControlLabel
-                                    value="no"
-                                    control={<Radio />}
-                                    label="No"
-                                  />
-                                </RadioGroup>
-                              </Grid>
-
-                              {values?.appliedForSoilTesting === "yes" ? (
-                                <>
-                                  <Grid item sm={6} xs={12}></Grid>
-                                  <Grid item sm={6} xs={12}>
-                                    <Typography
-                                      variant="body1"
-                                      sx={{
-                                        fontWeight: 500,
-                                        color: "text.primary",
-                                      }}
-                                    >
-                                      Upload Land Document
-                                    </Typography>
-                                    <Box
-                                      display="flex"
-                                      flexDirection="column"
-                                      alignItems="flex-start"
-                                    >
-                                      <FilePreview file={fileForView} />
-
-                                      <Button
-                                        variant="contained"
-                                        component="label"
-                                        sx={{
-                                          "&:hover": {
-                                            backgroundColor: "#5E7954",
-                                          },
-                                        }}
-                                      >
-                                        Upload
-                                        <input
-                                          type="file"
-                                          hidden
-                                          onChange={(e: any) =>
-                                            handleFile(e?.target?.files[0])
-                                          }
-                                        />
-                                      </Button>
-                                    </Box>
-                                    {values?.appliedForSoilTesting === "yes" ? (
-                                      file?.length <= 0 ? (
-                                        <div style={{ color: "red" }}>
-                                          {"Please select an image"}
-                                        </div>
-                                      ) : null
-                                    ) : null}
-                                  </Grid>
-                                </>
-                              ) : null}
-                              <Grid xs={12} md={12}>
-                                <Box
-                                  sx={{
-                                    padding: 5,
-                                  }}
-                                >
-                                  <Button
-                                    variant="contained"
-                                    type="submit"
-                                    sx={{
-                                      mr: 1,
-                                      "&:hover": {
-                                        backgroundColor: "#5E7954",
-                                      },
-                                    }}
-                                  >
-                                    Submit
-                                  </Button>
-                                  <Button
-                                    onClick={() => {
-                                      router.back();
-                                    }}
-                                    variant="outlined"
-                                    type="button"
-                                    color="secondary"
-                                  >
-                                    Cancel
-                                  </Button>
-                                </Box>
-                              </Grid>
-                            </Grid>
-                          </div>
-                        </Form>
-                      )}
-                    </Formik>
-                  )}
-                </Grid>
-              </Box>
-            </>
-          </Card>
         </Box>
       </section>
       <FooterSection

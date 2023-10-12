@@ -2206,3 +2206,7 @@ footer .contact_details_menu .contact-name p a:hover {
     font-size: 22px;
   }
 }
+
+.HoverOnUser:hover {
+  border: 4px solid green !important;
+}

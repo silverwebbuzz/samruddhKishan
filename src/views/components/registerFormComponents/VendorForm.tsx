@@ -15,6 +15,7 @@ import * as yup from "yup";
 import { FilePreview } from "../filePreviewer/FilePreview";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { createUser1 } from "src/slice/farmers";
 
 const VendorForm = ({
   size,
@@ -24,6 +25,7 @@ const VendorForm = ({
   allState,
   setDistrict,
   district,
+  taluka,
   setFieldValue,
   allDistrict,
   handlePincode,
@@ -33,6 +35,8 @@ const VendorForm = ({
 }: any) => {
   const [categoryIdPrefill, setCategoryIdPrefill] = useState(0);
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+
   const validationSchema = yup.object().shape({
     firstName: yup.string().required("First Name Required"),
     lastName: yup.string().required("Last Name Required"),
@@ -54,6 +58,37 @@ const VendorForm = ({
         "Must contain 8 characters, 1 uppercase, 1 lowercase, 1 number, and 1 special character"
       ),
   });
+
+  const handleSubmit = (values: any) => {
+    let Vendorspayload = [
+      { firstName: values?.firstName || "" },
+      { lastName: values?.lastName || "" },
+      { email: values?.email || "" },
+      { password: values?.password || "" },
+      { phone: values?.phone || "" },
+      { state: values?.state || "" },
+      { city: district || "" },
+      { taluka: taluka || "" },
+      { pinCode: pincode || "" },
+      { village: values?.villageName || "" },
+      { roleId: 17 || "" },
+      { vendorImage: values?.vendorImage || "" },
+      { categoryId: categoryIdPrefill || "" },
+    ];
+    let formData = new FormData();
+    Vendorspayload.forEach((entry: any) => {
+      //@ts-ignore
+      const key = Object.keys(entry)[0]; // Extracting the key from the object
+      const value = entry[key]; // Extracting the value from the object
+      formData.append(key, value); // Appending the key-value pair to the formData
+    });
+
+    dispatch(createUser1(formData)).then((res: any) => {
+      if (res?.payload?.status === 200) {
+        router.push("/users");
+      }
+    });
+  };
   return (
     <>
       <Formik
@@ -73,7 +108,7 @@ const VendorForm = ({
         }}
         validationSchema={validationSchema}
         onSubmit={(values) => {
-          console.log(values);
+          handleSubmit(values);
         }}
       >
         {({

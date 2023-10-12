@@ -36,7 +36,7 @@ const ApmcForm = ({
 
   const handleSubmit = (values: any) => {
     let apmcpayload = [
-      { roleId: rolePrefill || "" },
+      { roleId: 10 || "" },
       { state: values?.state || "" },
       { city: district || "" },
       { taluka: taluka || "" },
