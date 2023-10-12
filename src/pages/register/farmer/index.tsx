@@ -69,6 +69,7 @@ import * as yup from "yup";
 import CustomRadioImg from "src/@core/components/custom-radio/image";
 import { CustomRadioImgData } from "src/@core/components/custom-radio/types";
 import { getAllContent } from "src/slice/landingPageSlice";
+import Topbar from "src/views/components/topbar";
 const index = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
@@ -248,776 +249,797 @@ const index = () => {
       }
     }
   };
+  useEffect(() => {
+    document.body.classList.add("landingPage");
+    return () => {
+      document.body.classList.remove("landingPage");
+    };
+  }, []);
   return (
-    <Box
-      style={{
-        padding: "5%",
-        marginLeft: "20%",
-        marginRight: "20%",
-      }}
-    >
-      <Card
-        sx={{
-          padding: "3%",
+    <>
+      <Topbar data={getContentData} />
+      <Navbar LOGO={getLogo?.logo} />
+      <PageBanner
+        height={200}
+        BGImg={"/images/logo/slider6.jpg"}
+        bannerName="Farmer Registration"
+        bannerContent="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry"
+      />
+      <Box
+        style={{
+          padding: "5%",
+          marginLeft: "20%",
+          marginRight: "20%",
         }}
       >
-        <Box sx={{ mb: 8, textAlign: "center" }}>
-          <Divider>
-            <Chip
-              sx={{
-                fontSize: "22px",
-                padding: "15px",
-                fontWeight: "bold",
-                textAlign: "left",
-                backgroundColor: "#f6f5f8",
-              }}
-              label="Farmers Registration"
-            />
-          </Divider>
-        </Box>
-        <Formik
-          enableReinitialize
-          initialValues={{
-            firstName: "",
-            lastName: "",
-            email: "",
-            password: "",
-            phone: "",
-            state: "",
-            district: "",
-            pinCode: "",
-            taluka: "",
-            villageName: "",
-            role: "f1",
-            middleName: "",
-            asPerAbove: "",
-            DOB: "",
-            aadharNumber: "",
-            mobileNumber: "",
-            wpNumber: "",
-            address: "",
-            caste: "",
-            maritalStatus: "married",
-            gender: "male",
-            religion: "",
-            landDistrict: "",
-            subDivision: "",
-            circle: "",
-            mouza: "",
-            landVillage: "",
-            pattaType: "",
-            latNo: "",
-            pattaNo: "",
-            landArea: "",
-            landType: "",
-            farmerLandOwnershipType: "",
-            appliedForSoilTesting: "yes",
-          }}
-          validationSchema={validationSchema}
-          onSubmit={(values) => {
-            if (values?.appliedForSoilTesting === "yes" && file?.length > 0) {
-              handleFarmerSubmit(values);
-            } else if (values?.appliedForSoilTesting === "no") {
-              handleFarmerSubmit(values);
-            }
+        <Card
+          sx={{
+            padding: "3%",
           }}
         >
-          {({
-            values,
-            handleChange,
-            handleBlur,
-            errors,
-            touched,
-            setFieldValue,
-          }) => (
-            <Form>
-              <div
-                style={{
-                  padding: "10px",
-                  marginLeft: "5px",
+          <Box sx={{ mb: 8, textAlign: "center" }}>
+            <Divider>
+              <Chip
+                sx={{
+                  fontSize: "22px",
+                  padding: "15px",
+                  fontWeight: "bold",
+                  textAlign: "left",
+                  backgroundColor: "#f6f5f8",
                 }}
-              >
-                <Grid container xs={12} md={12} spacing={3}>
-                  <Grid item sm={6} xs={12}>
-                    <TextField
-                      size="small"
-                      value={values?.firstName}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      name="firstName"
-                      error={Boolean(errors.firstName && touched.firstName)}
-                      fullWidth
-                      label="First Name *"
-                      placeholder="First Name"
-                    />
-                    <ErrorMessage
-                      name="firstName"
-                      render={(msg) => (
-                        <div style={{ color: "red" }}>{msg}</div>
-                      )}
-                    />
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    <TextField
-                      size="small"
-                      value={values?.middleName}
-                      name="middleName"
-                      error={Boolean(errors.middleName && touched.middleName)}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      fullWidth
-                      label="Middle Name"
-                      placeholder="Middle Name"
-                    />
-                    <ErrorMessage
-                      name="middleName"
-                      render={(msg) => (
-                        <div style={{ color: "red" }}>{msg}</div>
-                      )}
-                    />
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    <TextField
-                      size="small"
-                      value={values?.lastName}
-                      name="lastName"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={Boolean(errors.lastName && touched.lastName)}
-                      fullWidth
-                      label="Last Name *"
-                      placeholder="Last Name"
-                    />
-                    <ErrorMessage
-                      name="lastName"
-                      render={(msg) => (
-                        <div style={{ color: "red" }}>{msg}</div>
-                      )}
-                    />
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    <TextField
-                      size="small"
-                      value={values?.DOB}
-                      name="DOB"
-                      onChange={handleChange}
-                      fullWidth
-                      type="date"
-                      label="Date of birth *"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      inputProps={{
-                        max: new Date().toISOString().split("T")[0], // Set max to today's date
-                      }}
-                    />
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    <TextField
-                      size="small"
-                      value={values?.aadharNumber}
-                      name="aadharNumber"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={Boolean(
-                        errors.aadharNumber && touched.aadharNumber
-                      )}
-                      fullWidth
-                      type="number"
-                      label="Aadhar Number *"
-                      placeholder="Aadhar Number"
-                    />
-                    <ErrorMessage
-                      name="aadharNumber"
-                      render={(msg) => (
-                        <div style={{ color: "red" }}>{msg}</div>
-                      )}
-                    />
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    <TextField
-                      size="small"
-                      value={values?.mobileNumber}
-                      name="mobileNumber"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      type="number"
-                      error={Boolean(
-                        errors.mobileNumber && touched.mobileNumber
-                      )}
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      label="Mobile Number *"
-                      placeholder="Mobile Number"
-                    />
-                    <ErrorMessage
-                      name="mobileNumber"
-                      render={(msg) => (
-                        <div style={{ color: "red" }}>{msg}</div>
-                      )}
-                    />
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    <TextField
-                      size="small"
-                      value={values?.wpNumber}
-                      name="wpNumber"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      type="number"
-                      error={Boolean(errors.wpNumber && touched.wpNumber)}
-                      fullWidth
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      label="Whatsapp Number *"
-                      placeholder="Whatsapp Number"
-                    />
-                    <ErrorMessage
-                      name="wpNumber"
-                      render={(msg) => (
-                        <div style={{ color: "red" }}>{msg}</div>
-                      )}
-                    />
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    <TextField
-                      size="small"
-                      value={values?.address}
-                      name="address"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      fullWidth
-                      label="Address"
-                      placeholder="Address"
-                    />
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    <FormControl fullWidth size="small">
-                      <InputLabel id="demo-simple-select-label">
-                        State
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        name="state"
-                        value={values?.state}
-                        label="State"
-                        onChange={(e: any) => {
-                          setFieldValue("state", e?.target?.value);
-                          setSTATE(e?.target?.value);
+                label="Farmers Registration"
+              />
+            </Divider>
+          </Box>
+          <Formik
+            enableReinitialize
+            initialValues={{
+              firstName: "",
+              lastName: "",
+              email: "",
+              password: "",
+              phone: "",
+              state: "",
+              district: "",
+              pinCode: "",
+              taluka: "",
+              villageName: "",
+              role: "f1",
+              middleName: "",
+              asPerAbove: "",
+              DOB: "",
+              aadharNumber: "",
+              mobileNumber: "",
+              wpNumber: "",
+              address: "",
+              caste: "",
+              maritalStatus: "married",
+              gender: "male",
+              religion: "",
+              landDistrict: "",
+              subDivision: "",
+              circle: "",
+              mouza: "",
+              landVillage: "",
+              pattaType: "",
+              latNo: "",
+              pattaNo: "",
+              landArea: "",
+              landType: "",
+              farmerLandOwnershipType: "",
+              appliedForSoilTesting: "yes",
+            }}
+            validationSchema={validationSchema}
+            onSubmit={(values) => {
+              if (values?.appliedForSoilTesting === "yes" && file?.length > 0) {
+                handleFarmerSubmit(values);
+              } else if (values?.appliedForSoilTesting === "no") {
+                handleFarmerSubmit(values);
+              }
+            }}
+          >
+            {({
+              values,
+              handleChange,
+              handleBlur,
+              errors,
+              touched,
+              setFieldValue,
+            }) => (
+              <Form>
+                <div
+                  style={{
+                    padding: "10px",
+                    marginLeft: "5px",
+                  }}
+                >
+                  <Grid container xs={12} md={12} spacing={3}>
+                    <Grid item sm={6} xs={12}>
+                      <TextField
+                        size="small"
+                        value={values?.firstName}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        name="firstName"
+                        error={Boolean(errors.firstName && touched.firstName)}
+                        fullWidth
+                        label="First Name *"
+                        placeholder="First Name"
+                      />
+                      <ErrorMessage
+                        name="firstName"
+                        render={(msg) => (
+                          <div style={{ color: "red" }}>{msg}</div>
+                        )}
+                      />
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      <TextField
+                        size="small"
+                        value={values?.middleName}
+                        name="middleName"
+                        error={Boolean(errors.middleName && touched.middleName)}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        fullWidth
+                        label="Middle Name"
+                        placeholder="Middle Name"
+                      />
+                      <ErrorMessage
+                        name="middleName"
+                        render={(msg) => (
+                          <div style={{ color: "red" }}>{msg}</div>
+                        )}
+                      />
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      <TextField
+                        size="small"
+                        value={values?.lastName}
+                        name="lastName"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={Boolean(errors.lastName && touched.lastName)}
+                        fullWidth
+                        label="Last Name *"
+                        placeholder="Last Name"
+                      />
+                      <ErrorMessage
+                        name="lastName"
+                        render={(msg) => (
+                          <div style={{ color: "red" }}>{msg}</div>
+                        )}
+                      />
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      <TextField
+                        size="small"
+                        value={values?.DOB}
+                        name="DOB"
+                        onChange={handleChange}
+                        fullWidth
+                        type="date"
+                        label="Date of birth *"
+                        InputLabelProps={{
+                          shrink: true,
                         }}
-                      >
-                        {allState?.data?.map((name: any) => (
-                          <MenuItem key={name?.name} value={name?.name}>
-                            {name?.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    <Tooltip title="Please select state first">
+                        inputProps={{
+                          max: new Date().toISOString().split("T")[0], // Set max to today's date
+                        }}
+                      />
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      <TextField
+                        size="small"
+                        value={values?.aadharNumber}
+                        name="aadharNumber"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={Boolean(
+                          errors.aadharNumber && touched.aadharNumber
+                        )}
+                        fullWidth
+                        type="number"
+                        label="Aadhar Number *"
+                        placeholder="Aadhar Number"
+                      />
+                      <ErrorMessage
+                        name="aadharNumber"
+                        render={(msg) => (
+                          <div style={{ color: "red" }}>{msg}</div>
+                        )}
+                      />
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      <TextField
+                        size="small"
+                        value={values?.mobileNumber}
+                        name="mobileNumber"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        type="number"
+                        error={Boolean(
+                          errors.mobileNumber && touched.mobileNumber
+                        )}
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        label="Mobile Number *"
+                        placeholder="Mobile Number"
+                      />
+                      <ErrorMessage
+                        name="mobileNumber"
+                        render={(msg) => (
+                          <div style={{ color: "red" }}>{msg}</div>
+                        )}
+                      />
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      <TextField
+                        size="small"
+                        value={values?.wpNumber}
+                        name="wpNumber"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        type="number"
+                        error={Boolean(errors.wpNumber && touched.wpNumber)}
+                        fullWidth
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        label="Whatsapp Number *"
+                        placeholder="Whatsapp Number"
+                      />
+                      <ErrorMessage
+                        name="wpNumber"
+                        render={(msg) => (
+                          <div style={{ color: "red" }}>{msg}</div>
+                        )}
+                      />
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      <TextField
+                        size="small"
+                        value={values?.address}
+                        name="address"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        fullWidth
+                        label="Address"
+                        placeholder="Address"
+                      />
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
                       <FormControl fullWidth size="small">
                         <InputLabel id="demo-simple-select-label">
-                          District
+                          State
                         </InputLabel>
                         <Select
                           labelId="demo-simple-select-label"
                           id="demo-simple-select"
-                          name="district"
-                          disabled={STATE.length <= 0}
-                          value={values?.district}
-                          label="District"
-                          onChange={handleChange}
+                          name="state"
+                          value={values?.state}
+                          label="State"
+                          onChange={(e: any) => {
+                            setFieldValue("state", e?.target?.value);
+                            setSTATE(e?.target?.value);
+                          }}
                         >
-                          {allDistrict?.map((name: any) => (
+                          {allState?.data?.map((name: any) => (
                             <MenuItem key={name?.name} value={name?.name}>
                               {name?.name}
                             </MenuItem>
                           ))}
                         </Select>
                       </FormControl>
-                    </Tooltip>
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    <TextField
-                      size="small"
-                      value={pincode}
-                      name="pinCode"
-                      error={Boolean(errors.pinCode && touched.pinCode)}
-                      onChange={(e) => {
-                        handlePincode(e.target.value);
-                        setFieldValue("pinCode", e.target.value);
-                      }}
-                      fullWidth
-                      type="number"
-                      label="Pin Code"
-                      placeholder="Pin Code"
-                    />
-                    <ErrorMessage
-                      name="pinCode"
-                      render={(msg) => (
-                        <div style={{ color: "red" }}>{msg}</div>
-                      )}
-                    />
-                  </Grid>
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      <Tooltip title="Please select state first">
+                        <FormControl fullWidth size="small">
+                          <InputLabel id="demo-simple-select-label">
+                            District
+                          </InputLabel>
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            name="district"
+                            disabled={STATE.length <= 0}
+                            value={values?.district}
+                            label="District"
+                            onChange={handleChange}
+                          >
+                            {allDistrict?.map((name: any) => (
+                              <MenuItem key={name?.name} value={name?.name}>
+                                {name?.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Tooltip>
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      <TextField
+                        size="small"
+                        value={pincode}
+                        name="pinCode"
+                        error={Boolean(errors.pinCode && touched.pinCode)}
+                        onChange={(e) => {
+                          handlePincode(e.target.value);
+                          setFieldValue("pinCode", e.target.value);
+                        }}
+                        fullWidth
+                        type="number"
+                        label="Pin Code"
+                        placeholder="Pin Code"
+                      />
+                      <ErrorMessage
+                        name="pinCode"
+                        render={(msg) => (
+                          <div style={{ color: "red" }}>{msg}</div>
+                        )}
+                      />
+                    </Grid>
 
-                  <Grid item sm={6} xs={12}>
-                    <Tooltip
-                      title="Please enter pincode first"
-                      disableFocusListener={!(pincode.length <= 0)}
-                      disableHoverListener={!(pincode.length <= 0)}
-                      disableTouchListener={!(pincode.length <= 0)}
-                    >
-                      <FormControl fullWidth size="small">
-                        <InputLabel id="demo-simple-select-label">
-                          Taluka
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          name="taluka"
-                          disabled={pincode?.length <= 0}
-                          value={values?.taluka && values?.taluka}
-                          label="Taluka"
-                          onChange={handleChange}
-                        >
-                          {getAddressByPinCodeData?.taluka &&
-                            getAddressByPinCodeData?.taluka?.map(
+                    <Grid item sm={6} xs={12}>
+                      <Tooltip
+                        title="Please enter pincode first"
+                        disableFocusListener={!(pincode.length <= 0)}
+                        disableHoverListener={!(pincode.length <= 0)}
+                        disableTouchListener={!(pincode.length <= 0)}
+                      >
+                        <FormControl fullWidth size="small">
+                          <InputLabel id="demo-simple-select-label">
+                            Taluka
+                          </InputLabel>
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            name="taluka"
+                            disabled={pincode?.length <= 0}
+                            value={values?.taluka && values?.taluka}
+                            label="Taluka"
+                            onChange={handleChange}
+                          >
+                            {getAddressByPinCodeData?.taluka &&
+                              getAddressByPinCodeData?.taluka?.map(
+                                (name: any) => (
+                                  <MenuItem key={name} value={name}>
+                                    {name}
+                                  </MenuItem>
+                                )
+                              )}
+                          </Select>
+                        </FormControl>
+                      </Tooltip>
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      <Tooltip
+                        title="Please enter pincode first"
+                        disableFocusListener={!(pincode.length <= 0)}
+                        disableHoverListener={!(pincode.length <= 0)}
+                        disableTouchListener={!(pincode.length <= 0)}
+                      >
+                        <FormControl fullWidth size="small">
+                          <InputLabel id="demo-simple-select-label">
+                            Village Name
+                          </InputLabel>
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            name="villageName"
+                            disabled={pincode.length <= 0}
+                            value={values?.villageName && values?.villageName}
+                            label="villageName"
+                            onChange={handleChange}
+                          >
+                            {getAddressByPinCodeData?.village?.map(
                               (name: any) => (
                                 <MenuItem key={name} value={name}>
                                   {name}
                                 </MenuItem>
                               )
                             )}
-                        </Select>
-                      </FormControl>
-                    </Tooltip>
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    <Tooltip
-                      title="Please enter pincode first"
-                      disableFocusListener={!(pincode.length <= 0)}
-                      disableHoverListener={!(pincode.length <= 0)}
-                      disableTouchListener={!(pincode.length <= 0)}
-                    >
-                      <FormControl fullWidth size="small">
-                        <InputLabel id="demo-simple-select-label">
-                          Village Name
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          name="villageName"
-                          disabled={pincode.length <= 0}
-                          value={values?.villageName && values?.villageName}
-                          label="villageName"
-                          onChange={handleChange}
-                        >
-                          {getAddressByPinCodeData?.village?.map(
-                            (name: any) => (
-                              <MenuItem key={name} value={name}>
-                                {name}
-                              </MenuItem>
-                            )
-                          )}
-                        </Select>
-                      </FormControl>
-                    </Tooltip>
-                  </Grid>
+                          </Select>
+                        </FormControl>
+                      </Tooltip>
+                    </Grid>
 
-                  <Grid item sm={6} xs={12}>
-                    {" "}
-                    <TextField
-                      size="small"
-                      value={values?.religion}
-                      name="religion"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      fullWidth
-                      label="Religion"
-                      placeholder="Religion"
-                    />
-                  </Grid>
-
-                  <Grid item sm={6} xs={12}>
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        fontWeight: 500,
-                        color: "text.primary",
-                      }}
-                    >
-                      Gender{" "}
-                    </Typography>
-                    <RadioGroup
-                      row
-                      value={values && values?.gender}
-                      name="gender"
-                      onChange={handleChange}
-                    >
-                      <FormControlLabel
-                        value="male"
-                        control={<Radio value="male" />}
-                        label="Male"
-                      />
-                      <FormControlLabel
-                        value="female"
-                        control={<Radio value="female" />}
-                        label="Female"
-                      />
-                    </RadioGroup>
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        fontWeight: 500,
-                        color: "text.primary",
-                      }}
-                    >
-                      Marital Status
-                    </Typography>
-                    <RadioGroup
-                      row
-                      aria-label="controlled"
-                      value={values?.maritalStatus && values?.maritalStatus}
-                      name="maritalStatus"
-                      onChange={handleChange}
-                    >
-                      <FormControlLabel
-                        value="single"
-                        control={<Radio />}
-                        label="Single"
-                      />
-                      <FormControlLabel
-                        value="married"
-                        control={<Radio />}
-                        label="Married"
-                      />
-                    </RadioGroup>
-                  </Grid>
-                </Grid>
-                <Box sx={{ mb: 8, textAlign: "center" }}>
-                  <Divider>
-                    <Chip
-                      sx={{
-                        fontSize: "22px",
-                        padding: "15px",
-                        fontWeight: "bold",
-                        textAlign: "left",
-                        backgroundColor: "#f6f5f8",
-                      }}
-                      label="Land Details"
-                    />
-                  </Divider>
-                </Box>
-
-                <Grid
-                  container
-                  spacing={6}
-                  sx={{
-                    padding: "10px",
-                  }}
-                >
-                  <Grid item sm={6} xs={12}>
-                    <TextField
-                      size="small"
-                      value={values?.landDistrict}
-                      name="landDistrict"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={Boolean(
-                        errors.landDistrict && touched.landDistrict
-                      )}
-                      fullWidth
-                      label="Land District"
-                      placeholder="Land Distric"
-                    />
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    {" "}
-                    <TextField
-                      size="small"
-                      value={values?.subDivision}
-                      name="subDivision"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      fullWidth
-                      label="SubDivision"
-                      placeholder="SubDivision"
-                    />
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    {" "}
-                    <TextField
-                      size="small"
-                      value={values?.circle}
-                      name="circle"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      fullWidth
-                      label="Circle"
-                      placeholder="Circle"
-                    />
-                  </Grid>
-
-                  <Grid item sm={6} xs={12}>
-                    <TextField
-                      size="small"
-                      value={values?.landVillage}
-                      name="landVillage"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      fullWidth
-                      label="Land Village"
-                      placeholder="landVillage"
-                    />
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    {" "}
-                    <TextField
-                      size="small"
-                      value={values?.mouza}
-                      name="mouza"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      fullWidth
-                      label="Mouza"
-                      placeholder="mouza"
-                    />
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    {" "}
-                    <TextField
-                      size="small"
-                      value={values?.pattaType}
-                      name="pattaType"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      fullWidth
-                      label="PattaType"
-                      placeholder="PattaType"
-                    />
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    {" "}
-                    <TextField
-                      size="small"
-                      value={values?.latNo}
-                      name="latNo"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      fullWidth
-                      label="LatNo"
-                      placeholder="LatNo"
-                    />
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    {" "}
-                    <TextField
-                      size="small"
-                      value={values?.pattaNo}
-                      name="pattaNo"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      fullWidth
-                      label="PattaNo"
-                      placeholder="PattaNo"
-                    />
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    {" "}
-                    <FormControl fullWidth size="small">
-                      <InputLabel shrink htmlFor="auth-login-v2-password">
-                        Land Area
-                      </InputLabel>
-                      <OutlinedInput
-                        label="landArea"
+                    <Grid item sm={6} xs={12}>
+                      {" "}
+                      <TextField
+                        size="small"
+                        value={values?.religion}
+                        name="religion"
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        notched
-                        value={values?.landArea}
-                        name="landArea"
-                        type={"number"}
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <Box
-                              edge="end"
-                              sx={{
-                                color: "black",
-                              }}
-                            >
-                              Sqft.
-                            </Box>
-                          </InputAdornment>
-                        }
+                        fullWidth
+                        label="Religion"
+                        placeholder="Religion"
+                      />
+                    </Grid>
+
+                    <Grid item sm={6} xs={12}>
+                      <Typography
+                        variant="body1"
                         sx={{
-                          "& fieldset": {
-                            borderWidth: "1px !important",
-                            borderColor: "#8d8686 !important",
-                          },
-
-                          "&.Mui-focused fieldset": {
-                            borderColor: "#8d8686 !important",
-                            borderWidth: "1px !important",
-                          },
-                          "& input": {
-                            color: "black", // Set the desired text color for the input
-                          },
-                          "& label.MuiInputLabel-root": {
-                            color: "black", // Set the label font color to blue
-                          },
-                          mb: 4,
+                          fontWeight: 500,
+                          color: "text.primary",
                         }}
+                      >
+                        Gender{" "}
+                      </Typography>
+                      <RadioGroup
+                        row
+                        value={values && values?.gender}
+                        name="gender"
+                        onChange={handleChange}
+                      >
+                        <FormControlLabel
+                          value="male"
+                          control={<Radio value="male" />}
+                          label="Male"
+                        />
+                        <FormControlLabel
+                          value="female"
+                          control={<Radio value="female" />}
+                          label="Female"
+                        />
+                      </RadioGroup>
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          fontWeight: 500,
+                          color: "text.primary",
+                        }}
+                      >
+                        Marital Status
+                      </Typography>
+                      <RadioGroup
+                        row
+                        aria-label="controlled"
+                        value={values?.maritalStatus && values?.maritalStatus}
+                        name="maritalStatus"
+                        onChange={handleChange}
+                      >
+                        <FormControlLabel
+                          value="single"
+                          control={<Radio />}
+                          label="Single"
+                        />
+                        <FormControlLabel
+                          value="married"
+                          control={<Radio />}
+                          label="Married"
+                        />
+                      </RadioGroup>
+                    </Grid>
+                  </Grid>
+                  <Box sx={{ mb: 8, textAlign: "center" }}>
+                    <Divider>
+                      <Chip
+                        sx={{
+                          fontSize: "22px",
+                          padding: "15px",
+                          fontWeight: "bold",
+                          textAlign: "left",
+                          backgroundColor: "#f6f5f8",
+                        }}
+                        label="Land Details"
                       />
-                    </FormControl>
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    {" "}
-                    <TextField
-                      size="small"
-                      value={values?.landType}
-                      name="landType"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      fullWidth
-                      label="Land Type"
-                      placeholder="Land Type"
-                    />
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    {" "}
-                    <TextField
-                      size="small"
-                      value={values?.farmerLandOwnershipType}
-                      name="farmerLandOwnershipType"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      fullWidth
-                      label="Farmer LandOwner Ship Type"
-                      placeholder="Farmer LandOwner Ship Type"
-                    />
-                  </Grid>
-                  <Grid item sm={6} xs={12}>
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        fontWeight: 500,
-                        color: "text.primary",
-                      }}
-                    >
-                      Upload Land Document
-                    </Typography>
-                    <RadioGroup
-                      row
-                      aria-label="controlled"
-                      value={values?.appliedForSoilTesting}
-                      name="appliedForSoilTesting"
-                      onChange={handleChange}
-                    >
-                      <FormControlLabel
-                        value="yes"
-                        control={<Radio />}
-                        label="Yes"
-                      />
-                      <FormControlLabel
-                        value="no"
-                        control={<Radio />}
-                        label="No"
-                      />
-                    </RadioGroup>
-                  </Grid>
+                    </Divider>
+                  </Box>
 
-                  {values?.appliedForSoilTesting === "yes" ? (
-                    <>
-                      <Grid item sm={6} xs={12}></Grid>
-                      <Grid item sm={6} xs={12}>
-                        <Typography
-                          variant="body1"
+                  <Grid
+                    container
+                    spacing={6}
+                    sx={{
+                      padding: "10px",
+                    }}
+                  >
+                    <Grid item sm={6} xs={12}>
+                      <TextField
+                        size="small"
+                        value={values?.landDistrict}
+                        name="landDistrict"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={Boolean(
+                          errors.landDistrict && touched.landDistrict
+                        )}
+                        fullWidth
+                        label="Land District"
+                        placeholder="Land Distric"
+                      />
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      {" "}
+                      <TextField
+                        size="small"
+                        value={values?.subDivision}
+                        name="subDivision"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        fullWidth
+                        label="SubDivision"
+                        placeholder="SubDivision"
+                      />
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      {" "}
+                      <TextField
+                        size="small"
+                        value={values?.circle}
+                        name="circle"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        fullWidth
+                        label="Circle"
+                        placeholder="Circle"
+                      />
+                    </Grid>
+
+                    <Grid item sm={6} xs={12}>
+                      <TextField
+                        size="small"
+                        value={values?.landVillage}
+                        name="landVillage"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        fullWidth
+                        label="Land Village"
+                        placeholder="landVillage"
+                      />
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      {" "}
+                      <TextField
+                        size="small"
+                        value={values?.mouza}
+                        name="mouza"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        fullWidth
+                        label="Mouza"
+                        placeholder="mouza"
+                      />
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      {" "}
+                      <TextField
+                        size="small"
+                        value={values?.pattaType}
+                        name="pattaType"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        fullWidth
+                        label="PattaType"
+                        placeholder="PattaType"
+                      />
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      {" "}
+                      <TextField
+                        size="small"
+                        value={values?.latNo}
+                        name="latNo"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        fullWidth
+                        label="LatNo"
+                        placeholder="LatNo"
+                      />
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      {" "}
+                      <TextField
+                        size="small"
+                        value={values?.pattaNo}
+                        name="pattaNo"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        fullWidth
+                        label="PattaNo"
+                        placeholder="PattaNo"
+                      />
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      {" "}
+                      <FormControl fullWidth size="small">
+                        <InputLabel shrink htmlFor="auth-login-v2-password">
+                          Land Area
+                        </InputLabel>
+                        <OutlinedInput
+                          label="landArea"
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          notched
+                          value={values?.landArea}
+                          name="landArea"
+                          type={"number"}
+                          endAdornment={
+                            <InputAdornment position="end">
+                              <Box
+                                edge="end"
+                                sx={{
+                                  color: "black",
+                                }}
+                              >
+                                Sqft.
+                              </Box>
+                            </InputAdornment>
+                          }
                           sx={{
-                            fontWeight: 500,
-                            color: "text.primary",
-                          }}
-                        >
-                          Upload Land Document
-                        </Typography>
-                        <Box
-                          display="flex"
-                          flexDirection="column"
-                          alignItems="flex-start"
-                        >
-                          <FilePreview file={fileForView} />
+                            "& fieldset": {
+                              borderWidth: "1px !important",
+                              borderColor: "#8d8686 !important",
+                            },
 
-                          <Button
-                            variant="contained"
-                            component="label"
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#8d8686 !important",
+                              borderWidth: "1px !important",
+                            },
+                            "& input": {
+                              color: "black", // Set the desired text color for the input
+                            },
+                            "& label.MuiInputLabel-root": {
+                              color: "black", // Set the label font color to blue
+                            },
+                            mb: 4,
+                          }}
+                        />
+                      </FormControl>
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      {" "}
+                      <TextField
+                        size="small"
+                        value={values?.landType}
+                        name="landType"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        fullWidth
+                        label="Land Type"
+                        placeholder="Land Type"
+                      />
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      {" "}
+                      <TextField
+                        size="small"
+                        value={values?.farmerLandOwnershipType}
+                        name="farmerLandOwnershipType"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        fullWidth
+                        label="Farmer LandOwner Ship Type"
+                        placeholder="Farmer LandOwner Ship Type"
+                      />
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          fontWeight: 500,
+                          color: "text.primary",
+                        }}
+                      >
+                        Upload Land Document
+                      </Typography>
+                      <RadioGroup
+                        row
+                        aria-label="controlled"
+                        value={values?.appliedForSoilTesting}
+                        name="appliedForSoilTesting"
+                        onChange={handleChange}
+                      >
+                        <FormControlLabel
+                          value="yes"
+                          control={<Radio />}
+                          label="Yes"
+                        />
+                        <FormControlLabel
+                          value="no"
+                          control={<Radio />}
+                          label="No"
+                        />
+                      </RadioGroup>
+                    </Grid>
+
+                    {values?.appliedForSoilTesting === "yes" ? (
+                      <>
+                        <Grid item sm={6} xs={12}></Grid>
+                        <Grid item sm={6} xs={12}>
+                          <Typography
+                            variant="body1"
                             sx={{
-                              "&:hover": {
-                                backgroundColor: "#5E7954",
-                              },
+                              fontWeight: 500,
+                              color: "text.primary",
                             }}
                           >
-                            Upload
-                            <input
-                              type="file"
-                              hidden
-                              onChange={(e: any) =>
-                                handleFile(e?.target?.files[0])
-                              }
-                            />
-                          </Button>
-                        </Box>
-                        {values?.appliedForSoilTesting === "yes" ? (
-                          file?.length <= 0 ? (
-                            <div style={{ color: "red" }}>
-                              {"Please select an image"}
-                            </div>
-                          ) : null
-                        ) : null}
-                      </Grid>
-                    </>
-                  ) : null}
-                  <Grid xs={12} md={12}>
-                    <Box
-                      sx={{
-                        padding: 5,
-                      }}
-                    >
-                      <Button
-                        variant="contained"
-                        type="submit"
+                            Upload Land Document
+                          </Typography>
+                          <Box
+                            display="flex"
+                            flexDirection="column"
+                            alignItems="flex-start"
+                          >
+                            <FilePreview file={fileForView} />
+
+                            <Button
+                              variant="contained"
+                              component="label"
+                              sx={{
+                                "&:hover": {
+                                  backgroundColor: "#5E7954",
+                                },
+                              }}
+                            >
+                              Upload
+                              <input
+                                type="file"
+                                hidden
+                                onChange={(e: any) =>
+                                  handleFile(e?.target?.files[0])
+                                }
+                              />
+                            </Button>
+                          </Box>
+                          {values?.appliedForSoilTesting === "yes" ? (
+                            file?.length <= 0 ? (
+                              <div style={{ color: "red" }}>
+                                {"Please select an image"}
+                              </div>
+                            ) : null
+                          ) : null}
+                        </Grid>
+                      </>
+                    ) : null}
+                    <Grid xs={12} md={12}>
+                      <Box
                         sx={{
-                          mr: 1,
-                          "&:hover": {
-                            backgroundColor: "#5E7954",
-                          },
+                          padding: 5,
                         }}
                       >
-                        Submit
-                      </Button>
-                      <Button
-                        onClick={() => {
-                          router.back();
-                        }}
-                        variant="outlined"
-                        type="button"
-                        color="secondary"
-                      >
-                        Cancel
-                      </Button>
-                    </Box>
+                        <Button
+                          variant="contained"
+                          type="submit"
+                          sx={{
+                            mr: 1,
+                            "&:hover": {
+                              backgroundColor: "#5E7954",
+                            },
+                          }}
+                        >
+                          Submit
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            router.back();
+                          }}
+                          variant="outlined"
+                          type="button"
+                          color="secondary"
+                        >
+                          Cancel
+                        </Button>
+                      </Box>
+                    </Grid>
                   </Grid>
-                </Grid>
-              </div>
-            </Form>
-          )}
-        </Formik>
-      </Card>
-    </Box>
+                </div>
+              </Form>
+            )}
+          </Formik>
+        </Card>
+      </Box>
+      <FooterSection
+        DATA={getContentData}
+        LOGO={getLogo?.logo}
+        JSONHandler={JSONHandler}
+      />
+    </>
   );
 };
 index.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>;

@@ -69,6 +69,7 @@ import * as yup from "yup";
 import CustomRadioImg from "src/@core/components/custom-radio/image";
 import { CustomRadioImgData } from "src/@core/components/custom-radio/types";
 import { getAllContent } from "src/slice/landingPageSlice";
+import Topbar from "src/views/components/topbar";
 
 // ** Styled Components
 const RegisterIllustration = styled("img")(({ theme }) => ({
@@ -531,6 +532,7 @@ const Register = () => {
 
   return (
     <>
+      <Topbar data={getContentData} />
       <Navbar LOGO={getLogo?.logo} />
       <PageBanner
         height={200}

@@ -472,50 +472,64 @@ const index = () => {
     };
   }, []);
   return (
-    <Box
-      style={{
-        padding: "5%",
-        marginLeft: "20%",
-        marginRight: "20%",
-      }}
-    >
-      <Card
-        sx={{
-          padding: "3%",
+    <>
+      <Navbar LOGO={getLogo?.logo} />
+      <PageBanner
+        height={200}
+        BGImg={"/images/logo/slider6.jpg"}
+        bannerName="Vendor Registration"
+        bannerContent="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry"
+      />
+      <Box
+        style={{
+          padding: "5%",
+          marginLeft: "20%",
+          marginRight: "20%",
         }}
       >
-        <Box sx={{ mb: 8, textAlign: "center" }}>
-          <Divider>
-            <Chip
-              sx={{
-                fontSize: "22px",
-                padding: "15px",
-                fontWeight: "bold",
-                textAlign: "left",
-                backgroundColor: "#f6f5f8",
-              }}
-              label="Vendors Registration"
-            />
-          </Divider>
-        </Box>
-        <VendorForm
-          size="small"
-          allState={allState}
-          STATE={STATE}
-          setSTATE={setSTATE}
-          setDistrict={setDistrict}
-          district={district}
-          allDistrict={allDistrict}
-          rolePrefill={rolePrefill}
-          handlePincode={handlePincode}
-          pincode={pincode}
-          setTaluka={setTaluka}
-          taluka={taluka}
-          getAddressByPinCodeData={getAddressByPinCodeData}
-          categories={categories}
-        />
-      </Card>
-    </Box>
+        <Card
+          sx={{
+            padding: "3%",
+          }}
+        >
+          <Box sx={{ mb: 8, textAlign: "center" }}>
+            <Divider>
+              <Chip
+                sx={{
+                  fontSize: "22px",
+                  padding: "15px",
+                  fontWeight: "bold",
+                  textAlign: "left",
+                  backgroundColor: "#f6f5f8",
+                }}
+                label="Vendors Registration"
+              />
+            </Divider>
+          </Box>
+          <VendorForm
+            size="small"
+            allState={allState}
+            STATE={STATE}
+            setSTATE={setSTATE}
+            setDistrict={setDistrict}
+            district={district}
+            allDistrict={allDistrict}
+            rolePrefill={rolePrefill}
+            handlePincode={handlePincode}
+            pincode={pincode}
+            setTaluka={setTaluka}
+            taluka={taluka}
+            getAddressByPinCodeData={getAddressByPinCodeData}
+            categories={categories}
+          />
+        </Card>
+      </Box>
+      <FooterSection
+        DATA={getContentData}
+        LOGO={getLogo?.logo}
+        JSONHandler={JSONHandler}
+      />
+    </>
   );
 };
 index.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>;

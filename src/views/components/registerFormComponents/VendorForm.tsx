@@ -16,6 +16,8 @@ import { FilePreview } from "../filePreviewer/FilePreview";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { createUser1 } from "src/slice/farmers";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "src/store/store";
 
 const VendorForm = ({
   size,
