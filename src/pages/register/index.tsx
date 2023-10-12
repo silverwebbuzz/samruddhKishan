@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ChangeEvent, ReactNode, useEffect, useState } from "react";
 
 // ** Next Import
 
@@ -65,6 +65,8 @@ import ApmcForm from "src/views/components/registerFormComponents/ApmcForm";
 import VendorForm from "src/views/components/registerFormComponents/VendorForm";
 import { ErrorMessage, Form, Formik } from "formik";
 import * as yup from "yup";
+import CustomRadioImg from "src/@core/components/custom-radio/image";
+import { CustomRadioImgData } from "src/@core/components/custom-radio/types";
 
 // ** Styled Components
 const RegisterIllustration = styled("img")(({ theme }) => ({
@@ -544,6 +546,127 @@ const Register = () => {
             marginRight: "20%",
           }}
         >
+          {" "}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                border: rolePrefill == "f1" ? "4px solid green" : "1px solid",
+                borderRadius: "10px",
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+                alignItems: "center",
+                margin: "10px",
+                width: "200px",
+                height: "200px",
+              }}
+              onClick={() => {
+                setRolePrefill("f1");
+              }}
+            >
+              <img
+                style={{
+                  height: "100px",
+                  width: "100px",
+                  objectFit: "contain",
+                }}
+                src="/images/logo/1696851476202-farmer.png"
+              />
+              <Typography fontWeight={600} textAlign={"center"} mt={4}>
+                Farmers
+              </Typography>
+            </div>{" "}
+            <div
+              style={{
+                border: rolePrefill == "13" ? "4px solid green" : "1px solid",
+                borderRadius: "10px",
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+                alignItems: "center",
+                margin: "10px",
+                width: "200px",
+                height: "200px",
+              }}
+              onClick={() => {
+                setRolePrefill("13");
+              }}
+            >
+              <img
+                style={{
+                  height: "100px",
+                  width: "100px",
+                  objectFit: "contain",
+                }}
+                src="/images/logo/information-point_5639292.png"
+              />
+              <Typography fontWeight={600} textAlign={"center"} mt={4}>
+                Centers
+              </Typography>
+            </div>{" "}
+            <div
+              style={{
+                border: rolePrefill == "10" ? "4px solid green" : "1px solid",
+                borderRadius: "10px",
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+                alignItems: "center",
+                margin: "10px",
+                width: "200px",
+                height: "200px",
+              }}
+              onClick={() => {
+                setRolePrefill("10");
+              }}
+            >
+              <img
+                style={{
+                  height: "100px",
+                  width: "100px",
+                  objectFit: "contain",
+                }}
+                src="/images/logo/consumer_5823547.png"
+              />
+              <Typography fontWeight={600} textAlign={"center"} mt={4}>
+                Apmc Traders
+              </Typography>
+            </div>{" "}
+            <div
+              style={{
+                border: rolePrefill == "17" ? "4px solid green" : "1px solid",
+                borderRadius: "10px",
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+                alignItems: "center",
+                margin: "10px",
+                width: "200px",
+                height: "200px",
+              }}
+              onClick={() => {
+                setRolePrefill("17");
+              }}
+            >
+              <img
+                style={{
+                  height: "100px",
+                  width: "100px",
+                  objectFit: "contain",
+                }}
+                src="/images/logo/buyer_1900085.png"
+              />
+              <Typography fontWeight={600} textAlign={"center"} mt={4}>
+                Vendors
+              </Typography>
+            </div>
+          </div>
           <Card>
             <>
               <Box
@@ -565,6 +688,7 @@ const Register = () => {
                     />
                   </Divider>
                 </Box>
+
                 <Grid
                   container
                   // spacing={6}
@@ -572,7 +696,7 @@ const Register = () => {
                     padding: "10px",
                   }}
                 >
-                  <Grid item sm={12} xs={12}>
+                  {/* <Grid item sm={12} xs={12}>
                     <FormControl fullWidth size="small">
                       <InputLabel id="demo-simple-select-label">
                         User type
@@ -597,14 +721,9 @@ const Register = () => {
                           </MenuItem>
                         ))}
                       </Select>
-                      {/* <ErrorMessage
-                        name="role"
-                        render={(msg) => (
-                          <div style={{ color: "red" }}>{msg}</div>
-                        )}
-                      /> */}
                     </FormControl>
-                  </Grid>
+                  </Grid> */}
+
                   {rolePrefill == 13 ? (
                     <CentersForm
                       size="small"

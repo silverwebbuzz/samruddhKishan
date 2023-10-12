@@ -54,6 +54,7 @@ import { FilePreview } from "../../../views/components/filePreviewer/FilePreview
 import {
   getAllProductSection,
   updateProductContentSection,
+  updateServiceContentSection,
 } from "src/slice/productSectionSlice";
 import CardContentDialog from "src/views/components/dialogBox/CardContentDialog";
 import ProductContentCard from "src/views/components/dialogBox/ProductContentCard";
@@ -64,6 +65,7 @@ import {
 } from "src/slice/smallProductSlice";
 import { SyntheticEvent } from "react-draft-wysiwyg";
 import PointCardDialog from "src/views/components/dialogBox/PointsCardDialog";
+import ServiceContentCardDialog from "src/views/components/dialogBox/ServiceContentCardDialog";
 
 export type Payload = {
   id?: number;
@@ -85,6 +87,8 @@ const ContentPage = () => {
   const {
     allProductSectionData,
     updateProductCardSectionData,
+
+    updateServiceCardContent,
     updateProductContentSectionData,
   } = useSelector((state: any) => state?.rootReducer?.productSectionReducer);
 
@@ -118,7 +122,11 @@ const ContentPage = () => {
 
   useEffect(() => {
     dispatch(getAllContent());
-  }, [updateContentData, updateCardContentData]);
+  }, [
+    updateContentData,
+    updateCardContentData,
+    updateProductContentSectionData,
+  ]);
 
   useEffect(() => {
     dispatch(getAllProductSection());
@@ -126,7 +134,11 @@ const ContentPage = () => {
 
   useEffect(() => {
     dispatch(getAllSmallProduct());
-  }, [updateSmallProductContentData, updateSmallProductCardData]);
+  }, [
+    updateSmallProductContentData,
+    updateServiceCardContent,
+    updateSmallProductCardData,
+  ]);
   useEffect(() => {
     if (allContentData) {
       localStorage.setItem("AllContentDataId", allContentData?.id);
@@ -307,6 +319,7 @@ const ContentPage = () => {
     (panel: string) => (event: SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
     };
+
   return (
     <Grid container spacing={6}>
       {/* <CardHeader title='Home Page' /> */}
@@ -685,7 +698,6 @@ const ContentPage = () => {
           </AccordionDetails>
         </Accordion>
       </Grid>
-
       <Grid item xs={12}>
         <Accordion
           expanded={expanded === "section3"}
@@ -697,6 +709,163 @@ const ContentPage = () => {
             expandIcon={<Icon fontSize="1.25rem" icon="tabler:chevron-down" />}
           >
             <h2>Section 3</h2>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Formik
+              initialValues={{
+                serviceContentMainHeading:
+                  allContentData?.serviceContentMainHeading || "",
+                serviceContentSubHeading:
+                  allContentData?.serviceContentSubHeading || "",
+                serviceContentText: allContentData?.serviceContentText || "",
+              }}
+              enableReinitialize
+              onSubmit={(values) => {
+                const formData = new FormData();
+                let payload = {
+                  id: allContentData?.id,
+                  serviceContentMainHeading: values?.serviceContentMainHeading,
+                  serviceContentSubHeading: values?.serviceContentSubHeading,
+                  serviceContentText: values?.serviceContentText,
+                };
+                // @ts-ignore
+                dispatch(updateServiceContentSection(payload));
+              }}
+            >
+              {({ values, handleChange }) => (
+                <Form>
+                  <Grid container spacing={3}>
+                    <Grid item sm={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Section Main Heading"
+                        name="serviceContentMainHeading"
+                        onChange={handleChange}
+                        value={values.serviceContentMainHeading}
+                      />
+                    </Grid>
+                    <Grid item sm={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Section Sub Heading"
+                        name="serviceContentSubHeading"
+                        onChange={handleChange}
+                        value={values.serviceContentSubHeading}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        multiline
+                        minRows={2}
+                        maxRows={4}
+                        label="Section Text"
+                        name="serviceContentText"
+                        onChange={handleChange}
+                        value={values.serviceContentText}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Button type="submit" variant="contained">
+                        Submit
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Form>
+              )}
+            </Formik>
+            <Box mt={8}>
+              <Typography fontWeight={500} fontSize={20} mb={2}>
+                Service Card
+              </Typography>
+
+              <Grid container rowSpacing={3}>
+                {JSONHandler(allContentData?.bigServiceContentCard).map(
+                  (value: any, index: number) => (
+                    <Grid
+                      item
+                      container
+                      key={index}
+                      spacing={3}
+                      alignItems={"center"}
+                    >
+                      <Grid item sm={2} xs={12}>
+                        <Box width={100} height={60}>
+                          <FilePreview
+                            file={value?.ServiceContentMainCardImage}
+                          />
+                        </Box>
+                      </Grid>
+
+                      <Grid item sm={3} xs={12}>
+                        <TextField
+                          disabled
+                          fullWidth
+                          size="small"
+                          label="Service Card Main Heading"
+                          placeholder="Card Main Heading"
+                          value={value?.bigServiceContentSubHeading}
+                          name="bigServiceContentSubHeading"
+                        />
+                      </Grid>
+                      <Grid item sm={3} xs={12}>
+                        <TextField
+                          disabled
+                          fullWidth
+                          label="Service Card Sub Heading"
+                          placeholder="Card Sub Heading"
+                          size="small"
+                          value={value?.bigServiceContentText}
+                          name="bigServiceContentText"
+                        />
+                      </Grid>
+
+                      {value?.positionId && (
+                        <Grid item sm={3} xs={12}>
+                          <Tooltip title="Edit">
+                            <IconButton
+                              size="small"
+                              sx={{ color: "text.secondary" }}
+                              onClick={() => {
+                                handleShow("serviceContentCard");
+                                setEdit(true);
+                                setEditField(value);
+                              }}
+                            >
+                              <Icon icon="tabler:edit" />
+                            </IconButton>
+                          </Tooltip>
+                        </Grid>
+                      )}
+                    </Grid>
+                  )
+                )}
+              </Grid>
+
+              <Button
+                sx={{ my: 5 }}
+                color="inherit"
+                variant="contained"
+                type="button"
+                onClick={() => handleShow("serviceContentCard")}
+              >
+                ADD SERVICE CARD
+              </Button>
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+      </Grid>
+      <Grid item xs={12}>
+        <Accordion
+          expanded={expanded === "section4"}
+          onChange={handleChange("section4")}
+        >
+          <AccordionSummary
+            id="controlled-panel-header-1"
+            aria-controls="controlled-panel-content-1"
+            expandIcon={<Icon fontSize="1.25rem" icon="tabler:chevron-down" />}
+          >
+            <h2>Section 4</h2>
           </AccordionSummary>
           <AccordionDetails>
             <Formik
@@ -787,8 +956,11 @@ const ContentPage = () => {
                       alignItems={"center"}
                     >
                       <Grid item sm={2} xs={12}>
-                        <Box width={100} height={60}>
+                        <Box>
                           <FilePreview
+                            style={{
+                              height: "100px",
+                            }}
                             file={value.productContentMainCardImage}
                           />
                         </Box>
@@ -850,144 +1022,19 @@ const ContentPage = () => {
             </Box>
           </AccordionDetails>
         </Accordion>
-        {/* <Card>
-          <CardHeader title='Section 3' />
-          <CardContent>
-            
-          </CardContent>
-        </Card> */}
       </Grid>
 
-      {/* <Grid item xs={12}>
-        <Accordion
-          expanded={expanded === "section4"}
-          onChange={handleChange("section4")}
-        >
-          <AccordionSummary
-            id="controlled-panel-header-1"
-            aria-controls="controlled-panel-content-1"
-            expandIcon={<Icon fontSize="1.25rem" icon="tabler:chevron-down" />}
-          >
-            <h2>Section 4</h2>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Formik
-              initialValues={{
-                smallProductContentMainHeading:
-                  getAllSmallProductData[0]?.smallProductContentMainHeading ||
-                  "",
-              }}
-              enableReinitialize
-              onSubmit={(values) => {
-                let ID = localStorage.getItem("AllContentDataId");
-                const payload = {
-                  id: ID,
-                  smallProductContentMainHeading:
-                    values?.smallProductContentMainHeading,
-                };
-                // @ts-ignore
-                dispatch(updateSmallProductContent(payload)).then(() => {
-                  dispatch(getAllContent());
-                });
-              }}
-            >
-              {({ values, handleChange }) => (
-                <Form>
-                  <Stack spacing={3}>
-                    <TextField
-                      fullWidth
-                      label="Sub-Product Content Main Heading"
-                      name="smallProductContentMainHeading"
-                      onChange={handleChange}
-                      value={values.smallProductContentMainHeading}
-                    />
-
-                    <Box>
-                      <Button variant="contained" type="submit">
-                        Submit
-                      </Button>
-                    </Box>
-                  </Stack>
-                </Form>
-              )}
-            </Formik>
-            <Box mt={8}>
-              <Typography fontWeight={500} fontSize={20} mb={2}>
-                Add Card
-              </Typography>
-
-              <Grid container spacing={5}>
-                {smallCardData &&
-                  smallCardData.map((value: any, index: number) => (
-                    <Grid
-                      key={index}
-                      item
-                      container
-                      spacing={3}
-                      xs={12}
-                      alignItems={"center"}
-                    >
-                      <Grid item sm={2} xs={12}>
-                        <Box width={100} height={60}>
-                          <FilePreview
-                            file={value?.smallProductContentCardImage}
-                          />
-                        </Box>
-                      </Grid>
-                      <Grid item sm={6} xs={12}>
-                        <TextField
-                          fullWidth
-                          size="small"
-                          label="Product Content Name"
-                          name="productContentName"
-                          value={value?.productContentName}
-                        />
-                      </Grid>
-                      {value?.positionId && (
-                        <Grid item sm={2} xs={12}>
-                          <Tooltip title="Edit">
-                            <IconButton
-                              size="small"
-                              sx={{ color: "text.secondary" }}
-                              onClick={() => {
-                                handleShow("smallProductContentCard");
-                                setEdit(true);
-                                setEditField(value);
-                              }}
-                            >
-                              <Icon icon="tabler:edit" />
-                            </IconButton>
-                          </Tooltip>
-                        </Grid>
-                      )}
-                    </Grid>
-                  ))}
-              </Grid>
-
-              <Button
-                sx={{ mt: 3, mb: 5 }}
-                color="inherit"
-                variant="contained"
-                type="button"
-                onClick={() => handleShow("smallProductContentCard")}
-              >
-                ADD CARD
-              </Button>
-            </Box>
-          </AccordionDetails>
-        </Accordion>
-      </Grid> */}
       <Grid item xs={12}>
         <Accordion
-          expanded={expanded === "section4"}
-          onChange={handleChange("section4")}
+          expanded={expanded === "section5"}
+          onChange={handleChange("section5")}
         >
           <AccordionSummary
             id="controlled-panel-header-1"
             aria-controls="controlled-panel-content-1"
             expandIcon={<Icon fontSize="1.25rem" icon="tabler:chevron-down" />}
           >
-            <h2>Section 4</h2>
+            <h2>Section 5</h2>
           </AccordionSummary>
           <AccordionDetails>
             <Formik
@@ -1063,14 +1110,6 @@ const ContentPage = () => {
             </Formik>
           </AccordionDetails>
         </Accordion>
-
-        {/* SECTION  =   4 */}
-        {/* <Card>
-          <CardHeader title='Section 4' />
-          <CardContent>
-            
-          </CardContent>
-        </Card> */}
       </Grid>
       <DeleteDialog
         open={openDelete}
@@ -1085,6 +1124,11 @@ const ContentPage = () => {
       {dialogName === "slider" && <SliderContentDialog {...props} />}
       {dialogName === "cardContents" && <CardContentDialog {...props} />}
       {dialogName === "productContentCard" && <ProductContentCard {...props} />}
+      {/*  */}
+      {dialogName === "serviceContentCard" && (
+        <ServiceContentCardDialog {...props} />
+      )}
+
       {dialogName === "smallProductContentCard" && (
         <SmallProductCard {...props} />
       )}

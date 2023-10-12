@@ -206,11 +206,106 @@ const HomePage = () => {
           <Grid container>
             <Grid sm={12} md={6}>
               <Box className="what-do-left">
-                <p className="what-do-heading">Services</p>
+                <p className="what-do-heading">
+                  {getContentData?.serviceContentMainHeading}
+                </p>
+                <h1 className="what-do-content">
+                  {getContentData?.serviceContentSubHeading}
+                </h1>
               </Box>
             </Grid>
           </Grid>
           <div className="card-section">
+            <Swiper
+              slidesPerView={
+                JSONHandler(getContentData?.bigServiceContentCard).length === 4
+                  ? 4
+                  : JSONHandler(getContentData?.bigServiceContentCard)
+                      .length === 3
+                  ? 3
+                  : JSONHandler(getContentData?.bigServiceContentCard)
+                      .length === 2
+                  ? 2
+                  : JSONHandler(getContentData?.bigServiceContentCard)
+                      .length === 1
+                  ? 1
+                  : 4
+              }
+              spaceBetween={30}
+              autoplay={{
+                delay: 2500,
+                disableOnInteraction: false,
+              }}
+              modules={[Autoplay]}
+              breakpoints={{
+                320: {
+                  slidesPerView: 1,
+                  spaceBetween: 0,
+                },
+                576: {
+                  slidesPerView: 2,
+                  spaceBetween: 15,
+                },
+                768: {
+                  slidesPerView: 3,
+                  spaceBetween: 20,
+                },
+                1024: {
+                  slidesPerView: 4,
+                  spaceBetween: 30,
+                },
+              }}
+              className="mySwiper slider-main-card"
+            >
+              {JSONHandler(getContentData?.bigServiceContentCard)?.map(
+                (Item, index) => {
+                  return (
+                    <SwiperSlide className="main-card-banner" key={index}>
+                      <div
+                        className="main-card"
+                        style={{
+                          width: "200px",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          flexDirection: "column",
+                          paddingTop: "0px",
+                        }}
+                      >
+                        <div className="card-img">
+                          <img
+                            className="card-image"
+                            src={Item?.ServiceContentMainCardImage}
+                            alt="card"
+                            width={"140px"}
+                          />
+                        </div>
+                        <div className="card-content">
+                          <h5 className="card-heading">
+                            {Item?.bigServiceContentSubHeading}
+                          </h5>
+                          <p className="card-text">
+                            <TruncateText
+                              text={Item?.bigServiceContentText}
+                              maxLength={60}
+                            />
+                          </p>
+                        </div>
+                      </div>
+                    </SwiperSlide>
+                  );
+                }
+              )}
+            </Swiper>
+          </div>
+          {/* <div
+          // style={{
+          //   margin: "60px 0 0 0",
+          //   display: "flex",
+          //   // flexWrap: "wrap",
+          //   gap: "20px",
+          // }}
+          >
             <Swiper
               slidesPerView={
                 JSONHandler(getContentData?.bigProductContentCard).length === 4
@@ -252,80 +347,37 @@ const HomePage = () => {
               }}
               className="mySwiper slider-main-card"
             >
-              <SwiperSlide className="main-card-banner">
-                <div className="main-card">
-                  <div className="card-img">
-                    <img
-                      className="card-image"
-                      src={"./images/logo/27.png"}
-                      alt="card"
-                      width={"140px"}
-                    />
-                  </div>
-                  <div className="card-content">
-                    <h5 className="card-heading">{"ADD CONTENT"}</h5>
-                    <div className="card-text">
-                      <TruncateText text={"ADD CONTENT"} maxLength={60} />
-                    </div>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide className="main-card-banner">
-                <div className="main-card">
-                  <div className="card-img">
-                    <img
-                      className="card-image"
-                      src={"./images/logo/28.png"}
-                      alt="card"
-                      width={"140px"}
-                    />
-                  </div>
-                  <div className="card-content">
-                    <h5 className="card-heading">ADD CONTENT</h5>
-                    <div className="card-text">
-                      <TruncateText text={"ADD CONTENT"} maxLength={60} />
-                    </div>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide className="main-card-banner">
-                <div className="main-card">
-                  <div className="card-img">
-                    <img
-                      className="card-image"
-                      src={"./images/logo/27.png"}
-                      alt="card"
-                      width={"140px"}
-                    />
-                  </div>
-                  <div className="card-content">
-                    <h5 className="card-heading">ADD CONTENT</h5>
-                    <div className="card-text">
-                      <TruncateText text={"ADD CONTENT"} maxLength={60} />
-                    </div>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide className="main-card-banner">
-                <div className="main-card">
-                  <div className="card-img">
-                    <img
-                      className="card-image"
-                      src={"./images/logo/28.png"}
-                      alt="card"
-                      width={"140px"}
-                    />
-                  </div>
-                  <div className="card-content">
-                    <h5 className="card-heading">{"ADD CONTENT"}</h5>
-                    <div className="card-text">
-                      <TruncateText text={"ADD CONTENT"} maxLength={60} />
-                    </div>
-                  </div>
-                </div>
-              </SwiperSlide>
+              {JSONHandler(getContentData?.bigServiceContentCard)?.map(
+                (Item, index) => {
+                  return (
+                    <SwiperSlide key={index}>
+                      <div className="main-card">
+                        <div className="card-img">
+                          <img
+                            className="card-image"
+                            src={Item?.ServiceContentMainCardImage}
+                            alt="card"
+                            width={"140px"}
+                          />
+                        </div>
+                        <div className="card-content">
+                          <h5 className="card-heading">
+                            {Item?.bigServiceContentSubHeading}
+                          </h5>
+                          <p className="card-text">
+                            <TruncateText
+                              text={Item?.bigServiceContentText}
+                              maxLength={60}
+                            />
+                          </p>
+                        </div>
+                      </div>
+                    </SwiperSlide>
+                  );
+                }
+              )}
             </Swiper>
-          </div>
+          </div> */}
         </section>
         <section className="fresh_product_sec sec_padding">
           <div className="fresh_product_cards">

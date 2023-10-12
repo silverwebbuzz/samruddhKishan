@@ -1,77 +1,121 @@
-import Icon from 'src/@core/components/icon'
-import { Box, Button, Dialog, DialogContent, DialogTitle, Grid, IconButton, TextField } from '@mui/material'
-import { Form, Formik } from 'formik'
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { FilePreview } from 'src/views/components/filePreviewer/FilePreview'
-import { updateProductCardSection } from 'src/slice/productSectionSlice'
+import Icon from "src/@core/components/icon";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  IconButton,
+  TextField,
+} from "@mui/material";
+import { Form, Formik } from "formik";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { FilePreview } from "src/views/components/filePreviewer/FilePreview";
+import {
+  getAllProductSection,
+  updateProductCardSection,
+} from "src/slice/productSectionSlice";
+import { getAllContent } from "src/slice/contentSectionSlice";
 
-const ProductContentCard = ({ show, handleCancel, edit, setEdit, editField }: any) => {
-  const [cardImage, setCardImage] = useState(false)
-  const dispatch = useDispatch()
+const ProductContentCard = ({
+  show,
+  handleCancel,
+  edit,
+  setEdit,
+  editField,
+}: any) => {
+  const [cardImage, setCardImage] = useState(false);
+  const dispatch = useDispatch();
 
   return (
     <Dialog
-      maxWidth='sm'
+      maxWidth="sm"
       fullWidth
       open={show}
       onClose={() => {
-        handleCancel()
-        setEdit(false)
+        handleCancel();
+        setEdit(false);
       }}
-      aria-labelledby='form-dialog-title'
+      aria-labelledby="form-dialog-title"
     >
-      <DialogTitle>{edit ? 'Update Card' : 'Add Card'}</DialogTitle>
+      <DialogTitle>{edit ? "Update Card" : "Add Card"}</DialogTitle>
       <DialogContent>
         <Formik
           enableReinitialize
           initialValues={
             edit
               ? {
-                  productContentMainCardImage: editField?.productContentMainCardImage,
-                  bigProductContentSubHeading: editField?.bigProductContentSubHeading,
-                  bigProductContentText: editField?.bigProductContentText
+                  productContentMainCardImage:
+                    editField?.productContentMainCardImage,
+                  bigProductContentSubHeading:
+                    editField?.bigProductContentSubHeading,
+                  bigProductContentText: editField?.bigProductContentText,
                 }
-              : { productContentMainCardImage: null, bigProductContentSubHeading: '', bigProductContentText: '' }
+              : {
+                  productContentMainCardImage: null,
+                  bigProductContentSubHeading: "",
+                  bigProductContentText: "",
+                }
           }
           onSubmit={(values, { resetForm }) => {
-            console.log(values)
-            let cardFormData = new FormData()
-            let ID = localStorage.getItem('AllContentDataId')
-            cardFormData.append('id', ID)
+            console.log(values);
+            let cardFormData = new FormData();
+            let ID = localStorage.getItem("AllContentDataId");
+            cardFormData.append("id", ID);
             if (cardImage) {
-              cardFormData.append('productContentMainCardImage', values?.productContentMainCardImage)
+              cardFormData.append(
+                "productContentMainCardImage",
+                values?.productContentMainCardImage
+              );
             }
-            cardFormData.append('bigProductContentSubHeading', values?.bigProductContentSubHeading)
-            cardFormData.append('bigProductContentText', values?.bigProductContentText)
+            cardFormData.append(
+              "bigProductContentSubHeading",
+              values?.bigProductContentSubHeading
+            );
+            cardFormData.append(
+              "bigProductContentText",
+              values?.bigProductContentText
+            );
             if (edit) {
-              cardFormData.append('positionId', editField?.positionId)
+              cardFormData.append("positionId", editField?.positionId);
             }
-            let cardPayload = cardFormData
+            let cardPayload = cardFormData;
             // @ts-ignore
-            dispatch(updateProductCardSection(cardPayload))
-            setEdit(false)
-            handleCancel()
-            resetForm()
+            dispatch(updateProductCardSection(cardPayload)).then(() => {
+              dispatch(getAllProductSection());
+            });
+            setEdit(false);
+            handleCancel();
+            resetForm();
           }}
         >
           {({ values, handleChange, setFieldValue }) => (
             <Form>
               <Grid container spacing={4}>
                 <Grid item xs={12}>
-                  <Box display={'flex'} alignItems={'center'}>
-                    <Box width={100} height={80}>
-                      <FilePreview file={values.productContentMainCardImage} />
+                  <Box display={"flex"} alignItems={"center"}>
+                    <Box>
+                      <FilePreview
+                        style={{
+                          height: "100px",
+                        }}
+                        file={values.productContentMainCardImage}
+                      />
                     </Box>
-                    <IconButton color='primary' component='label'>
-                      <Icon icon='material-symbols:upload' />
+                    <IconButton color="primary" component="label">
+                      <Icon icon="material-symbols:upload" />
                       <input
                         hidden
-                        type='file'
+                        type="file"
                         name={values.productContentMainCardImage}
                         onChange={(e: any) => {
-                          setFieldValue('productContentMainCardImage', e.target?.files[0])
-                          setCardImage(true)
+                          setFieldValue(
+                            "productContentMainCardImage",
+                            e.target?.files[0]
+                          );
+                          setCardImage(true);
                         }}
                       />
                     </IconButton>
@@ -80,8 +124,8 @@ const ProductContentCard = ({ show, handleCancel, edit, setEdit, editField }: an
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
-                    label='Product Card Heading'
-                    name='bigProductContentSubHeading'
+                    label="Product Card Heading"
+                    name="bigProductContentSubHeading"
                     onChange={handleChange}
                     value={values.bigProductContentSubHeading}
                   />
@@ -89,22 +133,22 @@ const ProductContentCard = ({ show, handleCancel, edit, setEdit, editField }: an
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
-                    label='Product Card Text'
-                    name='bigProductContentText'
+                    label="Product Card Text"
+                    name="bigProductContentText"
                     onChange={handleChange}
                     value={values.bigProductContentText}
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Button sx={{ mr: 2 }} type='submit' variant='contained'>
+                  <Button sx={{ mr: 2 }} type="submit" variant="contained">
                     Submit
                   </Button>
                   <Button
-                    variant='outlined'
-                    color='error'
+                    variant="outlined"
+                    color="error"
                     onClick={() => {
-                      setEdit(false)
-                      handleCancel()
+                      setEdit(false);
+                      handleCancel();
                     }}
                   >
                     Cancel
@@ -116,7 +160,7 @@ const ProductContentCard = ({ show, handleCancel, edit, setEdit, editField }: an
         </Formik>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default ProductContentCard
+export default ProductContentCard;

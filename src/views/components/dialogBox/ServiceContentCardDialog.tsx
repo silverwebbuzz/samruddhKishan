@@ -13,10 +13,13 @@ import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { FilePreview } from "src/views/components/filePreviewer/FilePreview";
-import { updateProductCardSection } from "src/slice/productSectionSlice";
-import { updateSmallProductCard } from "src/slice/smallProductSlice";
+import {
+  updateProductCardSection,
+  updateServiceCardSection,
+} from "src/slice/productSectionSlice";
+import { getAllContent } from "src/slice/contentSectionSlice";
 
-const SmallProductCard = ({
+const ServiceContentCardDialog = ({
   show,
   handleCancel,
   edit,
@@ -37,18 +40,26 @@ const SmallProductCard = ({
       }}
       aria-labelledby="form-dialog-title"
     >
-      <DialogTitle>{edit ? "Update Card" : "Add Card"}</DialogTitle>
+      <DialogTitle>
+        {edit ? "Update Service Card" : "Add Service Card"}
+      </DialogTitle>
       <DialogContent>
         <Formik
           enableReinitialize
           initialValues={
             edit
               ? {
-                  smallProductContentCardImage:
-                    editField?.smallProductContentCardImage,
-                  productContentName: editField?.productContentName,
+                  ServiceContentMainCardImage:
+                    editField?.ServiceContentMainCardImage,
+                  bigServiceContentSubHeading:
+                    editField?.bigServiceContentSubHeading,
+                  bigServiceContentText: editField?.bigServiceContentText,
                 }
-              : { smallProductContentCardImage: "", productContentName: "" }
+              : {
+                  ServiceContentMainCardImage: null,
+                  bigServiceContentSubHeading: "",
+                  bigServiceContentText: "",
+                }
           }
           onSubmit={(values, { resetForm }) => {
             console.log(values);
@@ -57,20 +68,26 @@ const SmallProductCard = ({
             cardFormData.append("id", ID);
             if (cardImage) {
               cardFormData.append(
-                "smallProductContentCardImage",
-                values?.smallProductContentCardImage
+                "serviceContentMainCardImage",
+                values?.ServiceContentMainCardImage
               );
             }
             cardFormData.append(
-              "productContentName",
-              values?.productContentName
+              "bigServiceContentSubHeading",
+              values?.bigServiceContentSubHeading
+            );
+            cardFormData.append(
+              "bigServiceContentText",
+              values?.bigServiceContentText
             );
             if (edit) {
               cardFormData.append("positionId", editField?.positionId);
             }
             let cardPayload = cardFormData;
             // @ts-ignore
-            dispatch(updateSmallProductCard(cardPayload));
+            dispatch(updateServiceCardSection(cardPayload)).then(() => {
+              dispatch(getAllContent());
+            });
             setEdit(false);
             handleCancel();
             resetForm();
@@ -81,18 +98,23 @@ const SmallProductCard = ({
               <Grid container spacing={4}>
                 <Grid item xs={12}>
                   <Box display={"flex"} alignItems={"center"}>
-                    <Box width={100} height={80}>
-                      <FilePreview file={values.smallProductContentCardImage} />
+                    <Box>
+                      <FilePreview
+                        style={{
+                          height: "100px",
+                        }}
+                        file={values.ServiceContentMainCardImage}
+                      />
                     </Box>
                     <IconButton color="primary" component="label">
                       <Icon icon="material-symbols:upload" />
                       <input
                         hidden
                         type="file"
-                        name={values.smallProductContentCardImage}
+                        name={values.ServiceContentMainCardImage}
                         onChange={(e: any) => {
                           setFieldValue(
-                            "smallProductContentCardImage",
+                            "ServiceContentMainCardImage",
                             e.target?.files[0]
                           );
                           setCardImage(true);
@@ -104,10 +126,19 @@ const SmallProductCard = ({
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
-                    label="Product Card Heading"
-                    name="productContentName"
+                    label="Service Card Heading"
+                    name="bigServiceContentSubHeading"
                     onChange={handleChange}
-                    value={values.productContentName}
+                    value={values.bigServiceContentSubHeading}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Service Card Text"
+                    name="bigServiceContentText"
+                    onChange={handleChange}
+                    value={values.bigServiceContentText}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -134,4 +165,4 @@ const SmallProductCard = ({
   );
 };
 
-export default SmallProductCard;
+export default ServiceContentCardDialog;
