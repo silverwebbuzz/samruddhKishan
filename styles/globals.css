@@ -552,11 +552,11 @@ code[class*="language-"] {
 }
 .fresh_product_cards .single_item {
   background: #2c5848;
-  padding: 40px 30px;
+  padding: 40px 11px;
   border-radius: 10px;
   font-weight: 900;
   margin-bottom: 30px;
-  width: calc(53.66% - 25px);
+  width: calc(100% - 25px);
   text-align: center;
   z-index: 9;
   cursor: pointer;
@@ -1579,7 +1579,7 @@ footer .contact_details_menu .contact-name p a:hover {
     height: 450px;
   }
   .fresh_product_cards .single_item {
-    width: calc(53.66% - 13px);
+    width: calc(100% - 13px);
   }
   .copyright .footer_copyright_wrapper {
     padding: 20px 20px 20px 8%;
@@ -1819,7 +1819,7 @@ footer .contact_details_menu .contact-name p a:hover {
   }
   .fresh_product_cards .single_item {
     margin-bottom: 0;
-    width: 31.03%;
+    width: 100%;
   }
   .card-section .card-img,
   .card-section .card-img::after {
@@ -2167,7 +2167,7 @@ footer .contact_details_menu .contact-name p a:hover {
 }
 @media (max-width: 480px) {
   .fresh_product_cards .single_item {
-    width: 47.3%;
+    width: 50.3%;
   }
   .testimonial_section .testimonial_left {
     height: 300px;
@@ -2209,4 +2209,37 @@ footer .contact_details_menu .contact-name p a:hover {
 
 .HoverOnUser:hover {
   border: 4px solid green !important;
+  cursor: pointer;
+}
+
+/*  */
+.what_we_offer_card_main {
+  padding: 0 !important;
+}
+.what_we_offer_card_text {
+  padding: 5px 25px 25px !important;
+}
+.what_we_offer_card_img,
+.what_we_offer_card_img img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  aspect-ratio: 1.5;
+}
+.what_we_offer_card_main .card-img::after {
+  display: none;
+}
+
+/* ChatButton.css */
+.chat-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  /* background-color: #007bff; Change to your preferred button color */
+  color: #fff; /* Change to your preferred text color */
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  z-index: 999;
 }

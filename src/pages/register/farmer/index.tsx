@@ -116,8 +116,8 @@ const index = () => {
       .max(10, "Whatsapp Number must be 10 digits"),
     aadharNumber: yup
       .string()
-      .required("Aadhar number is required")
       .matches(/^\d{12}$/, "Please enter a valid aadhar number"),
+    DOB: yup.string().required("Date of birth is required"),
   });
 
   const handleFarmerSubmit = (values: any) => {
@@ -218,6 +218,13 @@ const index = () => {
     }
     return JSON.parse(data);
   };
+  const handlePincode = (e: any) => {
+    setPincode(e);
+    let payload = {
+      pincode: e,
+    };
+    dispatch(getAdressByPincode(payload));
+  };
   const FilePreview = ({ file, onRemove }: any) => {
     if (isValidUrl(file)) {
       return (
@@ -247,6 +254,28 @@ const index = () => {
           </Box>
         );
       }
+    }
+  };
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+  const handleFile = async (e, param) => {
+    const file = e;
+    setFileForView(e);
+    const base64 = await convertBase64(file);
+    if (base64) {
+      setFile(base64);
     }
   };
   useEffect(() => {
@@ -417,6 +446,7 @@ const index = () => {
                         value={values?.DOB}
                         name="DOB"
                         onChange={handleChange}
+                        error={Boolean(errors.DOB && touched.DOB)}
                         fullWidth
                         type="date"
                         label="Date of birth *"
@@ -426,6 +456,12 @@ const index = () => {
                         inputProps={{
                           max: new Date().toISOString().split("T")[0], // Set max to today's date
                         }}
+                      />
+                      <ErrorMessage
+                        name="DOB"
+                        render={(msg) => (
+                          <div style={{ color: "red" }}>{msg}</div>
+                        )}
                       />
                     </Grid>
                     <Grid item sm={6} xs={12}>
@@ -819,7 +855,7 @@ const index = () => {
                         placeholder="PattaType"
                       />
                     </Grid>
-                    <Grid item sm={6} xs={12}>
+                    {/* <Grid item sm={6} xs={12}>
                       {" "}
                       <TextField
                         size="small"
@@ -831,7 +867,7 @@ const index = () => {
                         label="LatNo"
                         placeholder="LatNo"
                       />
-                    </Grid>
+                    </Grid> */}
                     <Grid item sm={6} xs={12}>
                       {" "}
                       <TextField

@@ -182,11 +182,12 @@ const FarmerDetails = () => {
       .matches(/^(\+91|0)?[6789]\d{9}$/, "Invalid mobile number"),
     aadharNumber: yup
       .string()
-      .required("Aadhar number is required")
+      // .required("Aadhar number is required")
       .matches(
         /^([0-9]{4}[0-9]{4}[0-9]{4}$)|([0-9]{4}\s[0-9]{4}\s[0-9]{4}$)|([0-9]{4}-[0-9]{4}-[0-9]{4}$)/,
         "please enter a valid aadhar number"
       ),
+    DOB: yup.string().required("Date of birth is required"),
 
     appliedForSoilTesting: yup.string().required("Periods of bond is required"),
   });
@@ -438,6 +439,7 @@ const FarmerDetails = () => {
                       onChange={handleChange}
                       fullWidth
                       type="date"
+                      error={Boolean(errors.DOB && touched.DOB)}
                       label="Date of birth *"
                       InputLabelProps={{
                         shrink: true,
@@ -461,6 +463,12 @@ const FarmerDetails = () => {
                           color: "black", // Set the label font color to blue
                         },
                       }}
+                    />
+                    <ErrorMessage
+                      name="DOB"
+                      render={(msg) => (
+                        <div style={{ color: "red" }}>{msg}</div>
+                      )}
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>
@@ -1124,7 +1132,7 @@ const FarmerDetails = () => {
                       }}
                     />
                   </Grid>
-                  <Grid item sm={6} xs={12}>
+                  {/* <Grid item sm={6} xs={12}>
                     {" "}
                     <TextField
                       value={values?.latNo}
@@ -1151,7 +1159,7 @@ const FarmerDetails = () => {
                         },
                       }}
                     />
-                  </Grid>
+                  </Grid> */}
                   <Grid item sm={6} xs={12}>
                     {" "}
                     <TextField

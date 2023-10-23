@@ -88,7 +88,7 @@ export default function Navbar({ LOGO }) {
                 position: "fixed",
                 top: 0,
                 left: visibleMenu ? 0 : "-120vh",
-                width: "60%",
+                width: "60% !important",
                 height: "100%",
               }),
             }}

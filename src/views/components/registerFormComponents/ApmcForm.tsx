@@ -90,10 +90,12 @@ const ApmcForm = ({
       .string()
       .required("Password is required")
       .min(8, "Password must contain 8 characters")
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-        "Must contain 8 characters, 1 uppercase, 1 lowercase, 1 number, and 1 special character"
-      ),
+      .matches(/^\S*$/, "Password cannot contain spaces"),
+
+    // .matches(
+    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+    //   "Must contain 8 characters, 1 uppercase, 1 lowercase, 1 number, and 1 special character"
+    // ),
   });
   return (
     <Formik

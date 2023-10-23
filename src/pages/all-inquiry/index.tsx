@@ -331,6 +331,16 @@ const allInquiry = () => {
           >
             <MenuItem
               onClick={() => {
+                handleClickOpenDelete();
+                setDeleteID(row?.id);
+                setDelelteField(row?.inqury);
+              }}
+            >
+              <Icon icon="tabler:trash" />
+              Delete
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
                 let editPayload: any = {
                   id: row?.id,
                   status: "pending",
