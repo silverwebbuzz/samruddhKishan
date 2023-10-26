@@ -418,7 +418,7 @@ code[class*="language-"] {
 }
 .top_bar {
   display: flex;
-  padding: 0 10% 0 0;
+  padding: 0 0 0 0;
 }
 .top_bar {
   color: #fff;
@@ -764,7 +764,7 @@ code[class*="language-"] {
   padding: 100px 10% 0;
 }
 .product_gallery_slider_main {
-  padding: 60px 0 0 15%;
+  padding: 60px 0 0 2%;
 }
 .product_gallery_slider .slider_item .overlay {
   background: #1f4e3d;
@@ -1541,7 +1541,7 @@ footer .contact_details_menu .contact-name p a:hover {
     background-position: left top, right top;
   }
   .top_bar {
-    padding: 0 8% 0 0 !important;
+    padding: 0 0 0 0 !important;
   }
   .top_bar_left {
     padding: 15px 15px 15px 10% !important;
@@ -1702,7 +1702,7 @@ footer .contact_details_menu .contact-name p a:hover {
     padding: 20px;
   }
   .product_gallery_slider_main {
-    padding: 20px 0 0 10%;
+    padding: 20px 0 0 1%;
   }
   .get-to-know-right {
     padding: 0px 0 0px 50px;
@@ -1739,7 +1739,7 @@ footer .contact_details_menu .contact-name p a:hover {
     width: calc(100% - 180px) !important;
   }
   .top_bar {
-    padding: 0 5% 0 0 !important;
+    padding: 0 0 0 0 !important;
   }
   .copyright .footer_copyright_wrapper {
     padding: 20px 20px 20px 5%;
@@ -2155,9 +2155,9 @@ footer .contact_details_menu .contact-name p a:hover {
   .product_gallery_btm_counter_right .counter .timer {
     font-size: 30px;
   }
-  .desk_navbar {
+  /* .desk_navbar {
     width: 80% !important;
-  }
+  } */
   .get-to-know .get-to-know_img {
     max-width: 100%;
   }
@@ -2242,4 +2242,38 @@ footer .contact_details_menu .contact-name p a:hover {
   cursor: pointer;
   text-align: center;
   z-index: 999;
+}
+
+/* This CSS is used to style the Google Translate Element dropdown */
+#google_translate_element {
+  background-color: #1f4e3d;
+
+  width: "151px";
+  height: 30px;
+}
+#google_translate_element select {
+  /* Apply your custom styles here */
+  background-color: #fff; /* Background color */
+  color: #333; /* Text color */
+  border: 1px solid #ccc; /* Border */
+  border-radius: 50px; /* Rounded corners */
+  padding: 5px; /* Spacing inside the dropdown */
+  width: 150px; /* Width of the dropdown */
+  height: 40px;
+}
+
+#google_translate_element select option {
+  /* Style the dropdown options (languages) */
+  padding: 5px; /* Spacing inside each option */
+}
+
+/* Style the dropdown icon (arrow) */
+#google_translate_element img.goog-te-gadget-icon {
+  display: none; /* Hide the default Google Translate icon */
+}
+.goog-te-gadget {
+  color: #ffff !important;
+}
+.goog-te-gadget a {
+  color: #ffff !important;
 }

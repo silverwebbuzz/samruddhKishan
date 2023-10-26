@@ -116,6 +116,7 @@ const ContentPage = () => {
     }
     return JSON.parse(data);
   };
+
   useEffect(() => {
     dispatch(getAllSlides());
   }, [deleteSliderData, createSliderData, updateSliderData]);
@@ -489,7 +490,10 @@ const ContentPage = () => {
                               mr: 3,
                             }}
                           >
-                            <FilePreview file={values.contentMainImg} />
+                            <FilePreview
+                              style={{ height: "100%", width: "100%" }}
+                              file={values.contentMainImg}
+                            />
                           </Box>
                           <IconButton
                             size="large"
@@ -522,7 +526,10 @@ const ContentPage = () => {
                               mr: 3,
                             }}
                           >
-                            <FilePreview file={values.contentSubImg} />
+                            <FilePreview
+                              style={{ height: "100%", width: "100%" }}
+                              file={values.contentSubImg}
+                            />
                           </Box>
                           <IconButton
                             size="large"

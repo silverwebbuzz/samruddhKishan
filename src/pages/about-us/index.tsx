@@ -1,52 +1,56 @@
 // ** MUI Imports
 //@ts-nocheck
-import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
-import { useSelector } from 'react-redux'
-import BlankLayout from 'src/@core/layouts/BlankLayout'
-import { getAllContent } from 'src/slice/contentSectionSlice'
-import { getLogoAPI } from 'src/slice/settingSlice'
-import { AppDispatch } from 'src/store/store'
-import AboutSection from 'src/views/components/landdingPage/aboutSection/AboutSection'
-import FooterSection from 'src/views/components/landdingPage/footerSection'
-import GetToKnow from 'src/views/components/landdingPage/getKnow/GetKnown'
-import Navbar from 'src/views/components/landdingPage/navBar/Navbar'
-import PageBanner from 'src/views/components/landdingPage/pageBanner/PageBanner'
-import TestimonialSection from 'src/views/components/landdingPage/testimonialSection/TestimonialSection'
-import Topbar from 'src/views/components/topbar'
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import BlankLayout from "src/@core/layouts/BlankLayout";
+import { getAllContent } from "src/slice/contentSectionSlice";
+import { getLogoAPI } from "src/slice/settingSlice";
+import { AppDispatch } from "src/store/store";
+import AboutSection from "src/views/components/landdingPage/aboutSection/AboutSection";
+import FooterSection from "src/views/components/landdingPage/footerSection";
+import GetToKnow from "src/views/components/landdingPage/getKnow/GetKnown";
+import Navbar from "src/views/components/landdingPage/navBar/Navbar";
+import PageBanner from "src/views/components/landdingPage/pageBanner/PageBanner";
+import TestimonialSection from "src/views/components/landdingPage/testimonialSection/TestimonialSection";
+import Topbar from "src/views/components/topbar";
 
 const AboutPage = () => {
-  const { getLogo } = useSelector((state: any) => state?.rootReducer?.settingsReducer)
-  const { getContentData } = useSelector((state: any) => state?.rootReducer?.landingPageReducer)
-  const dispatch = useDispatch<AppDispatch>()
+  const { getLogo } = useSelector(
+    (state: any) => state?.rootReducer?.settingsReducer
+  );
+  const { getContentData } = useSelector(
+    (state: any) => state?.rootReducer?.landingPageReducer
+  );
+  const dispatch = useDispatch<AppDispatch>();
   const JSONHandler = (data: any) => {
     try {
-      JSON.parse(data)
+      JSON.parse(data);
     } catch (e) {
-      return []
+      return [];
     }
-    return JSON.parse(data)
-  }
+    return JSON.parse(data);
+  };
   useEffect(() => {
-    document.body.classList.add('landingPage')
+    document.body.classList.add("landingPage");
     return () => {
-      document.body.classList.remove('landingPage')
-    }
-  }, [])
+      document.body.classList.remove("landingPage");
+    };
+  }, []);
   useEffect(() => {
-    dispatch(getLogoAPI())
-    dispatch(getAllContent())
-  }, [])
+    dispatch(getLogoAPI());
+    dispatch(getAllContent());
+  }, []);
   return (
     <>
       <Topbar data={getContentData} />
       <Navbar LOGO={getLogo?.logo} />
-      <div className='about-page'>
+      <div className="about-page">
         <PageBanner
           height={200}
-          BGImg={'/images/logo/slider1.jpg'}
-          bannerName='About Us'
-          bannerContent='Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry'
+          BGImg={"/images/logo/slider1.jpg"}
+          bannerName="About Us"
+          bannerContent="The Director of the company was inspired by his Father's teachings on empowering farmers. His Father emphasized that when farmers thrive, so does society, and a prosperous society contributes to a prosperous nation. This philosophy aims to benefit the entire world through empowered farmers. Farmers are viewed as the stewards of Mother Earth with the potential to bring prosperity to their families, communities, and nations. As a reflection of this belief, the company is named 'Kisaan Capability Richest And Owner Family.' "
         />
         {/* About section start */}
         <AboutSection DATA={getContentData} JSONHandler={JSONHandler} />
@@ -59,12 +63,16 @@ const AboutPage = () => {
         {/* About section end */}
       </div>
       {/* Footer section start */}
-      <FooterSection DATA={getContentData} LOGO={getLogo?.logo} JSONHandler={JSONHandler} />
+      <FooterSection
+        DATA={getContentData}
+        LOGO={getLogo?.logo}
+        JSONHandler={JSONHandler}
+      />
       {/* Footer section end */}
     </>
-  )
-}
+  );
+};
 // AboutPage.guestGuard = true
-AboutPage.authGuard = false
-AboutPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
-export default AboutPage
+AboutPage.authGuard = false;
+AboutPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>;
+export default AboutPage;

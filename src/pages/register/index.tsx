@@ -538,7 +538,7 @@ const Register = () => {
         height={200}
         BGImg={"/images/logo/slider6.jpg"}
         bannerName="User Registration"
-        bannerContent="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry"
+        bannerContent="Join us on this journey of growth and innovation as we work together to cultivate prosperity for farmers worldwide. Explore our extensive range of products and discover how our platform can revolutionize your farming experience. Welcome to a brighter, more efficient future for farming with Samruddh Kisaan."
       />
       <section
         className="home-contact"

@@ -43,6 +43,8 @@ const HomePage = () => {
   const [expanded, setExpanded] = useState<string | false>(false);
   const [viewPortEntered, setViewPortEntered] = useState(false);
   const [showMore, setShowMore] = useState(false);
+  const [selectElement, setSelectElement] = useState("");
+  const [chatUrl, setChatUrl] = useState("#");
   const { allProductsData } = useSelector(
     (state: any) => state?.rootReducer?.productReducer
   );
@@ -138,8 +140,29 @@ const HomePage = () => {
     const uniq = ProductData.filter((Item) => Item.addToHome === 1);
     return uniq;
   };
+
+  // Check for mobile devices
+  function isMobileDevice() {
+    return (
+      typeof window.orientation !== "undefined" ||
+      navigator.userAgent.indexOf("Mobile") !== -1
+    );
+  }
+
+  useEffect(() => {
+    if (isMobileDevice()) {
+      setChatUrl(
+        `https://wa.me/${9327152685}/?text=${encodeURIComponent("hello")}`
+      );
+    } else {
+      setChatUrl(`https://web.whatsapp.com/send?phone=${9327152685}`);
+    }
+  }, []);
+
   return (
     <>
+      <div>{selectElement}</div>
+      {console.log(selectElement)}
       <Topbar data={getContentData} />
       <Navbar LOGO={getLogo?.logo} JSONHandler={JSONHandler} />
       <div className="hero">
@@ -299,86 +322,6 @@ const HomePage = () => {
               )}
             </Swiper>
           </div>
-          {/* <div
-          // style={{
-          //   margin: "60px 0 0 0",
-          //   display: "flex",
-          //   // flexWrap: "wrap",
-          //   gap: "20px",
-          // }}
-          >
-            <Swiper
-              slidesPerView={
-                JSONHandler(getContentData?.bigProductContentCard).length === 4
-                  ? 4
-                  : JSONHandler(getContentData?.bigProductContentCard)
-                      .length === 3
-                  ? 3
-                  : JSONHandler(getContentData?.bigProductContentCard)
-                      .length === 2
-                  ? 2
-                  : JSONHandler(getContentData?.bigProductContentCard)
-                      .length === 1
-                  ? 1
-                  : 4
-              }
-              spaceBetween={30}
-              autoplay={{
-                delay: 2500,
-                disableOnInteraction: false,
-              }}
-              modules={[Autoplay]}
-              breakpoints={{
-                320: {
-                  slidesPerView: 1,
-                  spaceBetween: 0,
-                },
-                576: {
-                  slidesPerView: 2,
-                  spaceBetween: 15,
-                },
-                768: {
-                  slidesPerView: 3,
-                  spaceBetween: 20,
-                },
-                1024: {
-                  slidesPerView: 4,
-                  spaceBetween: 30,
-                },
-              }}
-              className="mySwiper slider-main-card"
-            >
-              {JSONHandler(getContentData?.bigServiceContentCard)?.map(
-                (Item, index) => {
-                  return (
-                    <SwiperSlide key={index}>
-                      <div className="main-card">
-                        <div className="card-img">
-                          <img
-                            className="card-image"
-                            src={Item?.ServiceContentMainCardImage}
-                            alt="card"
-                            width={"140px"}
-                          />
-                        </div>
-                        <div className="card-content">
-                          <h5 className="card-heading">
-                            {Item?.bigServiceContentSubHeading}
-                          </h5>
-                          <p className="card-text">
-                            <TruncateText
-                              text={Item?.bigServiceContentText}
-                              maxLength={60}
-                            />
-                          </p>
-                        </div>
-                      </div>
-                    </SwiperSlide>
-                  );
-                }
-              )}
-            </Swiper>
-          </div> */}
         </section>
         <section className="fresh_product_sec sec_padding">
           <div className="fresh_product_cards">
@@ -690,95 +633,9 @@ const HomePage = () => {
         {/* Contact form start */}
         <ContactSection JSONHandler={JSONHandler} />
         {/* Contact form end */}
-        {/* <section className='home_latest_blogs sec_padding'>
-          <div className='latest_blog_lg'>
-            <div className='card_img'>
-              <Link href='#' passHref>
-                <img src='/images/logo/blog-2.jpg' alt='' />
-                <div className='btm_publish_date'>
-                  <h4>14</h4>
-                  <p>Apr,23</p>
-                </div>
-              </Link>
-            </div>
-            <div className='card_content'>
-              <div className='auther_details'>
-                <Link href='#' passHref>
-                  <Icon icon='gg:profile' />
-                  Agrul
-                </Link>
-                <Link href='#' passHref>
-                  <Icon icon='ant-design:comment-outlined' />2 Comments
-                </Link>
-              </div>
-              <h3>
-                <Link href='#' passHref>
-                  Announcing if the resolution sentiments Possession ye no mr unaffected remarkably
-                </Link>
-              </h3>
-            </div>
-          </div>
-          <div className='latest_blog_sm'>
-            <div className='card_img'>
-              <Link href='#' passHref>
-                <img src='/images/logo/blog-2.jpg' alt='' />
-                <div className='btm_publish_date'>
-                  <h4>14</h4>
-                  <p>Apr,23</p>
-                </div>
-              </Link>
-            </div>
-            <div className='card_content'>
-              <div className='auther_details'>
-                <Link href='#' passHref>
-                  <Icon icon='gg:profile' />
-                  Agrul
-                </Link>
-                <Link href='#' passHref>
-                  <Icon icon='ant-design:comment-outlined' />2 Comments
-                </Link>
-              </div>
-              <h3>
-                <Link href='#' passHref>
-                  Announcing if the resolution sentiments Possession ye no mr unaffected remarkably
-                </Link>
-              </h3>
-            </div>
-          </div>
-          <div className='latest_blog_sm'>
-            <div className='card_img'>
-              <Link href='#' passHref>
-                <img src='/images/logo/blog-2.jpg' alt='' />
-                <div className='btm_publish_date'>
-                  <h4>14</h4>
-                  <p>Apr,23</p>
-                </div>
-              </Link>
-            </div>
-            <div className='card_content'>
-              <div className='auther_details'>
-                <Link href='#' passHref>
-                  <Icon icon='gg:profile' />
-                  Agrul
-                </Link>
-                <Link href='#' passHref>
-                  <Icon icon='ant-design:comment-outlined' />2 Comments
-                </Link>
-              </div>
-              <h3>
-                <Link href='#' passHref>
-                  Announcing if the resolution sentiments Possession ye no mr unaffected remarkably
-                </Link>
-              </h3>
-            </div>
-          </div>
-        </section> */}
 
-        {/* <a href={"#"} className="chat-button">
-          <IconButton icon="logos:whatsapp-icon" />
-        </a> */}
         <a
-          href={"https://web.whatsapp.com/"}
+          href={chatUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="chat-button"
