@@ -73,7 +73,8 @@ const OurCentersPage = () => {
         height={200}
         BGImg={"/images/logo/slider1.jpg"}
         bannerName="Our Centers"
-        bannerContent="But we're more than just a marketplace for farming supplies. At Samruddh Kisaan, we're committed to helping you succeed in your agricultural endeavors. We believe that data-driven decisions can transform farming, and that's why we offer a cutting-edge platform to capture and analyze vital farmer data. Our mission is simple: to empower you with the best solutions available, ensuring that your farm thrives and contributes to a sustainable future."
+        bannerContent="
+        At Samruddh Kishan, we operate a network of centers dedicated to the Farmers. Each of our centers is designed to register a farmer and helping to them, and they are strategically located in all over the country."
       />
       {/* <AboutSection ourCenter={true} DATA={getContentData} JSONHandler={JSONHandler} /> */}
       <section

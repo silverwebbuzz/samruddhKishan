@@ -50,7 +50,7 @@ const ContactPage = () => {
           height={200}
           BGImg={"/images/logo/slider6.jpg"}
           bannerName="Contact Us"
-          bannerContent="Welcome to Samruddh Kisaan, your one-stop destination for all your farming equipment and resource needs. We understand that farming is not just a profession; it's a way of life. That's why we're dedicated to providing farmers like you with top-quality tools, including fertilizers, seeds, sprays, insecticides, containers, and much more."
+          bannerContent="We will make every effort to respond to your inquiry promptly. Your feedback and questions are important to us as we strive to better serve you and meet your needs."
         />
         {/* Contact section start */}
         <ContactSection JSONHandler={JSONHandler} />

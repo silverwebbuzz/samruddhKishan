@@ -1,18 +1,50 @@
+import axios from "axios";
 import moment from "moment";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import Icon from "src/@core/components/icon";
 const FooterSection = ({ LOGO, DATA }: any) => {
-  // const product =
-  // console.log(DATA, 'DATA')
-  const JSONHandler = (data: any) => {
-    try {
-      JSON.parse(data);
-    } catch (e) {
-      return [];
+  const [subsribeValue, setSubsribeValue] = useState("");
+  const [isValidEmail, setIsValidEmail] = useState(true);
+
+  const handleSubscribe = () => {
+    if (isValidEmail) {
+      if (subsribeValue.length > 0) {
+        const payload = {
+          email: subsribeValue,
+        };
+        axios
+          .post(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/subscribers/createSubscriber`,
+            payload,
+            {
+              "Access-Control-Allow-Origin": "*",
+              "Content-Type": "application/json",
+            }
+          )
+          .then((res) => {
+            console.log("asbdkagkdghsagdhagsdgj", res?.data?.status);
+            if (res?.data?.status === 200) {
+              toast.success("Thank you for subscribing!");
+            }
+          });
+      }
     }
-    return JSON.parse(data);
   };
+
+  const validateEmail = (email: string) => {
+    // Regular expression for a valid email
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+    return emailRegex.test(email);
+  };
+
+  const handleEmailChange = (e: any) => {
+    const email = e.target.value;
+    setSubsribeValue(email);
+    setIsValidEmail(validateEmail(email));
+  };
+
   useEffect(() => {
     const script = document.createElement("script");
     script.type = "text/javascript";
@@ -43,8 +75,20 @@ const FooterSection = ({ LOGO, DATA }: any) => {
           </a>
           <p>{DATA?.featuresProduct?.[2]?.footerContent}</p>
           <div className="footer_form">
-            <input type="text" placeholder="input your email" />
-            <button type="submit">Go</button>
+            <input
+              type="email"
+              value={subsribeValue}
+              onChange={handleEmailChange}
+              placeholder="Enter your email"
+              className={isValidEmail ? "" : "invalid-email"}
+            />
+            <button
+              type="submit"
+              onClick={handleSubscribe}
+              disabled={!isValidEmail}
+            >
+              Go
+            </button>
           </div>
           <div
             style={{

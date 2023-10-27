@@ -1,7 +1,14 @@
 // @ts-nocheck
-import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
-import { Formik, Form, FormikProps, ErrorMessage, Field, FieldArray } from 'formik'
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import {
+  Formik,
+  Form,
+  FormikProps,
+  ErrorMessage,
+  Field,
+  FieldArray,
+} from "formik";
 import {
   Box,
   Card,
@@ -15,182 +22,200 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Typography
-} from '@mui/material'
-import { AppDispatch, RootState } from 'src/store/store'
-import { useDispatch } from 'react-redux'
-import { useSelector } from 'react-redux'
-import * as yup from 'yup'
-import styled from '@emotion/styled'
-import { useEffect, useState } from 'react'
-import dynamic from 'next/dynamic'
-import 'react-quill/dist/quill.snow.css'
-import { getAllCategories } from 'src/slice/categoriesSlice'
-import { createService } from 'src/slice/servicesSlice'
-import { useRouter } from 'next/router'
-import { getAllBrands } from 'src/slice/brandsSlice'
-import { toast } from 'react-hot-toast'
-import { border, borderRadius, display, padding } from '@mui/system'
-import { GridDeleteIcon } from '@mui/x-data-grid'
+  Typography,
+} from "@mui/material";
+import { AppDispatch, RootState } from "src/store/store";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import * as yup from "yup";
+import styled from "@emotion/styled";
+import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import "react-quill/dist/quill.snow.css";
+import { getAllCategories } from "src/slice/categoriesSlice";
+import { createService } from "src/slice/servicesSlice";
+import { useRouter } from "next/router";
+import { getAllBrands } from "src/slice/brandsSlice";
+import { toast } from "react-hot-toast";
+import { border, borderRadius, display, padding } from "@mui/system";
+import { GridDeleteIcon } from "@mui/x-data-grid";
 import {
   createProduct,
   deleteProductGallaryImage,
   getAllCountry,
   getAllUnits,
   getProductById,
-  updateProduct
-} from 'src/slice/productSlice'
-import { getAllUsers } from 'src/slice/farmers'
-import DemoSelect from 'src/views/demo/demoSelect'
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
+  updateProduct,
+} from "src/slice/productSlice";
+import { getAllUsers } from "src/slice/farmers";
+import DemoSelect from "src/views/demo/demoSelect";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const editProduct = () => {
-  const dispatch = useDispatch<AppDispatch>()
-  const router = useRouter()
-  const { categories } = useSelector((state: any) => state?.rootReducer?.categoriesReducer)
-  const { getUsers } = useSelector((state: any) => state?.rootReducer?.farmerReducer)
-  const { brandsData } = useSelector((state: any) => state?.rootReducer?.brandsReducer)
-  const { allUnitsData, contries, singleProductsData } = useSelector((state: any) => state?.rootReducer?.productReducer)
-  const [selectedFiles, setSelectedFiles] = useState([])
-  const [newSelectedFiles, setNewSelectedFiles] = useState([])
-  const [removeFiles, setRemoveFiles] = useState([])
-  const [categoryIdPrefill, setCategoryIdPrefill] = useState(0)
-  const [brandPrefill, setBrandPrefill] = useState('')
-  const [contryPrefill, setContryPrefill] = useState('')
-  const [productUnits, setProductUnits] = useState('')
-  const productID = localStorage.getItem('editProductID')
-  const [vendorId, setVendorId] = useState('')
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+  const { categories } = useSelector(
+    (state: any) => state?.rootReducer?.categoriesReducer
+  );
+  const { getUsers } = useSelector(
+    (state: any) => state?.rootReducer?.farmerReducer
+  );
+  const { brandsData } = useSelector(
+    (state: any) => state?.rootReducer?.brandsReducer
+  );
+  const { allUnitsData, contries, singleProductsData } = useSelector(
+    (state: any) => state?.rootReducer?.productReducer
+  );
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [newSelectedFiles, setNewSelectedFiles] = useState([]);
+  const [removeFiles, setRemoveFiles] = useState([]);
+  const [categoryIdPrefill, setCategoryIdPrefill] = useState(0);
+  const [brandPrefill, setBrandPrefill] = useState("");
+  const [contryPrefill, setContryPrefill] = useState("");
+  const [productUnits, setProductUnits] = useState("");
+  const productID = localStorage.getItem("editProductID");
+  const [vendorId, setVendorId] = useState("");
 
-  const ProfilePicture = styled('img')(({ theme }) => ({
+  const ProfilePicture = styled("img")(({ theme }) => ({
     width: 108,
     height: 108,
     borderRadius: theme.shape.borderRadius,
     border: `4px solid ${theme.palette.common.white}`,
-    [theme.breakpoints.down('md')]: {
-      marginBottom: theme.spacing(4)
-    }
-  }))
+    [theme.breakpoints.down("md")]: {
+      marginBottom: theme.spacing(4),
+    },
+  }));
 
   // ** State
   const handleProduct = (values: any, { resetForm }: any) => {
-    let formdata = new FormData()
-    formdata.append('id', productID)
-    formdata.append('vendorId', vendorId ? vendorId : 0)
-    formdata.append('categoryId', categoryIdPrefill ? categoryIdPrefill : 0)
-    formdata.append('productName', values?.productName)
-    formdata.append('brandId', brandPrefill ? brandPrefill : 0)
-    formdata.append('productShort', values?.productShort)
-    formdata.append('specification', JSON.stringify(values?.specifications))
-    formdata.append('producctVideoUrl', values?.producctVideoUrl)
-    formdata.append('productDescription', values?.productDescription)
-    formdata.append('productCode', values?.productCode)
-    formdata.append('productImage', values?.productImage)
-    formdata.append('availbilityStock', values?.availbilityStock)
-    formdata.append('minPrice', values?.minPrice)
-    formdata.append('maxPrice', values?.maxPrice)
-    formdata.append('productUnits', productUnits)
-    formdata.append('country', values?.country)
-    formdata.append('status', values?.status)
-    formdata.append('addToHome', values?.addToHome ? 1 : 0)
+    let formdata = new FormData();
+    formdata.append("id", productID);
+    formdata.append("vendorId", vendorId ? vendorId : 0);
+    formdata.append("categoryId", categoryIdPrefill ? categoryIdPrefill : 0);
+    formdata.append("productName", values?.productName);
+    formdata.append("brandId", brandPrefill ? brandPrefill : 0);
+    formdata.append("productShort", values?.productShort);
+    formdata.append("specification", JSON.stringify(values?.specifications));
+    formdata.append("producctVideoUrl", values?.producctVideoUrl);
+    formdata.append("productDescription", values?.productDescription);
+    formdata.append("productCode", values?.productCode);
+    formdata.append("productImage", values?.productImage);
+    formdata.append("availbilityStock", values?.availbilityStock);
+    formdata.append("minPrice", values?.minPrice);
+    formdata.append("maxPrice", values?.maxPrice);
+    formdata.append("productUnits", productUnits);
+    formdata.append("country", values?.country);
+    formdata.append("status", values?.status);
+    formdata.append("addToHome", values?.addToHome ? 1 : 0);
     newSelectedFiles.forEach((file, index) => {
-      formdata.append(`productGallaryImage`, file)
-    })
-    let payload = formdata
+      formdata.append(`productGallaryImage`, file);
+    });
+    let payload = formdata;
     let payloadForDeleteImages = {
-      ids: removeFiles
-    }
-    dispatch(updateProduct(payload)).then(res => {
+      ids: removeFiles,
+    };
+    dispatch(updateProduct(payload)).then((res) => {
       if (removeFiles?.length > 0) {
-        dispatch(deleteProductGallaryImage(payloadForDeleteImages)).then(res => {
-          setSelectedFiles([])
-          setNewSelectedFiles([])
-          setRemoveFiles([])
-        })
+        dispatch(deleteProductGallaryImage(payloadForDeleteImages)).then(
+          (res) => {
+            setSelectedFiles([]);
+            setNewSelectedFiles([]);
+            setRemoveFiles([]);
+          }
+        );
       }
-      if (res?.payload?.status === 'success') {
-        setSelectedFiles([])
-        router.push('/all-products')
+      if (res?.payload?.status === "success") {
+        setSelectedFiles([]);
+        router.push("/all-products");
       }
-    })
-  }
+    });
+  };
 
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
+      ["bold", "italic", "underline", "strike"],
       [{ color: [] }, { background: [] }],
-      [{ script: 'sub' }, { script: 'super' }],
-      ['blockquote', 'code-block'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ indent: '-1' }, { indent: '+1' }, { align: [] }],
-      ['link', 'image', 'video'],
-      ['clean']
-    ]
-  }
+      [{ script: "sub" }, { script: "super" }],
+      ["blockquote", "code-block"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      [{ indent: "-1" }, { indent: "+1" }, { align: [] }],
+      ["link", "image", "video"],
+      ["clean"],
+    ],
+  };
   // Validations
   const validationSchema = yup.object({
-    productName: yup.string().required('Product name is required')
-  })
+    productName: yup.string().required("Product name is required"),
+  });
   const isValidUrl = (urlString: any) => {
     try {
-      return Boolean(new URL(urlString))
+      return Boolean(new URL(urlString));
     } catch (e) {
-      return false
+      return false;
     }
-  }
+  };
   const FilePreview = ({ file, onRemove }: any) => {
     if (isValidUrl(file)) {
       return (
         <Box>
-          <ProfilePicture src={file} alt='profile-picture' />
+          <ProfilePicture src={file} alt="profile-picture" />
         </Box>
-      )
+      );
     } else {
-      if (file?.type?.startsWith('image')) {
+      if (file?.type?.startsWith("image")) {
         return (
           <Box>
-            <ProfilePicture src={URL.createObjectURL(file)} alt='profile-picture' />
+            <ProfilePicture
+              src={URL.createObjectURL(file)}
+              alt="profile-picture"
+            />
           </Box>
-        )
+        );
       } else {
         return (
           <Box>
             <ProfilePicture
-              src={'/images/logo/pngtree-gray-network-placeholder-png-image_3416659.jpg'}
-              alt='profile-picture'
+              src={
+                "/images/logo/pngtree-gray-network-placeholder-png-image_3416659.jpg"
+              }
+              alt="profile-picture"
             />
           </Box>
-        )
+        );
       }
     }
-  }
+  };
 
-  const handleFileChange = event => {
-    const file = event.target.files[0] // Only allow selecting one file at a time
-    setSelectedFiles(prevSelectedFiles => [...prevSelectedFiles, file])
-    setNewSelectedFiles(prevNewSelectedFiles => [...prevNewSelectedFiles, file])
-  }
+  const handleFileChange = (event) => {
+    const file = event.target.files[0]; // Only allow selecting one file at a time
+    setSelectedFiles((prevSelectedFiles) => [...prevSelectedFiles, file]);
+    setNewSelectedFiles((prevNewSelectedFiles) => [
+      ...prevNewSelectedFiles,
+      file,
+    ]);
+  };
   useEffect(() => {
-    dispatch(getAllCategories())
-    dispatch(getAllBrands())
-    dispatch(getAllUsers())
-    dispatch(getAllCountry())
-    dispatch(getAllUnits())
-    dispatch(getProductById({ id: productID }))
-  }, [])
+    dispatch(getAllCategories());
+    dispatch(getAllBrands());
+    dispatch(getAllUsers());
+    dispatch(getAllCountry());
+    dispatch(getAllUnits());
+    dispatch(getProductById({ id: productID }));
+  }, []);
 
   useEffect(() => {
     setTimeout(() => {
-      setCategoryIdPrefill(singleProductsData?.categoryId || 0)
-      setBrandPrefill(singleProductsData?.brandId || '')
-      setVendorId(singleProductsData?.vendorId || '')
-      setContryPrefill(singleProductsData?.country || '')
-      setProductUnits(singleProductsData?.productUnits || '')
-      const productGallaryImage = singleProductsData?.productGallaryImage
+      setCategoryIdPrefill(singleProductsData?.categoryId || 0);
+      setBrandPrefill(singleProductsData?.brandId || "");
+      setVendorId(singleProductsData?.vendorId || "");
+      setContryPrefill(singleProductsData?.country || "");
+      setProductUnits(singleProductsData?.productUnits || "");
+      const productGallaryImage = singleProductsData?.productGallaryImage;
       if (productGallaryImage && productGallaryImage.length !== undefined) {
-        setSelectedFiles([...productGallaryImage])
+        setSelectedFiles([...productGallaryImage]);
       }
-    }, 1000)
+    }, 1000);
   }, [
     singleProductsData?.categoryId,
     singleProductsData?.vendorId,
@@ -198,13 +223,15 @@ const editProduct = () => {
     singleProductsData?.productName,
     singleProductsData?.country,
     singleProductsData?.productUnits,
-    singleProductsData?.productGallaryImage // Include this dependency
-  ])
+    singleProductsData?.productGallaryImage, // Include this dependency
+  ]);
 
   const handleRemoveFile = (indexToRemove: any, id: any) => {
-    setSelectedFiles(prevFiles => prevFiles.filter((_, index) => index !== indexToRemove))
-    setRemoveFiles([...removeFiles, id])
-  }
+    setSelectedFiles((prevFiles) =>
+      prevFiles.filter((_, index) => index !== indexToRemove)
+    );
+    setRemoveFiles([...removeFiles, id]);
+  };
   const ImagePreviewer = ({ file, index }) => {
     if (isValidUrl(file?.file?.file)) {
       return (
@@ -212,70 +239,70 @@ const editProduct = () => {
           <img
             src={file?.file?.file}
             style={{
-              objectFit: 'contained',
-              width: '100px',
-              height: '100px',
-              aspectRatio: '1'
+              objectFit: "contained",
+              width: "100px",
+              height: "100px",
+              aspectRatio: "1",
             }}
             alt={`File ${file?.index}`}
-            width='150px'
-            height='auto'
+            width="150px"
+            height="auto"
           />
           <IconButton
-            aria-label='delete'
-            color='error'
+            aria-label="delete"
+            color="error"
             onClick={() => {
-              handleRemoveFile(file?.index, file?.file?.id)
+              handleRemoveFile(file?.index, file?.file?.id);
             }}
           >
             <GridDeleteIcon />
           </IconButton>
         </div>
-      )
+      );
     } else {
-      if (file?.file?.type?.startsWith('image')) {
+      if (file?.file?.type?.startsWith("image")) {
         return (
           <div key={index} style={{ padding: 15 }}>
             <img
               src={URL.createObjectURL(file?.file)}
               style={{
-                objectFit: 'contained',
-                width: '100px',
-                height: '100px',
-                aspectRatio: '1'
+                objectFit: "contained",
+                width: "100px",
+                height: "100px",
+                aspectRatio: "1",
               }}
               alt={`File ${index}`}
-              width='150px'
-              height='auto'
+              width="150px"
+              height="auto"
             />
             <IconButton
-              aria-label='delete'
-              color='error'
+              aria-label="delete"
+              color="error"
               onClick={() => {
-                handleRemoveFile(index)
+                handleRemoveFile(index);
               }}
             >
               <GridDeleteIcon />
             </IconButton>
           </div>
-        )
+        );
       }
     }
-  }
+  };
   const checkValidJson = (val: any) => {
     try {
-      return JSON.parse(val)
+      return JSON.parse(val);
     } catch (e) {
-      return []
+      return [];
     }
-  }
+  };
   const userFilter = (users: any) => {
-    return users?.filter((user: any) => user.role === 'VENDORS')
-  }
+    return users?.filter((user: any) => user.role === "VENDORS");
+  };
   return (
     <Card
       sx={{
-        padding: 5
+        padding: 5,
       }}
     >
       <Formik
@@ -297,28 +324,36 @@ const editProduct = () => {
           productUnits: singleProductsData?.productUnits,
           country: singleProductsData?.country,
           status: singleProductsData?.status,
-          addToHome: singleProductsData?.addToHome === 1 ? true : false
+          addToHome: singleProductsData?.addToHome === 1 ? true : false,
         }}
         validationSchema={validationSchema}
         onSubmit={(values: any, { resetForm }) => {
-          handleProduct(values, { resetForm })
+          handleProduct(values, { resetForm });
         }}
       >
         {(props: FormikProps<any>) => {
-          const { values, touched, errors, handleBlur, handleChange, handleSubmit, setFieldValue } = props
+          const {
+            values,
+            touched,
+            errors,
+            handleBlur,
+            handleChange,
+            handleSubmit,
+            setFieldValue,
+          } = props;
           return (
             <Form onSubmit={handleSubmit}>
-              <Box sx={{ mb: 8, textAlign: 'center' }}>
+              <Box sx={{ mb: 8, textAlign: "center" }}>
                 <Divider>
                   <Chip
                     sx={{
-                      fontSize: '22px',
-                      padding: '15px',
-                      fontWeight: 'bold',
-                      textAlign: 'left',
-                      backgroundColor: '#f6f5f8'
+                      fontSize: "22px",
+                      padding: "15px",
+                      fontWeight: "bold",
+                      textAlign: "left",
+                      backgroundColor: "#f6f5f8",
                     }}
-                    label='Product Details'
+                    label="Product Details"
                   />
                 </Divider>
               </Box>
@@ -327,7 +362,7 @@ const editProduct = () => {
                   <FormControl fullWidth>
                     <DemoSelect
                       data={categories?.data}
-                      size={'medium'}
+                      size={"medium"}
                       //@ts-ignore
                       selectedCategory={categoryIdPrefill}
                       //@ts-ignore
@@ -337,15 +372,17 @@ const editProduct = () => {
                 </Grid>
                 <Grid item xs={6} sm={6}>
                   <FormControl fullWidth>
-                    <InputLabel id='demo-simple-select-label'>Vendor Name</InputLabel>
+                    <InputLabel id="demo-simple-select-label">
+                      Vendor Name
+                    </InputLabel>
                     <Select
-                      labelId='demo-simple-select-label'
-                      id='demo-simple-select'
-                      name='vendorId'
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      name="vendorId"
                       value={vendorId}
-                      label='Vendor Name'
+                      label="Vendor Name"
                       onChange={(e: any) => {
-                        setVendorId(e?.target?.value)
+                        setVendorId(e?.target?.value);
                       }}
                     >
                       {userFilter(getUsers?.data)?.map((Item: any) => (
@@ -358,16 +395,18 @@ const editProduct = () => {
                 </Grid>
                 <Grid item xs={6} sm={6}>
                   <FormControl fullWidth>
-                    <InputLabel id='demo-simple-select-label'>Select Brand</InputLabel>
+                    <InputLabel id="demo-simple-select-label">
+                      Select Brand
+                    </InputLabel>
                     <Select
-                      labelId='demo-simple-select-label'
-                      id='demo-simple-select'
-                      name='brandId'
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      name="brandId"
                       value={brandPrefill}
-                      label='Select Brand'
+                      label="Select Brand"
                       onChange={(e: any) => {
-                        setFieldValue('brandId', e?.target?.value)
-                        setBrandPrefill(e?.target?.value)
+                        setFieldValue("brandId", e?.target?.value);
+                        setBrandPrefill(e?.target?.value);
                       }}
                     >
                       {brandsData?.data?.map((Item: any) => (
@@ -380,89 +419,119 @@ const editProduct = () => {
                 </Grid>
                 <Grid item xs={6} sm={6}>
                   <TextField
-                    label='Product Name'
-                    autoComplete='off'
+                    label="Product Name"
+                    autoComplete="off"
                     value={values?.productName}
-                    type='text'
-                    helperText={errors?.productName && touched?.productName ? errors?.productName : ''}
-                    error={errors?.productName && touched?.productName ? true : false}
+                    type="text"
+                    helperText={
+                      errors?.productName && touched?.productName
+                        ? errors?.productName
+                        : ""
+                    }
+                    error={
+                      errors?.productName && touched?.productName ? true : false
+                    }
                     onBlur={handleBlur}
                     onChange={handleChange}
                     fullWidth
-                    name='productName'
-                    placeholder={'Add Product Name'}
+                    name="productName"
+                    placeholder={"Add Product Name"}
                     InputLabelProps={{
-                      shrink: true
+                      shrink: true,
                     }}
                   />
                 </Grid>
                 <Grid item xs={6} sm={6}>
                   <TextField
-                    label='Product Code(SKU)'
-                    autoComplete='off'
+                    label="Product Code(SKU)"
+                    autoComplete="off"
                     value={values?.productCode}
-                    type='text'
-                    helperText={errors?.productCode && touched?.productCode ? errors?.productCode : ''}
-                    error={errors?.productCode && touched?.productCode ? true : false}
+                    type="text"
+                    helperText={
+                      errors?.productCode && touched?.productCode
+                        ? errors?.productCode
+                        : ""
+                    }
+                    error={
+                      errors?.productCode && touched?.productCode ? true : false
+                    }
                     onBlur={handleBlur}
                     onChange={handleChange}
                     fullWidth
-                    name='productCode'
-                    placeholder={'Product Code(SKU)'}
+                    name="productCode"
+                    placeholder={"Product Code(SKU)"}
                     InputLabelProps={{
-                      shrink: true
+                      shrink: true,
                     }}
                   />
                 </Grid>
 
                 <Grid item xs={6} sm={6}>
                   <TextField
-                    label='Product Video URL'
-                    autoComplete='off'
+                    label="Product Video URL"
+                    autoComplete="off"
                     value={values?.producctVideoUrl}
-                    type='text'
-                    helperText={errors?.producctVideoUrl && touched?.producctVideoUrl ? errors?.producctVideoUrl : ''}
-                    error={errors?.producctVideoUrl && touched?.producctVideoUrl ? true : false}
+                    type="text"
+                    helperText={
+                      errors?.producctVideoUrl && touched?.producctVideoUrl
+                        ? errors?.producctVideoUrl
+                        : ""
+                    }
+                    error={
+                      errors?.producctVideoUrl && touched?.producctVideoUrl
+                        ? true
+                        : false
+                    }
                     onBlur={handleBlur}
                     onChange={handleChange}
                     fullWidth
-                    name='producctVideoUrl'
-                    placeholder={'Product Video URL'}
+                    name="producctVideoUrl"
+                    placeholder={"Product Video URL"}
                     InputLabelProps={{
-                      shrink: true
+                      shrink: true,
                     }}
                   />
                 </Grid>
                 <Grid item xs={6} sm={6}>
                   <TextField
-                    label='Availability(Stock)'
-                    autoComplete='off'
+                    label="Availability(Stock)"
+                    autoComplete="off"
                     value={values?.availbilityStock}
-                    type='number'
-                    helperText={errors?.availbilityStock && touched?.availbilityStock ? errors?.availbilityStock : ''}
-                    error={errors?.availbilityStock && touched?.availbilityStock ? true : false}
+                    type="number"
+                    helperText={
+                      errors?.availbilityStock && touched?.availbilityStock
+                        ? errors?.availbilityStock
+                        : ""
+                    }
+                    error={
+                      errors?.availbilityStock && touched?.availbilityStock
+                        ? true
+                        : false
+                    }
                     onBlur={handleBlur}
                     onChange={handleChange}
                     fullWidth
-                    name='availbilityStock'
-                    placeholder={'Availability(Stock)'}
+                    name="availbilityStock"
+                    placeholder={"Availability(Stock)"}
                     InputLabelProps={{
-                      shrink: true
+                      shrink: true,
                     }}
                   />
                 </Grid>
                 <Grid item xs={6} sm={6}>
                   <FormControl fullWidth>
-                    <InputLabel id='demo-simple-select-label'>Products Unit</InputLabel>
+                    <InputLabel id="demo-simple-select-label">
+                      Products Unit
+                    </InputLabel>
                     <Select
-                      labelId='demo-simple-select-label'
-                      id='demo-simple-select'
-                      name='brandId'
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      name="brandId"
                       value={productUnits}
-                      label='Products Unit'
+                      label="Products Unit"
                       onChange={(e: any) => {
-                        setFieldValue('brandId', e?.target?.value)
-                        setProductUnits(e?.target?.value)
+                        setFieldValue("brandId", e?.target?.value);
+                        setProductUnits(e?.target?.value);
                       }}
                     >
                       {allUnitsData?.units?.map((Item: any) => (
@@ -476,49 +545,51 @@ const editProduct = () => {
 
                 <Grid item xs={6} sm={6}>
                   <TextField
-                    label='Minimum Price'
-                    autoComplete='off'
+                    label="Minimum Price"
+                    autoComplete="off"
                     value={values?.minPrice}
-                    type='number'
+                    type="number"
                     onBlur={handleBlur}
                     onChange={handleChange}
                     fullWidth
-                    name='minPrice'
-                    placeholder={'Minimum Price'}
+                    name="minPrice"
+                    placeholder={"Minimum Price"}
                     InputLabelProps={{
-                      shrink: true
+                      shrink: true,
                     }}
                   />
                 </Grid>
                 <Grid item xs={6} sm={6}>
                   <TextField
-                    label='Maximum Price'
-                    autoComplete='off'
+                    label="Maximum Price"
+                    autoComplete="off"
                     value={values?.maxPrice}
-                    type='number'
+                    type="number"
                     onBlur={handleBlur}
                     onChange={handleChange}
                     fullWidth
-                    name='maxPrice'
-                    placeholder={'Maximum Price'}
+                    name="maxPrice"
+                    placeholder={"Maximum Price"}
                     InputLabelProps={{
-                      shrink: true
+                      shrink: true,
                     }}
                   />
                 </Grid>
 
                 <Grid item xs={12} sm={12}>
                   <FormControl fullWidth>
-                    <InputLabel id='demo-simple-select-label'>Country of origin</InputLabel>
+                    <InputLabel id="demo-simple-select-label">
+                      Country of origin
+                    </InputLabel>
                     <Select
-                      labelId='demo-simple-select-label'
-                      id='demo-simple-select'
-                      name='country'
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      name="country"
                       value={contryPrefill}
-                      label='Country of origin'
+                      label="Country of origin"
                       onChange={(e: any) => {
-                        setFieldValue('country', e?.target?.value)
-                        setContryPrefill(e?.target?.value)
+                        setFieldValue("country", e?.target?.value);
+                        setContryPrefill(e?.target?.value);
                       }}
                     >
                       {contries?.data?.map((Item: any) => (
@@ -532,60 +603,72 @@ const editProduct = () => {
 
                 <Grid item xs={12} sm={12}>
                   <TextField
-                    label='Product Short Description'
-                    autoComplete='off'
+                    label="Product Short Description"
+                    autoComplete="off"
                     rows={4}
                     multiline
                     value={values?.productShort}
-                    type='text'
-                    helperText={errors?.productShort && touched?.productShort ? errors?.productShort : ''}
-                    error={errors?.productShort && touched?.productShort ? true : false}
+                    type="text"
+                    helperText={
+                      errors?.productShort && touched?.productShort
+                        ? errors?.productShort
+                        : ""
+                    }
+                    error={
+                      errors?.productShort && touched?.productShort
+                        ? true
+                        : false
+                    }
                     onBlur={handleBlur}
                     onChange={handleChange}
                     fullWidth
-                    name='productShort'
-                    placeholder={'Product Short Description'}
+                    name="productShort"
+                    placeholder={"Product Short Description"}
                     InputLabelProps={{
-                      shrink: true
+                      shrink: true,
                     }}
                   />
                 </Grid>
                 <Grid item xs={4} sm={4}>
                   <Box
                     sx={{
-                      border: '1px solid #e9e9ea',
-                      padding: '10px',
-                      borderRadius: '6px'
+                      border: "1px solid #e9e9ea",
+                      padding: "10px",
+                      borderRadius: "6px",
                     }}
                   >
-                    <Typography variant='h6' align='center'>
+                    <Typography variant="h6" align="center">
                       Upload Product Image
                     </Typography>
                     <Box
                       sx={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-around'
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-around",
                       }}
                     >
                       <FilePreview file={values.productImage} />
-                      <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+                      <Box
+                        display={"flex"}
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
+                      >
                         <Button
-                          variant='contained'
-                          component='label'
+                          variant="contained"
+                          component="label"
                           sx={{
                             mr: 1,
-                            '&:hover': {
-                              backgroundColor: '#5E7954'
-                            }
+                            "&:hover": {
+                              backgroundColor: "#5E7954",
+                            },
                           }}
                         >
                           Upload
                           <input
-                            type='file'
+                            type="file"
                             hidden
-                            onChange={e => {
-                              setFieldValue('productImage', e.target?.files[0])
+                            onChange={(e) => {
+                              setFieldValue("productImage", e.target?.files[0]);
                             }}
                           />
                         </Button>
@@ -596,66 +679,70 @@ const editProduct = () => {
                 <Grid item xs={8} sm={8}>
                   <Box
                     sx={{
-                      border: '1px solid #e9e9ea',
-                      padding: '10px',
-                      borderRadius: '6px'
+                      border: "1px solid #e9e9ea",
+                      padding: "10px",
+                      borderRadius: "6px",
                     }}
                   >
-                    <Typography variant='h6' align='center'>
+                    <Typography variant="h6" align="center">
                       Specifications
                     </Typography>
                     <FieldArray
-                      name='specifications'
-                      render={arrayHelpers => (
+                      name="specifications"
+                      render={(arrayHelpers) => (
                         <div
                           style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'space-around',
-                            alignItems: 'center'
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "space-around",
+                            alignItems: "center",
                           }}
                         >
                           {values &&
-                            values?.specifications?.map((specification, index) => (
-                              <div
-                                key={index}
-                                style={{
-                                  display: 'flex',
-                                  alignItems: 'center'
-                                }}
-                              >
-                                <Field
-                                  as={TextField}
-                                  label='Title'
-                                  variant='outlined'
-                                  sx={{
-                                    margin: 3
+                            values?.specifications?.map(
+                              (specification, index) => (
+                                <div
+                                  key={index}
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
                                   }}
-                                  name={`specifications[${index}].title`}
-                                />
-                                <Field
-                                  as={TextField}
-                                  label='Value'
-                                  variant='outlined'
-                                  sx={{
-                                    margin: 3
-                                  }}
-                                  name={`specifications.${index}.value`}
-                                />
-                                <Button
-                                  type='button'
-                                  variant='contained'
-                                  color='error'
-                                  onClick={() => arrayHelpers.remove(index)} // remove a friend from the list
                                 >
-                                  Delete
-                                </Button>
-                              </div>
-                            ))}
+                                  <Field
+                                    as={TextField}
+                                    label="Title"
+                                    variant="outlined"
+                                    sx={{
+                                      margin: 3,
+                                    }}
+                                    name={`specifications[${index}].title`}
+                                  />
+                                  <Field
+                                    as={TextField}
+                                    label="Value"
+                                    variant="outlined"
+                                    sx={{
+                                      margin: 3,
+                                    }}
+                                    name={`specifications.${index}.value`}
+                                  />
+                                  <Button
+                                    type="button"
+                                    variant="contained"
+                                    color="error"
+                                    onClick={() => arrayHelpers.remove(index)} // remove a friend from the list
+                                  >
+                                    Delete
+                                  </Button>
+                                </div>
+                              )
+                            )}
                           <Button
-                            type='button'
-                            variant='contained'
-                            onClick={() => arrayHelpers.push({ title: '', value: '' })}
+                            type="button"
+                            variant="contained"
+                            onClick={() =>
+                              arrayHelpers.push({ title: "", value: "" })
+                            }
                           >
                             Add Specification
                           </Button>
@@ -669,22 +756,27 @@ const editProduct = () => {
                   item
                   xs={12}
                   sx={{
-                    marginTop: '20px'
+                    marginTop: "20px",
                   }}
                 >
                   <Grid item sm={12} xs={12}>
-                    <Typography variant='h6'>Product Full Description :</Typography>
-                    <Field sx={{ marginTop: '10px', marginBottom: '20px' }} name='productDescription'>
+                    <Typography variant="h6">
+                      Product Full Description :
+                    </Typography>
+                    <Field
+                      sx={{ marginTop: "10px", marginBottom: "20px" }}
+                      name="productDescription"
+                    >
                       {({ field }: any) => (
                         <div
                           style={{
-                            marginBottom: '20px'
+                            marginBottom: "20px",
                           }}
                         >
                           <ReactQuill
                             style={{
-                              height: '200px',
-                              margin: '20px'
+                              height: "200px",
+                              margin: "20px",
                             }}
                             modules={modules}
                             value={field.value}
@@ -697,31 +789,49 @@ const editProduct = () => {
                 </Grid>
 
                 <Grid xs={12}>
-                  <div styele={{ border: '1px solid #e9e9ea', padding: '10px', borderRadius: '6px' }}>
+                  <div
+                    styele={{
+                      border: "1px solid #e9e9ea",
+                      padding: "10px",
+                      borderRadius: "6px",
+                    }}
+                  >
                     <div
                       style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        margin: ' 60px 22px 0px 43px',
-                        border: '1px solid #e9e9ea'
+                        display: "flex",
+                        flexDirection: "column",
+                        margin: " 60px 22px 0px 43px",
+                        border: "1px solid #e9e9ea",
                       }}
                     >
-                      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                      <div style={{ display: "flex", flexWrap: "wrap" }}>
                         {selectedFiles.length > 0 ? (
                           selectedFiles?.map((file, index) => {
-                            return <ImagePreviewer key={index} file={{ file: file, index: index }} />
+                            return (
+                              <ImagePreviewer
+                                key={index}
+                                file={{ file: file, index: index }}
+                              />
+                            );
                           })
                         ) : (
                           <ProfilePicture
-                            src={'/images/logo/pngtree-gray-network-placeholder-png-image_3416659.jpg'}
-                            alt='profile-picture'
+                            src={
+                              "/images/logo/pngtree-gray-network-placeholder-png-image_3416659.jpg"
+                            }
+                            alt="profile-picture"
                           />
                         )}
                       </div>
                       <div>
-                        <input id='file-input' type='file' onChange={handleFileChange} style={{ display: 'none' }} />
-                        <label htmlFor='file-input'>
-                          <Button component='span'>Select File</Button>
+                        <input
+                          id="file-input"
+                          type="file"
+                          onChange={handleFileChange}
+                          style={{ display: "none" }}
+                        />
+                        <label htmlFor="file-input">
+                          <Button component="span">Select File</Button>
                         </label>
                       </div>
                     </div>
@@ -732,28 +842,30 @@ const editProduct = () => {
                     control={
                       <Checkbox
                         checked={values?.addToHome}
-                        onChange={e => setFieldValue('addToHome', e.target?.checked)}
+                        onChange={(e) =>
+                          setFieldValue("addToHome", e.target?.checked)
+                        }
                       />
                     }
-                    name='addToHome'
-                    label='Add To Home Page'
+                    name="addToHome"
+                    label="Add To Home Page"
                     sx={{
-                      marginLeft: 4
+                      marginLeft: 4,
                     }}
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Box sx={{ marginTop: '25px' }}>
-                    <Button type='submit' variant='contained' size='medium'>
+                  <Box sx={{ marginTop: "25px" }}>
+                    <Button type="submit" variant="contained" size="medium">
                       Save
                     </Button>
                     <Button
-                      color='error'
-                      sx={{ marginLeft: '10px' }}
-                      size='medium'
-                      variant='contained'
+                      color="error"
+                      sx={{ marginLeft: "10px" }}
+                      size="medium"
+                      variant="contained"
                       onClick={() => {
-                        router.push('/all-products')
+                        router.push("/all-products");
                       }}
                     >
                       Cancel
@@ -762,11 +874,11 @@ const editProduct = () => {
                 </Grid>
               </Grid>
             </Form>
-          )
+          );
         }}
       </Formik>
     </Card>
-  )
-}
+  );
+};
 
-export default editProduct
+export default editProduct;

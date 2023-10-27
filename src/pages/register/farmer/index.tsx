@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import { ChangeEvent, ReactNode, useEffect, useState } from "react";
 
@@ -70,6 +71,11 @@ import CustomRadioImg from "src/@core/components/custom-radio/image";
 import { CustomRadioImgData } from "src/@core/components/custom-radio/types";
 import { getAllContent } from "src/slice/landingPageSlice";
 import Topbar from "src/views/components/topbar";
+import { GridDeleteIcon } from "@mui/x-data-grid";
+import { Document, Page, pdfjs } from "react-pdf";
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.js`;
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
 const index = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
@@ -81,6 +87,8 @@ const index = () => {
   const [taluka, setTaluka] = useState("");
   const [fileForView, setFileForView] = useState("");
   const [file, setFile] = useState("");
+  const [selectedFiles, setSelectedFiles] = useState([]);
+
   const {
     getRoles,
     getAddressByPinCodeData,
@@ -119,53 +127,166 @@ const index = () => {
       .matches(/^\d{12}$/, "Please enter a valid aadhar number"),
     DOB: yup.string().required("Date of birth is required"),
   });
-
+  const handleFileChange = (event) => {
+    const file = event.target.files[0]; // Only allow selecting one file at a time
+    setSelectedFiles([...selectedFiles, file]);
+  };
+  const handleRemoveFile = (indexToRemove) => {
+    setSelectedFiles((prevFiles) =>
+      prevFiles.filter((_, index) => index !== indexToRemove)
+    );
+  };
+  const ImagePreviewer = ({ file, index }) => {
+    if (isValidUrl(file?.file?.file)) {
+      return (
+        <div key={index} style={{ padding: 15 }}>
+          <img
+            src={file?.file?.file}
+            style={{
+              objectFit: "contained",
+              width: "100px",
+              height: "100px",
+              aspectRatio: "1",
+            }}
+            alt={`File ${file?.index}`}
+            width="150px"
+            height="auto"
+          />
+          <IconButton
+            aria-label="delete"
+            color="error"
+            onClick={() => {
+              // dlajks
+              handleRemoveFile(file?.index, file?.file?.id);
+            }}
+          >
+            <GridDeleteIcon />
+          </IconButton>
+          {/* <Typography>{file.name}</Typography> */}
+        </div>
+      );
+    } else {
+      if (
+        file?.file?.type?.startsWith("image") ||
+        file?.file?.type?.startsWith("application/pdf")
+      ) {
+        if (file?.file?.type?.startsWith("image")) {
+          return (
+            <div key={file?.index} style={{ padding: 15 }}>
+              <img
+                src={URL.createObjectURL(file?.file)}
+                style={{
+                  objectFit: "contained",
+                  width: "100px",
+                  height: "100px",
+                  aspectRatio: "1",
+                }}
+                alt={`File ${file?.index}`}
+                width="150px"
+                height="auto"
+              />
+              <IconButton
+                aria-label="delete"
+                color="error"
+                onClick={() => {
+                  handleRemoveFile(file?.index);
+                  console.log("index", index);
+                }}
+              >
+                <GridDeleteIcon />
+              </IconButton>
+            </div>
+          );
+        } else {
+          return (
+            <div
+              key={file?.index}
+              style={{ padding: 15, display: "flex", flexDirection: "row" }}
+            >
+              <Document
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  aspectRatio: "1",
+                }}
+                file={file?.file}
+              >
+                <Page pageNumber={1} />
+              </Document>
+              <IconButton
+                aria-label="delete"
+                color="error"
+                sx={{
+                  alignSelf: "end",
+                }}
+                onClick={() => {
+                  handleRemoveFile(file?.index);
+                }}
+              >
+                <GridDeleteIcon />
+              </IconButton>
+            </div>
+          );
+        }
+      }
+    }
+  };
   const handleFarmerSubmit = (values: any) => {
     console.log("values", values);
-    const payload = {
-      adminId: 0,
-      firstName: values?.firstName,
-      middleName: values?.middleName,
-      lastName: values?.lastName,
-      // asPerAbove: values?.asPerAbove,
-      dateOfBirth: moment(values?.DOB).format(),
-      aadharNumber: values?.aadharNumber,
-      mobileNumber: values?.mobileNumber,
-      wpNumber: values?.wpNumber,
-      address: values?.address,
-      villageName: values?.villageName,
-      taluka: values?.taluka,
-      district: values?.district,
-      state: values?.state,
-      pinCode: pincode,
-      caste: values?.caste,
-      maritalStatus: values?.maritalStatus,
-      gender: values?.gender,
-      religion: values?.religion,
-      landDistrict: values?.landDistrict,
-      subDivision: values?.subDivision,
-      circle: values?.circle,
-      mouza: values?.mouza,
-      landVillage: values?.landVillage,
-      pattaType: values?.pattaType,
-      latNo: values?.latNo,
-      pattaNo: values?.pattaNo,
-      landArea: values?.landArea,
-      landType: values?.landType,
-      farmerLandOwnershipType: values?.farmerLandOwnershipType,
-      appliedForSoilTesting: "yes" ? 1 : 0,
-      filename: fileForView?.name,
-    };
-    console.log("payload", payload);
-    dispatch(createFarmer(payload)).then((res) => {
-      if (res?.payload?.id) {
-        let payload = {
-          id: res?.payload?.id,
-          file: file,
-        };
-        dispatch(uploadImage(payload));
-        router.push("/");
-      }
+    const payload = [
+      { adminId: 0 },
+      { firstName: values?.firstName },
+      { middleName: values?.middleName },
+      { lastName: values?.lastName },
+
+      { dateOfBirth: moment(values?.DOB).format() },
+      { aadharNumber: values?.aadharNumber },
+      { mobileNumber: values?.mobileNumber },
+      { wpNumber: values?.wpNumber },
+      { address: values?.address },
+      { villageName: values?.villageName },
+      { taluka: values?.taluka },
+      { district: values?.district },
+      { state: values?.state },
+      { pinCode: pincode },
+      { caste: values?.caste },
+      { maritalStatus: values?.maritalStatus },
+      { gender: values?.gender },
+      { religion: values?.religion },
+      { landDistrict: values?.landDistrict },
+      { subDivision: values?.subDivision },
+      { circle: values?.circle },
+      { mouza: values?.mouza },
+      { landVillage: values?.landVillage },
+      { pattaType: values?.pattaType },
+      { latNo: values?.latNo },
+      { pattaNo: values?.pattaNo },
+      { landArea: values?.landArea },
+      { landType: values?.landType },
+      { farmerLandOwnershipType: values?.farmerLandOwnershipType },
+      { appliedForSoilTesting: "yes" ? 1 : 0 },
+      // filename: fileForView?.name,
+    ];
+    const formData = new FormData();
+    selectedFiles.forEach((file, index) => {
+      formData.append(`Document`, file);
+    });
+    payload.forEach((entry: any) => {
+      //@ts-ignore
+      const key = Object.keys(entry)[0];
+      const value = entry[key];
+      formData.append(key, value);
+    });
+    console.log("ashdaghdjhakjsdhjkahsdjkhkj");
+    dispatch(createFarmer(formData)).then((res) => {
+      // if (res?.payload?.id) {
+      //   let payload = {
+      //     id: res?.payload?.id,
+      //     file: file,
+      //   };
+      //   dispatch(uploadImage(payload));
+      // }
+      router.push("/");
     });
   };
 
@@ -360,7 +481,10 @@ const index = () => {
             }}
             validationSchema={validationSchema}
             onSubmit={(values) => {
-              if (values?.appliedForSoilTesting === "yes" && file?.length > 0) {
+              if (
+                values?.appliedForSoilTesting === "yes" &&
+                selectedFiles?.length > 0
+              ) {
                 handleFarmerSubmit(values);
               } else if (values?.appliedForSoilTesting === "no") {
                 handleFarmerSubmit(values);
@@ -985,53 +1109,67 @@ const index = () => {
                     </Grid>
 
                     {values?.appliedForSoilTesting === "yes" ? (
-                      <>
-                        <Grid item sm={6} xs={12}></Grid>
-                        <Grid item sm={6} xs={12}>
-                          <Typography
-                            variant="body1"
-                            sx={{
-                              fontWeight: 500,
-                              color: "text.primary",
+                      <Grid xs={12}>
+                        <div
+                          styele={{
+                            border: "1px solid #e9e9ea",
+                            padding: "10px",
+                            borderRadius: "6px",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              margin: " 60px 22px 0px 43px",
+                              border: "1px solid #e9e9ea",
                             }}
                           >
-                            Upload Land Document
-                          </Typography>
-                          <Box
-                            display="flex"
-                            flexDirection="column"
-                            alignItems="flex-start"
-                          >
-                            <FilePreview file={fileForView} />
+                            <div style={{ display: "flex", flexWrap: "wrap" }}>
+                              {selectedFiles.length > 0 ? (
+                                selectedFiles?.map((file, index) => {
+                                  console.log(
+                                    "file: file, index: index ",
+                                    file,
+                                    index
+                                  );
+                                  return (
+                                    <ImagePreviewer
+                                      key={index}
+                                      file={{ file: file, index: index }}
+                                    />
+                                  );
+                                })
+                              ) : (
+                                <ProfilePicture
+                                  src={
+                                    "/images/logo/pngtree-gray-network-placeholder-png-image_3416659.jpg"
+                                  }
+                                  alt="profile-picture"
+                                />
 
-                            <Button
-                              variant="contained"
-                              component="label"
-                              sx={{
-                                "&:hover": {
-                                  backgroundColor: "#5E7954",
-                                },
-                              }}
-                            >
-                              Upload
+                                // <Typography>No files selected.</Typography>
+                              )}
+                            </div>
+                            <div>
                               <input
+                                id="file-input"
                                 type="file"
-                                hidden
-                                onChange={(e: any) =>
-                                  handleFile(e?.target?.files[0])
-                                }
+                                onChange={handleFileChange}
+                                style={{ display: "none" }}
                               />
-                            </Button>
-                          </Box>
-                          {values?.appliedForSoilTesting === "yes" ? (
-                            file?.length <= 0 ? (
-                              <div style={{ color: "red" }}>
-                                {"Please select an image"}
-                              </div>
-                            ) : null
-                          ) : null}
-                        </Grid>
-                      </>
+                              <label htmlFor="file-input">
+                                <Button
+                                  //   variant='contained'
+                                  component="span"
+                                >
+                                  Select File
+                                </Button>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </Grid>
                     ) : null}
                     <Grid xs={12} md={12}>
                       <Box

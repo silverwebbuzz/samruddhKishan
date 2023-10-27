@@ -196,7 +196,7 @@ const ProductsPage = () => {
           height={200}
           BGImg="/images/logo/slider2.jpg"
           bannerName="Products"
-          bannerContent="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry"
+          bannerContent="Organic products are cultivated or produced without the use of synthetic pesticides, herbicides, or genetically modified organisms (GMOs). They are grown or made following strict organic farming practices, which prioritize sustainability, environmental responsibility, and the well-being of both consumers and the planet. "
         />
       </div>
 

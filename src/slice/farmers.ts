@@ -150,7 +150,8 @@ export const createFarmer = createAsyncThunk(
         `${process.env.NEXT_PUBLIC_BASE_URL}/farmer/createFarmer`,
         payload,
         {
-          headers,
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "multipart/form-data",
         }
       );
       return res?.data?.data;
@@ -185,7 +186,8 @@ export const updateFarmer = createAsyncThunk(
         `${process.env.NEXT_PUBLIC_BASE_URL}/farmer/updateFarmer`,
         payload,
         {
-          headers,
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "multipart/form-data",
         }
       );
       return res?.data?.data;
@@ -194,6 +196,26 @@ export const updateFarmer = createAsyncThunk(
     }
   }
 );
+
+export const deleteFarmerImages = createAsyncThunk(
+  "farmer/deleteFarmerImages",
+  async (payload: any, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/farmer/deleteLandDocument`,
+        payload,
+        {
+          headers,
+        }
+      );
+
+      return res?.data?.data;
+    } catch (err: any) {
+      return rejectWithValue(err?.response?.data);
+    }
+  }
+);
+
 export const deleteFarmer = createAsyncThunk(
   "farmer/deleteFarmer",
   async (payload: any, { rejectWithValue }) => {

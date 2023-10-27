@@ -50,7 +50,7 @@ const AboutPage = () => {
           height={200}
           BGImg={"/images/logo/slider1.jpg"}
           bannerName="About Us"
-          bannerContent="The Director of the company was inspired by his Father's teachings on empowering farmers. His Father emphasized that when farmers thrive, so does society, and a prosperous society contributes to a prosperous nation. This philosophy aims to benefit the entire world through empowered farmers. Farmers are viewed as the stewards of Mother Earth with the potential to bring prosperity to their families, communities, and nations. As a reflection of this belief, the company is named 'Kisaan Capability Richest And Owner Family.' "
+          bannerContent="We deeply respect farmers as Earth's caretakers, recognizing their significant role. They aren't just growers; they craft futures for their families, communities, and nations. This belief is embedded in our name – Kisaan Capability Richest and Owner Family."
         />
         {/* About section start */}
         <AboutSection DATA={getContentData} JSONHandler={JSONHandler} />

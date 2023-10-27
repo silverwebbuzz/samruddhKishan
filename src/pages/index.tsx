@@ -43,7 +43,7 @@ const HomePage = () => {
   const [expanded, setExpanded] = useState<string | false>(false);
   const [viewPortEntered, setViewPortEntered] = useState(false);
   const [showMore, setShowMore] = useState(false);
-  const [selectElement, setSelectElement] = useState("");
+
   const [chatUrl, setChatUrl] = useState("#");
   const { allProductsData } = useSelector(
     (state: any) => state?.rootReducer?.productReducer
@@ -151,9 +151,7 @@ const HomePage = () => {
 
   useEffect(() => {
     if (isMobileDevice()) {
-      setChatUrl(
-        `https://wa.me/${9327152685}/?text=${encodeURIComponent("hello")}`
-      );
+      setChatUrl(`https://wa.me/${9327152685}/?text=${"hello"}`);
     } else {
       setChatUrl(`https://web.whatsapp.com/send?phone=${9327152685}`);
     }
@@ -161,8 +159,6 @@ const HomePage = () => {
 
   return (
     <>
-      <div>{selectElement}</div>
-      {console.log(selectElement)}
       <Topbar data={getContentData} />
       <Navbar LOGO={getLogo?.logo} JSONHandler={JSONHandler} />
       <div className="hero">
@@ -417,10 +413,11 @@ const HomePage = () => {
                             {Item?.bigProductContentSubHeading}
                           </h5>
                           <p className="card-text">
-                            <TruncateText
+                            {Item?.bigProductContentText}
+                            {/* <TruncateText
                               text={Item?.bigProductContentText}
                               maxLength={60}
-                            />
+                            /> */}
                           </p>
                         </div>
                       </div>
@@ -433,6 +430,7 @@ const HomePage = () => {
         </section>
         <section className="fresh_product_sec sec_padding">
           <h2>{"Our Brands"}</h2>
+
           <div className="fresh_product_cards">
             <img
               className="freshproductman_img"
@@ -693,7 +691,6 @@ const HomePage = () => {
     </>
   );
 };
-// Home.guestGuard = true
 HomePage.authGuard = false;
 HomePage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>;
 export default HomePage;

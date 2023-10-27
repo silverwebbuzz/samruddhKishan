@@ -177,7 +177,7 @@ const ServicesPage = () => {
           height={200}
           BGImg={"/images/logo/slider3.jpg"}
           bannerName="Services"
-          bannerContent="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry"
+          bannerContent="Farming services encompass a range of expert solutions designed to support farmers and agricultural operations. These services include soil testing, crop consulting, pest management, irrigation, and more. They aim to enhance farm productivity, sustainability, and profitability by providing farmers with tailored guidance, resources, and tools."
         />
       </div>
       <section

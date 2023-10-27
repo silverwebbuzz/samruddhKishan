@@ -242,7 +242,7 @@ code[class*="language-"] {
   display: flex;
   position: relative;
   z-index: 1;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   width: 150px;
   height: 150px;
   align-items: center;
@@ -290,7 +290,8 @@ code[class*="language-"] {
   line-height: 1.7;
 }
 .card-text {
-  margin: 10px 0 0 0;
+  margin: 6px;
+  padding: 0px;
   color: var(--para-color);
   line-height: 1.7;
   font-family: var(--defalt-font) !important;
@@ -526,13 +527,14 @@ code[class*="language-"] {
 }
 .fresh_product_sec {
   background-color: #1f4e3d;
-  padding: 300px 10% 100px;
+  padding: 200px 10% 100px;
   z-index: 9;
   position: relative;
 }
 .fresh_product_sec h2 {
   text-align: center;
   margin: 0 auto 50px;
+  padding: 10px 0px 10px 0px;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-size: cover;
@@ -556,7 +558,7 @@ code[class*="language-"] {
   border-radius: 10px;
   font-weight: 900;
   margin-bottom: 30px;
-  width: calc(100% - 25px);
+  width: calc(100% - 19px);
   text-align: center;
   z-index: 9;
   cursor: pointer;
@@ -759,9 +761,10 @@ code[class*="language-"] {
 }
 .product_gallery_section {
   text-align: center;
+  background: #ffff;
 }
 .product_gallery_heading {
-  padding: 100px 10% 0;
+  padding: 60px 10% 0;
 }
 .product_gallery_slider_main {
   padding: 60px 0 0 2%;
@@ -2217,7 +2220,7 @@ footer .contact_details_menu .contact-name p a:hover {
   padding: 0 !important;
 }
 .what_we_offer_card_text {
-  padding: 5px 25px 25px !important;
+  padding: 5px 18px 18px !important;
 }
 .what_we_offer_card_img,
 .what_we_offer_card_img img {
@@ -2276,4 +2279,13 @@ footer .contact_details_menu .contact-name p a:hover {
 }
 .goog-te-gadget a {
   color: #ffff !important;
+}
+
+.react-pdf__Page__canvas {
+  height: 100px !important;
+  width: 100px !important;
+}
+.react-pdf__Page__textContent {
+  height: 100px !important;
+  width: 100px !important;
 }

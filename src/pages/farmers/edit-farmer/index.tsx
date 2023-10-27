@@ -9,6 +9,7 @@ import {
   Button,
   Card,
   Divider,
+  IconButton,
   InputAdornment,
   OutlinedInput,
   Radio,
@@ -28,6 +29,7 @@ import { ErrorMessage, Form, Formik } from "formik";
 import Chip from "src/@core/components/mui/chip";
 import {
   createFarmer,
+  deleteFarmerImages,
   getAdressByPincode,
   getAllDistrict,
   getAllState,
@@ -39,7 +41,11 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
-
+import { GridDeleteIcon } from "@mui/x-data-grid";
+import { Document, Page, pdfjs } from "react-pdf";
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.js`;
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
 const ProfilePicture = styled("img")(({ theme }) => ({
   width: 108,
   height: 108,
@@ -65,45 +71,48 @@ const FarmerDetails = () => {
   const [landDistrict, setLandDistrict] = useState("");
   const [url, setUrl] = useState("");
   const [fileForView, setFileForView] = useState("");
+  const [selectedFiles, setSelectedFiles] = useState([]);
 
   const dispatch = useDispatch();
   const router = useRouter();
+  const [newSelectedFiles, setNewSelectedFiles] = useState([]);
+  const [removeFiles, setRemoveFiles] = useState([]);
 
   const initialValues = {
-    firstName: getFarmer?.[0]?.firstName,
-    middleName: getFarmer?.[0]?.middleName,
-    lastName: getFarmer?.[0]?.lastName,
-    wpNumber: getFarmer?.[0]?.wpNumber,
-    DOB: moment(getFarmer && getFarmer?.[0]?.dateOfBirth)
+    firstName: getFarmer?.firstName,
+    middleName: getFarmer?.middleName,
+    lastName: getFarmer?.lastName,
+    wpNumber: getFarmer?.wpNumber,
+    DOB: moment(getFarmer && getFarmer?.dateOfBirth)
       .utc()
       .add(1, "day")
       .format("YYYY-MM-DD"),
-    aadharNumber: getFarmer?.[0]?.aadharNumber,
-    mobileNumber: getFarmer?.[0]?.mobileNumber,
-    address: getFarmer?.[0]?.address,
-    villageName: getFarmer?.[0]?.villageName,
-    taluka: getFarmer?.[0]?.taluka,
-    district: getFarmer?.[0]?.district,
-    state: getFarmer?.[0]?.state,
-    pinCode: getFarmer?.[0]?.pinCode,
-    caste: getFarmer?.[0]?.caste,
-    maritalStatus: getFarmer?.[0]?.maritalStatus,
-    gender: getFarmer && getFarmer?.[0]?.gender,
-    religion: getFarmer?.[0]?.religion,
-    landDistrict: getFarmer?.[0]?.landDistrict,
-    subDivision: getFarmer?.[0]?.subDivision,
-    circle: getFarmer?.[0]?.circle,
-    mouza: getFarmer?.[0]?.mouza,
-    landVillage: getFarmer?.[0]?.landVillage,
-    pattaType: getFarmer?.[0]?.pattaType,
-    latNo: getFarmer?.[0]?.latNo,
-    pattaNo: getFarmer?.[0]?.pattaNo,
-    landArea: getFarmer?.[0]?.landArea,
-    landType: getFarmer?.[0]?.landType,
-    farmerLandOwnershipType: getFarmer?.[0]?.farmerLandOwnershipType,
+    aadharNumber: getFarmer?.aadharNumber,
+    mobileNumber: getFarmer?.mobileNumber,
+    address: getFarmer?.address,
+    villageName: getFarmer?.villageName,
+    taluka: getFarmer?.taluka,
+    district: getFarmer?.district,
+    state: getFarmer?.state,
+    pinCode: getFarmer?.pinCode,
+    caste: getFarmer?.caste,
+    maritalStatus: getFarmer?.maritalStatus,
+    gender: getFarmer && getFarmer?.gender,
+    religion: getFarmer?.religion,
+    landDistrict: getFarmer?.landDistrict,
+    subDivision: getFarmer?.subDivision,
+    circle: getFarmer?.circle,
+    mouza: getFarmer?.mouza,
+    landVillage: getFarmer?.landVillage,
+    pattaType: getFarmer?.pattaType,
+    latNo: getFarmer?.latNo,
+    pattaNo: getFarmer?.pattaNo,
+    landArea: getFarmer?.landArea,
+    landType: getFarmer?.landType,
+    farmerLandOwnershipType: getFarmer?.farmerLandOwnershipType,
     appliedForSoilTesting:
-      getFarmer?.[0]?.appliedForSoilTesting === 1 ? "yes" : "no",
-    maritalStatus: getFarmer?.[0]?.maritalStatus,
+      getFarmer?.appliedForSoilTesting === 1 ? "yes" : "no",
+    maritalStatus: getFarmer?.maritalStatus,
   };
 
   const validationSchema = yup.object().shape({
@@ -131,69 +140,244 @@ const FarmerDetails = () => {
   });
   const handleSubmit = (values: any) => {
     const userData: any = JSON.parse(localStorage.getItem("userData"));
-    const payload = {
-      adminId: userData?.id,
-      firstName: values?.firstName,
-      middleName: values?.middleName,
-      lastName: values?.lastName,
-      wpNumber: values?.wpNumber,
-      dateOfBirth: values?.DOB,
-      aadharNumber: values?.aadharNumber,
-      mobileNumber: values?.mobileNumber,
-      address: values?.address,
-      villageName: values?.villageName,
-      taluka: values?.taluka,
-      district: values?.district,
-      state: values?.state,
-      pinCode: pincode,
-      caste: values?.caste,
-      maritalStatus: maritalStatus,
-      gender: gender,
-      religion: values?.religion,
-      landDistrict: values?.landDistrict,
-      subDivision: values?.subDivision,
-      circle: values?.circle,
-      mouza: values?.mouza,
-      landVillage: values?.landVillage,
-      pattaType: values?.pattaType,
-      latNo: values?.latNo,
-      pattaNo: values?.pattaNo,
-      landArea: values?.landArea,
-      landType: values?.landType,
-      farmerLandOwnershipType: values?.farmerLandOwnershipType,
-      appliedForSoilTesting: values?.appliedForSoilTesting === "yes" ? 1 : 0,
-    };
+    const payload = [
+      { firstName: values?.firstName },
+      { middleName: values?.middleName },
+      { lastName: values?.lastName },
+      { dateOfBirth: moment(values?.DOB).format() },
+      { aadharNumber: values?.aadharNumber },
+      { mobileNumber: values?.mobileNumber },
+      { wpNumber: values?.wpNumber },
+      { address: values?.address },
+      { villageName: villageName },
+      { taluka: Taluka },
+      { district: district },
+      { state: values?.state },
+      { pinCode: pincode },
+      { caste: values?.caste },
+      { maritalStatus: values?.maritalStatus },
+      { gender: values?.gender },
+      { religion: values?.religion },
+      { landDistrict: values?.landDistrict },
+      { subDivision: values?.subDivision },
+      { circle: values?.circle },
+      { mouza: values?.mouza },
+      { landVillage: values?.landVillage },
+      { pattaType: values?.pattaType },
+      { latNo: values?.latNo },
+      { pattaNo: values?.pattaNo },
+      { landArea: values?.landArea },
+      { landType: values?.landType },
+      { farmerLandOwnershipType: values?.farmerLandOwnershipType },
+      {
+        appliedForSoilTesting: values?.appliedForSoilTesting === "yes" ? 1 : 0,
+      },
+    ];
+
+    const formData = new FormData();
+    newSelectedFiles.forEach((file, index) => {
+      formData.append(`Document`, file);
+    });
+    payload.forEach((entry: any) => {
+      //@ts-ignore
+      const key = Object.keys(entry)[0];
+      const value = entry[key];
+      formData.append(key, value);
+    });
 
     if (userData?.role === "admin") {
-      payload.adminId = userData?.id;
-      if (getFarmer?.[0]?.id) {
-        payload.id = getFarmer?.[0]?.id;
-        dispatch(updateFarmer(payload));
-        if (file?.length > 0) {
-          let payload = {
-            id: getFarmer?.[0]?.id,
-            file: file,
+      formData.append("adminId", userData?.id);
+      if (getFarmer?.id) {
+        formData.append("id", getFarmer?.id);
+        dispatch(updateFarmer(formData)).then(() => {
+          let payloadForDeleteImages = {
+            ids: removeFiles,
           };
-          dispatch(uploadImage(payload));
-        }
-        router.push("/farmers");
+          console.log("removeFiles", removeFiles);
+          if (removeFiles?.length > 0) {
+            dispatch(deleteFarmerImages(payloadForDeleteImages)).then((res) => {
+              setSelectedFiles([]);
+              setNewSelectedFiles([]);
+              setRemoveFiles([]);
+            });
+          }
+          router.push("/farmers");
+        });
       }
     } else {
-      payload.referralId = userData?.id;
-      payload.referralName = userData?.role;
-      if (getFarmer?.[0]?.id) {
-        payload.id = getFarmer?.[0]?.id;
-        dispatch(updateFarmer(payload));
-        if (file?.length > 0) {
-          let payload = {
-            id: getFarmer?.[0]?.id,
-            file: file,
+      formData.append("referralId", userData?.id);
+      formData.append("referralName", userData?.role);
+      if (getFarmer?.id) {
+        formData.append("id", getFarmer?.id);
+        dispatch(updateFarmer(formData)).then((res) => {
+          let payloadForDeleteImages = {
+            ids: removeFiles,
           };
-          dispatch(uploadImage(payload));
-        }
-        router.push("/farmers");
+          if (removeFiles?.length > 0) {
+            dispatch(deleteFarmerImages(payloadForDeleteImages)).then((res) => {
+              setSelectedFiles([]);
+              setNewSelectedFiles([]);
+              setRemoveFiles([]);
+            });
+          }
+          router.push("/farmers");
+        });
       }
     }
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0]; // Only allow selecting one file at a time
+    setSelectedFiles((prevSelectedFiles) => [...prevSelectedFiles, file]);
+    setNewSelectedFiles((prevNewSelectedFiles) => [
+      ...prevNewSelectedFiles,
+      file,
+    ]);
+  };
+  function isPDForImage(url) {
+    const fileExtension = url.split(".").pop().toLowerCase();
+
+    if (fileExtension === "pdf") {
+      return true;
+    } else if (["jpg", "jpeg", "png", "gif", "bmp"].includes(fileExtension)) {
+      return false;
+    } else {
+      return "Unknown"; // Handle other file types
+    }
+  }
+  const ImagePreviewer = ({ file, index }) => {
+    console.log("Image Previewer", file?.file);
+    if (isValidUrl(file?.file?.file)) {
+      if (isPDForImage(file?.file?.file)) {
+        return (
+          <div
+            key={file?.index}
+            style={{ padding: 15, display: "flex", flexDirection: "row" }}
+          >
+            <Document
+              style={{
+                width: "100px",
+                height: "100px",
+                aspectRatio: "1",
+              }}
+              file={file?.file?.file}
+            >
+              <Page pageNumber={1} />
+            </Document>
+            <IconButton
+              aria-label="delete"
+              color="error"
+              sx={{
+                alignSelf: "end",
+              }}
+              onClick={() => {
+                handleRemoveFile(file?.index, file?.file?.id);
+              }}
+            >
+              <GridDeleteIcon />
+            </IconButton>
+          </div>
+        );
+      } else {
+        return (
+          <div key={index} style={{ padding: 15 }}>
+            <img
+              src={file?.file?.file}
+              style={{
+                objectFit: "contained",
+                width: "100px",
+                height: "100px",
+                aspectRatio: "1",
+              }}
+              alt={`File ${file?.index}`}
+              width="150px"
+              height="auto"
+            />
+            <IconButton
+              aria-label="delete"
+              color="error"
+              onClick={() => {
+                // dlajks
+                handleRemoveFile(file?.index, file?.file?.id);
+              }}
+            >
+              <GridDeleteIcon />
+            </IconButton>
+            {/* <Typography>{file.name}</Typography> */}
+          </div>
+        );
+      }
+    } else {
+      if (
+        file?.file?.type?.startsWith("image") ||
+        file?.file?.type?.startsWith("application/pdf")
+      ) {
+        if (file?.file?.type?.startsWith("image")) {
+          return (
+            <div key={file?.index} style={{ padding: 15 }}>
+              <img
+                src={URL.createObjectURL(file?.file)}
+                style={{
+                  objectFit: "contained",
+                  width: "100px",
+                  height: "100px",
+                  aspectRatio: "1",
+                }}
+                alt={`File ${file?.index}`}
+                width="150px"
+                height="auto"
+              />
+              <IconButton
+                aria-label="delete"
+                color="error"
+                onClick={() => {
+                  handleRemoveFile(file?.index);
+                  console.log("index", index);
+                }}
+              >
+                <GridDeleteIcon />
+              </IconButton>
+            </div>
+          );
+        } else {
+          return (
+            <div
+              key={file?.index}
+              style={{ padding: 15, display: "flex", flexDirection: "row" }}
+            >
+              <Document
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  aspectRatio: "1",
+                }}
+                file={file?.file}
+              >
+                <Page pageNumber={1} />
+              </Document>
+              <IconButton
+                aria-label="delete"
+                color="error"
+                sx={{
+                  alignSelf: "end",
+                }}
+                onClick={() => {
+                  handleRemoveFile(file?.index);
+                }}
+              >
+                <GridDeleteIcon />
+              </IconButton>
+            </div>
+          );
+        }
+      }
+    }
+  };
+  const handleRemoveFile = (indexToRemove: any, id: any) => {
+    setSelectedFiles((prevFiles) =>
+      prevFiles.filter((_, index) => index !== indexToRemove)
+    );
+    setRemoveFiles([...removeFiles, id]);
   };
   const handleRadio = (e: any) => {
     setGender(e);
@@ -222,33 +406,15 @@ const FarmerDetails = () => {
     dispatch(getAllDistrict({ state: STATE }));
   }, [STATE]);
   useEffect(() => {
-    if (getFarmer?.[0]?.file) {
-      setFileForView(getFarmer?.[0]?.file);
+    if (getFarmer?.file) {
+      setFileForView(getFarmer?.file);
+      const file = getFarmer?.file;
+      if (file && file?.length !== undefined) {
+        setSelectedFiles([...file]);
+      }
     }
-  }, [getFarmer?.[0]?.file]);
-  const convertBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
+  }, [getFarmer?.file]);
 
-      fileReader.onload = () => {
-        resolve(fileReader.result);
-      };
-
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
-  };
-
-  const handleFile = async (e, param) => {
-    const file = e.target.files[0];
-    setFileForView(e?.target?.files[0]);
-    const base64 = await convertBase64(file);
-    if (base64) {
-      setFile(base64);
-    }
-  };
   const isValidUrl = (urlString: any) => {
     try {
       return Boolean(new URL(urlString));
@@ -256,58 +422,25 @@ const FarmerDetails = () => {
       return false;
     }
   };
-  const FilePreview = ({ file, onRemove }: any) => {
-    if (isValidUrl(file)) {
-      return (
-        <Box>
-          <ProfilePicture src={file} alt="profile-picture" />
-        </Box>
-      );
-    } else {
-      if (file?.type?.startsWith("image")) {
-        return (
-          <Box>
-            <ProfilePicture
-              src={URL.createObjectURL(file)}
-              alt="profile-picture"
-            />
-          </Box>
-        );
-      } else {
-        return (
-          <Box>
-            <ProfilePicture
-              src={
-                "/images/logo/pngtree-gray-network-placeholder-png-image_3416659.jpg"
-              }
-              alt="profile-picture"
-            />
-          </Box>
-        );
-      }
-    }
-  };
+
   useEffect(() => {
     const timer = setTimeout(() => {
-      setPincode(getFarmer?.[0]?.pinCode);
-      setSTATE(getFarmer?.[0]?.state);
-      setDistrict(getFarmer?.[0]?.district);
-      setTaluka(getFarmer?.[0]?.taluka);
-      setVillageName(getFarmer?.[0]?.villageName);
-      setLandDistrict(getFarmer?.[0]?.landDistrict);
-      setUrl(getFarmer?.[0]?.file);
-      setFile(getFarmer?.[0]?.file);
+      setPincode(getFarmer?.pinCode);
+      setSTATE(getFarmer?.state);
+      setDistrict(getFarmer?.district);
+      setTaluka(getFarmer?.taluka);
+      setVillageName(getFarmer?.villageName);
+      setLandDistrict(getFarmer?.landDistrict);
     }, 1000);
-    setGender(getFarmer?.[0]?.gender);
-    setMaritalStatus(getFarmer?.[0]?.maritalStatus);
+    setGender(getFarmer?.gender);
+    setMaritalStatus(getFarmer?.maritalStatus);
     return () => clearTimeout(timer);
   }, [
-    getFarmer?.[0]?.state,
-    getFarmer?.[0]?.taluka,
-    getFarmer?.[0]?.pinCode,
-    getFarmer?.[0]?.landDistrict,
+    getFarmer?.state,
+    getFarmer?.taluka,
+    getFarmer?.pinCode,
+    getFarmer?.landDistrict,
   ]);
-
   return (
     <>
       <Card
@@ -1437,47 +1570,55 @@ const FarmerDetails = () => {
                     </RadioGroup>
                   </Grid>
                   {values?.appliedForSoilTesting === "yes" ? (
-                    <>
-                      <Grid item sm={6} xs={12}></Grid>
-                      <Grid item sm={6} xs={12}>
-                        <Typography
-                          variant="body1"
-                          sx={{ fontWeight: 500, color: "text.primary" }}
+                    <Grid xs={12}>
+                      <div
+                        styele={{
+                          border: "1px solid #e9e9ea",
+                          padding: "10px",
+                          borderRadius: "6px",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            margin: " 60px 22px 0px 43px",
+                            border: "1px solid #e9e9ea",
+                          }}
                         >
-                          <FilePreview file={fileForView} />
-                        </Typography>
-                        <Box
-                          display={"flex"}
-                          alignItems={"center"}
-                          justifyContent={"space-between"}
-                        >
-                          <Button
-                            variant="contained"
-                            component="label"
-                            sx={{
-                              mr: 1,
-                              "&:hover": {
-                                backgroundColor: "#5E7954",
-                              },
-                            }}
-                          >
-                            Upload Land Document
+                          <div style={{ display: "flex", flexWrap: "wrap" }}>
+                            {selectedFiles.length > 0 ? (
+                              selectedFiles?.map((file, index) => {
+                                return (
+                                  <ImagePreviewer
+                                    key={index}
+                                    file={{ file: file, index: index }}
+                                  />
+                                );
+                              })
+                            ) : (
+                              <ProfilePicture
+                                src={
+                                  "/images/logo/pngtree-gray-network-placeholder-png-image_3416659.jpg"
+                                }
+                                alt="profile-picture"
+                              />
+                            )}
+                          </div>
+                          <div>
                             <input
+                              id="file-input"
                               type="file"
-                              hidden
-                              onChange={(e) => handleFile(e)}
+                              onChange={handleFileChange}
+                              style={{ display: "none" }}
                             />
-                          </Button>
-                        </Box>
-                        {values?.appliedForSoilTesting === "yes" ? (
-                          file?.length <= 0 ? (
-                            <div style={{ color: "red" }}>
-                              {"Please select an image"}
-                            </div>
-                          ) : null
-                        ) : null}
-                      </Grid>
-                    </>
+                            <label htmlFor="file-input">
+                              <Button component="span">Select File</Button>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </Grid>
                   ) : null}
                 </Grid>
                 <Box
