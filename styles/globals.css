@@ -1469,6 +1469,9 @@ footer .contact_details_menu .contact-name p a:hover {
   margin-top: 5px;
 }
 
+.aboutPage_sec_padding {
+  padding: 120px 10%;
+}
 /*Responsive css */
 @media (min-width: 1025px) {
   .mobile_navbar {
@@ -1477,10 +1480,16 @@ footer .contact_details_menu .contact-name p a:hover {
   .desk_navbar {
     flex-direction: row !important;
   }
+  .aboutPage_sec_padding {
+    padding: 90px 10%;
+  }
 }
 @media only screen and (max-width: 1400px) {
   .about-text {
     padding-right: 0;
+  }
+  .aboutPage_sec_padding {
+    padding: 90px 10%;
   }
   .main-menu .menu-link .menu-item {
     padding: 10px;
@@ -1492,6 +1501,9 @@ footer .contact_details_menu .contact-name p a:hover {
 @media (max-width: 1200px) {
   .about-img {
     /* width: 340px; */
+  }
+  .aboutPage_sec_padding {
+    padding: 90px 5%;
   }
   .about-img2 {
     width: 180px;
@@ -1760,6 +1772,9 @@ footer .contact_details_menu .contact-name p a:hover {
 @media (max-width: 991px) {
   .banner-style-one h2 {
     font-size: 60px !important;
+  }
+  .aboutPage_sec_padding {
+    padding: 50px 5%;
   }
   .banner-area.navigation-circle .swiper-button-prev,
   .banner-area.navigation-circle .swiper-button-next {
@@ -2078,8 +2093,12 @@ footer .contact_details_menu .contact-name p a:hover {
     width: 100%;
     margin: 0px auto;
   }
+
   .home-contact {
     padding-bottom: 0 !important;
+  }
+  .aboutPage_sec_padding {
+    padding: 50px 10%;
   }
 }
 @media (max-width: 575px) {

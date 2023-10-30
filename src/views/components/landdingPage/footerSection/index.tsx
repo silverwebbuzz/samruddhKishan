@@ -1,13 +1,15 @@
 import axios from "axios";
 import moment from "moment";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { GetServerSideProps, NextPageContext } from "next/types";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Icon from "src/@core/components/icon";
-const FooterSection = ({ LOGO, DATA }: any) => {
+const FooterSection = ({ LOGO, DATA, JSONHandler }: any) => {
   const [subsribeValue, setSubsribeValue] = useState("");
   const [isValidEmail, setIsValidEmail] = useState(true);
-
+  const router = useRouter();
   const handleSubscribe = () => {
     if (isValidEmail) {
       if (subsribeValue.length > 0) {
@@ -213,14 +215,26 @@ const FooterSection = ({ LOGO, DATA }: any) => {
             © Copyright 2023. All Rights Reserved by Silverwebbuzz
           </div>
           <div className="copyright_right">
-            <a href={DATA?.featuresProduct?.[2]?.termsLink}>Terms</a>
+            {JSONHandler(DATA?.pages).map((page) => {
+              return (
+                // href="/pages/[slug]" as={`/pages/${page?.slug}`}
+                <p
+                  style={{
+                    cursor: "pointer",
+                  }}
+                  onClick={() => router.push(`pages/${page?.slug}`)}
+                >
+                  {page?.title}
+                </p>
+              );
+            })}
+            {/* <a href={DATA?.featuresProduct?.[2]?.termsLink}>Terms</a>
             <a href={DATA?.featuresProduct?.[2]?.privacyLink}>Privacy</a>
-            <a href={DATA?.featuresProduct?.[2]?.supportLink}>Support</a>
+            <a href={DATA?.featuresProduct?.[2]?.supportLink}>Support</a> */}
           </div>
         </div>
       </div>
     </>
   );
 };
-
 export default FooterSection;

@@ -128,6 +128,17 @@ export default function Navbar({ LOGO }) {
               >
                 Register
               </Button>
+              <Button
+                className="login-btn"
+                sx={{
+                  margin: "0px 12px",
+                }}
+                onClick={() => {
+                  router.push("/login");
+                }}
+              >
+                Login
+              </Button>
             </Box>
             {visibleMenu && matchMobileView && (
               <IconButton

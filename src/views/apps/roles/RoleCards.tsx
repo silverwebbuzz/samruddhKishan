@@ -1,438 +1,495 @@
 // ** React Imports
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 
 // ** Next Import
-import Link from 'next/link'
+import Link from "next/link";
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid'
-import Card from '@mui/material/Card'
-import Table from '@mui/material/Table'
-import Button from '@mui/material/Button'
-import Avatar from '@mui/material/Avatar'
-import Dialog from '@mui/material/Dialog'
-import Tooltip from '@mui/material/Tooltip'
-import Checkbox from '@mui/material/Checkbox'
-import TableRow from '@mui/material/TableRow'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableHead from '@mui/material/TableHead'
-import TextField from '@mui/material/TextField'
-import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography'
-import FormControl from '@mui/material/FormControl'
-import DialogTitle from '@mui/material/DialogTitle'
-import CardContent from '@mui/material/CardContent'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import TableContainer from '@mui/material/TableContainer'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import Table from "@mui/material/Table";
+import Button from "@mui/material/Button";
+import Avatar from "@mui/material/Avatar";
+import Dialog from "@mui/material/Dialog";
+import Tooltip from "@mui/material/Tooltip";
+import Checkbox from "@mui/material/Checkbox";
+import TableRow from "@mui/material/TableRow";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import FormControl from "@mui/material/FormControl";
+import DialogTitle from "@mui/material/DialogTitle";
+import CardContent from "@mui/material/CardContent";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import TableContainer from "@mui/material/TableContainer";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 // ** Icon Imports
-import Icon from 'src/@core/components/icon'
+import Icon from "src/@core/components/icon";
 import {
   createRoleAndPermission,
   getAllPermission,
   getAllUsers,
   getRoleAndPermissions,
-  updateRoles
-} from 'src/slice/farmers'
-import { useDispatch } from 'react-redux'
-import { AppDispatch } from 'src/store/store'
-import { useSelector } from 'react-redux'
-import { ErrorMessage, Form, Formik } from 'formik'
-import * as yup from 'yup'
-import RoleDeleteDialog from 'src/views/deleteDialogBox/roleDeleteDialogBox'
+  updateRoles,
+} from "src/slice/farmers";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "src/store/store";
+import { useSelector } from "react-redux";
+import { ErrorMessage, Form, Formik } from "formik";
+import * as yup from "yup";
+import RoleDeleteDialog from "src/views/deleteDialogBox/roleDeleteDialogBox";
 
 interface CardDataType {
-  title: string
-  avatars: string[]
-  totalUsers: number
+  title: string;
+  avatars: string[];
+  totalUsers: number;
 }
 
 const RolesCards = () => {
   // ** States
-  const [open, setOpen] = useState<boolean>(false)
-  const [dialogTitle, setDialogTitle] = useState<'Add' | 'Edit'>('Add')
-  const [selectedCheckbox, setSelectedCheckbox] = useState<any[]>([])
-  const [DeleteID, setDeleteID] = useState()
-  const [openDelete, setOpenDelete] = useState<boolean>(false)
-  const [delelteField, setDelelteField] = useState<string>('')
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
+  const [open, setOpen] = useState<boolean>(false);
+  const [dialogTitle, setDialogTitle] = useState<"Add" | "Edit">("Add");
+  const [selectedCheckbox, setSelectedCheckbox] = useState<any[]>([]);
+  const [DeleteID, setDeleteID] = useState();
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const [delelteField, setDelelteField] = useState<string>("");
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
   const { getRoles, createURole, getPermission, isLoading } = useSelector(
     (state: any) => state?.rootReducer?.farmerReducer
-  )
-  const [roleEditValue, setRoleEditValue] = useState<any>()
+  );
+  const [roleEditValue, setRoleEditValue] = useState<any>();
   const handleClickOpen = () => {
-    setOpen(true)
-    setIsDialogOpen(true)
-  }
-  const dispatch = useDispatch<AppDispatch>()
+    setOpen(true);
+    setIsDialogOpen(true);
+  };
+  const dispatch = useDispatch<AppDispatch>();
   const validationSchema = yup.object().shape({
-    roleName: yup.string().required('Role Name is required')
-  })
+    roleName: yup.string().required("Role Name is required"),
+  });
   const handleClose = () => {
-    setSelectedCheckbox([])
-    setOpen(false)
-    setIsDialogOpen(false)
-  }
+    setSelectedCheckbox([]);
+    setOpen(false);
+    setIsDialogOpen(false);
+  };
   const togglePermission = (id: string) => {
-    const arr = removeDuplicates(selectedCheckbox)
+    const arr = removeDuplicates(selectedCheckbox);
     if (arr.includes(id)) {
-      arr.splice(arr.indexOf(id), 1)
-      setSelectedCheckbox([...arr])
+      arr.splice(arr.indexOf(id), 1);
+      setSelectedCheckbox([...arr]);
     } else {
-      setSelectedCheckbox(prev => [...prev, id])
+      setSelectedCheckbox((prev) => [...prev, id]);
     }
-  }
-  const handleClickOpenDelete = () => setOpenDelete(true)
-  const handleDeleteClose = () => setOpenDelete(false)
+  };
+  const handleClickOpenDelete = () => setOpenDelete(true);
+  const handleDeleteClose = () => setOpenDelete(false);
 
   useEffect(() => {
-    dispatch(getRoleAndPermissions())
+    dispatch(getRoleAndPermissions());
     //@ts-ignore
-    dispatch(getAllPermission())
-  }, [createURole])
+    dispatch(getAllPermission());
+  }, [createURole]);
 
   const removeDuplicates = (arr: any) => {
-    return arr.filter((item: any, index: any) => arr.indexOf(item) === index)
-  }
+    return arr.filter((item: any, index: any) => arr.indexOf(item) === index);
+  };
 
   const onSubmitClick = (values: any) => {
-    if (dialogTitle === 'Edit') {
+    if (dialogTitle === "Edit") {
       let payload = {
         id: roleEditValue?.id,
         roleType: values.roleName?.toUpperCase(),
-        rolePermission: selectedCheckbox
-      }
+        rolePermission: selectedCheckbox,
+      };
       dispatch(updateRoles(payload)).then((res: any) => {
-        setSelectedCheckbox([])
-        handleClose()
+        setSelectedCheckbox([]);
+        handleClose();
         if (res) {
-          dispatch(getRoleAndPermissions())
-          setSelectedCheckbox([])
+          dispatch(getRoleAndPermissions());
+          setSelectedCheckbox([]);
         }
-      })
+      });
     } else {
       if (getPermission?.length > 0) {
         const FilterdArray = () => {
-          let Fi: Array<any>[]
+          let Fi: Array<any>[];
           getPermission?.map((Item: any) => {
             removeDuplicates(selectedCheckbox)?.some((ID: any) => {
               if (Item?.id == ID) {
-                let finalItem = { ...Item, action: 1 }
-                return finalItem
+                let finalItem = { ...Item, action: 1 };
+                return finalItem;
               }
-            })
-            Fi = removeDuplicates(selectedCheckbox)
-          })
+            });
+            Fi = removeDuplicates(selectedCheckbox);
+          });
           //@ts-ignore
-          return Fi
-        }
+          return Fi;
+        };
         let payload = {
           roleType: values.roleName?.toUpperCase(),
           //@ts-ignore
-          rolePermission: removeDuplicates(FilterdArray())
-        }
-        dispatch(createRoleAndPermission(payload)).then(res => {
-          setSelectedCheckbox([])
-          handleClose()
+          rolePermission: removeDuplicates(FilterdArray()),
+        };
+        dispatch(createRoleAndPermission(payload)).then((res) => {
+          setSelectedCheckbox([]);
+          handleClose();
           if (res) {
-            dispatch(getRoleAndPermissions())
-            setSelectedCheckbox([])
+            dispatch(getRoleAndPermissions());
+            setSelectedCheckbox([]);
           }
-        })
+        });
       }
     }
-  }
+  };
   const checkedCheckbox = () => {
     roleEditValue?.rolePermission &&
       JSON.parse(roleEditValue?.rolePermission)?.map((Item: any) => {
         // setSelectedCheckbox(prev => [...prev, Item])
-        selectedCheckbox.push(Item)
-      })
-  }
+        selectedCheckbox.push(Item);
+      });
+  };
   useEffect(() => {
-    if (dialogTitle === 'Edit') {
-      checkedCheckbox()
+    if (dialogTitle === "Edit") {
+      checkedCheckbox();
     } else {
-      setSelectedCheckbox([])
+      setSelectedCheckbox([]);
     }
-  }, [open, dialogTitle])
+  }, [open, dialogTitle]);
 
   useEffect(() => {
     if (!isDialogOpen) {
-      setSelectedCheckbox([])
+      setSelectedCheckbox([]);
     }
-  }, [isDialogOpen])
+  }, [isDialogOpen]);
   //@ts-ignore
   const renderCards = () =>
     getRoles.map((item: any, index: number) => (
       <Grid item xs={12} sm={6} lg={4} key={index}>
         <Card>
           <CardContent>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography variant='h5' sx={{ mb: 1 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-end",
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  flexDirection: "column",
+                }}
+              >
+                <Typography variant="h5" sx={{ mb: 1 }}>
                   {item?.roleType?.toUpperCase()}
                 </Typography>
                 <Typography
-                  href='/'
+                  href="/"
                   component={Link}
-                  sx={{ color: 'primary.main', textDecoration: 'none' }}
-                  onClick={e => {
-                    e.preventDefault()
-                    setRoleEditValue(item)
-                    setDialogTitle('Edit')
-                    handleClickOpen()
+                  sx={{ color: "primary.main", textDecoration: "none" }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setRoleEditValue(item);
+                    setDialogTitle("Edit");
+                    handleClickOpen();
                   }}
                 >
                   Edit Role
                 </Typography>
               </Box>
               <IconButton
-                size='small'
-                sx={{ color: 'text.disabled' }}
+                size="small"
+                sx={{ color: "text.disabled" }}
                 onClick={() => {
-                  handleClickOpenDelete()
-                  setDeleteID(item?.id)
-                  setDelelteField(item?.roleType)
+                  handleClickOpenDelete();
+                  setDeleteID(item?.id);
+                  setDelelteField(item?.roleType);
                 }}
               >
-                <Icon icon='tabler:trash' />
+                <Icon icon="tabler:trash" />
               </IconButton>
             </Box>
           </CardContent>
         </Card>
       </Grid>
-    ))
+    ));
 
   const routesArray = [
     {
-      title: 'Dashboard',
-      path: '/dashboard',
-      icon: 'fluent-mdl2:b-i-dashboard'
+      title: "Dashboard",
+      path: "/dashboard",
+      icon: "fluent-mdl2:b-i-dashboard",
     },
     {
-      title: 'Farmers',
-      path: '/farmers',
-      action: 'read',
-      subject: 'farmers',
-      icon: 'game-icons:farmer'
+      title: "Farmers",
+      path: "/farmers",
+      action: "read",
+      subject: "farmers",
+      icon: "game-icons:farmer",
     },
     {
-      title: 'Users',
-      path: '/users',
-      action: 'read',
-      subject: 'users',
-      icon: 'ci:users'
+      title: "Users",
+      path: "/users",
+      action: "read",
+      subject: "users",
+      icon: "ci:users",
     },
     {
-      title: 'Brands',
-      path: '/brands',
-      action: 'read',
-      subject: 'brands',
-      icon: 'fluent:production-checkmark-24-regular'
+      title: "Brands",
+      path: "/brands",
+      action: "read",
+      subject: "brands",
+      icon: "fluent:production-checkmark-24-regular",
     },
     {
-      title: 'Categories',
-      path: '/categories',
-      icon: 'tabler:category'
+      title: "Categories",
+      path: "/categories",
+      icon: "tabler:category",
     },
     {
-      title: 'Products',
-      path: '/all-products',
-      action: 'read',
-      subject: 'all-products',
-      icon: 'fluent-mdl2:b-i-dashboard'
+      title: "Products",
+      path: "/all-products",
+      action: "read",
+      subject: "all-products",
+      icon: "fluent-mdl2:b-i-dashboard",
     },
     {
-      title: 'Services',
-      path: '/all-services',
-      action: 'read',
-      subject: 'all-services',
-      icon: 'carbon:ibm-cloud-hyper-protect-crypto-services'
+      title: "Services",
+      path: "/all-services",
+      action: "read",
+      subject: "all-services",
+      icon: "carbon:ibm-cloud-hyper-protect-crypto-services",
     },
     {
-      title: 'Inquiry',
-      path: '/all-inquiry',
-      action: 'read',
-      subject: 'inquiry',
-      icon: 'wpf:ask-question'
+      title: "Inquiry",
+      path: "/all-inquiry",
+      action: "read",
+      subject: "inquiry",
+      icon: "wpf:ask-question",
     },
 
-    { title: 'Settings', path: '/settings', action: 'read', subject: 'settings', icon: 'uil:setting' },
     {
-      title: 'CMS',
-      icon: 'fluent:content-view-32-regular',
+      title: "Settings",
+      path: "/settings",
+      action: "read",
+      subject: "settings",
+      icon: "uil:setting",
+    },
+    {
+      title: "CMS",
+      icon: "fluent:content-view-32-regular",
       children: [
         {
-          title: 'Home Page',
-          path: '/cms/home'
+          title: "Home Page",
+          path: "/cms/home",
         },
         {
-          title: 'FAQ',
-          path: '/cms/faq'
+          title: "FAQ",
+          path: "/cms/faq",
         },
         {
-          title: 'Testimonials',
-          path: '/cms/testimonials'
+          title: "Testimonials",
+          path: "/cms/testimonials",
         },
         {
-          title: 'Footer',
-          path: '/cms/footer'
-        }
-      ]
+          title: "Footer",
+          path: "/cms/footer",
+        },
+      ],
     },
 
     {
-      title: 'Roles & Permissions',
-      icon: 'grommet-icons:user-admin',
+      title: "Roles & Permissions",
+      icon: "grommet-icons:user-admin",
 
       children: [
         {
-          title: 'Permissions',
-          path: '/permissions'
+          title: "Permissions",
+          path: "/permissions",
         },
-        { title: 'role', path: '/roles' }
-      ]
-    }
-  ]
+        { title: "role", path: "/roles" },
+      ],
+    },
+  ];
   return (
-    <Grid container spacing={6} className='match-height'>
+    <Grid container spacing={6} className="match-height">
       {renderCards()}
       <Grid item xs={12} sm={6} lg={4}>
         <Card
-          sx={{ cursor: 'pointer' }}
+          sx={{ cursor: "pointer" }}
           onClick={() => {
-            handleClickOpen()
-            setDialogTitle('Add')
+            handleClickOpen();
+            setDialogTitle("Add");
           }}
         >
-          <Grid container sx={{ height: '100%' }}>
+          <Grid container sx={{ height: "100%" }}>
             <Grid item xs={5}>
               <Box
                 sx={{
-                  height: '100%',
+                  height: "100%",
                   minHeight: 140,
-                  display: 'flex',
-                  alignItems: 'flex-end',
-                  justifyContent: 'center'
+                  display: "flex",
+                  alignItems: "flex-end",
+                  justifyContent: "center",
                 }}
               >
-                <img height={122} alt='add-role' src='/images/pages/add-new-role-illustration.png' />
+                <img
+                  height={122}
+                  alt="add-role"
+                  src="/images/pages/add-new-role-illustration.png"
+                />
               </Box>
             </Grid>
             <Grid item xs={7}>
-              <CardContent sx={{ pl: 0, height: '100%' }}>
-                <Box sx={{ textAlign: 'right' }}>
+              <CardContent sx={{ pl: 0, height: "100%" }}>
+                <Box sx={{ textAlign: "right" }}>
                   <Button
-                    variant='contained'
+                    variant="contained"
                     sx={{
                       mb: 3,
-                      whiteSpace: 'nowrap',
-                      '&:hover': {
-                        backgroundColor: '#5E7954'
-                      }
+                      whiteSpace: "nowrap",
+                      "&:hover": {
+                        backgroundColor: "#5E7954",
+                      },
                     }}
                     onClick={() => {
-                      handleClickOpen()
-                      setDialogTitle('Add')
+                      handleClickOpen();
+                      setDialogTitle("Add");
                     }}
                   >
                     Add New Role
                   </Button>
-                  <Typography sx={{ color: 'text.secondary' }}>Add role, if it doesn't exist.</Typography>
+                  <Typography sx={{ color: "text.secondary" }}>
+                    Add role, if it doesn't exist.
+                  </Typography>
                 </Box>
               </CardContent>
             </Grid>
           </Grid>
         </Card>
       </Grid>
-      <Dialog fullWidth maxWidth='md' scroll='body' onClose={handleClose} open={open}>
+      <Dialog
+        fullWidth
+        maxWidth="md"
+        scroll="body"
+        onClose={handleClose}
+        open={open}
+      >
         <Formik
           initialValues={
-            dialogTitle === 'Edit'
+            dialogTitle === "Edit"
               ? {
-                  roleName: roleEditValue?.roleType
+                  roleName: roleEditValue?.roleType,
                 }
               : {
-                  roleName: ''
+                  roleName: "",
                 }
           }
           validationSchema={validationSchema}
-          onSubmit={values => {
-            onSubmitClick(values)
+          onSubmit={(values) => {
+            onSubmitClick(values);
           }}
         >
-          {({ values, handleChange, handleBlur, errors, touched, setFieldValue }) => (
+          {({
+            values,
+            handleChange,
+            handleBlur,
+            errors,
+            touched,
+            setFieldValue,
+          }) => (
             <Form>
               <DialogTitle
                 sx={{
-                  textAlign: 'center',
-                  px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-                  pt: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
+                  textAlign: "center",
+                  px: (theme) => [
+                    `${theme.spacing(5)} !important`,
+                    `${theme.spacing(15)} !important`,
+                  ],
+                  pt: (theme) => [
+                    `${theme.spacing(8)} !important`,
+                    `${theme.spacing(12.5)} !important`,
+                  ],
                 }}
               >
-                <Typography variant='h5' component='span'>
+                <Typography variant="h5" component="span">
                   {`${dialogTitle} Role`}
                 </Typography>
-                <Typography variant='body2'>Set Role Permissions</Typography>
+                <Typography variant="body2">Set Role Permissions</Typography>
               </DialogTitle>
               <DialogContent
                 sx={{
-                  pb: theme => `${theme.spacing(5)} !important`,
-                  px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`]
+                  pb: (theme) => `${theme.spacing(5)} !important`,
+                  px: (theme) => [
+                    `${theme.spacing(5)} !important`,
+                    `${theme.spacing(15)} !important`,
+                  ],
                 }}
               >
                 <Box sx={{ my: 4 }}>
                   <FormControl fullWidth>
                     <TextField
-                      label='Role Name'
-                      name='roleName'
+                      label="Role Name"
+                      name="roleName"
                       value={values?.roleName}
                       error={Boolean(errors.roleName && touched.roleName)}
-                      placeholder='Enter Role Name'
+                      placeholder="Enter Role Name"
                       onChange={handleChange}
                     />
-                    <ErrorMessage name='roleName' render={msg => <div style={{ color: 'red' }}>{msg}</div>} />
+                    <ErrorMessage
+                      name="roleName"
+                      render={(msg) => (
+                        <div style={{ color: "red" }}>{msg}</div>
+                      )}
+                    />
                   </FormControl>
                 </Box>
-                <Typography variant='h6'>Role Permissions</Typography>
+                <Typography variant="h6">Role Permissions</Typography>
                 <TableContainer>
-                  <Table size='small'>
+                  <Table size="small">
                     <TableHead>
                       <TableRow>
-                        <TableCell sx={{ pl: '0 !important' }}>
+                        <TableCell sx={{ pl: "0 !important" }}>
                           <Box
                             sx={{
-                              display: 'flex',
-                              fontSize: '0.875rem',
-                              whiteSpace: 'nowrap',
-                              alignItems: 'center',
-                              textTransform: 'capitalize',
-                              '& svg': { ml: 1, cursor: 'pointer' }
+                              display: "flex",
+                              fontSize: "0.875rem",
+                              whiteSpace: "nowrap",
+                              alignItems: "center",
+                              textTransform: "capitalize",
+                              "& svg": { ml: 1, cursor: "pointer" },
                             }}
                           >
                             Administrator Access
-                            <Tooltip placement='top' title='Allows a full access to the system'>
-                              <Box sx={{ display: 'flex' }}>
-                                <Icon icon='tabler:info-circle' fontSize='1.25rem' />
+                            <Tooltip
+                              placement="top"
+                              title="Allows a full access to the system"
+                            >
+                              <Box sx={{ display: "flex" }}>
+                                <Icon
+                                  icon="tabler:info-circle"
+                                  fontSize="1.25rem"
+                                />
                               </Box>
                             </Tooltip>
                           </Box>
                         </TableCell>
-                        <TableCell sx={{ pl: '0 !important' }}>
+                        <TableCell sx={{ pl: "0 !important" }}>
                           <Box
                             sx={{
-                              display: 'flex',
-                              fontSize: '0.875rem',
-                              whiteSpace: 'nowrap',
-                              alignItems: 'center',
-                              textTransform: 'capitalize',
-                              '& svg': { ml: 1, cursor: 'pointer' }
+                              display: "flex",
+                              fontSize: "0.875rem",
+                              whiteSpace: "nowrap",
+                              alignItems: "center",
+                              textTransform: "capitalize",
+                              "& svg": { ml: 1, cursor: "pointer" },
                             }}
                           >
                             Access
@@ -440,50 +497,69 @@ const RolesCards = () => {
                         </TableCell>
                       </TableRow>
                     </TableHead>
-                    {dialogTitle === 'Add' ? (
+                    {dialogTitle === "Add" ? (
                       <TableBody>
                         {routesArray?.map((i: any, index: number) => {
-                          const id = i?.id
-
+                          const id = i?.id;
+                          console.log("i", i);
                           return (
-                            <TableRow key={index} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
+                            <TableRow
+                              key={index}
+                              sx={{
+                                "& .MuiTableCell-root:first-of-type": {
+                                  pl: "0 !important",
+                                },
+                              }}
+                            >
                               <TableCell
                                 sx={{
                                   fontWeight: 600,
-                                  whiteSpace: 'nowrap',
-                                  color: theme => `${theme.palette.text.primary} !important`
+                                  whiteSpace: "nowrap",
+                                  color: (theme) =>
+                                    `${theme.palette.text.primary} !important`,
                                 }}
                               >
-                                {i?.moduleName}
+                                {i?.title}
                               </TableCell>
                               <TableCell>
                                 <FormControlLabel
                                   // label='Access'
                                   control={
                                     <Checkbox
-                                      size='small'
+                                      size="small"
                                       id={`${id}`}
                                       onChange={() => togglePermission(`${id}`)}
-                                      checked={removeDuplicates(selectedCheckbox).includes(`${id}`)}
+                                      checked={removeDuplicates(
+                                        selectedCheckbox
+                                      ).includes(`${id}`)}
                                     />
                                   }
                                 />
                               </TableCell>
                             </TableRow>
-                          )
+                          );
                         })}
                       </TableBody>
                     ) : (
                       <TableBody>
                         {getPermission?.map((I: any, Index: number) => {
-                          const ID = I?.id
+                          const ID = I?.id;
+                          console.log("I", I);
                           return (
-                            <TableRow key={Index} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
+                            <TableRow
+                              key={Index}
+                              sx={{
+                                "& .MuiTableCell-root:first-of-type": {
+                                  pl: "0 !important",
+                                },
+                              }}
+                            >
                               <TableCell
                                 sx={{
                                   fontWeight: 600,
-                                  whiteSpace: 'nowrap',
-                                  color: theme => `${theme.palette.text.primary} !important`
+                                  whiteSpace: "nowrap",
+                                  color: (theme) =>
+                                    `${theme.palette.text.primary} !important`,
                                 }}
                               >
                                 {I?.moduleName}
@@ -493,18 +569,20 @@ const RolesCards = () => {
                                   // label='Access'
                                   control={
                                     <Checkbox
-                                      size='small'
+                                      size="small"
                                       id={`${ID}`}
                                       onChange={() => togglePermission(`${ID}`)}
                                       //@ts-ignore
                                       // checked={checkedCheckbox(ID)}
-                                      checked={removeDuplicates(selectedCheckbox).includes(`${ID}`)}
+                                      checked={removeDuplicates(
+                                        selectedCheckbox
+                                      ).includes(`${ID}`)}
                                     />
                                   }
                                 />
                               </TableCell>
                             </TableRow>
-                          )
+                          );
                         })}
                       </TableBody>
                     )}
@@ -514,25 +592,35 @@ const RolesCards = () => {
 
               <DialogActions
                 sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  px: theme => [`${theme.spacing(5)} !important`, `${theme.spacing(15)} !important`],
-                  pb: theme => [`${theme.spacing(8)} !important`, `${theme.spacing(12.5)} !important`]
+                  display: "flex",
+                  justifyContent: "center",
+                  px: (theme) => [
+                    `${theme.spacing(5)} !important`,
+                    `${theme.spacing(15)} !important`,
+                  ],
+                  pb: (theme) => [
+                    `${theme.spacing(8)} !important`,
+                    `${theme.spacing(12.5)} !important`,
+                  ],
                 }}
               >
-                <Box className='demo-space-x'>
+                <Box className="demo-space-x">
                   <Button
-                    variant='contained'
+                    variant="contained"
                     sx={{
-                      '&:hover': {
-                        backgroundColor: '#5E7954'
-                      }
+                      "&:hover": {
+                        backgroundColor: "#5E7954",
+                      },
                     }}
-                    type='submit'
+                    type="submit"
                   >
                     Submit
                   </Button>
-                  <Button color='secondary' variant='outlined' onClick={handleClose}>
+                  <Button
+                    color="secondary"
+                    variant="outlined"
+                    onClick={handleClose}
+                  >
                     Cancel
                   </Button>
                 </Box>
@@ -546,12 +634,12 @@ const RolesCards = () => {
         setOpen={setOpenDelete}
         handleClickOpen={handleClickOpenDelete}
         handleClose={handleDeleteClose}
-        type='role'
+        type="role"
         delelteField={delelteField}
         id={DeleteID}
       />
     </Grid>
-  )
-}
+  );
+};
 
-export default RolesCards
+export default RolesCards;

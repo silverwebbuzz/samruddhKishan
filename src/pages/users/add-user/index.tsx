@@ -200,6 +200,16 @@ const index = () => {
     // localStorage.removeItem('FarmerData')
   }, [page, pageCount, pageLimit, deleteUser, updateUsers12, createUser12]);
 
+  const JSONHandler = (data: any) => {
+    try {
+      JSON.parse(data);
+    } catch (e) {
+      return [];
+    }
+    return JSON.parse(data);
+  };
+  const userdata = JSONHandler(localStorage.getItem("userData"));
+
   const handleSubmit = (values: any) => {
     let payload = [
       //other
@@ -252,6 +262,9 @@ const index = () => {
       { vendorImage: values?.vendorImage },
       { categoryId: categoryIdPrefill },
     ];
+    if (userdata?.role == "admin") {
+      payload.push({ adminId: userdata?.id });
+    }
     let formData = new FormData();
     payload.forEach((entry: any) => {
       //@ts-ignore
