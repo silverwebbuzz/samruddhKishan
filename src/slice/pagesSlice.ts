@@ -11,12 +11,14 @@ interface RootState {
   createPages: Array<any>;
   getAllPages: Array<any>;
   getAllAboutUSData: Array<any>;
+  aboutDescription: Array<any>;
   isLoading: boolean;
 }
 const initialState: RootState = {
   createPages: [],
   getAllPages: [],
   getAllAboutUSData: [],
+  aboutDescription: [],
   isLoading: false,
 };
 
@@ -68,6 +70,27 @@ export const getAboutUs = createAsyncThunk(
     }
   }
 );
+
+//
+
+export const createAboutusDesc = createAsyncThunk(
+  "about/createAboutusDesc",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/aboutUsPage/createAboutUsPage`,
+        payload,
+        { headers }
+      );
+
+      return res?.data;
+    } catch (err: any) {
+      return rejectWithValue(err?.response?.data);
+    }
+  }
+);
+
+///aboutUsPage/getAllAboutUsPage
 // categories slice
 export const pagesSlice = createSlice({
   name: "pagesSlice",
@@ -105,6 +128,17 @@ export const pagesSlice = createSlice({
     builder.addCase(getAboutUs.rejected, (state) => {
       state.isLoading = false;
     });
+    builder.addCase(createAboutusDesc.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(createAboutusDesc.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.aboutDescription = action.payload;
+    });
+    builder.addCase(createAboutusDesc.rejected, (state) => {
+      state.isLoading = false;
+    });
+
     //getAboutUs
   },
 });

@@ -97,6 +97,10 @@ const navigation = (): VerticalNavItemsType => {
             path: "/cms/faq",
           },
           {
+            title: "About Us",
+            path: "/cms/about-us",
+          },
+          {
             title: "Pages",
             path: "/cms/pages",
           },
@@ -208,6 +212,10 @@ const navigation = (): VerticalNavItemsType => {
           {
             title: "FAQ",
             path: "/cms/faq",
+          },
+          {
+            title: "About Us",
+            path: "/cms/about-us",
           },
           {
             title: "Pages",

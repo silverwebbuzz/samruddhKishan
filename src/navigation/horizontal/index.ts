@@ -96,6 +96,10 @@ const navigation = (): HorizontalNavItemsType => {
             path: "/cms/faq",
           },
           {
+            title: "About Us",
+            path: "/cms/about-us",
+          },
+          {
             title: "Pages",
             path: "/cms/pages",
           },
@@ -206,6 +210,10 @@ const navigation = (): HorizontalNavItemsType => {
           {
             title: "FAQ",
             path: "/cms/faq",
+          },
+          {
+            title: "About Us",
+            path: "/cms/about-us",
           },
           {
             title: "Pages",

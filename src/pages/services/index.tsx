@@ -266,14 +266,10 @@ const ServicesPage = () => {
               >
                 <CardContent
                   style={{
-                    // flex: 1,
                     display: "flex",
                     flexDirection: "column",
-                    // justifyContent: 'space-beteen',
                     alignItems: "center",
-                    // padding: '40px'
                     paddingBottom: "0px",
-                    // paddingTop: '0px'
                   }}
                 >
                   <img

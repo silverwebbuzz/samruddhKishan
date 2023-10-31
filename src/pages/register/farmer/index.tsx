@@ -88,7 +88,7 @@ const index = () => {
   const [fileForView, setFileForView] = useState("");
   const [file, setFile] = useState("");
   const [selectedFiles, setSelectedFiles] = useState([]);
-
+  const [docMessage, setDocMessage] = useState("");
   const {
     getRoles,
     getAddressByPinCodeData,
@@ -485,6 +485,7 @@ const index = () => {
                 values?.appliedForSoilTesting === "yes" &&
                 selectedFiles?.length > 0
               ) {
+                setDocMessage("Please select documents");
                 handleFarmerSubmit(values);
               } else if (values?.appliedForSoilTesting === "no") {
                 handleFarmerSubmit(values);
@@ -1169,6 +1170,7 @@ const index = () => {
                             </div>
                           </div>
                         </div>
+                        {docMessage}
                       </Grid>
                     ) : null}
                     <Grid xs={12} md={12}>

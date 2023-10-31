@@ -71,6 +71,7 @@ const FarmerDetails = () => {
   const [date, setDate] = useState<DateType>(new Date());
   const [fileForView, setFileForView] = useState("");
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [docMessage, setDocMessage] = useState("Please select documents");
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -168,8 +169,6 @@ const FarmerDetails = () => {
         "please enter a valid aadhar number"
       ),
     DOB: yup.string().required("Date of birth is required"),
-
-    appliedForSoilTesting: yup.string().required("Periods of bond is required"),
   });
   const handleRemoveFile = (indexToRemove) => {
     setSelectedFiles((prevFiles) =>
@@ -369,12 +368,19 @@ const FarmerDetails = () => {
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={(values) => {
+            console.log(
+              "ajkkljlkasjdkljasldjlj",
+              values?.appliedForSoilTesting === "yes" &&
+                selectedFiles?.length > 0
+            );
             if (
               values?.appliedForSoilTesting === "yes" &&
               selectedFiles?.length > 0
             ) {
+              setDocMessage("");
               handleSubmit(values);
             } else if (values?.appliedForSoilTesting === "no") {
+              setDocMessage("");
               handleSubmit(values);
             }
           }}
