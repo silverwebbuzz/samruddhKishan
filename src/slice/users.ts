@@ -69,6 +69,15 @@ export const usersSlice = createSlice({
     builder.addCase(getAllFarmers.rejected, (state) => {
       state.isLoading = false;
     });
+    builder.addCase(userVerifier.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(userVerifier.fulfilled, (state, action) => {
+      state.isLoading = false;
+    });
+    builder.addCase(userVerifier.rejected, (state) => {
+      state.isLoading = false;
+    });
   },
 });
 export default usersSlice.reducer;

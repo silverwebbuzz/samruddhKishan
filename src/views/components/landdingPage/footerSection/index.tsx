@@ -68,6 +68,15 @@ const FooterSection = ({ LOGO, DATA, JSONHandler }: any) => {
 
     document.head.appendChild(googleTranslateScript);
   }, []);
+
+  const handleLink = (slug) => {
+    if (router.pathname.includes("pages")) {
+      const basePath = router.pathname.includes("pages") ? "/pages" : "";
+      router.push(`${basePath}/${slug}`);
+    } else {
+      router.push(`/pages/${slug}`);
+    }
+  };
   return (
     <>
       <footer className="sec_padding">
@@ -222,7 +231,9 @@ const FooterSection = ({ LOGO, DATA, JSONHandler }: any) => {
                   style={{
                     cursor: "pointer",
                   }}
-                  onClick={() => router.push(`pages/${page?.slug}`)}
+                  onClick={() => {
+                    handleLink(page?.slug);
+                  }}
                 >
                   {page?.title}
                 </p>

@@ -77,6 +77,7 @@ const FarmerDetails = () => {
   const router = useRouter();
   const [newSelectedFiles, setNewSelectedFiles] = useState([]);
   const [removeFiles, setRemoveFiles] = useState([]);
+  const [docMessage, setDocMessage] = useState("Please select documents");
 
   const initialValues = {
     firstName: getFarmer?.firstName,
@@ -123,16 +124,13 @@ const FarmerDetails = () => {
     mobileNumber: yup
       .string()
       .required("Mobile number is required")
-      // .min(10)
       .matches(/^(\+91|0)?[6789]\d{9}$/, "Invalid mobile number"),
     wpNumber: yup
       .string()
       .required("Whatsapp number is required")
-      // .min(10)
       .matches(/^(\+91|0)?[6789]\d{9}$/, "Invalid mobile number"),
     aadharNumber: yup
       .string()
-      // .required('Aadhar number is required')
       .matches(
         /^([0-9]{4}[0-9]{4}[0-9]{4}$)|([0-9]{4}\s[0-9]{4}\s[0-9]{4}$)|([0-9]{4}-[0-9]{4}-[0-9]{4}$)/,
         "please enter a valid aadhar number"
@@ -193,7 +191,6 @@ const FarmerDetails = () => {
           let payloadForDeleteImages = {
             ids: removeFiles,
           };
-          console.log("removeFiles", removeFiles);
           if (removeFiles?.length > 0) {
             dispatch(deleteFarmerImages(payloadForDeleteImages)).then((res) => {
               setSelectedFiles([]);
@@ -227,7 +224,7 @@ const FarmerDetails = () => {
   };
 
   const handleFileChange = (event) => {
-    const file = event.target.files[0]; // Only allow selecting one file at a time
+    const file = event.target.files[0];
     setSelectedFiles((prevSelectedFiles) => [...prevSelectedFiles, file]);
     setNewSelectedFiles((prevNewSelectedFiles) => [
       ...prevNewSelectedFiles,
@@ -242,11 +239,10 @@ const FarmerDetails = () => {
     } else if (["jpg", "jpeg", "png", "gif", "bmp"].includes(fileExtension)) {
       return false;
     } else {
-      return "Unknown"; // Handle other file types
+      return "Unknown";
     }
   }
   const ImagePreviewer = ({ file, index }) => {
-    console.log("Image Previewer", file?.file);
     if (isValidUrl(file?.file?.file)) {
       if (isPDForImage(file?.file?.file)) {
         return (
@@ -441,6 +437,13 @@ const FarmerDetails = () => {
     getFarmer?.pinCode,
     getFarmer?.landDistrict,
   ]);
+  useEffect(() => {
+    if (selectedFiles.length > 0) {
+      setDocMessage("");
+    } else {
+      setDocMessage("Please select documents");
+    }
+  }, [selectedFiles, removeFiles]);
   return (
     <>
       <Card
@@ -1617,6 +1620,16 @@ const FarmerDetails = () => {
                             </label>
                           </div>
                         </div>
+                        {
+                          <p
+                            style={{
+                              marginLeft: "30px",
+                              color: "red",
+                            }}
+                          >
+                            {docMessage}
+                          </p>
+                        }
                       </div>
                     </Grid>
                   ) : null}

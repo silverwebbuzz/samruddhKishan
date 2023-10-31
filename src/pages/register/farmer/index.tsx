@@ -232,7 +232,6 @@ const index = () => {
     }
   };
   const handleFarmerSubmit = (values: any) => {
-    console.log("values", values);
     const payload = [
       { adminId: 0 },
       { firstName: values?.firstName },
@@ -265,7 +264,6 @@ const index = () => {
       { landType: values?.landType },
       { farmerLandOwnershipType: values?.farmerLandOwnershipType },
       { appliedForSoilTesting: "yes" ? 1 : 0 },
-      // filename: fileForView?.name,
     ];
     const formData = new FormData();
     selectedFiles.forEach((file, index) => {
@@ -277,15 +275,7 @@ const index = () => {
       const value = entry[key];
       formData.append(key, value);
     });
-    console.log("ashdaghdjhakjsdhjkahsdjkhkj");
     dispatch(createFarmer(formData)).then((res) => {
-      // if (res?.payload?.id) {
-      //   let payload = {
-      //     id: res?.payload?.id,
-      //     file: file,
-      //   };
-      //   dispatch(uploadImage(payload));
-      // }
       router.push("/");
     });
   };
@@ -346,37 +336,7 @@ const index = () => {
     };
     dispatch(getAdressByPincode(payload));
   };
-  const FilePreview = ({ file, onRemove }: any) => {
-    if (isValidUrl(file)) {
-      return (
-        <Box>
-          <ProfilePicture src={file} alt="profile-picture" />
-        </Box>
-      );
-    } else {
-      if (file?.type?.startsWith("image")) {
-        return (
-          <Box>
-            <ProfilePicture
-              src={URL.createObjectURL(file)}
-              alt="profile-picture"
-            />
-          </Box>
-        );
-      } else {
-        return (
-          <Box>
-            <ProfilePicture
-              src={
-                "/images/logo/pngtree-gray-network-placeholder-png-image_3416659.jpg"
-              }
-              alt="profile-picture"
-            />
-          </Box>
-        );
-      }
-    }
-  };
+
   const convertBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
@@ -405,6 +365,14 @@ const index = () => {
       document.body.classList.remove("landingPage");
     };
   }, []);
+
+  useEffect(() => {
+    if (selectedFiles.length > 0) {
+      setDocMessage("");
+    } else {
+      setDocMessage("Please select documents");
+    }
+  }, [selectedFiles]);
   return (
     <>
       <Topbar data={getContentData} />
@@ -1170,7 +1138,16 @@ const index = () => {
                             </div>
                           </div>
                         </div>
-                        {docMessage}
+                        {
+                          <p
+                            style={{
+                              marginLeft: "30px",
+                              color: "red",
+                            }}
+                          >
+                            {docMessage}
+                          </p>
+                        }
                       </Grid>
                     ) : null}
                     <Grid xs={12} md={12}>

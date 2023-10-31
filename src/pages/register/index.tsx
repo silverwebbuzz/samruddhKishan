@@ -585,7 +585,7 @@ const Register = () => {
                   width: "100px",
                   objectFit: "contain",
                 }}
-                src="/images/logo/1696851476202-farmer.png"
+                src="/images/logo/farmer_10613.png"
               />
               <Typography fontWeight={600} textAlign={"center"} mt={4}>
                 Register As Farmers
@@ -615,7 +615,7 @@ const Register = () => {
                   width: "100px",
                   objectFit: "contain",
                 }}
-                src="/images/logo/information-point_5639292.png"
+                src="/images/logo/mall_7650057.png"
               />
               <Typography fontWeight={600} textAlign={"center"} mt={4}>
                 Register As Centers
@@ -653,7 +653,7 @@ const Register = () => {
                   width: "100px",
                   objectFit: "contain",
                 }}
-                src="/images/logo/consumer_5823547.png"
+                src="/images/logo/businessman-with-suitcase-going-work-city_31198.png"
               />
               <Typography fontWeight={600} textAlign={"center"} mt={4}>
                 Register As Apmc Traders
@@ -683,7 +683,7 @@ const Register = () => {
                   width: "100px",
                   objectFit: "contain",
                 }}
-                src="/images/logo/buyer_1900085.png"
+                src="/images/logo/clipboard_1440288.png"
               />
               <Typography fontWeight={600} textAlign={"center"} mt={4}>
                 Register As Vendors

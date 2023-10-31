@@ -50,6 +50,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.js`;
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
+import { remove } from "nprogress";
 
 const ProfilePicture = styled("img")(({ theme }) => ({
   width: 108,
@@ -175,6 +176,7 @@ const FarmerDetails = () => {
       prevFiles.filter((_, index) => index !== indexToRemove)
     );
   };
+
   const ImagePreviewer = ({ file, index }) => {
     if (isValidUrl(file?.file?.file)) {
       return (
@@ -236,7 +238,6 @@ const FarmerDetails = () => {
             </div>
           );
         } else {
-          console.log("file?.file[0]", file?.file);
           return (
             <div
               key={file?.index}
@@ -356,6 +357,14 @@ const FarmerDetails = () => {
     dispatch(getAllDistrict({ state: STATE }));
   }, [STATE]);
 
+  useEffect(() => {
+    if (selectedFiles.length > 0) {
+      setDocMessage("");
+    } else {
+      setDocMessage("Please select documents");
+    }
+  }, [selectedFiles]);
+
   return (
     <>
       <Card
@@ -368,19 +377,12 @@ const FarmerDetails = () => {
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={(values) => {
-            console.log(
-              "ajkkljlkasjdkljasldjlj",
-              values?.appliedForSoilTesting === "yes" &&
-                selectedFiles?.length > 0
-            );
             if (
               values?.appliedForSoilTesting === "yes" &&
               selectedFiles?.length > 0
             ) {
-              setDocMessage("");
               handleSubmit(values);
             } else if (values?.appliedForSoilTesting === "no") {
-              setDocMessage("");
               handleSubmit(values);
             }
           }}
@@ -1473,6 +1475,16 @@ const FarmerDetails = () => {
                             </label>
                           </div>
                         </div>
+                        {
+                          <p
+                            style={{
+                              marginLeft: "30px",
+                              color: "red",
+                            }}
+                          >
+                            {docMessage}
+                          </p>
+                        }
                       </div>
                     </Grid>
                   ) : null}

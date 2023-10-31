@@ -51,6 +51,7 @@ import * as yup from "yup";
 import DeleteMultiFieldsDialog from "src/views/deleteDialogBox/deleteMultiFieldsDialog";
 import { alpha } from "@mui/system";
 import { userVerifier } from "src/slice/users";
+import axios from "axios";
 
 export type Payload = {
   id?: number;
@@ -306,9 +307,22 @@ const allUsers = () => {
                 color={flag == 0 ? "error" : flag == 2 ? "warning" : "primary"}
                 onClick={() => {
                   flag !== 1
-                    ? dispatch(
-                        userVerifier({ id: id, flag: flag == 0 ? 2 : 1 })
-                      )
+                    ? dispatch(userVerifier({ id: id, flag: 1 }))
+                        .then((res) => {
+                          axios.post(
+                            `${process.env.NEXT_PUBLIC_BASE_URL}/user/sentEmail`,
+                            { id: id },
+                            {
+                              headers: {
+                                "Access-Control-Allow-Origin": "*",
+                                "Content-Type": "application/json",
+                              },
+                            }
+                          );
+                        })
+                        .then((res) => {
+                          dispatch(getAllUsers({ page: 1, pageSize: 10 }));
+                        })
                     : false;
                 }}
               />
