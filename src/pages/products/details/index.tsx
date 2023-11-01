@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   Box,
   Button,
@@ -126,7 +127,7 @@ const Details = () => {
           bannerName={
             InquryName?.productName ? "Product Details" : "Service Details"
           }
-          bannerContent="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry"
+          bannerContent="Organic products are cultivated or produced without the use of synthetic pesticides, herbicides, or genetically modified organisms (GMOs). They are grown or made following strict organic farming practices, which prioritize sustainability, environmental responsibility, and the well-being of both consumers and the planet."
         />
       </div>
       <section>
@@ -169,17 +170,27 @@ const Details = () => {
                       }}
                       slidesPerView={1}
                     >
-                      {InquryName?.productGallaryImages?.map((Item: any) => {
-                        return (
-                          <SwiperSlide className="product_body_slider">
-                            <img
-                              className="product_image_slider"
-                              src={Item}
-                              alt="Image not found"
-                            />
-                          </SwiperSlide>
-                        );
-                      })}
+                      {InquryName?.productGallaryImages.length > 0 ? (
+                        InquryName?.productGallaryImages?.map((Item: any) => {
+                          return (
+                            <SwiperSlide className="product_body_slider">
+                              <img
+                                className="product_image_slider"
+                                src={Item}
+                                alt="Image not found"
+                              />
+                            </SwiperSlide>
+                          );
+                        })
+                      ) : (
+                        <SwiperSlide className="product_body_slider">
+                          <img
+                            className="product_image_slider"
+                            src={InquryName?.productImage}
+                            alt="Image not found"
+                          />
+                        </SwiperSlide>
+                      )}
                     </Swiper>
                   </Grid>
                   <Grid md={6} xs={12}>

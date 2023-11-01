@@ -167,6 +167,7 @@ const RolesCards = () => {
       setSelectedCheckbox([]);
     }
   }, [isDialogOpen]);
+  console.log("selectedCheckbox", selectedCheckbox);
   //@ts-ignore
   const renderCards = () =>
     getRoles.map((item: any, index: number) => (
@@ -499,9 +500,9 @@ const RolesCards = () => {
                     </TableHead>
                     {dialogTitle === "Add" ? (
                       <TableBody>
-                        {routesArray?.map((i: any, index: number) => {
+                        {getPermission?.map((i: any, index: number) => {
                           const id = i?.id;
-
+                          console.log("--->", i);
                           return (
                             <TableRow
                               key={index}
@@ -519,7 +520,7 @@ const RolesCards = () => {
                                     `${theme.palette.text.primary} !important`,
                                 }}
                               >
-                                {i?.title}
+                                {i?.moduleName}
                               </TableCell>
                               <TableCell>
                                 <FormControlLabel
@@ -544,7 +545,7 @@ const RolesCards = () => {
                       <TableBody>
                         {getPermission?.map((I: any, Index: number) => {
                           const ID = I?.id;
-
+                          console.log("--->I", I);
                           return (
                             <TableRow
                               key={Index}

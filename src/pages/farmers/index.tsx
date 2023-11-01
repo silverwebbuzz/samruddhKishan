@@ -498,6 +498,7 @@ const allFarmers = () => {
                         setDistrict("");
                         setRoleValue([]);
                         setReferalName("");
+                        setFarmerID("");
                       }}
                     >
                       {" "}

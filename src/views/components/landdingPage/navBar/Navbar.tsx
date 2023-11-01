@@ -129,7 +129,9 @@ export default function Navbar({ LOGO }) {
                 <Link className="menu-link" href="/products" passHref>
                   <li
                     className={`menu-item ${
-                      router.asPath === "/products/" ? "menue-Active" : ""
+                      router.pathname.includes("/products")
+                        ? "menue-Active"
+                        : ""
                     }`}
                   >
                     Products
@@ -138,7 +140,9 @@ export default function Navbar({ LOGO }) {
                 <Link className="menu-link" href="/services" passHref>
                   <li
                     className={`menu-item ${
-                      router.asPath === "/services/" ? "menue-Active" : ""
+                      router.pathname.includes("/services")
+                        ? "menue-Active"
+                        : ""
                     }`}
                   >
                     Services
