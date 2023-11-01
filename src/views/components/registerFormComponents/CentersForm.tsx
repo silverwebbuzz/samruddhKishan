@@ -29,7 +29,6 @@ const CentersForm = ({
   pincode,
   getAddressByPinCodeData,
   setTaluka,
-  rolePrefill,
   taluka,
   size,
 }: any) => {
@@ -52,18 +51,11 @@ const CentersForm = ({
       .required("Password is required")
       .min(8, "Password must contain 8 characters")
       .matches(/^\S*$/, "Password cannot contain spaces"),
-
-    // .matches(/^(?!\s)(?=.*\S)/, "Password cannot contain spaces"),
-
-    // .matches(
-    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-    //   "Must contain 8 characters, 1 uppercase, 1 lowercase, 1 number, and 1 special character"
-    // ),
   });
 
   const handleSubmit = (values: any) => {
     let centersPayload = [
-      { roleId: 13 || "" },
+      { roleId: 1 || "" },
       { state: values?.state || "" },
       { city: district || "" },
       { taluka: taluka || "" },

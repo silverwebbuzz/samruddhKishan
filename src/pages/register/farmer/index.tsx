@@ -1,8 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { ChangeEvent, ReactNode, useEffect, useState } from "react";
-
-// ** Next Import
+import { ReactNode, useEffect, useState } from "react";
 
 // ** MUI Components
 import TextField from "@mui/material/TextField";
@@ -11,29 +9,16 @@ import FormControl from "@mui/material/FormControl";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputAdornment from "@mui/material/InputAdornment";
 import { Box, BoxProps, styled } from "@mui/system";
-
-// ** Icon Imports
-import Icon from "src/@core/components/icon";
-
-// ** Layout Import
 import BlankLayout from "src/@core/layouts/BlankLayout";
 
-// ** Hooks
-import { useSettings } from "src/@core/hooks/useSettings";
-
-// ** Demo Imports
-import FooterIllustrationsV2 from "src/views/pages/auth/FooterIllustrationsV2";
 import {
   Button,
   Card,
-  Checkbox,
   Chip,
   Divider,
   FormControlLabel,
-  FormControlLabelProps,
   Grid,
   IconButton,
-  Link,
   MenuItem,
   Radio,
   RadioGroup,
@@ -47,12 +32,10 @@ import PageBanner from "src/views/components/landdingPage/pageBanner/PageBanner"
 
 import {
   createFarmer,
-  createUser1,
   getAdressByPincode,
   getAllDistrict,
   getAllState,
   getRoleAndPermissions,
-  uploadImage,
 } from "src/slice/farmers";
 import { getAllCategories } from "src/slice/categoriesSlice";
 import { useSelector } from "react-redux";
@@ -62,13 +45,10 @@ import Navbar from "src/views/components/landdingPage/navBar/Navbar";
 import { getLogoAPI } from "src/slice/settingSlice";
 import FooterSection from "src/views/components/landdingPage/footerSection";
 import moment from "moment";
-import CentersForm from "src/views/components/registerFormComponents/CentersForm";
-import ApmcForm from "src/views/components/registerFormComponents/ApmcForm";
-import VendorForm from "src/views/components/registerFormComponents/VendorForm";
+
 import { ErrorMessage, Form, Formik } from "formik";
 import * as yup from "yup";
-import CustomRadioImg from "src/@core/components/custom-radio/image";
-import { CustomRadioImgData } from "src/@core/components/custom-radio/types";
+
 import { getAllContent } from "src/slice/landingPageSlice";
 import Topbar from "src/views/components/topbar";
 import { GridDeleteIcon } from "@mui/x-data-grid";
@@ -81,26 +61,13 @@ const index = () => {
   const router = useRouter();
   const [pincode, setPincode] = useState("");
   const [STATE, setSTATE] = useState("");
-  const [district, setDistrict] = useState("");
-  const [rolePrefill, setRolePrefill] = useState("f1");
-  const [categoryIdPrefill, setCategoryIdPrefill] = useState(0);
-  const [taluka, setTaluka] = useState("");
-  const [fileForView, setFileForView] = useState("");
-  const [file, setFile] = useState("");
+
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [docMessage, setDocMessage] = useState("");
-  const {
-    getRoles,
-    getAddressByPinCodeData,
-    allDistrict,
-    allState,
-    deleteUser,
-    updateUsers12,
-    createUser12,
-  } = useSelector((state: any) => state?.rootReducer?.farmerReducer);
-  const { categories } = useSelector(
-    (state: any) => state?.rootReducer?.categoriesReducer
+  const { getAddressByPinCodeData, allDistrict, allState } = useSelector(
+    (state: any) => state?.rootReducer?.farmerReducer
   );
+
   const { getLogo } = useSelector(
     (state: any) => state?.rootReducer?.settingsReducer
   );
@@ -128,7 +95,7 @@ const index = () => {
     DOB: yup.string().required("Date of birth is required"),
   });
   const handleFileChange = (event) => {
-    const file = event.target.files[0]; // Only allow selecting one file at a time
+    const file = event.target.files[0];
     setSelectedFiles([...selectedFiles, file]);
   };
   const handleRemoveFile = (indexToRemove) => {
@@ -162,7 +129,6 @@ const index = () => {
           >
             <GridDeleteIcon />
           </IconButton>
-          {/* <Typography>{file.name}</Typography> */}
         </div>
       );
     } else {
@@ -237,7 +203,6 @@ const index = () => {
       { firstName: values?.firstName },
       { middleName: values?.middleName },
       { lastName: values?.lastName },
-
       { dateOfBirth: moment(values?.DOB).format() },
       { aadharNumber: values?.aadharNumber },
       { mobileNumber: values?.mobileNumber },
@@ -336,36 +301,12 @@ const index = () => {
     };
     dispatch(getAdressByPincode(payload));
   };
-
-  const convertBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-
-      fileReader.onload = () => {
-        resolve(fileReader.result);
-      };
-
-      fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
-  };
-  const handleFile = async (e, param) => {
-    const file = e;
-    setFileForView(e);
-    const base64 = await convertBase64(file);
-    if (base64) {
-      setFile(base64);
-    }
-  };
   useEffect(() => {
     document.body.classList.add("landingPage");
     return () => {
       document.body.classList.remove("landingPage");
     };
   }, []);
-
   useEffect(() => {
     if (selectedFiles.length > 0) {
       setDocMessage("");

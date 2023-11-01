@@ -21,14 +21,12 @@ import { AppDispatch } from "src/store/store";
 
 const VendorForm = ({
   size,
-  values,
   setSTATE,
   STATE,
   allState,
   setDistrict,
   district,
   taluka,
-  setFieldValue,
   allDistrict,
   handlePincode,
   pincode,
@@ -56,11 +54,6 @@ const VendorForm = ({
       .required("Password is required")
       .min(8, "Password must contain 8 characters")
       .matches(/^\S*$/, "Password cannot contain spaces"),
-
-    // .matches(
-    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-    //   "Must contain 8 characters, 1 uppercase, 1 lowercase, 1 number, and 1 special character"
-    // ),
   });
 
   const handleSubmit = (values: any) => {
@@ -75,7 +68,7 @@ const VendorForm = ({
       { taluka: taluka || "" },
       { pinCode: pincode || "" },
       { village: values?.villageName || "" },
-      { roleId: 17 || "" },
+      { roleId: 3 || "" },
       { vendorImage: values?.vendorImage || "" },
       { categoryId: categoryIdPrefill || "" },
     ];

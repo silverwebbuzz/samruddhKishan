@@ -108,6 +108,9 @@ code[class*="language-"] {
 .menu-item:hover {
   color: var(--btn-color);
 }
+.menue-Active {
+  color: var(--btn-color);
+}
 .about-section {
   background-image: url("/images/logo/leaf.png");
   padding: 120px 10%;

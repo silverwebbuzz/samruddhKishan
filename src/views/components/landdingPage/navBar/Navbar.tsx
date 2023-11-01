@@ -13,10 +13,11 @@ import { Router, useRouter } from "next/router";
 
 export default function Navbar({ LOGO }) {
   const [visibleMenu, setVisibleMenu] = useState<boolean>(false);
+  const router = useRouter();
   const { breakpoints } = useTheme();
   const md = 1024; // Define md variable with value 1024
   const matchMobileView = useMediaQuery(`(max-width: ${md}px)`);
-  const router = useRouter();
+
   useEffect(() => {
     // This function will be called when the component unmounts
     return () => {
@@ -25,6 +26,7 @@ export default function Navbar({ LOGO }) {
       }
     };
   }, []);
+
   return (
     <Box
       sx={{ backgroundColor: "background.paper" }}
@@ -97,22 +99,59 @@ export default function Navbar({ LOGO }) {
             <div className="main-menu" style={{ marginLeft: "auto" }}>
               <ul className="sub-menu">
                 <Link className="menu-link" href="/" passHref>
-                  <li className="menu-item">Home</li>
+                  <li
+                    className={`menu-item ${
+                      router.asPath === "/" ? "menue-Active" : ""
+                    }`}
+                  >
+                    Home
+                  </li>
                 </Link>
+
                 <Link className="menu-link" href="/about-us" passHref>
-                  <li className="menu-item">About Us</li>
+                  <li
+                    className={`menu-item ${
+                      router.asPath === "/about-us/" ? "menue-Active" : ""
+                    }`}
+                  >
+                    About Us
+                  </li>
                 </Link>
                 <Link className="menu-link" href="/our-centers" passHref>
-                  <li className="menu-item">Our Centers</li>
+                  <li
+                    className={`menu-item ${
+                      router.asPath === "/our-centers/" ? "menue-Active" : ""
+                    }`}
+                  >
+                    Our Centers
+                  </li>
                 </Link>
                 <Link className="menu-link" href="/products" passHref>
-                  <li className="menu-item">Products</li>
+                  <li
+                    className={`menu-item ${
+                      router.asPath === "/products/" ? "menue-Active" : ""
+                    }`}
+                  >
+                    Products
+                  </li>
                 </Link>
                 <Link className="menu-link" href="/services" passHref>
-                  <li className="menu-item">Services</li>
+                  <li
+                    className={`menu-item ${
+                      router.asPath === "/services/" ? "menue-Active" : ""
+                    }`}
+                  >
+                    Services
+                  </li>
                 </Link>
                 <Link className="menu-link" href="/contact-us" passHref>
-                  <li className="menu-item">Contact Us</li>
+                  <li
+                    className={`menu-item ${
+                      router.asPath === "/contact-us/" ? "menue-Active" : ""
+                    }`}
+                  >
+                    Contact Us
+                  </li>
                 </Link>
               </ul>
             </div>

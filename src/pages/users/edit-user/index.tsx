@@ -71,12 +71,12 @@ const index = () => {
   const validationSchema = yup.object().shape({
     role: yup.string().required("Role is required"),
     firstName: yup.string().when("role", {
-      is: (role: any) => role !== "10" && role !== "13",
+      is: (role: any) => role !== "2" && role !== "1",
       then: (yup) => yup.required("First Name is required for this role"),
       otherwise: (yup) => yup.optional(),
     }),
     lastName: yup.string().when("role", {
-      is: (role: any) => role !== "10" && role !== "13",
+      is: (role: any) => role !== "2" && role !== "1",
       then: (yup) => yup.required("First Name is required for this role"),
       otherwise: (yup) => yup.optional(),
     }),
@@ -88,11 +88,6 @@ const index = () => {
       .required("Password is required")
       .min(8, "Password must contain 8 characters")
       .matches(/^\S*$/, "Password cannot contain spaces"),
-
-    // .matches(
-    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-    //   "Must contain 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special case character"
-    // ),
   });
 
   const initialValues = {
@@ -107,9 +102,7 @@ const index = () => {
     taluka: taluka,
     villageName: village,
     pinCode: pincode,
-    // role: userData?.role,
     role: userData?.roleId,
-    //centuserData?.//ces
     centerName: userData?.centerName,
     centerRegisterUnderCompanyDate: userData?.centerRegisterUnderCompanyDate,
     centerKeyPerson: userData?.centerKeyPerson,
@@ -129,7 +122,6 @@ const index = () => {
     centerCurrentHurdeles: userData?.centerCurrentHurdeles,
     centerNeededFacultys: userData?.centerNeededFacultys,
     centerAllFinancialAudits: userData?.centerAllFinancialAudits,
-    // apmc traders
     apmcFirmName: userData?.apmcFirmName,
     apmcAddress: userData?.apmcAddress,
     apmcName: userData?.apmcName,
@@ -433,7 +425,7 @@ const index = () => {
                       />
                     </FormControl>
                   </Grid>
-                  {rolePrefill == 13 ? (
+                  {rolePrefill == 1 ? (
                     <CentersForm
                       // POR={(values, handleChange, handleBlur, errors, touched, setFieldValue, resetForm)}
                       values={values}
@@ -455,7 +447,7 @@ const index = () => {
                       getAddressByPinCodeData={getAddressByPinCodeData}
                       resetForm={resetForm}
                     />
-                  ) : rolePrefill == 10 ? (
+                  ) : rolePrefill == 2 ? (
                     <ApmcForm
                       values={values}
                       allState={allState}
@@ -476,7 +468,7 @@ const index = () => {
                       getAddressByPinCodeData={getAddressByPinCodeData}
                       resetForm={resetForm}
                     />
-                  ) : rolePrefill == 17 ? (
+                  ) : rolePrefill == 3 ? (
                     <VendorForm
                       values={values}
                       allState={allState}

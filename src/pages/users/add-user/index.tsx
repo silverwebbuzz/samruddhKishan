@@ -83,12 +83,12 @@ const index = () => {
   const validationSchema = yup.object().shape({
     role: yup.string().required("Role is required"),
     firstName: yup.string().when("role", {
-      is: (role: any) => role !== "10" && role !== "13",
+      is: (role: any) => role !== "2" && role !== "1",
       then: (yup) => yup.required("First Name is required for this role"),
       otherwise: (yup) => yup.optional(),
     }),
     lastName: yup.string().when("role", {
-      is: (role: any) => role !== "10" && role !== "13",
+      is: (role: any) => role !== "2" && role !== "1",
       then: (yup) => yup.required("Last Name is required for this role"),
       otherwise: (yup) => yup.optional(),
     }),
@@ -263,6 +263,7 @@ const index = () => {
       { categoryId: categoryIdPrefill },
     ];
     if (userdata?.role == "admin") {
+      // @ts-ignore
       payload.push({ adminId: userdata?.id });
     }
     let formData = new FormData();
@@ -422,7 +423,7 @@ const index = () => {
                       />
                     </FormControl>
                   </Grid>
-                  {values?.role == 13 ? (
+                  {values?.role == 1 ? (
                     <CentersForm
                       values={values}
                       allState={allState}
@@ -443,7 +444,7 @@ const index = () => {
                       getAddressByPinCodeData={getAddressByPinCodeData}
                       resetForm={resetForm}
                     />
-                  ) : values?.role == 10 ? (
+                  ) : values?.role == 2 ? (
                     <ApmcForm
                       values={values}
                       allState={allState}
@@ -464,7 +465,7 @@ const index = () => {
                       getAddressByPinCodeData={getAddressByPinCodeData}
                       resetForm={resetForm}
                     />
-                  ) : values?.role == 17 ? (
+                  ) : values?.role == 3 ? (
                     <VendorForm
                       values={values}
                       allState={allState}
