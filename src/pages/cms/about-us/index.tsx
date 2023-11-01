@@ -67,7 +67,6 @@ const index = () => {
             description: getAllAboutUSData?.data?.[0]?.description,
           }}
           onSubmit={(values) => {
-            console.log("title", values);
             const payload = {
               description: values?.description,
             };

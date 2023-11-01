@@ -328,7 +328,6 @@ const FarmerDetails = () => {
                 color="error"
                 onClick={() => {
                   handleRemoveFile(file?.index);
-                  console.log("index", index);
                 }}
               >
                 <GridDeleteIcon />

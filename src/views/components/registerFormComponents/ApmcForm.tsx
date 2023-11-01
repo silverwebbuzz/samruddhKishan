@@ -58,7 +58,6 @@ const ApmcForm = ({
           values?.districtFarmerComingSellProduct || "",
       },
     ];
-    console.log(apmcpayload);
     let formData = new FormData();
     apmcpayload.forEach((entry: any) => {
       //@ts-ignore

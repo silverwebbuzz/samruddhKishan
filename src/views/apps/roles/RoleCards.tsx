@@ -501,7 +501,7 @@ const RolesCards = () => {
                       <TableBody>
                         {routesArray?.map((i: any, index: number) => {
                           const id = i?.id;
-                          console.log("i", i);
+
                           return (
                             <TableRow
                               key={index}
@@ -544,7 +544,7 @@ const RolesCards = () => {
                       <TableBody>
                         {getPermission?.map((I: any, Index: number) => {
                           const ID = I?.id;
-                          console.log("I", I);
+
                           return (
                             <TableRow
                               key={Index}

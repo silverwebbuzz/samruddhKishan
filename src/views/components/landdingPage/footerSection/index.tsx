@@ -26,7 +26,6 @@ const FooterSection = ({ LOGO, DATA, JSONHandler }: any) => {
             }
           )
           .then((res) => {
-            console.log("asbdkagkdghsagdhagsdgj", res?.data?.status);
             if (res?.data?.status === 200) {
               toast.success("Thank you for subscribing!");
             }

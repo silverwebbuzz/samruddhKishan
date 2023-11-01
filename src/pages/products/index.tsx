@@ -159,7 +159,6 @@ const ProductsPage = () => {
   }, []);
 
   const handleSubmit = (values: any) => {
-    console.log("values", values);
     localStorage.getItem("inquryName");
     let payload = {
       ...values,

@@ -170,7 +170,6 @@ export const getLogoAPI = createAsyncThunk(
 
       return res?.data?.data;
     } catch (err: any) {
-      console.log("res", err);
       return rejectWithValue(err?.response?.data);
     }
   }

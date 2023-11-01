@@ -89,7 +89,6 @@ const Details = () => {
     dispatch(getFooter());
   }, []);
   const handleSubmit = (values: any) => {
-    console.log("values", values);
     localStorage.getItem("inquryName");
     let payload = {
       ...values,
@@ -117,10 +116,6 @@ const Details = () => {
     };
   }, []);
 
-  console.log(
-    "SONHandler(InquryName?.productGallaryImage)",
-    InquryName?.productGallaryImages
-  );
   return (
     <>
       <Navbar LOGO={getLogo?.logo} />

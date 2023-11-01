@@ -48,7 +48,6 @@ const AboutPage = () => {
     dispatch(getAboutUs());
   }, []);
 
-  console.log("getAllAboutUSData", getAllAboutUSData?.data?.[0]?.description);
   return (
     <>
       <Topbar data={getContentData} />

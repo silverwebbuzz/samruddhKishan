@@ -56,8 +56,6 @@ const OurCentersPage = () => {
 
   useEffect(() => {
     let payload = {
-      // page: 1,
-      // pageSize: 10,
       centerName: "",
       state: "",
       city: selectedCenter,
@@ -109,7 +107,7 @@ const OurCentersPage = () => {
                   }}
                 >
                   {centersData?.data?.map((Itm: any) => {
-                    if (Itm?.roleId == "13")
+                    if (Itm?.roleId == "1")
                       return (
                         <div
                           className="center_list_single"

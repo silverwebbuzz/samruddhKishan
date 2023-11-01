@@ -1,36 +1,45 @@
 //@ts-nocheck
-import { Box, Button, Card, CardContent, CardHeader, Grid, TextField, Typography } from '@mui/material'
-import { Form, Formik } from 'formik'
-import { useEffect } from 'react'
-import toast from 'react-hot-toast'
-import { useSelector } from 'react-redux'
-import { useDispatch } from 'react-redux'
-import { getAllContent } from 'src/slice/contentSectionSlice'
-import { footerUpdate, getFooter } from 'src/slice/footerSlice'
-import CardContentDialog from 'src/views/components/dialogBox/CardContentDialog'
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { Form, Formik } from "formik";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { getAllContent } from "src/slice/contentSectionSlice";
+import { footerUpdate, getFooter } from "src/slice/footerSlice";
+import CardContentDialog from "src/views/components/dialogBox/CardContentDialog";
 
 const Footer = () => {
-  const dispatch = useDispatch()
-  const { allContentData } = useSelector((state: any) => state?.rootReducer?.contentSectionReducer)
-  const { getAllFooter } = useSelector((state: any) => state?.rootReducer?.footerReducer)
-  console.log(getAllFooter, 'getAllFoot')
+  const dispatch = useDispatch();
+  const { getAllFooter } = useSelector(
+    (state: any) => state?.rootReducer?.footerReducer
+  );
   //   footerReducer
 
   const handleSubmit = (values: any) => {
-    dispatch(footerUpdate(values)).then(res => {
-      if (res?.payload?.status === 'success') {
-        toast.success('Footer content updated successfully')
+    dispatch(footerUpdate(values)).then((res) => {
+      if (res?.payload?.status === "success") {
+        toast.success("Footer content updated successfully");
       }
-    })
-  }
+    });
+  };
 
   useEffect(() => {
-    dispatch(getFooter())
-  }, [])
+    dispatch(getFooter());
+  }, []);
   return (
     <div>
       <Card>
-        <CardHeader title='Footer' />
+        <CardHeader title="Footer" />
         <CardContent>
           <Formik
             initialValues={{
@@ -41,13 +50,13 @@ const Footer = () => {
               waterMark: getAllFooter?.waterMark,
               termsLink: getAllFooter?.termsLink,
               privacyLink: getAllFooter?.privacyLink,
-              supportLink: getAllFooter?.supportLink
+              supportLink: getAllFooter?.supportLink,
             }}
             enableReinitialize
-            onSubmit={values => {
-              let ID = getAllFooter?.id
-              values.id = ID
-              handleSubmit(values)
+            onSubmit={(values) => {
+              let ID = getAllFooter?.id;
+              values.id = ID;
+              handleSubmit(values);
             }}
           >
             {({ values, handleChange, handleSubmit }) => (
@@ -59,17 +68,17 @@ const Footer = () => {
                       multiline
                       minRows={2}
                       maxRows={4}
-                      label='Content'
-                      name='footerContent'
+                      label="Content"
+                      name="footerContent"
                       InputLabelProps={{
-                        shrink: true
+                        shrink: true,
                       }}
                       onChange={handleChange}
                       value={values?.footerContent}
                     />
                   </Grid>
                   <Grid item xs={12}>
-                    <Typography variant='h6'> Contact Details</Typography>
+                    <Typography variant="h6"> Contact Details</Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
@@ -78,11 +87,11 @@ const Footer = () => {
                       minRows={2}
                       maxRows={4}
                       InputLabelProps={{
-                        shrink: true
+                        shrink: true,
                       }}
-                      type='text'
-                      label='Contact Address'
-                      name='contactAddress'
+                      type="text"
+                      label="Contact Address"
+                      name="contactAddress"
                       onChange={handleChange}
                       value={values?.contactAddress}
                     />
@@ -91,16 +100,16 @@ const Footer = () => {
                     <Grid item sm={6} xs={12}>
                       <TextField
                         fullWidth
-                        size='small'
+                        size="small"
                         // multiline
                         // minRows={2}
                         // maxRows={4}
-                        type='email'
-                        label='Email'
+                        type="email"
+                        label="Email"
                         InputLabelProps={{
-                          shrink: true
+                          shrink: true,
                         }}
-                        name='contactEmail'
+                        name="contactEmail"
                         onChange={handleChange}
                         value={values?.contactEmail}
                       />
@@ -108,16 +117,16 @@ const Footer = () => {
                     <Grid item sm={6} xs={12}>
                       <TextField
                         fullWidth
-                        size='small'
+                        size="small"
                         // multiline
                         // minRows={2}
                         // maxRows={4}
                         InputLabelProps={{
-                          shrink: true
+                          shrink: true,
                         }}
-                        type='number'
-                        label='Phone Number'
-                        name='contactPhone'
+                        type="number"
+                        label="Phone Number"
+                        name="contactPhone"
                         onChange={handleChange}
                         value={values?.contactPhone}
                       />
@@ -125,18 +134,18 @@ const Footer = () => {
                   </Grid>
                 </Grid>
                 <Grid item xs={12} mt={3} mb={3}>
-                  <Typography variant='h6'> Other Details</Typography>
+                  <Typography variant="h6"> Other Details</Typography>
                 </Grid>
                 <Grid container xs={12} spacing={3}>
                   <Grid item sm={6} xs={12}>
                     <TextField
                       fullWidth
-                      type='text'
+                      type="text"
                       InputLabelProps={{
-                        shrink: true
+                        shrink: true,
                       }}
-                      label='Water Mark'
-                      name='waterMark'
+                      label="Water Mark"
+                      name="waterMark"
                       onChange={handleChange}
                       value={values?.waterMark}
                     />
@@ -144,11 +153,11 @@ const Footer = () => {
                   <Grid item sm={6} xs={12}>
                     <TextField
                       fullWidth
-                      type='text'
-                      label='Terms Link'
-                      name='termsLink'
+                      type="text"
+                      label="Terms Link"
+                      name="termsLink"
                       InputLabelProps={{
-                        shrink: true
+                        shrink: true,
                       }}
                       onChange={handleChange}
                       value={values?.termsLink}
@@ -157,11 +166,11 @@ const Footer = () => {
                   <Grid item sm={6} xs={12}>
                     <TextField
                       fullWidth
-                      type='text'
-                      label='Privacy Link'
-                      name='privacyLink'
+                      type="text"
+                      label="Privacy Link"
+                      name="privacyLink"
                       InputLabelProps={{
-                        shrink: true
+                        shrink: true,
                       }}
                       onChange={handleChange}
                       value={values?.privacyLink}
@@ -170,19 +179,19 @@ const Footer = () => {
                   <Grid item sm={6} xs={12}>
                     <TextField
                       fullWidth
-                      type='text'
-                      label='Support Link'
+                      type="text"
+                      label="Support Link"
                       InputLabelProps={{
-                        shrink: true
+                        shrink: true,
                       }}
-                      name='supportLink'
+                      name="supportLink"
                       onChange={handleChange}
                       value={values?.supportLink}
                     />
                   </Grid>
                 </Grid>
                 <Grid item xs={12} mt={3} mb={3}>
-                  <Button variant='contained' type='submit'>
+                  <Button variant="contained" type="submit">
                     Submit
                   </Button>
                 </Grid>
@@ -261,7 +270,7 @@ const Footer = () => {
         {/* {'dialogName' === 'cardContents' && <CardContentDialog {...props} />} */}
       </Card>
     </div>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

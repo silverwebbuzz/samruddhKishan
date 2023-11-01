@@ -1435,11 +1435,6 @@ const FarmerDetails = () => {
                           <div style={{ display: "flex", flexWrap: "wrap" }}>
                             {selectedFiles.length > 0 ? (
                               selectedFiles?.map((file, index) => {
-                                console.log(
-                                  "file: file, index: index ",
-                                  file,
-                                  index
-                                );
                                 return (
                                   <ImagePreviewer
                                     key={index}

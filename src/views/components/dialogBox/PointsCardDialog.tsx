@@ -1,55 +1,73 @@
-import Icon from 'src/@core/components/icon'
-import { Box, Button, Dialog, DialogContent, DialogTitle, Grid, IconButton, TextField } from '@mui/material'
-import { Form, Formik } from 'formik'
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { contentPointDetail, getAllContent, updateCardContent } from 'src/slice/contentSectionSlice'
-import { FilePreview } from 'src/views/components/filePreviewer/FilePreview'
+import Icon from "src/@core/components/icon";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  IconButton,
+  TextField,
+} from "@mui/material";
+import { Form, Formik } from "formik";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import {
+  contentPointDetail,
+  getAllContent,
+  updateCardContent,
+} from "src/slice/contentSectionSlice";
+import { FilePreview } from "src/views/components/filePreviewer/FilePreview";
 
-const PointCardDialog = ({ show, handleCancel, edit, setEdit, editField }: any) => {
-  const dispatch = useDispatch()
+const PointCardDialog = ({
+  show,
+  handleCancel,
+  edit,
+  setEdit,
+  editField,
+}: any) => {
+  const dispatch = useDispatch();
 
   return (
     <Dialog
-      maxWidth='sm'
+      maxWidth="sm"
       fullWidth
       open={show}
       onClose={() => {
-        handleCancel()
-        setEdit(false)
+        handleCancel();
+        setEdit(false);
       }}
-      aria-labelledby='form-dialog-title'
+      aria-labelledby="form-dialog-title"
     >
-      <DialogTitle>{edit ? 'Update Point' : 'Add Point'}</DialogTitle>
+      <DialogTitle>{edit ? "Update Point" : "Add Point"}</DialogTitle>
       <DialogContent>
         <Formik
           enableReinitialize
           initialValues={
             edit
               ? {
-                  contentPointDetail: editField?.contentPointDetail
+                  contentPointDetail: editField?.contentPointDetail,
                 }
               : {
-                  contentPointDetail: ''
+                  contentPointDetail: "",
                 }
           }
           onSubmit={(values, { resetForm }) => {
-            console.log(values)
-            let ID = localStorage.getItem('AllContentDataId')
+            let ID = localStorage.getItem("AllContentDataId");
             let payload = {
               id: ID,
-              contentPointDetail: values?.contentPointDetail
-            }
+              contentPointDetail: values?.contentPointDetail,
+            };
             if (edit) {
-              payload.positionId = editField?.positionId
+              payload.positionId = editField?.positionId;
             }
             // @ts-ignore
             dispatch(contentPointDetail(payload)).then(() => {
-              dispatch(getAllContent())
-            })
-            setEdit(false)
-            handleCancel()
-            resetForm()
+              dispatch(getAllContent());
+            });
+            setEdit(false);
+            handleCancel();
+            resetForm();
           }}
         >
           {({ values, handleChange, setFieldValue }) => (
@@ -58,23 +76,23 @@ const PointCardDialog = ({ show, handleCancel, edit, setEdit, editField }: any) 
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
-                    label='Point'
-                    name='contentPointDetail'
+                    label="Point"
+                    name="contentPointDetail"
                     onChange={handleChange}
                     value={values.contentPointDetail}
                   />
                 </Grid>
 
                 <Grid item xs={12}>
-                  <Button sx={{ mr: 2 }} type='submit' variant='contained'>
+                  <Button sx={{ mr: 2 }} type="submit" variant="contained">
                     Submit
                   </Button>
                   <Button
-                    variant='outlined'
-                    color='error'
+                    variant="outlined"
+                    color="error"
                     onClick={() => {
-                      setEdit(false)
-                      handleCancel()
+                      setEdit(false);
+                      handleCancel();
                     }}
                   >
                     Cancel
@@ -86,7 +104,7 @@ const PointCardDialog = ({ show, handleCancel, edit, setEdit, editField }: any) 
         </Formik>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default PointCardDialog
+export default PointCardDialog;

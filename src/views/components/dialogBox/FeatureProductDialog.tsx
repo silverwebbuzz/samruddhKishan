@@ -1,27 +1,42 @@
-import Icon from 'src/@core/components/icon'
-import { Box, Button, Dialog, DialogContent, DialogTitle, Grid, IconButton, TextField } from '@mui/material'
-import { Form, Formik } from 'formik'
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { updateCardContent } from 'src/slice/contentSectionSlice'
-import { FilePreview } from 'src/views/components/filePreviewer/FilePreview'
+import Icon from "src/@core/components/icon";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  IconButton,
+  TextField,
+} from "@mui/material";
+import { Form, Formik } from "formik";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { updateCardContent } from "src/slice/contentSectionSlice";
+import { FilePreview } from "src/views/components/filePreviewer/FilePreview";
 
-const CardContentDialog = ({ show, handleCancel, edit, setEdit, editField }: any) => {
-  const [cardImage, setCardImage] = useState(false)
-  const dispatch = useDispatch()
+const CardContentDialog = ({
+  show,
+  handleCancel,
+  edit,
+  setEdit,
+  editField,
+}: any) => {
+  const [cardImage, setCardImage] = useState(false);
+  const dispatch = useDispatch();
 
   return (
     <Dialog
-      maxWidth='sm'
+      maxWidth="sm"
       fullWidth
       open={show}
       onClose={() => {
-        handleCancel()
-        setEdit(false)
+        handleCancel();
+        setEdit(false);
       }}
-      aria-labelledby='form-dialog-title'
+      aria-labelledby="form-dialog-title"
     >
-      <DialogTitle>{edit ? 'Update Card' : 'Add Card'}</DialogTitle>
+      <DialogTitle>{edit ? "Update Card" : "Add Card"}</DialogTitle>
       <DialogContent>
         <Formik
           enableReinitialize
@@ -30,52 +45,54 @@ const CardContentDialog = ({ show, handleCancel, edit, setEdit, editField }: any
               ? {
                   contentCardImage: editField?.contentCardImage,
                   contentCardHeading: editField?.contentCardHeading,
-                  contentCardText: editField?.contentCardText
+                  contentCardText: editField?.contentCardText,
                 }
               : {
-                  contentCardImage: '',
-                  contentCardHeading: '',
-                  contentCardText: ''
+                  contentCardImage: "",
+                  contentCardHeading: "",
+                  contentCardText: "",
                 }
           }
           onSubmit={(values, { resetForm }) => {
-            console.log(values)
-            let cardFormData = new FormData()
-            let ID = localStorage.getItem('AllContentDataId')
-            cardFormData.append('id', ID)
+            let cardFormData = new FormData();
+            let ID = localStorage.getItem("AllContentDataId");
+            cardFormData.append("id", ID);
             if (cardImage) {
-              cardFormData.append('contentCardImage', values?.contentCardImage)
+              cardFormData.append("contentCardImage", values?.contentCardImage);
             }
-            cardFormData.append('contentCardHeading', values?.contentCardHeading)
-            cardFormData.append('contentCardText', values?.contentCardText)
+            cardFormData.append(
+              "contentCardHeading",
+              values?.contentCardHeading
+            );
+            cardFormData.append("contentCardText", values?.contentCardText);
             if (edit) {
-              cardFormData.append('positionId', editField?.positionId)
+              cardFormData.append("positionId", editField?.positionId);
             }
-            let cardPayload = cardFormData
+            let cardPayload = cardFormData;
             // @ts-ignore
-            dispatch(updateCardContent(cardPayload))
-            setEdit(false)
-            handleCancel()
-            resetForm()
+            dispatch(updateCardContent(cardPayload));
+            setEdit(false);
+            handleCancel();
+            resetForm();
           }}
         >
           {({ values, handleChange, setFieldValue }) => (
             <Form>
               <Grid container spacing={4}>
                 <Grid item xs={12}>
-                  <Box display={'flex'} alignItems={'center'}>
+                  <Box display={"flex"} alignItems={"center"}>
                     <Box width={100} height={80}>
                       <FilePreview file={values.contentCardImage} />
                     </Box>
-                    <IconButton color='primary' component='label'>
-                      <Icon icon='material-symbols:upload' />
+                    <IconButton color="primary" component="label">
+                      <Icon icon="material-symbols:upload" />
                       <input
                         hidden
-                        type='file'
+                        type="file"
                         name={values.contentCardImage}
                         onChange={(e: any) => {
-                          setFieldValue('contentCardImage', e.target?.files[0])
-                          setCardImage(true)
+                          setFieldValue("contentCardImage", e.target?.files[0]);
+                          setCardImage(true);
                         }}
                       />
                     </IconButton>
@@ -84,8 +101,8 @@ const CardContentDialog = ({ show, handleCancel, edit, setEdit, editField }: any
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
-                    label='Content Card Heading'
-                    name='contentCardHeading'
+                    label="Content Card Heading"
+                    name="contentCardHeading"
                     onChange={handleChange}
                     value={values.contentCardHeading}
                   />
@@ -93,22 +110,22 @@ const CardContentDialog = ({ show, handleCancel, edit, setEdit, editField }: any
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
-                    label='Content Card Text'
-                    name='contentCardText'
+                    label="Content Card Text"
+                    name="contentCardText"
                     onChange={handleChange}
                     value={values.contentCardText}
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Button sx={{ mr: 2 }} type='submit' variant='contained'>
+                  <Button sx={{ mr: 2 }} type="submit" variant="contained">
                     Submit
                   </Button>
                   <Button
-                    variant='outlined'
-                    color='error'
+                    variant="outlined"
+                    color="error"
                     onClick={() => {
-                      setEdit(false)
-                      handleCancel()
+                      setEdit(false);
+                      handleCancel();
                     }}
                   >
                     Cancel
@@ -120,7 +137,7 @@ const CardContentDialog = ({ show, handleCancel, edit, setEdit, editField }: any
         </Formik>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default CardContentDialog
+export default CardContentDialog;

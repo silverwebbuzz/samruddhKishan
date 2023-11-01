@@ -24,7 +24,6 @@ const ViewDialogBox = ({
   handleClose,
   data,
 }: any) => {
-  console.log("data", data);
   return (
     <Dialog
       open={open}
@@ -44,9 +43,6 @@ const ViewDialogBox = ({
             email: data?.email,
             quantity: data?.quantity,
             description: data?.description,
-          }}
-          onSubmit={(values: any, { resetForm }) => {
-            console.log(values, { resetForm });
           }}
         >
           {(props: FormikProps<any>) => {

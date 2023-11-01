@@ -51,7 +51,6 @@ const SmallProductCard = ({
               : { smallProductContentCardImage: "", productContentName: "" }
           }
           onSubmit={(values, { resetForm }) => {
-            console.log(values);
             let cardFormData = new FormData();
             let ID = localStorage.getItem("AllContentDataId");
             cardFormData.append("id", ID);

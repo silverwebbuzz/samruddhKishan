@@ -124,7 +124,6 @@ const ServicesPage = () => {
     localStorage.removeItem("inquryName");
   }, []);
   const handleSubmit = (values: any) => {
-    console.log("values", values);
     localStorage.getItem("inquryName");
     let payload = {
       ...values,

@@ -156,7 +156,6 @@ const index = () => {
                 color="error"
                 onClick={() => {
                   handleRemoveFile(file?.index);
-                  console.log("index", index);
                 }}
               >
                 <GridDeleteIcon />
@@ -1038,11 +1037,6 @@ const index = () => {
                             <div style={{ display: "flex", flexWrap: "wrap" }}>
                               {selectedFiles.length > 0 ? (
                                 selectedFiles?.map((file, index) => {
-                                  console.log(
-                                    "file: file, index: index ",
-                                    file,
-                                    index
-                                  );
                                   return (
                                     <ImagePreviewer
                                       key={index}
