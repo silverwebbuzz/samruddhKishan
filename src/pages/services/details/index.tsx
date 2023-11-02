@@ -45,6 +45,8 @@ import TabPanel from "@mui/lab/TabPanel";
 import FooterSection from "src/views/components/landdingPage/footerSection";
 import { getAllContent, getFooter } from "src/slice/landingPageSlice";
 import { Icon } from "@iconify/react";
+import * as Yup from "yup";
+
 const Details = () => {
   const { getLogo } = useSelector(
     (state: any) => state?.rootReducer?.settingsReducer
@@ -114,6 +116,9 @@ const Details = () => {
       document.body.classList.remove("landingPage");
     };
   }, []);
+  const validationSchema = Yup.object({
+    fullName: Yup.string().required("Full name is required"),
+  });
   return (
     <>
       <Navbar LOGO={getLogo?.logo} />
@@ -510,6 +515,7 @@ const Details = () => {
               quantity: 0,
               description: "",
             }}
+            validationSchema={validationSchema}
             onSubmit={(values: any, { resetForm }) => {
               handleSubmit(values, { resetForm });
             }}
@@ -574,7 +580,17 @@ const Details = () => {
                           shrink: true,
                         }}
                       />
+                      {touched.fullName && errors.fullName ? (
+                        <div
+                          style={{
+                            color: "red",
+                          }}
+                        >
+                          {errors.fullName}
+                        </div>
+                      ) : null}
                     </Grid>
+
                     <Grid xs={12}>
                       <TextField
                         label="Mobile Number"

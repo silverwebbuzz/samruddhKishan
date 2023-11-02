@@ -34,6 +34,8 @@ import toast from "react-hot-toast";
 import { createInquiry } from "src/slice/inquirySlice";
 import { getAllContent, getFooter } from "src/slice/landingPageSlice";
 import Topbar from "src/views/components/topbar";
+import * as Yup from "yup";
+
 const ServicesPage = () => {
   const { getLogo } = useSelector(
     (state: any) => state?.rootReducer?.settingsReducer
@@ -167,6 +169,9 @@ const ServicesPage = () => {
     }
     return JSON.parse(data);
   };
+  const validationSchema = Yup.object({
+    fullName: Yup.string().required("Full name is required"),
+  });
   return (
     <>
       <Topbar data={getContentData} />
@@ -389,6 +394,7 @@ const ServicesPage = () => {
               quantity: 0,
               description: "",
             }}
+            validationSchema={validationSchema}
             onSubmit={(values: any, { resetForm }) => {
               handleSubmit(values, { resetForm });
             }}
@@ -453,6 +459,15 @@ const ServicesPage = () => {
                           shrink: true,
                         }}
                       />
+                      {touched.fullName && errors.fullName ? (
+                        <div
+                          style={{
+                            color: "red",
+                          }}
+                        >
+                          {errors.fullName}
+                        </div>
+                      ) : null}
                     </Grid>
                     <Grid xs={12}>
                       <TextField

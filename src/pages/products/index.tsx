@@ -40,6 +40,8 @@ import { Form, Formik, FormikProps } from "formik";
 import FooterSection from "src/views/components/landdingPage/footerSection";
 import { getAllContent, getFooter } from "src/slice/landingPageSlice";
 import Topbar from "src/views/components/topbar";
+import * as Yup from "yup";
+
 const ProductsPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { getLogo } = useSelector(
@@ -97,6 +99,9 @@ const ProductsPage = () => {
   const handleSortByChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSortBy(event.target.value);
   };
+  const validationSchema = Yup.object({
+    fullName: Yup.string().required("Full name is required"),
+  });
   function TruncateText({ text, maxLength = 25 }: any) {
     const [isTruncated, setIsTruncated] = useState(true);
 
@@ -412,6 +417,7 @@ const ProductsPage = () => {
               quantity: 0,
               description: "",
             }}
+            validationSchema={validationSchema}
             onSubmit={(values: any, { resetForm }) => {
               handleSubmit(values, { resetForm });
             }}
@@ -476,6 +482,15 @@ const ProductsPage = () => {
                           shrink: true,
                         }}
                       />
+                      {touched.fullName && errors.fullName ? (
+                        <div
+                          style={{
+                            color: "red",
+                          }}
+                        >
+                          {errors.fullName}
+                        </div>
+                      ) : null}
                     </Grid>
                     <Grid xs={12}>
                       <TextField

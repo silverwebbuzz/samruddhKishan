@@ -48,6 +48,8 @@ import { getFooter } from "src/slice/footerSlice";
 import { getAllCategoriesForSelect } from "src/slice/categoriesSlice";
 import FooterSection from "src/views/components/landdingPage/footerSection";
 import { getAllContent } from "src/slice/landingPageSlice";
+import * as Yup from "yup";
+
 const Details = () => {
   const { getLogo } = useSelector(
     (state: any) => state?.rootReducer?.settingsReducer
@@ -117,6 +119,9 @@ const Details = () => {
     };
   }, []);
 
+  const validationSchema = Yup.object({
+    fullName: Yup.string().required("Full name is required"),
+  });
   return (
     <>
       <Navbar LOGO={getLogo?.logo} />
@@ -542,6 +547,7 @@ const Details = () => {
               quantity: 0,
               description: "",
             }}
+            validationSchema={validationSchema}
             onSubmit={(values: any, { resetForm }) => {
               handleSubmit(values, { resetForm });
             }}
@@ -606,6 +612,15 @@ const Details = () => {
                           shrink: true,
                         }}
                       />
+                      {touched.fullName && errors.fullName ? (
+                        <div
+                          style={{
+                            color: "red",
+                          }}
+                        >
+                          {errors.fullName}
+                        </div>
+                      ) : null}
                     </Grid>
                     <Grid xs={12}>
                       <TextField
