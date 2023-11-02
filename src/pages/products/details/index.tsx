@@ -109,7 +109,7 @@ const Details = () => {
         toast.success("Inquiry created successfully");
       }
       localStorage.removeItem("inquiryName");
-      router.push("/");
+      handleClose();
     });
   };
   useEffect(() => {
