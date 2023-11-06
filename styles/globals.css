@@ -2226,10 +2226,18 @@ footer .contact_details_menu .contact-name p a:hover {
   .what-we-do .main-card {
     padding: 20px;
   }
+
+  .nav_open .desk_navbar {
+    width: 60% !important;
+  }
 }
 @media (max-width: 415px) {
   .about-heading {
     font-size: 22px;
+  }
+
+  .nav_open .desk_navbar {
+    width: auto !important;
   }
 }
 

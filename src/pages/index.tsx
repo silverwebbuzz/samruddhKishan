@@ -151,9 +151,9 @@ const HomePage = () => {
 
   useEffect(() => {
     if (isMobileDevice()) {
-      setChatUrl(`https://wa.me/${9327152685}/?text=${"hello"}`);
+      setChatUrl(`https://wa.me/${9662511074}`);
     } else {
-      setChatUrl(`https://web.whatsapp.com/send?phone=${9327152685}`);
+      setChatUrl(`https://web.whatsapp.com/send?phone=${9662511074}`);
     }
   }, []);
 

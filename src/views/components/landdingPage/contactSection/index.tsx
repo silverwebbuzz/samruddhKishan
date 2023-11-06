@@ -147,7 +147,7 @@ const ContactSection = () => {
               </div>
               <div className="contact-name">
                 <h3>Phone No.</h3>
-                <p>+91 33378901</p>
+                <p>+919662511074</p>
               </div>
             </div>
             <div className="contact-details contact_details_location">
@@ -165,7 +165,7 @@ const ContactSection = () => {
               </div>
               <div className="contact-name">
                 <h3>Email</h3>
-                <p>example@gamil.com</p>
+                <p>info@samruddhkishan.com</p>
               </div>
             </div>
           </Box>
