@@ -38,12 +38,13 @@ import { Ref, forwardRef, ReactElement } from "react";
 import Fade, { FadeProps } from "@mui/material/Fade";
 import { useRouter } from "next/router";
 import DeleteDialog from "src/views/deleteDialogBox/deleteDialogBox";
-import CustomTextField from "src/@core/components/mui/text-field";
-import { getAllUsers } from "src/slice/users";
+// import * as XLSX from "xlsx";
+import XLSX from "sheetjs-style";
+import * as FileSaver from "file-saver";
 import axios from "axios";
 import { alpha } from "@mui/system";
 import DeleteMultiFieldsDialog from "src/views/deleteDialogBox/deleteMultiFieldsDialog";
-import Link from "next/link";
+import toast from "react-hot-toast";
 
 export type Payload = {
   id?: number;
@@ -92,7 +93,48 @@ const allFarmers = () => {
   const [farmerName, setFarmerName] = useState<string>("");
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
+
   const ROLE = JSON.parse(localStorage.getItem("role"));
+
+  const [excelData, setExcelData] = useState(null);
+  const [selectedFileName, setSelectedFileName] = useState("");
+  const [fileToUpload, setFileToupload] = useState(null);
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+
+    if (!file) {
+      return;
+    }
+    setFileToupload(file);
+    setSelectedFileName(file.name);
+  };
+  const handleUploadClick = async () => {
+    const formData = new FormData();
+    formData.append("file", fileToUpload);
+
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/farmer/UploadCSV`,
+        formData,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response?.status == 200) {
+        toast.success("file imported successfully");
+        setFileToupload(null);
+        setSelectedFileName("");
+      } else {
+        console.error("Error uploading file");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
   const CustomPagination = () => {
     return (
       <Box
@@ -346,12 +388,112 @@ const allFarmers = () => {
       ),
     },
   ];
+  //farmer/GetExcelData
+
+  const generateDownloadFunction = async (data) => {
+    if (data) {
+      try {
+        const fileType =
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+        const fileExtension = ".xlsx";
+
+        const dataBlob = new Blob([data], { type: fileType });
+        FileSaver.saveAs(dataBlob, "abcd" + fileExtension);
+      } catch (error) {
+        console.error("Error downloading Excel file:", error);
+      }
+    }
+  };
+  const csvClick = () => {
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/farmer/GetExcelData`,
+        { responseType: "arraybuffer" },
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type":
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "Content-Disposition": "attachment; filename=exported-farmers.xlsx",
+          },
+        }
+      )
+      .then(async (response) => {
+        generateDownloadFunction(response.data);
+      })
+      .catch((err) => {
+        if (err?.response?.data?.status === 404) {
+          toast.error(err?.response?.data?.msg);
+        }
+      });
+  };
+  // farmer/UploadCSV
 
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title="All Farmers" />
+          {/* <CardHeader title="All Farmers" /> */}
+
+          <Grid
+            container
+            direction="row"
+            xs={12}
+            sm={12}
+            sx={{ marginBottom: "10px" }}
+          >
+            <Box
+              sx={{
+                padding: 5,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "100%",
+                // flexDirection = "row",
+              }}
+            >
+              <Typography variant="h5">All Farmers</Typography>
+              <Box display={"flex"}>
+                <Button
+                  onClick={() => {
+                    csvClick();
+                  }}
+                >
+                  Export Excel File
+                </Button>
+                <div style={{ marginLeft: "10px" }}>
+                  <input
+                    type="file"
+                    id="fileInput"
+                    style={{ display: "none" }}
+                    onChange={handleFileUpload}
+                  />
+                  {selectedFileName?.length > 0 ? (
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                      }}
+                    >
+                      <p> {selectedFileName}</p>
+                      <Button onClick={handleUploadClick}>upload</Button>
+                    </div>
+                  ) : (
+                    <label htmlFor="fileInput">
+                      <Button component="span">Import Excel File</Button>
+                    </label>
+                  )}
+
+                  {excelData && (
+                    <div>
+                      <h3>Excel Data:</h3>
+                      <pre>{JSON.stringify(excelData, null, 2)}</pre>
+                    </div>
+                  )}
+                </div>
+              </Box>
+            </Box>
+          </Grid>
           <Grid xs={12} sm={12}>
             <Box
               sx={{
@@ -365,146 +507,134 @@ const allFarmers = () => {
             >
               {userData?.role === "admin" ? (
                 <>
-                  <Grid item sm={2} xs={12}>
-                    <TextField
-                      size="small"
-                      value={farmerID}
-                      onChange={(e) => {
-                        setFarmerID(e?.target?.value);
-                      }}
-                      label="Farmer ID"
-                      placeholder="Farmer ID"
-                      sx={{
-                        width: {
-                          xs: 1,
-                          sm: "auto",
-                        },
-                        "& .MuiInputBase-root > svg": {
-                          mr: 2,
-                        },
-                      }}
-                    />
-                  </Grid>
-                  <Grid item sm={2} xs={12}>
-                    <FormControl fullWidth size="small">
-                      <InputLabel id="demo-multiple-chip-label">
-                        User
-                      </InputLabel>
-                      <Select
-                        labelId="demo-multiple-chip-label"
-                        id="demo-multiple-chip"
-                        multiple
-                        value={roleValue}
-                        onChange={handleDropdownChange}
-                        input={
-                          <OutlinedInput
-                            id="select-multiple-chip"
-                            label="User"
-                          />
-                        }
-                        renderValue={(selected) => (
-                          <Box
-                            sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}
-                          >
-                            {selected.map((selectedItem) => (
-                              <Chip
-                                key={selectedItem?.value}
-                                label={`${selectedItem?.firstName}${selectedItem?.lastName}`}
-                              />
-                            ))}
-                          </Box>
-                        )}
-                        MenuProps={MenuProps}
-                      >
-                        {usersData?.data?.map((name) => (
-                          <MenuItem key={name} value={name}>
-                            {name?.firstName} {name?.lastName}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item sm={2} xs={12}>
-                    <FormControl fullWidth size="small">
-                      <InputLabel>State</InputLabel>
-                      <Select
-                        id="demo-simple-select"
-                        name="state"
-                        value={STATE}
-                        label="State"
-                        onChange={(e: any) => {
-                          setSTATE(e?.target?.value);
+                  <>
+                    <Grid item sm={2} xs={12} sx={{ marginBottom: "10px" }}>
+                      <TextField
+                        size="small"
+                        value={farmerID}
+                        onChange={(e) => {
+                          setFarmerID(e?.target?.value);
                         }}
-                      >
-                        {allState?.data?.map((name) => (
-                          <MenuItem key={name?.name} value={name?.name}>
-                            {name?.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item sm={2} xs={12}>
-                    <Tooltip title="Please select state first">
+                        label="Farmer ID"
+                        placeholder="Farmer ID"
+                        sx={{ width: "100%" }}
+                      />
+                    </Grid>
+                    <Grid item sm={2} xs={12} sx={{ marginBottom: "10px" }}>
                       <FormControl fullWidth size="small">
-                        <InputLabel id="demo-simple-select-label">
-                          District
+                        <InputLabel id="demo-multiple-chip-label">
+                          User
                         </InputLabel>
                         <Select
-                          labelId="demso-imple-select-label"
+                          labelId="demo-multiple-chip-label"
+                          id="demo-multiple-chip"
+                          multiple
+                          value={roleValue}
+                          onChange={handleDropdownChange}
+                          input={
+                            <OutlinedInput
+                              id="select-multiple-chip"
+                              label="User"
+                            />
+                          }
+                          renderValue={(selected) => (
+                            <Box
+                              sx={{
+                                display: "flex",
+                                flexWrap: "wrap",
+                                gap: 0.5,
+                              }}
+                            >
+                              {selected.map((selectedItem) => (
+                                <Chip
+                                  key={selectedItem?.value}
+                                  label={`${selectedItem?.firstName}${selectedItem?.lastName}`}
+                                />
+                              ))}
+                            </Box>
+                          )}
+                        >
+                          {usersData?.data?.map((name) => (
+                            <MenuItem key={name} value={name}>
+                              {name?.firstName} {name?.lastName}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item sm={2} xs={12} sx={{ marginBottom: "10px" }}>
+                      <FormControl fullWidth size="small">
+                        <InputLabel>State</InputLabel>
+                        <Select
                           id="demo-simple-select"
-                          name="district"
-                          disabled={STATE?.length <= 0}
-                          value={district}
-                          label="district"
-                          onChange={(e) => {
-                            setDistrict(e?.target?.value);
+                          name="state"
+                          value={STATE}
+                          label="State"
+                          onChange={(e: any) => {
+                            setSTATE(e?.target?.value);
                           }}
                         >
-                          {allDistrict?.map((name) => (
+                          {allState?.data?.map((name) => (
                             <MenuItem key={name?.name} value={name?.name}>
                               {name?.name}
                             </MenuItem>
                           ))}
                         </Select>
                       </FormControl>
-                    </Tooltip>
-                  </Grid>{" "}
-                  <Grid item sm={2} xs={12}>
-                    <TextField
-                      size="small"
-                      value={taluka}
-                      onChange={(e) => {
-                        setTaluka(e?.target?.value);
-                      }}
-                      label="Taluka"
-                      placeholder="Taluka"
-                      sx={{
-                        width: {
-                          xs: 1,
-                          sm: "auto",
-                        },
-                        "& .MuiInputBase-root > svg": {
-                          mr: 2,
-                        },
-                      }}
-                    />
-                  </Grid>
-                  <Grid item sm={2} xs={12}>
-                    <Button
-                      onClick={() => {
-                        setSTATE("");
-                        setTaluka("");
-                        setDistrict("");
-                        setRoleValue([]);
-                        setReferalName("");
-                        setFarmerID("");
-                      }}
-                    >
-                      {" "}
-                      Clear
-                    </Button>
-                  </Grid>
+                    </Grid>
+                    <Grid item sm={2} xs={12} sx={{ marginBottom: "10px" }}>
+                      <Tooltip title="Please select state first">
+                        <FormControl fullWidth size="small">
+                          <InputLabel id="demo-simple-select-label">
+                            District
+                          </InputLabel>
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            name="district"
+                            disabled={STATE?.length <= 0}
+                            value={district}
+                            label="district"
+                            onChange={(e) => {
+                              setDistrict(e?.target?.value);
+                            }}
+                          >
+                            {allDistrict?.map((name) => (
+                              <MenuItem key={name?.name} value={name?.name}>
+                                {name?.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Tooltip>
+                    </Grid>
+                    <Grid item sm={2} xs={12} sx={{ marginBottom: "10px" }}>
+                      <TextField
+                        size="small"
+                        value={taluka}
+                        onChange={(e) => {
+                          setTaluka(e?.target?.value);
+                        }}
+                        label="Taluka"
+                        placeholder="Taluka"
+                        sx={{ width: "100%" }}
+                      />
+                    </Grid>
+                    <Grid item sm={2} xs={12} sx={{ marginBottom: "10px" }}>
+                      <Button
+                        onClick={() => {
+                          setSTATE("");
+                          setTaluka("");
+                          setDistrict("");
+                          setRoleValue([]);
+                          setReferalName("");
+                          setFarmerID("");
+                        }}
+                      >
+                        Clear
+                      </Button>
+                    </Grid>
+                  </>
                 </>
               ) : (
                 <>
