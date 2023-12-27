@@ -52,7 +52,7 @@ import DeleteMultiFieldsDialog from "src/views/deleteDialogBox/deleteMultiFields
 import { alpha } from "@mui/system";
 import { userVerifier } from "src/slice/users";
 import axios from "axios";
-
+import * as FileSaver from "file-saver";
 export type Payload = {
   id?: number;
   search?: string;
@@ -94,6 +94,9 @@ const allUsers = () => {
   const [DeleteID, setDeleteID] = useState();
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [delelteField, setDelelteField] = useState<string>("");
+  const [excelData, setExcelData] = useState(null);
+  const [selectedFileName, setSelectedFileName] = useState("");
+  const [fileToUpload, setFileToupload] = useState(null);
   const handleClickOpen = () => {
     setEditPrefillData("");
     setPincode("");
@@ -157,7 +160,15 @@ const allUsers = () => {
       <></>
     );
   };
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
 
+    if (!file) {
+      return;
+    }
+    setFileToupload(file);
+    setSelectedFileName(file.name);
+  };
   const handleUserSearch = (e: any) => {
     setUserSearch(e);
     let payload = {
@@ -368,12 +379,137 @@ const allUsers = () => {
       ),
     },
   ];
+
+  const generateDownloadFunction = async (data) => {
+    if (data) {
+      try {
+        const fileType =
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+        const fileExtension = ".xlsx";
+
+        const dataBlob = new Blob([data], { type: fileType });
+        FileSaver.saveAs(dataBlob, "csv" + fileExtension);
+      } catch (error) {
+        console.error("Error downloading Excel file:", error);
+      }
+    }
+  };
+  const handleUploadClick = async () => {
+    const formData = new FormData();
+    formData.append("file", fileToUpload);
+
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/user/UploadCSV`,
+        formData,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response?.status == 200) {
+        toast.success("file imported successfully");
+        setFileToupload(null);
+        setSelectedFileName("");
+      } else {
+        console.error("Error uploading file");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  const csvClick = () => {
+    let payload = { roleIds: [ROLEID] };
+    axios
+      .post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/user/GetExcelData`,
+        payload,
+        { responseType: "arraybuffer" },
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type":
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "Content-Disposition": "attachment; filename=exported-farmers.xlsx",
+          },
+        }
+      )
+      .then(async (response) => {
+        generateDownloadFunction(response.data);
+      })
+      .catch((err) => {
+        if (err?.response?.data?.status === 404) {
+          toast.error(err?.response?.data?.msg);
+        }
+      });
+  };
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title="All Users" />
+          {/* <CardHeader title="All Users" /> */}
+          <Grid
+            container
+            direction="row"
+            xs={12}
+            sm={12}
+            sx={{ marginBottom: "10px" }}
+          >
+            <Box
+              sx={{
+                padding: 5,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "100%",
+                // flexDirection = "row",
+              }}
+            >
+              <Typography variant="h5">All Users</Typography>
+              <Box display={"flex"}>
+                <Button
+                  onClick={() => {
+                    csvClick();
+                  }}
+                >
+                  Export Excel File
+                </Button>
+                <div style={{ marginLeft: "10px" }}>
+                  <input
+                    type="file"
+                    id="fileInput"
+                    style={{ display: "none" }}
+                    onChange={handleFileUpload}
+                  />
+                  {selectedFileName?.length > 0 ? (
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                      }}
+                    >
+                      <p> {selectedFileName}</p>
+                      <Button onClick={handleUploadClick}>upload</Button>
+                    </div>
+                  ) : (
+                    <label htmlFor="fileInput">
+                      <Button component="span">Import Excel File</Button>
+                    </label>
+                  )}
 
+                  {excelData && (
+                    <div>
+                      <h3>Excel Data:</h3>
+                      <pre>{JSON.stringify(excelData, null, 2)}</pre>
+                    </div>
+                  )}
+                </div>
+              </Box>
+            </Box>
+          </Grid>
           <Box
             sx={{
               gap: 2,
