@@ -562,27 +562,6 @@ const addProduct = () => {
 
                 {/* ========================  Jaimin Changes  =========================================== */}
 
-                <Grid item xs={6} sm={6}>
-                  <FormControl fullWidth>
-                    <InputLabel>Select Status</InputLabel>
-                    <Select
-                      // size='small'
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      name="serviceStatus"
-                      label="Select Status"
-                      value={serviceStatusPrefill}
-                      onChange={(e) => {
-                        setFieldValue("serviceStatus", e?.target?.value);
-                        setServiceStatusPrefill(e?.target?.value);
-                      }}
-                    >
-                      <MenuItem value={1}>Active</MenuItem>
-                      <MenuItem value={0}>InActive</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-
                 {/* ========================  Jaimin Changes  =========================================== */}
                 <Grid item xs={12} sm={12}>
                   <TextField
@@ -826,7 +805,7 @@ const addProduct = () => {
                     </div>
                   </div>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={3}>
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -842,6 +821,27 @@ const addProduct = () => {
                       marginLeft: 4,
                     }}
                   />
+                </Grid>
+
+                <Grid item xs={3} sm={3}>
+                  <FormControl fullWidth>
+                    <InputLabel>Select Status</InputLabel>
+                    <Select
+                      // size='small'
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      name="serviceStatus"
+                      label="Select Status"
+                      value={serviceStatusPrefill}
+                      onChange={(e) => {
+                        setFieldValue("serviceStatus", e?.target?.value);
+                        setServiceStatusPrefill(e?.target?.value);
+                      }}
+                    >
+                      <MenuItem value={1}>Active</MenuItem>
+                      <MenuItem value={0}>InActive</MenuItem>
+                    </Select>
+                  </FormControl>
                 </Grid>
                 <Grid item xs={12}>
                   <Box sx={{ marginTop: "25px" }}>

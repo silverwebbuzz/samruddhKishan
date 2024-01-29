@@ -76,7 +76,7 @@ const ServicesPage = () => {
         {isTruncated ? (
           <div>
             <p>
-              {text?.slice(0, maxLength)}{" "}
+              {/* {text?.slice(0, maxLength)}{" "} */}
               {text?.length > 25 ? (
                 <span
                   style={{
