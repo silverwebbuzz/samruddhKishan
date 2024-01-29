@@ -48,7 +48,7 @@ import * as yup from "yup";
 import { getAllCategories } from "src/slice/categoriesSlice";
 import CategoryDialog from "src/views/components/dialogBox/CategoryDialog";
 import ProductDialog from "src/views/components/dialogBox/ProductDialog";
-import { getAllProducts } from "src/slice/productSlice";
+import { GetAllProductMainPage } from "src/slice/productSlice";
 import CustomAvatar from "src/@core/components/mui/avatar";
 import { ThemeColor } from "src/@core/layouts/types";
 import { getInitials } from "src/@core/utils/get-initials";
@@ -158,7 +158,7 @@ const ContentPage = () => {
     dispatch(getAllCategories({ page: 1, pageSize: 10 }));
     dispatch(getAllBrands());
     dispatch(getAllUsers());
-    dispatch(getAllProducts(payload)).then((response) => {
+    dispatch(GetAllProductMainPage(payload)).then((response) => {
       setPageCount(Math.ceil(response?.payload?.totalItems / pageLimit));
     });
   }, [
@@ -302,6 +302,27 @@ const ContentPage = () => {
               >
                 {categoryName}
               </Typography>
+            </Box>
+          </Box>
+        );
+      },
+    },
+    {
+      flex: 0.25,
+      field: "status",
+      sortable: false,
+      minWidth: 120,
+      headerName: "status",
+      renderCell: ({ row }: any) => {
+        const { status } = row;
+        return (
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <Chip
+                label={status === 1 ? "Active" : "Inactive"}
+                color={status === 1 ? "primary" : "error"}
+              />
+              <Badge />
             </Box>
           </Box>
         );

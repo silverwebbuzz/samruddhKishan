@@ -54,6 +54,36 @@ export const getAllServices = createAsyncThunk(
     }
   }
 );
+export const GetAllServicesMainPage = createAsyncThunk(
+  "user/GetAllServicesMainPage",
+  async (
+    payload: { page: string | number; pageSize: string | number } | any,
+    { rejectWithValue }
+  ) => {
+    try {
+      if (payload) {
+        const res = await axios.post(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/service/GetAllServicesMainPage`,
+          payload,
+          {
+            headers,
+          }
+        );
+        return res?.data;
+      } else {
+        const res = await axios.post(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/service/GetAllServicesMainPage`,
+          {
+            headers,
+          }
+        );
+        return res?.data;
+      }
+    } catch (err: any) {
+      return rejectWithValue(err?.response?.data);
+    }
+  }
+);
 
 export const createService = createAsyncThunk(
   "user/service",
@@ -166,6 +196,16 @@ export const servicesSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    builder.addCase(GetAllServicesMainPage.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(GetAllServicesMainPage.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.servicesData = action.payload;
+    });
+    builder.addCase(GetAllServicesMainPage.rejected, (state) => {
+      state.isLoading = false;
+    });
     builder.addCase(getAllServices.pending, (state) => {
       state.isLoading = true;
     });

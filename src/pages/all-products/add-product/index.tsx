@@ -44,6 +44,7 @@ import {
   getAllCountry,
   getAllUnits,
 } from "src/slice/productSlice";
+
 import { getAllUsers } from "src/slice/farmers";
 import DemoSelect from "src/views/demo/demoSelect";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -69,7 +70,7 @@ const addProduct = () => {
   const [contryPrefill, setContryPrefill] = useState("");
   const [productUnits, setProductUnits] = useState("");
   const [vendorId, setVendorId] = useState(0);
-
+  const [serviceStatusPrefill, setServiceStatusPrefill] = useState("");
   const ProfilePicture = styled("img")(({ theme }) => ({
     width: 108,
     height: 108,
@@ -99,8 +100,10 @@ const addProduct = () => {
     formdata.append("maxPrice", values?.maxPrice);
     formdata.append("productUnits", productUnits);
     formdata.append("country", contryPrefill);
-    formdata.append("status", values?.status);
+    formdata.append("status", serviceStatusPrefill);
+    // formdata.append("status", values?.status);
     formdata.append("addToHome", values?.addToHome ? 1 : 0);
+
     selectedFiles.forEach((file, index) => {
       formdata.append(`productGallaryImage`, file);
       // formdata.append('productGallaryImage', JSON.stringify(selectedFiles))
@@ -273,7 +276,8 @@ const addProduct = () => {
           productCode: "",
           productUnits: "",
           country: "",
-          status: "",
+          serviceStatus: "0",
+
           addToHome: false,
         }}
         validationSchema={validationSchema}
@@ -531,7 +535,7 @@ const addProduct = () => {
                   />
                 </Grid>
 
-                <Grid item xs={12} sm={12}>
+                <Grid item xs={6} sm={6}>
                   <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">
                       Country of origin
@@ -556,6 +560,30 @@ const addProduct = () => {
                   </FormControl>
                 </Grid>
 
+                {/* ========================  Jaimin Changes  =========================================== */}
+
+                <Grid item xs={6} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel>Select Status</InputLabel>
+                    <Select
+                      // size='small'
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      name="serviceStatus"
+                      label="Select Status"
+                      value={serviceStatusPrefill}
+                      onChange={(e) => {
+                        setFieldValue("serviceStatus", e?.target?.value);
+                        setServiceStatusPrefill(e?.target?.value);
+                      }}
+                    >
+                      <MenuItem value={1}>Active</MenuItem>
+                      <MenuItem value={0}>InActive</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                {/* ========================  Jaimin Changes  =========================================== */}
                 <Grid item xs={12} sm={12}>
                   <TextField
                     label="Product Short Description"
@@ -741,6 +769,7 @@ const addProduct = () => {
                     </Field>
                   </Grid>
                 </Grid>
+
                 <Grid xs={12}>
                   <div
                     styele={{

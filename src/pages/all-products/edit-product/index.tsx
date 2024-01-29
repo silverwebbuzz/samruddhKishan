@@ -75,7 +75,7 @@ const editProduct = () => {
   const [productUnits, setProductUnits] = useState("");
   const productID = localStorage.getItem("editProductID");
   const [vendorId, setVendorId] = useState("");
-
+  const [serviceStatusPrefill, setServiceStatusPrefill] = useState(0);
   const ProfilePicture = styled("img")(({ theme }) => ({
     width: 108,
     height: 108,
@@ -105,7 +105,8 @@ const editProduct = () => {
     formdata.append("maxPrice", values?.maxPrice);
     formdata.append("productUnits", productUnits);
     formdata.append("country", values?.country);
-    formdata.append("status", values?.status);
+    // formdata.append("status", values?.status);
+    formdata.append("status", serviceStatusPrefill);
     formdata.append("addToHome", values?.addToHome ? 1 : 0);
     newSelectedFiles.forEach((file, index) => {
       formdata.append(`productGallaryImage`, file);
@@ -205,12 +206,18 @@ const editProduct = () => {
   }, []);
 
   useEffect(() => {
+    console.log(
+      "bapuuuuu",
+      singleProductsData?.status || "",
+      singleProductsData?.status
+    );
     setTimeout(() => {
       setCategoryIdPrefill(singleProductsData?.categoryId || 0);
       setBrandPrefill(singleProductsData?.brandId || "");
       setVendorId(singleProductsData?.vendorId || "");
       setContryPrefill(singleProductsData?.country || "");
       setProductUnits(singleProductsData?.productUnits || "");
+      setServiceStatusPrefill(singleProductsData?.status);
       const productGallaryImage = singleProductsData?.productGallaryImage;
       if (productGallaryImage && productGallaryImage.length !== undefined) {
         setSelectedFiles([...productGallaryImage]);
@@ -223,7 +230,8 @@ const editProduct = () => {
     singleProductsData?.productName,
     singleProductsData?.country,
     singleProductsData?.productUnits,
-    singleProductsData?.productGallaryImage, // Include this dependency
+    singleProductsData?.productGallaryImage,
+    singleProductsData?.status, // Include this dependency
   ]);
 
   const handleRemoveFile = (indexToRemove: any, id: any) => {
@@ -323,7 +331,8 @@ const editProduct = () => {
           maxPrice: singleProductsData?.maxPrice,
           productUnits: singleProductsData?.productUnits,
           country: singleProductsData?.country,
-          status: singleProductsData?.status,
+          // serviceStatus: singleProductsData?.status,
+          serviceStatus: singleProductsData?.status === 1 ? true : false,
           addToHome: singleProductsData?.addToHome === 1 ? true : false,
         }}
         validationSchema={validationSchema}
@@ -576,7 +585,7 @@ const editProduct = () => {
                   />
                 </Grid>
 
-                <Grid item xs={12} sm={12}>
+                <Grid item xs={6} sm={6}>
                   <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">
                       Country of origin
@@ -600,7 +609,26 @@ const editProduct = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-
+                <Grid item xs={6} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel>Select Status</InputLabel>
+                    <Select
+                      // size='small'
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      name="serviceStatus"
+                      label="Select Status"
+                      value={serviceStatusPrefill}
+                      onChange={(e) => {
+                        setFieldValue("serviceStatus", e?.target?.value);
+                        setServiceStatusPrefill(e?.target?.value);
+                      }}
+                    >
+                      <MenuItem value={1}>Active</MenuItem>
+                      <MenuItem value={0}>InActive</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
                 <Grid item xs={12} sm={12}>
                   <TextField
                     label="Product Short Description"
