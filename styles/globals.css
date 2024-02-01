@@ -84,7 +84,7 @@ code[class*="language-"] {
   color: var(--font-color) !important;
 }
 .logo-img {
-  width: 200px;
+  width: 100px !important;
   height: auto;
   object-fit: contain;
 }
@@ -1244,20 +1244,21 @@ code[class*="language-"] {
   height: 45px;
 }
 .copyright {
-  padding-right: 10%;
+  /* padding-right: 10%; */
   background-color: #1f4e3d;
 }
 .copyright .footer_copyright_wrapper {
-  padding: 20px 20px 20px 10%;
+  padding: 2px 20px 2px 5%;
   background: #1a4133;
   color: var(--font-color);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
   font-size: 15px;
-  border-radius: 0 30px 0 0;
+  border-radius: 0 0 0 0;
   z-index: 9;
   position: relative;
+  width: 100%;
 }
 .copyright a {
   text-decoration: none;
@@ -1651,6 +1652,7 @@ footer .contact_details_menu .contact-name p a:hover {
   }
   .logo-img {
     width: 150px;
+  
   }
   .landing_home_page_header .MuiContainer-root {
     min-height: 90px !important;
